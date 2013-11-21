@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 
+######################################################
+####################
+#track-bola v0.1:
+####################
+#Se toma como entrada un flujo de video (webcam o archivo de video), se procesan y detectan círculos negros para
+#mover un entorno virtual (Laberinto tipo T).
+######################################################
+
+
 import pygame
 from pygame.locals import *
 
-TCP_IP = 'localhost' #ip a donde conecto a socket <>
-TCP_PORT = 50007 #puerto del socket
-BUFFER_SIZE = 14 #14 # Usualmente 1024, pero se quiere una respuesta rápida
-xnumber = 0;
-ynumber = 0;
-FALSE_POSITIVE_THRESHOLD = 1020
+fps = 8 #frames per second
 CYCLE_LOOP_NUMBER = 2 #cantidad de ciclos que deben pasar para que se ejecuten los movimientos en el mapa 3D
                       #más ciclos => más lento update pero menos rebote..
 
@@ -67,39 +71,15 @@ sprite_positions=[
   (3.5, 20.5,2),
   (3.5, 14.5,2),
   (14.5,20.5,2),
-  
-  #row of pillars in front of wall: fisheye test
-  #(18.5, 10.5, 1),
-  #(18.5, 11.5, 1),
-  #(18.5, 12.5, 1),
-  
-  #some barrels around the map
-  #(21.5, 1.5, 0),
-  #(15.5, 1.5, 0),
-  #(16.0, 1.8, 0),
-  #(16.2, 1.2, 0),
-  #(3.5,  2.5, 0),
-  #(9.5, 15.5, 0),
-  #(10.0, 15.1,0),
-  #(10.5, 15.8,0),
 ]
 
-def load_image(image, darken, colorKey = None):
-    ret = []
-    if colorKey is not None:
-        image.set_colorkey(colorKey)
-    if darken:
-        image.set_alpha(127)
-    for i in range(image.get_width()):
-        s = pygame.Surface((1, image.get_height())).convert()
-        #s.fill((0,0,0))
-        s.blit(image, (- i, 0))
-        if colorKey is not None:
-            s.set_colorkey(colorKey)
-        ret.append(s)
-    return ret  
-
 def mainFunction():
+    ##########################################################
+    #Función principal, en cada iteración actualiza el render del laberinto. 
+    #Mueve al personaje según el resultado
+    #de la función de captura de video.
+    ##########################################################
+    
     import math
     import worldManager
     import time
@@ -112,7 +92,7 @@ def mainFunction():
     size = w, h = 640,480
     pygame.init()
     window = pygame.display.set_mode(size)
-    pygame.display.set_caption("Laberinto Virtual - v0.7")
+    pygame.display.set_caption("Track-bola - v"+str(CURRENT_VERSION))
     screen = pygame.display.get_surface()
     #pixScreen = pygame.surfarray.pixels2d(screen)
     pygame.mouse.set_visible(True)
@@ -154,8 +134,6 @@ def mainFunction():
         clock.tick(60)
         
         wm.draw(screen)
-        
-        #print "xnumber ynumber ", xnumber, ynumber
         
         # timing for input and FPS counter
         
@@ -326,13 +304,13 @@ def mainVideoDetection():
 
     """
         Programa de detección de movimiento:
-        Se enciende timer de socket para enviar datos de mouse.
         Se enciende y configura cámara.
         Por cada ciclo de programa, se compara el fotograma actual con el anterior.
             Si hay diferencias en el movimiento de un círculo particular (comparando
             si son iguales por el hecho de que hay colisión en el espacio 2D-tiempo)
             entonces añadir valor en el vector en el que este círculo se movió.
-            En cada ciclo se envía por socket.
+            En cada ciclo se actualiza un "vector movimiento". El vector promedio resultante
+            se lee en el main() para actualizar la posición del personaje.
 """    
     CAM_NUMBER = 0 #cam number, 0 for integrated webcam, 1 for the next detected camera.
     
@@ -392,7 +370,7 @@ def mainVideoDetection():
 
     
     #Nombre: Movement Indicator
-    winName = "Movement Detection v0.7"
+    winName = "Track-bola v"+str(CURRENT_VERSION)+" - Detección de video"
     cv2.namedWindow(winName, cv2.CV_WINDOW_AUTOSIZE)
     
     # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
@@ -571,11 +549,7 @@ def mainVideoDetection():
             os.kill(os.getpid(), signal.SIGINT)
             sys.exit()
 
-class vectorSimple:
-    x=0;
-    y=0;
-    intensidad=0;
-    angulo=0;
+
 
 
 class Weapon(object):
@@ -612,8 +586,9 @@ class Weapon(object):
         img = self.images[self.frame]
         surface.blit(img, (surface.get_width()/2 - img.get_width()/2, surface.get_height()-img.get_height()))
 
-vectorInstantaneo = vectorSimple()
-fps = 8
+import worldManager
+vectorInstantaneo = worldManager.vectorSimple()
+CURRENT_VERSION = 0.1
 if __name__ == '__main__':
     #ver http://stackoverflow.com/questions/12376224/python-threading-running-2-different-functions-simultaneously
     #import threading

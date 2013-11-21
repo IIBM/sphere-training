@@ -1,6 +1,9 @@
 import pygame
 from pygame.locals import *
 import math
+
+#WorldManager.py
+#Clases que se usan junto con main.py para track-bola.
     
 texWidth = 64
 texHeight = 64
@@ -207,6 +210,11 @@ class Camera(object):
         self.planex = float(planex)
         self.planey = float(planey)
         
+class vectorSimple:
+    x=0;
+    y=0;
+    intensidad=0;
+    angulo=0;
 
 def load_image(image, darken, colorKey = None):
     ret = []
