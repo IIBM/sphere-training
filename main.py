@@ -3,9 +3,6 @@
 import pygame
 from pygame.locals import *
 
-
-
-
 TCP_IP = 'localhost' #ip a donde conecto a socket <>
 TCP_PORT = 50007 #puerto del socket
 BUFFER_SIZE = 14 #14 # Usualmente 1024, pero se quiere una respuesta rápida
@@ -60,33 +57,6 @@ worldMap =[
   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
 ];
 
-#worldMap =[
-#  [8,8,8,8,8,8,8,8,8,8,8,4,4,6,4,4,6,4,6,4,4,4,6,4],
-#  [8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,0,0,0,0,0,0,4],
-#  [8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,6],
-#  [8,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
-#  [8,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4],
-#  [8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,6,6,6,0,0,4,6],
-#  [8,8,8,8,0,8,8,8,8,8,8,4,4,4,4,4,4,6,0,0,0,0,0,6],
-#  [7,7,7,7,0,7,7,7,7,0,8,0,8,0,8,0,8,4,0,0,0,6,0,6],
-#  [7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,0,0,0,0,0,6],
-#  [7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,0,0,0,0,4],
-#  [7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,6,0,6,0,6],
-#  [7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,4,6,0,6,6,6],
-#  [7,7,7,7,0,7,7,7,7,8,8,4,0,6,8,4,8,3,3,3,0,3,3,3],
-#  [2,2,2,2,0,2,2,2,2,4,6,4,0,0,6,0,6,3,0,0,0,0,0,3],
-#  [2,2,0,0,0,0,0,2,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3],
-#  [2,0,0,0,0,0,0,0,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3],
-#  [1,0,0,0,0,0,0,0,1,4,4,4,4,4,6,0,6,3,3,0,0,0,3,3],
-#  [2,0,0,0,0,0,0,0,2,2,2,1,2,2,2,6,6,0,0,5,0,5,0,5],
-#  [2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5],
-#  [2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5],
-#  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5],
-#  [2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5],
-#  [2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5],
-#  [2,2,2,2,1,2,2,2,2,2,2,1,2,2,2,5,5,5,5,5,5,5,5,5]
-#];
-
 sprite_positions=[
   (20.5, 11.5, 2), #green light in front of playerstart
   #green lights in every room
@@ -127,50 +97,7 @@ def load_image(image, darken, colorKey = None):
         if colorKey is not None:
             s.set_colorkey(colorKey)
         ret.append(s)
-    return ret
- 
- 
-"""
-def socketTimer():
-  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  s.bind((TCP_IP, TCP_PORT))
-  while True:
-      #print "---"
-      time.sleep(0.1)
-      #por cada ciclo, escucho.
-      s.listen(1)
-      conn, addr = s.accept()
-      try:
-        data = conn.recv(BUFFER_SIZE)
-        #proceso lo recibido: asumo el siguiente formato:
-        # xNNNNyNNNN-
-        #donde NNNN es un número entero entre 0 y 9999
-        s1= data.strip()
-        longitud=len(s1)
-        posx=0
-        posy=0
-        if (s1.find('x')==-1) or (s1.find('y')==-1):
-          print "error, no encontrO x o y"
-          print s1
-        
-        else:
-            posx=s1.index('x');
-            posy=s1.index('y');
-            posending=s1.index('-');
-    
-            xx=s1[posx+1:posy]
-            yy=s1[posy+1:posending]
-            
-            global xnumber
-            xnumber = int(xx)
-            global ynumber
-            ynumber = int(yy)
-            print "Received data: x:y ", xnumber,ynumber
-        
-      except:
-        a=0
-        print "err"
- """     
+    return ret  
 
 def mainFunction():
     import math
@@ -650,19 +577,6 @@ class vectorSimple:
     intensidad=0;
     angulo=0;
 
-def deleteMe1():
-    import time
-    
-    while True:
-        print "Hello world"
-        time.sleep(0.5)
-                   
-def deleteMe2():
-    import time
-    
-    while True:
-        print "Goodbye world"
-        time.sleep(0.77)
 
 class Weapon(object):
     
