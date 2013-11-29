@@ -20,11 +20,13 @@ class soundGen():
         for s in range(n_samples):
             t = float(s)/self.sample_rate    # time in seconds
 
-            buf[s][0] = int(round(max_sample*math.sin(2*math.pi*freq*t)))  # left
+            buf[s][0] = int(round(max_sample*math.sin(2*math.pi*freq*t))) # left
             buf[s][1] = int(round(max_sample*math.sin(2*math.pi*freq*t))) # right
 
         self.sound = pygame.sndarray.make_sound(buf)
         return self.sound
+
+    #TODO add new waveforms
 
     def play(self):
         self.sound.play()
@@ -34,18 +36,16 @@ if __name__ == '__main__':
     import time
     s1 = soundGen()
     duration = 3.0 # in seconds
-    #freqency for the left speaker
-    frequency_l = 440
-    #frequency for the right speaker
-    frequency_r = 550
+    freq1 = 440
+    freq2 = 550
 
-    s1.tone(duration, frequency_l)
+    s1.tone(duration, freq1)
     s1.play()
     time.sleep(duration)
 
     time.sleep(1)
 
-    s1.tone(duration, frequency_r)
+    s1.tone(duration, freq2)
     s1.play()
     time.sleep(duration)
 
