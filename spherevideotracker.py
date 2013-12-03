@@ -158,17 +158,18 @@ class spherevideotracker():
 
         while True:
             ###########################################<>
-            # Preparo las imgs antigûa, actual y futura
+            # Preparo las imgs antigua, actual y futura
             ###########################################
             
             #im toma una captura para t_plus, y para algunas geometrías que se dibujan encima de él.
             im = self.cam.read()[1]
             
             #t_current es el del anterior ciclo, t_plus es el recién capturado (procesándolo 1ero..),
-#            if im.any():
-            t_plus = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
-#            else:
-#                print "FIN"
+            if im != None:
+                t_plus = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+            else:
+                print "FIN"
+                break
             
             cv.Smooth(cv.fromarray(t_plus), cv.fromarray(t_plus), cv.CV_BLUR, 3);
             #cv.Smooth(cv.fromarray(t_plus), cv.fromarray(t_plus), cv.CV_GAUSSIAN, 3, 0);
@@ -260,18 +261,12 @@ class spherevideotracker():
             
             #para finalizar programa, usuario presiona "Escape":
             delayMS = int((1.0/self.fps)*1000)
-            delayMS = int(5)
             key = cv2.waitKey(delayMS) #in miliseconds
             if (key == 27 or key==1048603): #escape pressed
                 #end Program.
                 cv2.destroyWindow(self.winName)
                 os.kill(os.getpid(), signal.SIGINT)
                 sys.exit()
-#        except:
-#          cv2.destroyWindow(self.winName)
-#          os.kill(os.getpid(), signal.SIGINT)
-#          sys.exit()
-
 
 if __name__ == '__main__':
     try:
