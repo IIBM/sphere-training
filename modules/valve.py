@@ -14,7 +14,7 @@ class dummypp () :
         return self.data
   
   
-class valve() :
+class Valve() :
     def __init__(self) :
         try :
           self.p = parallel.Parallel()
@@ -22,11 +22,11 @@ class valve() :
           print "Warning!!!: Could not find any parallel port. Using dummy parallel port"
           self.p = dummypp()
 
-    def on(self) :
+    def open(self) :
         a = self.p.getData()
         return self.p.setData(a|ValvePinMask)
 
-    def off(self) :
+    def close(self) :
         a = self.p.getData()
         return self.p.setData(a&(~ValvePinMask))
     
@@ -34,10 +34,10 @@ class valve() :
 if __name__ == '__main__':
     import time
 
-    v1 = valve()
+    v1 = Valve()
     print "open valve"
-    v1.on()
+    v1.open()
     print "delay 2 seconds"
     time.sleep(2)
     print "close valve"
-    v1.off()
+    v1.close()

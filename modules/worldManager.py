@@ -39,6 +39,7 @@ class WorldManager(object):
         self.camera = Camera(x,y,dirx,diry,planex,planey)
         self.worldMap = worldMap
         self.sprite_positions = sprite_positions
+
     def draw(self, surface):
         w = surface.get_width()
         h = surface.get_height()
