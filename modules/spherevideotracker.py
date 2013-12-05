@@ -100,6 +100,10 @@ class spherevideotracker():
             print "CALIBRACION"
             cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
 
+            # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
+            t_current = cv2.cvtColor(self.cam.read()[1], cv2.COLOR_RGB2GRAY)
+            t_plus = cv2.cvtColor(self.cam.read()[1], cv2.COLOR_RGB2GRAY)
+
             im = self.cam.read()[1]
 
             t_calib = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
@@ -136,7 +140,7 @@ class spherevideotracker():
             for i in range(0, len(circleRadius)):
                 expectedValue +=  circleRadius[i]
                  
-            expectedValue /= len(circleCenters)
+            expectedValue /= len(circleCenters) + .01
             for i in range (0, len(circleCenters)):
                 if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
                     maxRadius = circleRadius[i]
@@ -163,10 +167,6 @@ class spherevideotracker():
 
 
         if (onlyCalibrate == False) :
-            print "CALIBRACION"
-            # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
-            t_current = cv2.cvtColor(self.cam.read()[1], cv2.COLOR_RGB2GRAY)
-            t_plus = cv2.cvtColor(self.cam.read()[1], cv2.COLOR_RGB2GRAY)
 
             time.sleep(1.5)
 
@@ -184,6 +184,10 @@ class spherevideotracker():
                 else:
                     print "FIN"
                     break
+                
+                #t_current es el del anterior ciclo, t_plus es el recién capturado (procesándolo 1ero..),
+                t_current = t_plus
+                t_plus = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
                 
                 cv.Smooth(cv.fromarray(t_plus), cv.fromarray(t_plus), cv.CV_BLUR, 3);
                 #cv.Smooth(cv.fromarray(t_plus), cv.fromarray(t_plus), cv.CV_GAUSSIAN, 3, 0);

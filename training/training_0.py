@@ -17,7 +17,7 @@ lib_path = os.path.abspath('../modules/')
 sys.path.append(lib_path)
 
 THRESHOLD = 200
-TIMEVALVEOPEN = 1.0
+timeGote = 1.0
 
 
 import spherevideotracker
@@ -79,11 +79,16 @@ try:
         try:
             key = sys.stdin.read(1)#cv2.waitKey(100) #in miliseconds
             if (key == 'a'): #escape pressed
-                v1.open()
                 print "valve open"
+                v1.open()
             elif (key == 'c'):
-                v1.close()
                 print "valve close"
+                v1.close()
+            elif (key == 'g'):
+                print "valve open and close"
+                v1.open()
+                time.sleep(timeGote)
+                v1.close()
             elif (key=='\x1b'):
                 os.kill(os.getpid(), signal.SIGINT)
                 sys.exit()
