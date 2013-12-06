@@ -17,7 +17,7 @@ lib_path = os.path.abspath('../modules/')
 sys.path.append(lib_path)
 
 THRESHOLD = 200
-timeGote = 1.0
+timeGote = .1
 
 
 import spherevideotracker
@@ -28,11 +28,11 @@ except ImportError:
 except:
     print "otro error"
 
-sp1 = spherevideotracker.spherevideotracker(VIDEOSOURCE,CAM_WIDTH,CAM_HEIGHT)
+#sp1 = spherevideotracker.spherevideotracker(VIDEOSOURCE,CAM_WIDTH,CAM_HEIGHT)
 #sp1.calibrate()
 #time.sleep(2)
 
-import threading
+#import threading
 import time
 
 def detectmove():
@@ -52,11 +52,11 @@ def detectmove():
               
 
 
-th1 = threading.Thread(target=sp1.startcapture)
-th2 = threading.Thread(target=detectmove)
+#th1 = threading.Thread(target=sp1.startcapture)
+#th2 = threading.Thread(target=detectmove)
 
-th1.start()
-th2.start()
+#th1.start()
+#th2.start()
 
 import termios, fcntl, sys, os
 fd = sys.stdin.fileno()

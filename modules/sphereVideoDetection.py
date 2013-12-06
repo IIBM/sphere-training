@@ -59,7 +59,7 @@ class sphereVideoDetection():
 		    entonces añadir valor en el vector en el que este círculo se movió.
 		    En cada ciclo se envía por socket.
 	"""    
-	    CAM_NUMBER = 1 #cam number, 0 for integrated webcam, 1 for the next detected camera.
+	    CAM_NUMBER = 0 #cam number, 0 for integrated webcam, 1 for the next detected camera.
 	    
 	    #TCP_IP = 'localhost' #ip a donde conecto a socket
 	    #TCP_PORT = 50007 #puerto del socket
@@ -176,7 +176,7 @@ class sphereVideoDetection():
 	    print "Radio mayor: %d" % maxRadius
 	    print "Círculo Máximo de movimiento: %d" % MAX_CIRCLE_MOVEMENT
 	    print "Círculo Mínimo de movimiento: %d" % MIN_CIRCLE_MOVEMENT
-	    WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 2
+	    WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.7
 	    WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
 	    time.sleep(4)
 	    print "Fin calibración."
@@ -315,7 +315,6 @@ if __name__ == '__main__':
     import valve
     import time
     val1 = valve.Valve()
-
     while(True):
 	print "x:  "+str(videoDet.getCumX())
 	print "y:  "+str(videoDet.getCumY()) #<>
@@ -325,6 +324,7 @@ if __name__ == '__main__':
 		videoDet.resetCumY()
 		#abrir la válvula
 		print "abro VAlvula"
+
 		val1.open()
 		time.sleep(1)
 		val1.close()
