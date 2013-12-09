@@ -35,5 +35,14 @@ nosetests.xml
 .project
 .pydevproject
 
+# text editor
+.*.swp
+*~
 
+# Logging
+*.log
+
+# configuration files
 modules/configvideo.py
+
+

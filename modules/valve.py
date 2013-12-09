@@ -1,6 +1,10 @@
 import parallel
+import time
+import logging
+
 
 ValvePinMask = 0x04
+DropTime = .1
 
 class dummypp () :
     def __init__(self) :
@@ -19,25 +23,37 @@ class Valve() :
         try :
           self.p = parallel.Parallel()
         except :
-          print "Warning!!!: Could not find any parallel port. Using dummy parallel port"
+          logging.warning('Could not find any parallel port. Using dummy parallel port')
           self.p = dummypp()
 
     def open(self) :
+        logging.info('Valve opened')
         a = self.p.getData()
         return self.p.setData(a|ValvePinMask)
 
     def close(self) :
+        logging.info('Valve closed')
         a = self.p.getData()
         return self.p.setData(a&(~ValvePinMask))
     
+    def drop(self) :
+        logging.info('Valve drop')
+        self.open()
+        time.sleep(DropTime)
+        self.close()
 
 if __name__ == '__main__':
-    import time
+    # create a logging format
+    formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    dateformat = '%Y/%m/%d %I:%M:%S %p'
 
+    logging.basicConfig(filename='Valve.log', filemode='w',
+        level=logging.DEBUG, format=formatter, datefmt = dateformat)
+    logging.info('Start Valve Test')
     v1 = Valve()
-    print "open valve"
     v1.open()
-    print "delay 2 seconds"
     time.sleep(2)
-    print "close valve"
     v1.close()
+    time.sleep(2)
+    v1.close()
+    logging.info('End Valve Test')
