@@ -31,44 +31,53 @@ dateformat = '%Y/%m/%d %I:%M:%S %p'
 
 logging.basicConfig(filename='logs/tmanual.log', filemode='a',
     level=logging.DEBUG, format=formatter, datefmt = dateformat)
-logging.info('===============================================')
-logging.info('Start Manual Training')
+
+logger = logging.getLogger('main')
+logger.info('===============================================')
+logger.info('Start Manual Training')
 
 try:
     import valve
     import signal
+
+    print 'Options:'
+    print 'o: Open Valve'
+    print 'c: Close Valve'
+    print 'd: Water Drop'
+    print '1: 1 kHz tone'
+    print '2: 2 kHz tone'
+    print 'q or ESC: quit'
+    
     v1 = valve.Valve()
-    s1 = soundGen.soundGen()
-    s1.tone(1.0, 1000)
-    s2 = soundGen.soundGen()
-    s2.tone(1.0, 2000)
+    s1 = soundGen.soundGen(1000.0, 1.0)
+    s2 = soundGen.soundGen(2000.0, 1.0)
     while True:
         try:
             key = sys.stdin.read(1)#cv2.waitKey(100) #in miliseconds
             if (key == 'o'): #escape pressed
-                logging.info('valve open')
+                logger.info('valve open')
                 v1.open()
             elif (key == 'c'):
-                logging.info('valve close')
+                logger.info('valve close')
                 v1.close()
             elif (key == 'd'):
-                logging.info('valve drop')
+                logger.info('valve drop')
                 v1.drop()
             elif (key == '1'):
-                logging.info('tone 1: 1 kHz')
+                logger.info('tone 1: 1 kHz')
                 s1.play()
             elif (key == '2'):
-                logging.info('tone 2: 2 kHz')
+                logger.info('tone 2: 2 kHz')
                 s2.play()
             elif (key=='\x1b' or key=='q'):
-                logging.info('Exit signal key = %s',key)
+                logger.info('Exit signal key = %s',key)
                 os.kill(os.getpid(), signal.SIGINT)
                 sys.exit()
             else :
-                logging.debug('key pressesed = %s',key)
+                logger.debug('key pressesed = %s',key)
         except IOError: pass
         time.sleep(.05)
 finally:
     termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
     fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
-    logging.info('End Manual Training')
+    logger.info('End Manual Training')
