@@ -24,20 +24,31 @@ class sphereVideoDetection():
 		    fred1.start()
 		    #declare self variables to use.
 		    import track_bola_utils
-		    self.vectorInstantaneo = track_bola_utils.vectorSimple() #cummulative vector
-		    
-	def resetCumX(self):
+		    self.vectorInstantaneo = track_bola_utils.vectorSimple() #vector acumulado
+		    self.calibrate = True
+		    self.VIDEOSOURCE = videosource
+		    self.CAM_WIDTH = width
+		    self.CAM_HEIGHT = height
+	
+	def getAccumulatedVector(self):
+		return [self.vectorInstantaneo.x, self.vectorInstantaneo.y]
+	    
+	def resetX(self):
 		self.vectorInstantaneo.x = 0
 
-	def resetCumY(self):
+	def resetY(self):
 		self.vectorInstantaneo.y = 0
 
-	def getCumX(self):
+	def getAccumX(self):
 		return self.vectorInstantaneo.x
 
-	def getCumY(self):
+	def getAccumY(self):
 		return self.vectorInstantaneo.y
 
+	def calibrate(self):
+		self.calibrate = True
+	
+	
 	def mainVideoDetection(self):
 	    import cv as cv
 	    import cv2
@@ -48,24 +59,24 @@ class sphereVideoDetection():
 	    import sys
 	    import os
 	    import signal
-
+	
 	    """
-		Programa de detección de movimiento:
-		Se enciende timer de socket para enviar datos de mouse.
-		Se enciende y configura cámara.
-		Por cada ciclo de programa, se compara el fotograma actual con el anterior.
-		    Si hay diferencias en el movimiento de un círculo particular (comparando
-		    si son iguales por el hecho de que hay colisión en el espacio 2D-tiempo)
-		    entonces añadir valor en el vector en el que este círculo se movió.
-		    En cada ciclo se envía por socket.
+	        Programa de detección de movimiento:
+	        Se enciende timer de socket para enviar datos de mouse.
+	        Se enciende y configura cámara.
+	        Por cada ciclo de programa, se compara el fotograma actual con el anterior.
+	            Si hay diferencias en el movimiento de un círculo particular (comparando
+	            si son iguales por el hecho de que hay colisión en el espacio 2D-tiempo)
+	            entonces añadir valor en el vector en el que este círculo se movió.
+	            En cada ciclo se envía por socket.
 	"""    
 	    CAM_NUMBER = 0 #cam number, 0 for integrated webcam, 1 for the next detected camera.
 	    
 	    #TCP_IP = 'localhost' #ip a donde conecto a socket
 	    #TCP_PORT = 50007 #puerto del socket
 	    #variables "de movimiento":
-	    CAM_WIDTH = 640
-	    CAM_HEIGHT = 480
+	    #CAM_WIDTH = 640
+	    #CAM_HEIGHT = 480
 	    MIN_CONTOUR_AREA = 60 #mínimo área del contorno para que sea válido.
 	    MAX_CONTOUR_AREA = 2600 #máximo área del contorno para que sea válido.
 	    WORKING_MIN_CONTOUR_AREA = 9999 #ídem pero calibrado para situación actual
@@ -82,12 +93,15 @@ class sphereVideoDetection():
 	    #cam = cv2.VideoCapture("../files_movement/videos_prueba/fast_diag1.avi")
 	    #cam = cv2.VideoCapture("../files_movement/videos_prueba/video_distorted2.avi")
 	    #cam = cv2.VideoCapture("../files_movement/videos_prueba/video_webm.avi")
-	    #cam = cv2.VideoCapture("../files_movement/videos_prueba/abajo_y_arriba_2.avi")
-	    cam = cv2.VideoCapture(CAM_NUMBER)
+	    time.sleep(1)
+	    print self.VIDEOSOURCE
+	    cam = cv2.VideoCapture(self.VIDEOSOURCE)
+	    #cam = cv2.VideoCapture("../../Labyrinth/files_movement/videos_prueba/abajo_y_arriba_2.avi")
+	    #cam = cv2.VideoCapture(CAM_NUMBER)
 	    
 	    #Opciones de ejecuciOn: 640x480 => 60 fps.
-	    cam.set(3,CAM_WIDTH)
-	    cam.set(4,CAM_HEIGHT)
+	    cam.set(3,self.CAM_WIDTH)
+	    cam.set(4,self.CAM_HEIGHT)
 	    time.sleep(0.5)
 	    """
 	    CV_CAP_PROP_POS_MSEC Current position of the video file in milliseconds.
@@ -112,12 +126,13 @@ class sphereVideoDetection():
 	    """
 	    
 	    if not cam:
-		print "Error opening capture device"
-		sys.exit(1)
-
+	        print "Error opening capture device"
+	        sys.exit(1)
+	
 	    
-	    #Nombre: track-bola
-	    cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
+	    #Nombre: Movement Indicator
+	    winName = "Movement Detection v0.7"
+	    cv2.namedWindow(winName, cv2.CV_WINDOW_AUTOSIZE)
 	    
 	    # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
 	    t_current = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
@@ -140,36 +155,36 @@ class sphereVideoDetection():
 	    circleCenters = []
 	    circleRadius = []
 	    for i in range(0,len(contours)):
-		cnt = contours[i]
-		(x,y),radius = cv2.minEnclosingCircle(cnt)
-		center = (int(x),int(y))
-		radius = int(radius)
-		if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
-		    #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
-		    cv2.circle(im,center,radius,(0,255,0),2)
-		    circleCenters.append(center)
-		    circleRadius.append(radius)
-		  
+	        cnt = contours[i]
+	        (x,y),radius = cv2.minEnclosingCircle(cnt)
+	        center = (int(x),int(y))
+	        radius = int(radius)
+	        if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
+	            #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
+	            cv2.circle(im,center,radius,(0,255,0),2)
+	            circleCenters.append(center)
+	            circleRadius.append(radius)
+	          
 	    expectedValue = 0
 	    minRadius = 9999
 	    maxRadius = 0
 	    for i in range (0,10):
-		cv2.imshow( self.winName , im )
-		time.sleep(0.01)
-		key = cv2.waitKey(10)
+	        cv2.imshow( winName , im )
+	        time.sleep(0.01)
+	        key = cv2.waitKey(10)
 	    for i in range(0, len(circleRadius)):
-		expectedValue +=  circleRadius[i]
-		 
+	        expectedValue +=  circleRadius[i]
+	         
 	    expectedValue /= len(circleCenters)
 	    for i in range (0, len(circleCenters)):
-		if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
-		    maxRadius = circleRadius[i]
-		if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
-		    minRadius = circleRadius[i]
+	        if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
+	            maxRadius = circleRadius[i]
+	        if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
+	            minRadius = circleRadius[i]
 	    MAX_CIRCLE_MOVEMENT = expectedValue*1.5
 	    MIN_CIRCLE_MOVEMENT = expectedValue/5
 	    if (MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-		MIN_CIRCLE_MOVEMENT = 2
+	        MIN_CIRCLE_MOVEMENT = 2
 	    print "Número de muestras: %d" % len(circleCenters)
 	    print "Valor Esperado: %d" % expectedValue
 	    print "Radio menor: %d" % minRadius
@@ -186,114 +201,118 @@ class sphereVideoDetection():
 	    #################################################################
 	    
 	    while True:
-		###########################################<>
-		# Preparo las imgs antigûa, actual y futura
-		###########################################
-		
-		#im toma una captura para t_plus, y para algunas geometrías que se dibujan encima de él.
-		im = cam.read()[1]
-		
-		#t_current es el del anterior ciclo, t_plus es el recién capturado (procesándolo 1ero..),
-		t_current = t_plus
-		t_plus = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
-		
-		cv.Smooth(cv.fromarray(t_plus), cv.fromarray(t_plus), cv.CV_BLUR, 3);
-		#cv.Smooth(cv.fromarray(t_plus), cv.fromarray(t_plus), cv.CV_GAUSSIAN, 3, 0);
-		
-		#############################
-		#Proceso la imagen "antigUa": t_current
-		#############################
-		ret,thresh = cv2.threshold(t_current,50,255,cv2.THRESH_BINARY)
-		#Tomo los contornos (lo importante para analizar)
-		contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-		
-		############
-		#Recorrido1:
-		############
-		#recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
-		L = []
-		for i in range(0,len(contours)):
-		    cnt = contours[i]
-		    (x,y),radius = cv2.minEnclosingCircle(cnt)
-		    center = (int(x),int(y))
-		    radius = int(radius)
-		    if cv2.contourArea(cnt) > WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < WORKING_MAX_CONTOUR_AREA: 
-		        #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
-		        cv2.circle(im,center,radius,(0,255,0),2)
-		        L.append(center)
-		
-		#############################
-		#Proceso la imagen "futura": t_plus
-		#############################        
-		ret,thresh = cv2.threshold(t_plus,50,255,cv2.THRESH_BINARY)
-		contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-		
-		############
-		#Recorrido2:
-		############
-		#recorro los contornos NUEVAMENTE, capturando centros. Esta vez, para el frame "futuro"
-		Lnuevo = []
-		for i in range(0,len(contours)):
-		    cnt = contours[i]
-		    (x,y),radius = cv2.minEnclosingCircle(cnt)
-		    center = (int(x),int(y))
-		    radius = int(radius)
-		    #a continuaciOn, si el contorno tiene suficiente área, pero también si no es TAN grande:
-		    if cv2.contourArea(cnt) > WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < WORKING_MAX_CONTOUR_AREA:
-		        cv2.circle(im,center,radius,(0,255,0),2)
-		        Lnuevo.append(center)
-		
-		
-		##################################################
-		#analizo si hay colisiones en el espacio 2D-tiempo
-		##################################################
-		
-		#Si las hubiera, voy sumando contribuciones para ver hacia donde apunta el movimiento medio.
-		#Se analizan ambos versores del vector en el plano bidireccional:
-		movEjeX=0
-		movEjeY=0
-		numberOfVectors=1
-		
-		for index in range(len(Lnuevo)):
-		    for j in range(index, len(L)):
-		        if (math.sqrt((Lnuevo[index][0] - L[j][0]) ** 2 + (Lnuevo[index][1] - L[j][1]) **
-		                       2)) <= MAX_CIRCLE_MOVEMENT and (math.sqrt((Lnuevo[index][0] - L[j][0]) ** 2 + (Lnuevo[index][1] - L[j][1]) **
-		                                                 2)) >= MIN_CIRCLE_MOVEMENT:
-		            #print "Hay colisión: %d %d" % (index,j)
-		            cv2.circle(im, (Lnuevo[index][0], Lnuevo[index][1]),3,(0,0,255),2)
-		            cv2.line(im, (Lnuevo[index][0], Lnuevo[index][1]), (L[j][0], L[j][1]), (0,255,0), 5)
-		            
-		            
-		            #Condición para que se procese la colisión: esté en la mitad inferior. (ver doc.)
-		            movEjeY+=Lnuevo[index][1] - L[j][1]
-		            numberOfVectors+=1
-		            if (Lnuevo[index][1] > CAM_HEIGHT / 2):
-		                movEjeX+= Lnuevo[index][0] - L[j][0]
-		            #print "colisión entre %r -y- %r :: %r %r ::: " % (index, j, Lnuevo[index], L[j])
-		
-		#falta dividir las componentes del vector obtenido, dividiendo por N, para obtener vector Instantáneo
-		movEjeX /= numberOfVectors
-		movEjeY /= numberOfVectors
-		global vectorInstantaneo
-		self.vectorInstantaneo.x += movEjeX
-		self.vectorInstantaneo.y += movEjeY
-		
-		#Se tiene el vector instantáneo para este fotograma: vectorInstantáneo = (movEjeX, movEjeY)
-		#print ("(%d %d .. %d)"%(movEjeX, movEjeY, numberOfVectors))
-		        
-		#finalmente se "muestra" el resultado al usuario (feedback)
-		cv2.imshow( self.winName , im ) #obs.: NO es estrictamente necesario dar feedback acá.. también está mainFunction
-		#(imshow se puede sacar si el CPU es un problema.)
-		
-		time.sleep(0.01)
-		
-		#para finalizar programa, usuario presiona "Escape":
-		key = cv2.waitKey(10)
-		if (key == 27 or key==1048603): #escape pressed
-		    #end Program.
-		    cv2.destroyWindow(self.winName)
-		    os.kill(os.getpid(), signal.SIGINT)
-		    sys.exit()
+	        ###########################################<>
+	        # Preparo las imgs antigûa, actual y futura
+	        ###########################################
+	        
+	        #im toma una captura para t_plus, y para algunas geometrías que se dibujan encima de él.
+	        im = cam.read()[1]
+	        
+	        #t_current es el del anterior ciclo, t_plus es el recién capturado (procesándolo 1ero..),
+	        t_current = t_plus
+	        t_plus = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+	        
+	        cv.Smooth(cv.fromarray(t_plus), cv.fromarray(t_plus), cv.CV_BLUR, 3);
+	        #cv.Smooth(cv.fromarray(t_plus), cv.fromarray(t_plus), cv.CV_GAUSSIAN, 3, 0);
+	        
+	        #############################
+	        #Proceso la imagen "antigUa": t_current
+	        #############################
+	        ret,thresh = cv2.threshold(t_current,50,255,cv2.THRESH_BINARY)
+	        #Tomo los contornos (lo importante para analizar)
+	        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+	        
+	        ############
+	        #Recorrido1:
+	        ############
+	        #recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
+	        L = []
+	        for i in range(0,len(contours)):
+	            cnt = contours[i]
+	            (x,y),radius = cv2.minEnclosingCircle(cnt)
+	            center = (int(x),int(y))
+	            radius = int(radius)
+	            if cv2.contourArea(cnt) > WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < WORKING_MAX_CONTOUR_AREA: 
+	                #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
+	                cv2.circle(im,center,radius,(0,255,0),2)
+	                L.append(center)
+	        
+	        #############################
+	        #Proceso la imagen "futura": t_plus
+	        #############################        
+	        ret,thresh = cv2.threshold(t_plus,50,255,cv2.THRESH_BINARY)
+	        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+	        
+	        ############
+	        #Recorrido2:
+	        ############
+	        #recorro los contornos NUEVAMENTE, capturando centros. Esta vez, para el frame "futuro"
+	        Lnuevo = []
+	        for i in range(0,len(contours)):
+	            cnt = contours[i]
+	            (x,y),radius = cv2.minEnclosingCircle(cnt)
+	            center = (int(x),int(y))
+	            radius = int(radius)
+	            #a continuaciOn, si el contorno tiene suficiente área, pero también si no es TAN grande:
+	            if cv2.contourArea(cnt) > WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < WORKING_MAX_CONTOUR_AREA:
+	                cv2.circle(im,center,radius,(0,255,0),2)
+	                Lnuevo.append(center)
+	        
+	        
+	        ##################################################
+	        #analizo si hay colisiones en el espacio 2D-tiempo
+	        ##################################################
+	        
+	        #Si las hubiera, voy sumando contribuciones para ver hacia donde apunta el movimiento medio.
+	        #Se analizan ambos versores del vector en el plano bidireccional:
+	        movEjeX=0
+	        movEjeY=0
+	        numberOfVectors=1
+	        
+	        for index in range(len(Lnuevo)):
+	            for j in range(index, len(L)):
+	                if (math.sqrt((Lnuevo[index][0] - L[j][0]) ** 2 + (Lnuevo[index][1] - L[j][1]) **
+	                               2)) <= MAX_CIRCLE_MOVEMENT and (math.sqrt((Lnuevo[index][0] - L[j][0]) ** 2 + (Lnuevo[index][1] - L[j][1]) **
+	                                                         2)) >= MIN_CIRCLE_MOVEMENT:
+	                    #print "Hay colisión: %d %d" % (index,j)
+	                    cv2.circle(im, (Lnuevo[index][0], Lnuevo[index][1]),3,(0,0,255),2)
+	                    cv2.line(im, (Lnuevo[index][0], Lnuevo[index][1]), (L[j][0], L[j][1]), (0,255,0), 5)
+	                    
+	                    
+	                    #Condición para que se procese la colisión: esté en la mitad inferior. (ver doc.)
+	                    movEjeY+=Lnuevo[index][1] - L[j][1]
+	                    numberOfVectors+=1
+	                    if (Lnuevo[index][1] > CAM_HEIGHT / 2):
+	                        movEjeX+= Lnuevo[index][0] - L[j][0]
+	                    #print "colisión entre %r -y- %r :: %r %r ::: " % (index, j, Lnuevo[index], L[j])
+	        
+	        #falta dividir las componentes del vector obtenido, dividiendo por N, para obtener vector Instantáneo
+	        movEjeX /= numberOfVectors
+	        movEjeY /= numberOfVectors
+	        
+	        self.vectorInstantaneo.x += movEjeX
+	        self.vectorInstantaneo.y += movEjeY
+	        
+	        #Se tiene el vector instantáneo para este fotograma: vectorInstantáneo = (movEjeX, movEjeY)
+	        #print ("(%d %d .. %d)"%(movEjeX, movEjeY, numberOfVectors))
+	                
+	        #finalmente se "muestra" el resultado al usuario (feedback)
+	        cv2.imshow( winName , im ) #obs.: NO es estrictamente necesario dar feedback acá.. también está mainFunction
+	        #(imshow se puede sacar si el CPU es un problema.)
+	        
+	        time.sleep(0.01)
+	        
+	        #para finalizar programa, usuario presiona "Escape":
+	        key = cv2.waitKey(10)
+	        if (key == 27 or key==1048603): #escape pressed
+	            #end Program.
+	            cv2.destroyWindow(winName)
+	            os.kill(os.getpid(), signal.SIGINT)
+	            sys.exit()
+	
+	
+
+
 
 
 
@@ -310,23 +329,35 @@ if __name__ == '__main__':
     
     #fred2 = threading.Thread(target=mainVideoDetection)
     #fred2.start()
-    videoDet = sphereVideoDetection(0,0)
     print "prueba ejecutada."
-    import valve
+    try:
+    	from configvideo import *
+    except ImportError:
+    	print "No existe el archivo configvideo.py"
+    except:
+    	print "otro error"
+    videoDet = sphereVideoDetection(VIDEOSOURCE,CAM_WIDTH, CAM_HEIGHT)
+    
+    
     import time
-    val1 = valve.Valve()
+    try:
+	import valve
+    except:
+	print "error importing Valve"
     while(True):
-	print "x:  "+str(videoDet.getCumX())
-	print "y:  "+str(videoDet.getCumY()) #<>
-	if (abs(videoDet.getCumX()) > 80  or abs(videoDet.getCumY()) > 80):
+	time.sleep(2)
+	print "x:  "+str(videoDet.getAccumX())
+	print "y:  "+str(videoDet.getAccumY()) #<>
+	if (abs(videoDet.getAccumX()) > 80  or abs(videoDet.getAccumY()) > 80):
 		#resetear lo acumulado:
-		videoDet.resetCumX()
-		videoDet.resetCumY()
+		videoDet.resetX()
+		videoDet.resetY()
 		#abrir la válvula
 		print "abro VAlvula"
-
+		val1 = valve.Valve()
 		val1.open()
-		time.sleep(1)
+		time.sleep(0.2)
 		val1.close()
 		time.sleep(0.2)
+		print "fin apertura vAlvula"
 
