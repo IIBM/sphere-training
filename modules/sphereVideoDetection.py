@@ -79,10 +79,10 @@ class sphereVideoDetection():
 	    #CAM_HEIGHT = 480
 	    MIN_CONTOUR_AREA = 60 #mínimo área del contorno para que sea válido.
 	    MAX_CONTOUR_AREA = 2600 #máximo área del contorno para que sea válido.
-	    WORKING_MIN_CONTOUR_AREA = 9999 #ídem pero calibrado para situación actual
+	    self.WORKING_MIN_CONTOUR_AREA = 9999 #ídem pero calibrado para situación actual
 	    WORKING__CONTOUR_AREA = 0 #ídem pero calibrado para situación actual
-	    MIN_CIRCLE_MOVEMENT = 3 #mínima diferencia en movimiento del círculo para considerarlo como movimiento
-	    MAX_CIRCLE_MOVEMENT = 35 #máx diferencia en movimiento del círculo para considerarlo como movimiento
+	    self.MIN_CIRCLE_MOVEMENT = 3 #mínima diferencia en movimiento del círculo para considerarlo como movimiento
+	    self.MAX_CIRCLE_MOVEMENT = 35 #máx diferencia en movimiento del círculo para considerarlo como movimiento
 	    
 	    #Timer, envIa por socket algunas coordenadas de acuerdo a si hay movimiento.
 	    #socketTmr = threading.Timer(4.0, socketTimer)
@@ -181,18 +181,18 @@ class sphereVideoDetection():
 	            maxRadius = circleRadius[i]
 	        if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
 	            minRadius = circleRadius[i]
-	    MAX_CIRCLE_MOVEMENT = expectedValue*1.5
-	    MIN_CIRCLE_MOVEMENT = expectedValue/5
-	    if (MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-	        MIN_CIRCLE_MOVEMENT = 2
+	    self.MAX_CIRCLE_MOVEMENT = expectedValue*1.5
+	    self.MIN_CIRCLE_MOVEMENT = expectedValue/5
+	    if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+	        self.MIN_CIRCLE_MOVEMENT = 2
 	    print "Número de muestras: %d" % len(circleCenters)
 	    print "Valor Esperado: %d" % expectedValue
 	    print "Radio menor: %d" % minRadius
 	    print "Radio mayor: %d" % maxRadius
-	    print "Círculo Máximo de movimiento: %d" % MAX_CIRCLE_MOVEMENT
-	    print "Círculo Mínimo de movimiento: %d" % MIN_CIRCLE_MOVEMENT
-	    WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.7
-	    WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
+	    print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
+	    print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
+	    self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.7
+	    self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
 	    time.sleep(4)
 	    print "Fin calibración."
 	    calibrar = False
@@ -232,7 +232,7 @@ class sphereVideoDetection():
 	            (x,y),radius = cv2.minEnclosingCircle(cnt)
 	            center = (int(x),int(y))
 	            radius = int(radius)
-	            if cv2.contourArea(cnt) > WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < WORKING_MAX_CONTOUR_AREA: 
+	            if cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA: 
 	                #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
 	                cv2.circle(im,center,radius,(0,255,0),2)
 	                L.append(center)
@@ -254,7 +254,7 @@ class sphereVideoDetection():
 	            center = (int(x),int(y))
 	            radius = int(radius)
 	            #a continuaciOn, si el contorno tiene suficiente área, pero también si no es TAN grande:
-	            if cv2.contourArea(cnt) > WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < WORKING_MAX_CONTOUR_AREA:
+	            if cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA:
 	                cv2.circle(im,center,radius,(0,255,0),2)
 	                Lnuevo.append(center)
 	        
@@ -272,8 +272,8 @@ class sphereVideoDetection():
 	        for index in range(len(Lnuevo)):
 	            for j in range(index, len(L)):
 	                if (math.sqrt((Lnuevo[index][0] - L[j][0]) ** 2 + (Lnuevo[index][1] - L[j][1]) **
-	                               2)) <= MAX_CIRCLE_MOVEMENT and (math.sqrt((Lnuevo[index][0] - L[j][0]) ** 2 + (Lnuevo[index][1] - L[j][1]) **
-	                                                         2)) >= MIN_CIRCLE_MOVEMENT:
+	                               2)) <= self.MAX_CIRCLE_MOVEMENT and (math.sqrt((Lnuevo[index][0] - L[j][0]) ** 2 + (Lnuevo[index][1] - L[j][1]) **
+	                                                         2)) >= self.MIN_CIRCLE_MOVEMENT:
 	                    #print "Hay colisión: %d %d" % (index,j)
 	                    cv2.circle(im, (Lnuevo[index][0], Lnuevo[index][1]),3,(0,0,255),2)
 	                    cv2.line(im, (Lnuevo[index][0], Lnuevo[index][1]), (L[j][0], L[j][1]), (0,255,0), 5)
