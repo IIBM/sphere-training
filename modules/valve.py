@@ -2,6 +2,7 @@ import parallel
 import time
 import logging
 
+logger = logging.getLogger('valve')
 
 ValvePinMask = 0x04
 DropTime = .1
@@ -21,23 +22,24 @@ class dummypp () :
 class Valve() :
     def __init__(self) :
         try :
+          logger.info('New instance of valve')
           self.p = parallel.Parallel()
         except :
-          logging.warning('Could not find any parallel port. Using dummy parallel port')
+          logger.warning('Could not find any parallel port. Using dummy parallel port')
           self.p = dummypp()
 
     def open(self) :
-        logging.info('Valve opened')
+        logger.info('Valve opened')
         a = self.p.getData()
         return self.p.setData(a|ValvePinMask)
 
     def close(self) :
-        logging.info('Valve closed')
+        logger.info('Valve closed')
         a = self.p.getData()
         return self.p.setData(a&(~ValvePinMask))
     
     def drop(self) :
-        logging.info('Valve drop')
+        logger.info('Valve drop')
         self.open()
         time.sleep(DropTime)
         self.close()
@@ -47,7 +49,7 @@ if __name__ == '__main__':
     formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     dateformat = '%Y/%m/%d %I:%M:%S %p'
 
-    logging.basicConfig(filename='Valve.log', filemode='w',
+    logging.basicConfig(filename='logs/valve.log', filemode='w',
         level=logging.DEBUG, format=formatter, datefmt = dateformat)
     logging.info('Start Valve Test')
     v1 = Valve()
