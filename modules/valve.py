@@ -1,4 +1,3 @@
-import parallel
 import time
 import logging
 
@@ -23,6 +22,7 @@ class Valve() :
     def __init__(self) :
         try :
           logger.info('New instance of valve')
+          import parallel
           self.p = parallel.Parallel()
         except :
           logger.warning('Could not find any parallel port. Using dummy parallel port')
