@@ -29,15 +29,18 @@ class sphereVideoDetection():
 		    self.VIDEOSOURCE = videosource
 		    self.CAM_WIDTH = width
 		    self.CAM_HEIGHT = height
+		    self.CV2THRESHOLD = 150
 	
 	def getAccumulatedVector(self):
 		return [self.vectorInstantaneo.x, self.vectorInstantaneo.y]
 	    
 	def resetX(self):
 		self.vectorInstantaneo.x = 0
+		self.movEjeX = 0
 
 	def resetY(self):
 		self.vectorInstantaneo.y = 0
+		self.movEjeY = 0
 
 	def getAccumX(self):
 		return self.vectorInstantaneo.x
@@ -89,11 +92,7 @@ class sphereVideoDetection():
 	    #socketTmr.start() # luego de 4 segundos arranca.
 	    
 	    #Inicio de programa: se declara como se captura video.
-	    #cam = cv2.VideoCapture("../files_movement/videos_prueba/slow_izquierda.avi")
-	    #cam = cv2.VideoCapture("../files_movement/videos_prueba/fast_diag1.avi")
-	    #cam = cv2.VideoCapture("../files_movement/videos_prueba/video_distorted2.avi")
-	    #cam = cv2.VideoCapture("../files_movement/videos_prueba/video_webm.avi")
-	    time.sleep(1)
+	    time.sleep(1) #no borrar, ayuda a que se declaren las variables antes de usarlas.
 	    print self.VIDEOSOURCE
 	    cam = cv2.VideoCapture(self.VIDEOSOURCE)
 	    #cam = cv2.VideoCapture("../../Labyrinth/files_movement/videos_prueba/abajo_y_arriba_2.avi")
@@ -130,9 +129,7 @@ class sphereVideoDetection():
 	        sys.exit(1)
 	
 	    
-	    #Nombre: Movement Indicator
-	    winName = "Movement Detection v0.7"
-	    cv2.namedWindow(winName, cv2.CV_WINDOW_AUTOSIZE)
+	    cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
 	    
 	    # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
 	    t_current = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
@@ -147,7 +144,7 @@ class sphereVideoDetection():
 	    t_calib = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
 	    cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
 	    #ret,thresh = cv2.threshold(t_calib,127,255,cv2.THRESH_BINARY)
-	    ret,thresh = cv2.threshold(t_calib,50,255,cv2.THRESH_BINARY)
+	    ret,thresh = cv2.threshold(t_calib,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
 	    #Tomo los contornos (lo importante para analizar)
 	    contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 	    
@@ -169,7 +166,7 @@ class sphereVideoDetection():
 	    minRadius = 9999
 	    maxRadius = 0
 	    for i in range (0,10):
-	        cv2.imshow( winName , im )
+	        cv2.imshow( self.winName , im )
 	        time.sleep(0.01)
 	        key = cv2.waitKey(10)
 	    for i in range(0, len(circleRadius)):
@@ -218,7 +215,7 @@ class sphereVideoDetection():
 	        #############################
 	        #Proceso la imagen "antigUa": t_current
 	        #############################
-	        ret,thresh = cv2.threshold(t_current,50,255,cv2.THRESH_BINARY)
+	        ret,thresh = cv2.threshold(t_current,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
 	        #Tomo los contornos (lo importante para analizar)
 	        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 	        
@@ -240,7 +237,7 @@ class sphereVideoDetection():
 	        #############################
 	        #Proceso la imagen "futura": t_plus
 	        #############################        
-	        ret,thresh = cv2.threshold(t_plus,50,255,cv2.THRESH_BINARY)
+	        ret,thresh = cv2.threshold(t_plus,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
 	        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 	        
 	        ############
@@ -265,8 +262,8 @@ class sphereVideoDetection():
 	        
 	        #Si las hubiera, voy sumando contribuciones para ver hacia donde apunta el movimiento medio.
 	        #Se analizan ambos versores del vector en el plano bidireccional:
-	        movEjeX=0
-	        movEjeY=0
+	        self.movEjeX=0
+	        self.movEjeY=0
 	        numberOfVectors=1
 	        
 	        for index in range(len(Lnuevo)):
@@ -280,24 +277,27 @@ class sphereVideoDetection():
 	                    
 	                    
 	                    #Condición para que se procese la colisión: esté en la mitad inferior. (ver doc.)
-	                    movEjeY+=Lnuevo[index][1] - L[j][1]
+	                    self.movEjeY+=Lnuevo[index][1] - L[j][1]
 	                    numberOfVectors+=1
-	                    if (Lnuevo[index][1] > CAM_HEIGHT / 2):
-	                        movEjeX+= Lnuevo[index][0] - L[j][0]
+	                    if (Lnuevo[index][1] > self.CAM_HEIGHT / 2):
+	                        self.movEjeX+= Lnuevo[index][0] - L[j][0]
 	                    #print "colisión entre %r -y- %r :: %r %r ::: " % (index, j, Lnuevo[index], L[j])
 	        
 	        #falta dividir las componentes del vector obtenido, dividiendo por N, para obtener vector Instantáneo
-	        movEjeX /= numberOfVectors
-	        movEjeY /= numberOfVectors
+	        if (numberOfVectors == 0):
+	        	numberOfVectors = 1
 	        
-	        self.vectorInstantaneo.x += movEjeX
-	        self.vectorInstantaneo.y += movEjeY
+	        self.movEjeX /= numberOfVectors
+	        self.movEjeY /= numberOfVectors
 	        
-	        #Se tiene el vector instantáneo para este fotograma: vectorInstantáneo = (movEjeX, movEjeY)
-	        #print ("(%d %d .. %d)"%(movEjeX, movEjeY, numberOfVectors))
+	        self.vectorInstantaneo.x += self.movEjeX
+	        self.vectorInstantaneo.y += self.movEjeY
+	        
+	        #Se tiene el vector instantáneo para este fotograma: vectorInstantáneo = (self.movEjeX, self.movEjeY)
+	        #print ("(%d %d .. %d)"%(self.movEjeX, self.movEjeY, numberOfVectors))
 	                
 	        #finalmente se "muestra" el resultado al usuario (feedback)
-	        cv2.imshow( winName , im ) #obs.: NO es estrictamente necesario dar feedback acá.. también está mainFunction
+	        cv2.imshow( self.winName , im ) #obs.: NO es estrictamente necesario dar feedback acá.. también está mainFunction
 	        #(imshow se puede sacar si el CPU es un problema.)
 	        
 	        time.sleep(0.01)
@@ -306,19 +306,30 @@ class sphereVideoDetection():
 	        key = cv2.waitKey(10)
 	        if (key == 27 or key==1048603): #escape pressed
 	            #end Program.
-	            cv2.destroyWindow(winName)
+	            cv2.destroyWindow(self.winName)
 	            os.kill(os.getpid(), signal.SIGINT)
 	            sys.exit()
 	
+
+################################################################
+#Prueba unitaria de la clase si es ejecutada independientemente:
+################################################################
+if __name__ == '__main__':
+	#Crea un objeto de captura de video, imprime 'x' e 'y' del vector movimiento detectado de forma acumulada.
+	try:
+		from configvideo import *
+	except ImportError:
+		print "No existe el archivo configvideo.py"
+	except:
+		print "otro error"
+	videoDet = sphereVideoDetection(VIDEOSOURCE,CAM_WIDTH, CAM_HEIGHT)
+	import time
+	while(True):
+		print "x:  "+str(videoDet.getAccumX())
+		print "y:  "+str(videoDet.getAccumY()) #<>
+		time.sleep(0.8)
 	
-
-
-
-
-
-
-
-
+"""
 if __name__ == '__main__':
     #ver http://stackoverflow.com/questions/12376224/python-threading-running-2-different-functions-simultaneously
     #import threading
@@ -348,7 +359,7 @@ if __name__ == '__main__':
 	time.sleep(2)
 	print "x:  "+str(videoDet.getAccumX())
 	print "y:  "+str(videoDet.getAccumY()) #<>
-	if (abs(videoDet.getAccumX()) > 80  or abs(videoDet.getAccumY()) > 80):
+	if (abs(videoDet.getAccumX()) > 100  or abs(videoDet.getAccumY()) > 100):
 		#resetear lo acumulado:
 		videoDet.resetX()
 		videoDet.resetY()
@@ -360,4 +371,4 @@ if __name__ == '__main__':
 		val1.close()
 		time.sleep(0.2)
 		print "fin apertura vAlvula"
-
+"""
