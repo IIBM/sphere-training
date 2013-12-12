@@ -71,7 +71,8 @@ if __name__ == '__main__':
             movementVector[7] = movementVector[8]
             movementVector[8] = movementVector[9]
             movementVector[9] = (abs(videoDet.getAccumX() * videoDet.getAccumX())  + abs( videoDet.getAccumY()*videoDet.getAccumY() ))
-    
+            if (movementVector[9]>= 2000):
+                movementVector[9] = 1999
             vectorSum = 0
             for i in range(0,len(movementVector)):
                 vectorSum+= movementVector[i]
