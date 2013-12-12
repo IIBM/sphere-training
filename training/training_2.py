@@ -5,7 +5,7 @@
 """
     This training creates a movement detection object, and waits for a 1 second sustained movement.
     If detected, it will be given a reward (drop of water). Else, it will keep waiting until there is
-    a  significant movement.
+    a  significant movement.<>
 """
 ######################################################><
 import os, sys
@@ -13,6 +13,17 @@ lib_path = os.path.abspath('../modules/')
 sys.path.append(lib_path)
 
 import logging
+
+def printInstructions():
+    print 'Options:'
+    print 'o: Open Valve'
+    print 'c: Close Valve'
+    print 'd: Water Drop'
+    print '1: 1 kHz tone'
+    print '2: 2 kHz tone'
+    print 't: set threshold (500 - 10000)'
+    print 'w: set movement window (1 - 5 sec)'
+    print 'q or ESC: quit'
 
 def loopFunction():
     print "Training 2."
@@ -29,7 +40,7 @@ def loopFunction():
         while(True):
                 videoDet.resetX()
                 videoDet.resetY()
-                time.sleep(0.1)
+                time.sleep(movementWindow / 10.0)
                 movementVector[0] = movementVector[1]
                 movementVector[1] = movementVector[2]
                 movementVector[2] = movementVector[3]
@@ -45,7 +56,7 @@ def loopFunction():
                 vectorSum = 0
                 for i in range(0,len(movementVector)):
                     vectorSum+= movementVector[i]
-                if (vectorSum  > 4000):
+                if (vectorSum  > movementThreshold):
                     countMovement += 1
                 else:
                     countIdleTime += 1
@@ -96,7 +107,7 @@ if __name__ == '__main__':
     formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     dateformat = '%Y/%m/%d %I:%M:%S %p'
 
-    logging.basicConfig(filename='logs/tmanual.log', filemode='a',
+    logging.basicConfig(filename='logs/training2.log', filemode='a',
     level=logging.DEBUG, format=formatter, datefmt = dateformat)
 
     logger = logging.getLogger('main')
@@ -110,17 +121,14 @@ if __name__ == '__main__':
     import soundGen
     s1 = soundGen.soundGen(1000.0, 1.0)
     s2 = soundGen.soundGen(2000.0, 1.0)
+    #variables to be used as calibration
+    movementThreshold = 6000
+    movementWindow = 1
     # Create thread for executing detection tasks without interrupting user input.
     fred1 = threading.Thread(target=loopFunction)
     fred1.start()
     time.sleep(4)
-    print 'Options:'
-    print 'o: Open Valve'
-    print 'c: Close Valve'
-    print 'd: Water Drop'
-    print '1: 1 kHz tone'
-    print '2: 2 kHz tone'
-    print 'q or ESC: quit'
+    printInstructions()
     try:
         while(True):
             try:
@@ -140,15 +148,35 @@ if __name__ == '__main__':
                 elif (key == '2'):
                     logger.info('tone 2: 2 kHz')
                     s2.play()
+                elif (key == 't'):
+                    movementThreshold += 500
+                    if movementThreshold > 10000:
+                        movementThreshold = 500
+                    print "Movement Threshold changed to : " + str(movementThreshold)
+                    printInstructions()
+                elif (key == 'w'):
+                    movementWindow +=1
+                    if movementWindow > 5:
+                        movementWindow = 1
+                    print "Movement Window changed to : " + str(movementWindow) + "seconds"
+                    printInstructions()
                 elif (key=='\x1b' or key=='q'):
+                    print "Exiting."
                     logger.info('Exit signal key = %s',key)
+                    import signal
                     os.kill(os.getpid(), signal.SIGINT)
                     sys.exit()
                 else :
                     print "another key pressed"
             except IOError: pass
             time.sleep(.05)
+    except:
+        print "Closing Training 2."
     finally:
+        print "."
         termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
-        logger.info('End Manual Training')
+        logger.info('End Training 2')
+        print "-"
+        import os
+        os._exit(0)
