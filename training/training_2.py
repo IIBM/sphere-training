@@ -3,9 +3,9 @@
 ######################################################
 #Training 2:
 """
-    Se crea un objeto de detección de video y se espera que durante 1 segundo haya movimiento significativo.
-    Si lo hay, se da recompensa (gota de agua), caso contrario, se sigue esperando a que haya un movimiento
-    significativo durante 1 segundo sostenido.
+    This training creates a movement detection object, and waits for a 1 second sustained movement.
+    If detected, it will be given a reward (drop of water). Else, it will keep waiting until there is
+    a  significant movement.
 """
 ######################################################><
 import os, sys
@@ -14,18 +14,69 @@ sys.path.append(lib_path)
 
 import logging
 
-if __name__ == '__main__':
+def loopFunction():
     print "Training 2."
-    try:
-        from configvideo import *
-    except ImportError:
-        print "No existe el archivo configvideo.py"
-    except:
-        print "otro error"
+
     import sphereVideoDetection
     videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
     import time
-    import valve
+    
+
+    movementVector = [0,0,0,0,0,0,0,0,0,0] #has the history of previous movements, separated by 0.1 seconds
+    countMovement = 0 #if it reaches 10, there has been detected a sustained movement for 1000 ms => give reward
+    countIdleTime = 0 #if it reaches 10, there has NOT been detected a sustained movement for 1000 ms => reset counters
+    try:
+        while(True):
+                videoDet.resetX()
+                videoDet.resetY()
+                time.sleep(0.1)
+                movementVector[0] = movementVector[1]
+                movementVector[1] = movementVector[2]
+                movementVector[2] = movementVector[3]
+                movementVector[3] = movementVector[4]
+                movementVector[4] = movementVector[5]
+                movementVector[5] = movementVector[6]
+                movementVector[6] = movementVector[7]
+                movementVector[7] = movementVector[8]
+                movementVector[8] = movementVector[9]
+                movementVector[9] = (abs(videoDet.getAccumX() * videoDet.getAccumX())  + abs( videoDet.getAccumY()*videoDet.getAccumY() ))
+                if (movementVector[9]>= 2000):
+                    movementVector[9] = 1999
+                vectorSum = 0
+                for i in range(0,len(movementVector)):
+                    vectorSum+= movementVector[i]
+                if (vectorSum  > 4000):
+                    countMovement += 1
+                else:
+                    countIdleTime += 1
+                #print movementVector
+                logger.debug('Movement Vector: %s',movementVector)
+                #print "vector sum: " + str(vectorSum) + "       movement count: "+ str(countMovement)        
+                logger.debug('%s',"vector sum: " + str(vectorSum) + "       movement count: "+ str(countMovement))
+                if (countIdleTime >9):
+                    #durante 1000 ms no se estuvo moviendo. Resetear contadores
+                    countMovement = 0
+                    countIdleTime = 0
+                if (countMovement > 9):
+                    #se estuvo moviendo durante 1000 ms. Dar recompensa.
+                    countMovement = 0
+                    for i in range(0,len(movementVector)):
+                        movementVector[i] = 0
+                    logger.debug("Release drop of water.")
+                    #print "Release drop of water."
+                    val1.drop()
+    finally:
+        return
+
+if __name__ == '__main__':
+    import time
+    import threading
+    try:
+        from configvideo import *
+    except ImportError:
+        print "File configvideo.py not found."
+    except:
+        print "Error importing configvideo"
     #logging
     import logging
 
@@ -51,53 +102,53 @@ if __name__ == '__main__':
     logger = logging.getLogger('main')
     logger.info('===============================================')
     logger.info('Start Training 2')
-    #fin logging
-    movementVector = [0,0,0,0,0,0,0,0,0,0] #has the history of previous movements, separated by 0.1 seconds
-    countMovement = 0 #si llega a 10, es que durante 1000 ms estuvo moviéndose => dar recompensa
-    countIdleTime = 0 #si llega a 10, es que durante 1000 ms estuvo NO moviéndose => resetear contadores
+    #end logging
+    #valve:
+    import valve
     val1 = valve.Valve()
+    #soundGen
+    import soundGen
+    s1 = soundGen.soundGen(1000.0, 1.0)
+    s2 = soundGen.soundGen(2000.0, 1.0)
+    # Create thread for executing detection tasks without interrupting user input.
+    fred1 = threading.Thread(target=loopFunction)
+    fred1.start()
+    time.sleep(4)
+    print 'Options:'
+    print 'o: Open Valve'
+    print 'c: Close Valve'
+    print 'd: Water Drop'
+    print '1: 1 kHz tone'
+    print '2: 2 kHz tone'
+    print 'q or ESC: quit'
     try:
         while(True):
-            videoDet.resetX()
-            videoDet.resetY()
-            time.sleep(0.1)
-            movementVector[0] = movementVector[1]
-            movementVector[1] = movementVector[2]
-            movementVector[2] = movementVector[3]
-            movementVector[3] = movementVector[4]
-            movementVector[4] = movementVector[5]
-            movementVector[5] = movementVector[6]
-            movementVector[6] = movementVector[7]
-            movementVector[7] = movementVector[8]
-            movementVector[8] = movementVector[9]
-            movementVector[9] = (abs(videoDet.getAccumX() * videoDet.getAccumX())  + abs( videoDet.getAccumY()*videoDet.getAccumY() ))
-            if (movementVector[9]>= 2000):
-                movementVector[9] = 1999
-            vectorSum = 0
-            for i in range(0,len(movementVector)):
-                vectorSum+= movementVector[i]
-            if (vectorSum  > 4000):
-                countMovement += 1
-            else:
-                countIdleTime += 1
-            #print movementVector
-            logger.debug('Movement Vector: %s',movementVector)
-            #print "vector sum: " + str(vectorSum) + "       movement count: "+ str(countMovement)        
-            logger.debug('%s',"vector sum: " + str(vectorSum) + "       movement count: "+ str(countMovement))
-            if (countIdleTime >9):
-                #durante 1000 ms no se estuvo moviendo. Resetear contadores
-                countMovement = 0
-                countIdleTime = 0
-            if (countMovement > 9):
-                #se estuvo moviendo durante 1000 ms. Dar recompensa.
-                countMovement = 0
-                for i in range(0,len(movementVector)):
-                    movementVector[i] = 0
-                logger.debug("Release drop of water.")
-                #print "Release drop of water."
-                val1.drop()
+            try:
+                key = sys.stdin.read(1)#cv2.waitKey(100) #in miliseconds
+                if (key == 'o'): #escape pressed
+                    logger.info('valve open')
+                    val1.open()
+                elif (key == 'c'):
+                    logger.info('valve close')
+                    val1.close()
+                elif (key == 'd'):
+                    logger.info('valve drop')
+                    val1.drop()
+                elif (key == '1'):
+                    logger.info('tone 1: 1 kHz')
+                    s1.play()
+                elif (key == '2'):
+                    logger.info('tone 2: 2 kHz')
+                    s2.play()
+                elif (key=='\x1b' or key=='q'):
+                    logger.info('Exit signal key = %s',key)
+                    os.kill(os.getpid(), signal.SIGINT)
+                    sys.exit()
+                else :
+                    print "another key pressed"
+            except IOError: pass
+            time.sleep(.05)
     finally:
         termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
         logger.info('End Manual Training')
-
