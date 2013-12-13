@@ -35,6 +35,9 @@ class gVariables():
     timeThreshold_01 = 20
     timeThreshold_02 = 64
     timeThreshold_03 = 150
+    
+    trialCount = 0
+    successTrialCount=0
     def recalculateTimeIntervals(self):
         print "recalculating time intervals."
         #Should recalculate timeThreshold_0x according to total Time DUration.
@@ -53,6 +56,26 @@ def printInstructions():
     print 'q or ESC: quit'
 
 def loopFunction():
+    def renderAgain():
+        #render things in pygame again.
+        # draw the white background onto the surface
+        windowSurface.fill((55,55,55))
+        #
+        text1 = basicFont.render('Trials: %d' % gVariables.trialCount, True, (255,255,255))
+        textRect1 = text1.get_rect()
+        textRect1.centerx = windowSurface.get_rect().centerx
+        textRect1.centery = windowSurface.get_rect().centery
+        
+        text2 = basicFont.render('Successful Trials: %d' % gVariables.successTrialCount, True, (255,255,255))
+        textRect2 = text2.get_rect()
+        textRect2.centerx = windowSurface.get_rect().centerx
+        textRect2.centery = windowSurface.get_rect().centery+30
+        # draw the text onto the surface
+        windowSurface.blit(text1, textRect1)
+        windowSurface.blit(text2, textRect2)
+        # draw the window onto the screen
+        pygame.display.update()
+    
     print gVariables.trainingName
     import sphereVideoDetection
     videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
@@ -61,11 +84,19 @@ def loopFunction():
     movementVector = [0,0,0,0,0,0,0,0,0,0] #has the history of previous movements, separated by 0.1 seconds
     countMovement = 0 #if it reaches 10, there has been detected a sustained movement for 1000 ms => give reward
     countIdleTime = 0 #if it reaches 10, there has NOT been detected a sustained movement for 1000 ms => reset counters
+    #pygame for displaying variables
+    import pygame, sys
+    pygame.init()
+    windowSurface = pygame.display.set_mode((350, 100), 0, 32)
+    pygame.display.set_caption('Variables')
+    basicFont = pygame.font.SysFont(None, 48)
+    renderAgain()
     try:
         while(True):
                 videoDet.resetX()
                 videoDet.resetY()
                 time.sleep(movementWindow / gVariables.timeWindowDivider)
+                renderAgain()
                 movementVector[0] = movementVector[1]
                 movementVector[1] = movementVector[2]
                 movementVector[2] = movementVector[3]
@@ -103,8 +134,10 @@ def loopFunction():
                     if (trialTime > gVariables.timeThreshold_01 and trialTime < gVariables.timeThreshold_02):
                         val1.drop()
                         logger.debug("Release drop of water.")
+                        gVariables.successTrialCount+=1
     finally:
         return
+
 
 if __name__ == '__main__':
     import time
@@ -120,14 +153,17 @@ if __name__ == '__main__':
 
     import termios, fcntl, sys, os
     fd = sys.stdin.fileno()
-
-    oldterm = termios.tcgetattr(fd)
-    newattr = termios.tcgetattr(fd)
-    newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
-    termios.tcsetattr(fd, termios.TCSANOW, newattr)
-
-    oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
-    fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+    
+    try:
+        oldterm = termios.tcgetattr(fd)
+        newattr = termios.tcgetattr(fd)
+        newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+        termios.tcsetattr(fd, termios.TCSANOW, newattr)
+    
+        oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
+        fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+    except:
+        print "Error capturing input."
 
     time.sleep(2)
 
@@ -225,6 +261,7 @@ if __name__ == '__main__':
                 trialTime +=1
                 if (trialTime == 1):
                     logger.info('Starting new trial')
+                    gVariables.trialCount+=1
                     logger.info('tone 1: 1 kHz')
                     s1.play()
                 elif (trialTime == gVariables.timeThreshold_01):
