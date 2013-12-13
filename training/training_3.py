@@ -38,6 +38,10 @@ class gVariables():
     
     trialCount = 0
     successTrialCount=0
+    
+    countMovement = 0 #if it reaches 10, there has been detected a sustained movement for 1000 ms => give reward
+    countIdleTime = 0 #if it reaches 10, there has NOT been detected a sustained movement for 1000 ms => reset counters
+    
     def recalculateTimeIntervals(self):
         print "recalculating time intervals."
         #Should recalculate timeThreshold_0x according to total Time DUration.
@@ -82,8 +86,6 @@ def loopFunction():
     import time
     
     movementVector = [0,0,0,0,0,0,0,0,0,0] #has the history of previous movements, separated by 0.1 seconds
-    countMovement = 0 #if it reaches 10, there has been detected a sustained movement for 1000 ms => give reward
-    countIdleTime = 0 #if it reaches 10, there has NOT been detected a sustained movement for 1000 ms => reset counters
     #pygame for displaying variables
     import pygame, sys
     pygame.init()
@@ -106,28 +108,27 @@ def loopFunction():
                 movementVector[6] = movementVector[7]
                 movementVector[7] = movementVector[8]
                 movementVector[8] = movementVector[9]
-                if ((trialTime > gVariables.timeThreshold_01 and trialTime < gVariables.timeThreshold_02) or (isTrial == False) ):
-                    movementVector[9] = (abs(videoDet.getAccumX() * videoDet.getAccumX())  + abs( videoDet.getAccumY()*videoDet.getAccumY() ))
+                movementVector[9] = (abs(videoDet.getAccumX() * videoDet.getAccumX())  + abs( videoDet.getAccumY()*videoDet.getAccumY() ))
                 if (movementVector[9]>= gVariables.maxPointMovement):
                     movementVector[9] = gVariables.maxPointMovement - 1 
                 vectorSum = 0
                 for i in range(0,len(movementVector)):
                     vectorSum+= movementVector[i]
                 if (vectorSum  > movementThreshold):
-                    countMovement += 1
+                    gVariables.countMovement += 1
                 else:
-                    countIdleTime += 1
+                    gVariables.countIdleTime += 1
                 #print movementVector
                 logger.debug('Movement Vector: %s',movementVector)
                 #print "vector sum: " + str(vectorSum) + "       movement count: "+ str(countMovement)        
-                logger.debug('%s',"vector sum: " + str(vectorSum) + "       movement count: "+ str(countMovement))
-                if (countIdleTime >9):
+                logger.debug('%s',"vector sum: " + str(vectorSum) + "       movement count: "+ str(gVariables.countMovement))
+                if (gVariables.countIdleTime >9):
                     #durante 1000 ms no se estuvo moviendo. Resetear contadores
-                    countMovement = 0
-                    countIdleTime = 0
-                if (countMovement > 9):
+                    gVariables.countMovement = 0
+                    gVariables.countIdleTime = 0
+                if (gVariables.countMovement > 9):
                     #se estuvo moviendo durante 1000 ms. Dar recompensa.
-                    countMovement = 0
+                    gVariables.countMovement = 0
                     for i in range(0,len(movementVector)):
                         movementVector[i] = 0
                     #print "Release drop of water."
@@ -259,7 +260,7 @@ if __name__ == '__main__':
             except IOError: pass
             if (isTrial == 1):
                 trialTime +=1
-                if (trialTime == 1):
+                if (trialTime == 1 and gVariables.countMovement == 0 and gVariables.countIdleTime == 0):
                     logger.info('Starting new trial')
                     gVariables.trialCount+=1
                     logger.info('tone 1: 1 kHz')
