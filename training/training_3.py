@@ -14,26 +14,42 @@ sys.path.append(lib_path)
 
 import logging
 
+class gVariables():
+    trainingName = "Training 3"
+    timeWindowDivider = 10.0
+    maxPointMovement = 2000
+    initialMovementThreshold = 6000
+    initialWindowThreshold = 1
+    soundGenDuration = 1.0
+    soundGenFrequency1 = 1000.0
+    soundGenFrequency2 = 2000.0
+    totalTimeDuration = 8.0 #in seconds
+    timeThreshold_01 = 21
+    timeThreshold_02 = 63
+    timeThreshold_03 = 170
+    def recalculateTimeIntervals(self):
+        print "recalculating time intervals."
+        #Should recalculate timeThreshold_0x according to total Time DUration.
+        #This should be executed by the program only once, at the beginning of the run.
+    
 def printInstructions():
     print 'Options:'
     print 'o: Open Valve'
     print 'c: Close Valve'
     print 'd: Water Drop'
-    print '1: 1 kHz tone'
-    print '2: 2 kHz tone'
+    print '1: %d Hz tone' % gVariables.soundGenFrequency1
+    print '2: %d Hz tone' % gVariables.soundGenFrequency2
     print 't: set threshold (500 - 10000)'
     print 'w: set movement window (1 - 5 sec)'
     print 'k: set 8 second trial training'
     print 'q or ESC: quit'
 
 def loopFunction():
-    print "Training 3."
-
+    print gVariables.trainingName
     import sphereVideoDetection
     videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
     import time
     
-
     movementVector = [0,0,0,0,0,0,0,0,0,0] #has the history of previous movements, separated by 0.1 seconds
     countMovement = 0 #if it reaches 10, there has been detected a sustained movement for 1000 ms => give reward
     countIdleTime = 0 #if it reaches 10, there has NOT been detected a sustained movement for 1000 ms => reset counters
@@ -41,7 +57,7 @@ def loopFunction():
         while(True):
                 videoDet.resetX()
                 videoDet.resetY()
-                time.sleep(movementWindow / 10.0)
+                time.sleep(movementWindow / gVariables.timeWindowDivider)
                 movementVector[0] = movementVector[1]
                 movementVector[1] = movementVector[2]
                 movementVector[2] = movementVector[3]
@@ -51,10 +67,10 @@ def loopFunction():
                 movementVector[6] = movementVector[7]
                 movementVector[7] = movementVector[8]
                 movementVector[8] = movementVector[9]
-                if (trialTime > 21 and trialTime < 63):
+                if ((trialTime > gVariables.timeThreshold_01 and trialTime < gVariables.timeThreshold_02) or (isTrial == False) ):
                     movementVector[9] = (abs(videoDet.getAccumX() * videoDet.getAccumX())  + abs( videoDet.getAccumY()*videoDet.getAccumY() ))
-                if (movementVector[9]>= 2000):
-                    movementVector[9] = 1999
+                if (movementVector[9]>= gVariables.maxPointMovement):
+                    movementVector[9] = gVariables.maxPointMovement - 1 
                 vectorSum = 0
                 for i in range(0,len(movementVector)):
                     vectorSum+= movementVector[i]
@@ -89,7 +105,7 @@ if __name__ == '__main__':
     except ImportError:
         print "File configvideo.py not found."
     except:
-        print "Error importing configvideo"
+        print "Error importing configvideo" 
     #logging
     import logging
 
@@ -121,11 +137,11 @@ if __name__ == '__main__':
     val1 = valve.Valve()
     #soundGen
     import soundGen
-    s1 = soundGen.soundGen(1000.0, 1.0)
-    s2 = soundGen.soundGen(2000.0, 1.0)
+    s1 = soundGen.soundGen(gVariables.soundGenFrequency1, gVariables.soundGenDuration)
+    s2 = soundGen.soundGen(gVariables.soundGenFrequency2, gVariables.soundGenDuration)
     #variables to be used as calibration
-    movementThreshold = 6000
-    movementWindow = 1
+    movementThreshold = gVariables.initialMovementThreshold
+    movementWindow = gVariables.initialWindowThreshold
     trialTime = 0
     isTrial = 0 #boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
     # Create thread for executing detection tasks without interrupting user input.
@@ -147,12 +163,11 @@ if __name__ == '__main__':
                     logger.info('valve drop')
                     val1.drop()
                 elif (key == '1'):
-                    logger.info('tone 1: 1 kHz')
+                    logger.info('tone 1: %d Hz' % gVariables.soundGenFrequency1)
                     s1.play()
                 elif (key == '2'):
-                    logger.info('tone 2: 2 kHz')
+                    logger.info('tone 2: %d Hz'% gVariables.soundGenFrequency2)
                     s2.play()
-                
                 elif (key == 't'):
                     movementThreshold += 500
                     if movementThreshold > 10000:
@@ -168,15 +183,14 @@ if __name__ == '__main__':
                 elif (key == 'k'):
                     if isTrial == 0:
                         isTrial = 1
+                        trialTime = 0
                         print "8 second trial activated:"
                         print "  1 second: tone"
                         print "  2 second: detection of movement"
                         print "  5 second: inter trial delay time"
-                        trialTime = 0
                     else:
                         isTrial = 0
                         print "8 second trial deactivated."
-                        trialTime = 30
                 elif (key=='\x1b' or key=='q'):
                     print "Exiting."
                     logger.info('Exit signal key = %s',key)
@@ -188,16 +202,16 @@ if __name__ == '__main__':
             except IOError: pass
             if (isTrial == 1):
                 trialTime +=1
-                if trialTime> 170:
+                if trialTime> gVariables.timeThreshold_03:
                     trialTime = 0
                     logger.info('End inter-trial delay')
                 if (trialTime == 1):
                     logger.info('Starting new trial')
                     logger.info('tone 1: 1 kHz')
                     s1.play()
-                if (trialTime == 20):
+                if (trialTime == gVariables.timeThreshold_01 - 1):
                     logger.info('Start trial movement detection')
-                if (trialTime == 64):
+                if (trialTime == gVariables.timeThreshold_02 + 1):
                     logger.info('End trial movement detection')
                     logger.info('Start inter-trial delay')
             #print trialTime
