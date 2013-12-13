@@ -23,7 +23,7 @@ class gVariables():
     ##
     timeWindowDivider = 10.0
     maxPointMovement = 2000 #above this amount of movement detected, it will be trimmed to this value.
-    initialMovementThreshold = 6000
+    initialMovementThreshold = 4000
     initialWindowThreshold = 1
     maxMovementThreshold = 14000
     maxWindowThreshold = 5
@@ -32,9 +32,9 @@ class gVariables():
     soundGenFrequency1 = 1000.0
     soundGenFrequency2 = 2000.0
     totalTimeDuration = duration1_Sound + duration2_Movement + duration3_interTrial #in seconds
-    timeThreshold_01 = 21
-    timeThreshold_02 = 63
-    timeThreshold_03 = 170
+    timeThreshold_01 = 20
+    timeThreshold_02 = 64
+    timeThreshold_03 = 150
     def recalculateTimeIntervals(self):
         print "recalculating time intervals."
         #Should recalculate timeThreshold_0x according to total Time DUration.
@@ -223,18 +223,18 @@ if __name__ == '__main__':
             except IOError: pass
             if (isTrial == 1):
                 trialTime +=1
-                if trialTime> gVariables.timeThreshold_03:
-                    trialTime = 0
-                    logger.info('End inter-trial delay')
                 if (trialTime == 1):
                     logger.info('Starting new trial')
                     logger.info('tone 1: 1 kHz')
                     s1.play()
-                if (trialTime == gVariables.timeThreshold_01 - 1):
+                elif (trialTime == gVariables.timeThreshold_01):
                     logger.info('Start trial movement detection')
-                if (trialTime == gVariables.timeThreshold_02 + 1):
+                elif (trialTime == gVariables.timeThreshold_02):
                     logger.info('End trial movement detection')
                     logger.info('Start inter-trial delay')
+                elif trialTime> gVariables.timeThreshold_03:
+                    trialTime = 0
+                    logger.info('End inter-trial delay')
             #print trialTime
             time.sleep(.05)
     except:
