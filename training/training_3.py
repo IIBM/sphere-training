@@ -47,8 +47,8 @@ def printInstructions():
     print 'd: Water Drop'
     print '1: %d Hz tone' % gVariables.soundGenFrequency1
     print '2: %d Hz tone' % gVariables.soundGenFrequency2
-    print 't/T: increase/decrease threshold (500 - 10000)'
-    print 'w/W: increase/decrease movement window (1 - 5 sec)'
+    print 't/T: increase/decrease threshold (500 - %d)' % gVariables.maxMovementThreshold
+    print 'w/W: increase/decrease movement window (1 - %d sec)' % gVariables.maxWindowThreshold
     print 'k: set 8 second trial training'
     print 'q or ESC: quit'
 
