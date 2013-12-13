@@ -16,14 +16,22 @@ import logging
 
 class gVariables():
     trainingName = "Training 3"
+    #relevant Training variables
+    duration1_Sound = 1.0 #in seconds. Amount of time that the soundGen is executed.
+    duration2_Movement = 2.0 #in seconds. Amount of time during which movement is considered
+    duration3_interTrial = 4.0 #in seconds. Amount of delay time between two trials.
+    ##
     timeWindowDivider = 10.0
-    maxPointMovement = 2000
+    maxPointMovement = 2000 #above this amount of movement detected, it will be trimmed to this value.
     initialMovementThreshold = 6000
     initialWindowThreshold = 1
-    soundGenDuration = 1.0
+    maxMovementThreshold = 14000
+    maxWindowThreshold = 5
+    
+    soundGenDuration = duration1_Sound
     soundGenFrequency1 = 1000.0
     soundGenFrequency2 = 2000.0
-    totalTimeDuration = 8.0 #in seconds
+    totalTimeDuration = duration1_Sound + duration2_Movement + duration3_interTrial #in seconds
     timeThreshold_01 = 21
     timeThreshold_02 = 63
     timeThreshold_03 = 170
@@ -39,8 +47,8 @@ def printInstructions():
     print 'd: Water Drop'
     print '1: %d Hz tone' % gVariables.soundGenFrequency1
     print '2: %d Hz tone' % gVariables.soundGenFrequency2
-    print 't: set threshold (500 - 10000)'
-    print 'w: set movement window (1 - 5 sec)'
+    print 't/T: increase/decrease threshold (500 - 10000)'
+    print 'w/W: increase/decrease movement window (1 - 5 sec)'
     print 'k: set 8 second trial training'
     print 'q or ESC: quit'
 
@@ -91,9 +99,10 @@ def loopFunction():
                     countMovement = 0
                     for i in range(0,len(movementVector)):
                         movementVector[i] = 0
-                    logger.debug("Release drop of water.")
                     #print "Release drop of water."
-                    val1.drop()
+                    if (trialTime > gVariables.timeThreshold_01 and trialTime < gVariables.timeThreshold_02):
+                        val1.drop()
+                        logger.debug("Release drop of water.")
     finally:
         return
 
@@ -170,13 +179,25 @@ if __name__ == '__main__':
                     s2.play()
                 elif (key == 't'):
                     movementThreshold += 500
-                    if movementThreshold > 10000:
+                    if movementThreshold > gVariables.maxMovementThreshold:
+                        movementThreshold = gVariables.maxMovementThreshold
+                    print "Movement Threshold changed to : " + str(movementThreshold)
+                    printInstructions()
+                elif (key == 'T'):
+                    movementThreshold -= 500
+                    if movementThreshold < 500:
                         movementThreshold = 500
                     print "Movement Threshold changed to : " + str(movementThreshold)
                     printInstructions()
                 elif (key == 'w'):
                     movementWindow +=1
-                    if movementWindow > 5:
+                    if movementWindow > gVariables.maxWindowThreshold:
+                        movementWindow = gVariables.maxWindowThreshold
+                    print "Movement Window changed to : " + str(movementWindow) + "seconds"
+                    printInstructions()
+                elif (key == 'W'):
+                    movementWindow -=1
+                    if movementWindow < 1:
                         movementWindow = 1
                     print "Movement Window changed to : " + str(movementWindow) + "seconds"
                     printInstructions()
@@ -185,9 +206,9 @@ if __name__ == '__main__':
                         isTrial = 1
                         trialTime = 0
                         print "8 second trial activated:"
-                        print "  1 second: tone"
+                        print "  %d second: tone" %gVariables.soundGenDuration
                         print "  2 second: detection of movement"
-                        print "  5 second: inter trial delay time"
+                        print "  4 second: inter trial delay time"
                     else:
                         isTrial = 0
                         print "8 second trial deactivated."
