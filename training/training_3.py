@@ -38,6 +38,7 @@ class gVariables():
     
     trialCount = 0
     successTrialCount=0
+    dropReleased = 0
     
     countMovement = 0 #if it reaches 10, there has been detected a sustained movement for 1000 ms => give reward
     countIdleTime = 0 #if it reaches 10, there has NOT been detected a sustained movement for 1000 ms => reset counters
@@ -132,10 +133,11 @@ def loopFunction():
                     for i in range(0,len(movementVector)):
                         movementVector[i] = 0
                     #print "Release drop of water."
-                    if (trialTime > gVariables.timeThreshold_01 and trialTime < gVariables.timeThreshold_02):
+                    if (trialTime > gVariables.timeThreshold_01 and trialTime < gVariables.timeThreshold_02 and gVariables.dropReleased == 0):
                         val1.drop()
                         logger.debug("Release drop of water.")
                         gVariables.successTrialCount+=1
+			gVariables.dropReleased = 1
     finally:
         return
 
@@ -260,12 +262,13 @@ if __name__ == '__main__':
             except IOError: pass
             if (isTrial == 1):
                 trialTime +=1
-                if (trialTime == 1 and gVariables.countMovement == 0 and gVariables.countIdleTime == 0):
+                if (trialTime == 1 ):
                     logger.info('Starting new trial')
                     gVariables.trialCount+=1
+		    gVariables.dropReleased = 0
                     logger.info('tone 1: 1 kHz')
                     s1.play()
-                elif (trialTime == gVariables.timeThreshold_01):
+                if (trialTime == gVariables.timeThreshold_01):
                     logger.info('Start trial movement detection')
                 elif (trialTime == gVariables.timeThreshold_02):
                     logger.info('End trial movement detection')
