@@ -2,6 +2,9 @@ import pygame, sys
 import time
 
 class trainingDisplay() :
+    #Class that renders relevant text added by the user, lets you update its information.
+    #Created because the need of showing Trials and Successful trials to the user on a regular training.
+    #This class is a WIP
 
     def renderAgain(self):
         #render things in pygame again.
