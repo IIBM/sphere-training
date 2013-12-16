@@ -69,11 +69,11 @@ class sphereVideoDetection():
 		self.movementVector[6] = self.movementVector[7]
 		self.movementVector[7] = self.movementVector[8]
 		self.movementVector[8] = self.movementVector[9]
-		self.movementVector[9] = (abs(videoDet.getAccumX() * videoDet.getAccumX()) +
-							 abs(videoDet.getAccumY() * videoDet.getAccumY()))
+		self.movementVector[9] = (abs(self.getAccumX() * self.getAccumX()) +
+							 abs(self.getAccumY() * self.getAccumY()))
 		if (self.movementVector[9] >= self.maxPointMovement):
 			self.movementVector[9] = self.maxPointMovement
-		print self.movementVector
+		#print self.movementVector
 	
 	def mainVideoDetection(self):
 	    import cv as cv
