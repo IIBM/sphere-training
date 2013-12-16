@@ -4,8 +4,8 @@
 #Training 3:
 """
     This training creates a gives a 1 sec tone , then has an 2 second interval where the subject can
-    generate movement or not, and a reward in case there has been detected movement. Then follows a 5 second delay
-    for the next trial.<>
+    generate movement or not, and a reward in case there has been movement detected. Then follows a 5 second delay
+    between this and the next trial.<>
 """
 ######################################################><
 import os, sys
