@@ -11,7 +11,7 @@
 import os, sys
 lib_path = os.path.abspath('../modules/')
 sys.path.append(lib_path)
-
+import time
 import logging
 
 class gVariables():
@@ -42,6 +42,9 @@ class gVariables():
     
     countMovement = 0 #if it reaches 10, there has been detected a sustained movement for 1000 ms => give reward
     countIdleTime = 0 #if it reaches 10, there has NOT been detected a sustained movement for 1000 ms => reset counters
+    
+    import timeit
+    start_time = timeit.default_timer()
     
     def recalculateTimeIntervals(self):
         print "recalculating time intervals."
@@ -81,25 +84,41 @@ def loopFunction():
         # draw the window onto the screen
         pygame.display.update()
     
+    
     print gVariables.trainingName
     import sphereVideoDetection
     videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
-    import time
     
     movementVector = [0,0,0,0,0,0,0,0,0,0] #has the history of previous movements, separated by 0.1 seconds
-    #pygame for displaying variables
-    import pygame, sys
-    pygame.init()
-    windowSurface = pygame.display.set_mode((350, 100), 0, 32)
-    pygame.display.set_caption('Variables')
-    basicFont = pygame.font.SysFont(None, 48)
-    renderAgain()
+    #Display variables
+    import trainingDisplay #display for showing different variables of interest
+    display = trainingDisplay.trainingDisplay()
+    display.addImportantInfo(("Trials", 300))
+    display.addImportantInfo(("Succesful Trials", 200))
+    display.addSecondaryInfo(("% s/t", 45.0))
+    display.addSecondaryInfo(("Time:", time.clock()- gVariables.start_time))
+    display.renderAgain()
+    import timeit
     try:
         while(True):
                 videoDet.resetX()
                 videoDet.resetY()
                 time.sleep(movementWindow / gVariables.timeWindowDivider)
-                renderAgain()
+                #update display info
+                now = timeit.default_timer()
+                display.updateInfo("Time:", int(now - gVariables.start_time ) )
+                display.updateInfo("Trials", gVariables.trialCount)
+                display.updateInfo("Succesful Trials", gVariables.successTrialCount)
+                if (gVariables.trialCount > 0):
+                    temp =  (1.0*gVariables.successTrialCount/ gVariables.trialCount)
+                    tempH = temp*100.0
+                    tempString = str(tempH)
+                    if (len(tempString) > 3):
+                        tempS = str(tempH)[:4]
+                    else:
+                        tempS = str(tempH)[:3]
+                    display.updateInfo("% s/t", tempS)
+                display.renderAgain()
                 movementVector[0] = movementVector[1]
                 movementVector[1] = movementVector[2]
                 movementVector[2] = movementVector[3]
@@ -137,7 +156,7 @@ def loopFunction():
                         val1.drop()
                         logger.debug("Release drop of water.")
                         gVariables.successTrialCount+=1
-			gVariables.dropReleased = 1
+                        gVariables.dropReleased = 1
     finally:
         return
 
@@ -265,7 +284,7 @@ if __name__ == '__main__':
                 if (trialTime == 1 ):
                     logger.info('Starting new trial')
                     gVariables.trialCount+=1
-		    gVariables.dropReleased = 0
+                    gVariables.dropReleased = 0
                     logger.info('tone 1: 1 kHz')
                     s1.play()
                 if (trialTime == gVariables.timeThreshold_01):
