@@ -30,7 +30,13 @@ class sphereVideoDetection():
 		    self.CAM_WIDTH = width
 		    self.CAM_HEIGHT = height
 		    self.CV2THRESHOLD = 150
-	
+		    #variables for keeping track of continuous movement.
+		    self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected until now
+		    self.continuousIdleTime = 0 #amount of seconds that no movement was detected until now.
+		    self.isMoving = False #if true, it is currently in movement. False => currently idle
+		    self.maxPointMovement = 2000 #movementThreshold
+		    self.movementVector = [0,0,0,0,0,0,0,0,0,0] #has the history of previous movements, separated by 0.1 seconds
+			
 	def getAccumulatedVector(self):
 		return [self.vectorInstantaneo.x, self.vectorInstantaneo.y]
 	    
@@ -51,6 +57,23 @@ class sphereVideoDetection():
 	def calibrate(self):
 		self.calibrate = True
 	
+	def continuousMovementAnalysis(self):
+		#this function analyzes continuous movement. If detected, saves the amount of seconds of the movement so far.
+		#if idle is detected, it saves how much time the subject is idle.
+		self.movementVector[0] = self.movementVector[1]
+		self.movementVector[1] = self.movementVector[2]
+		self.movementVector[2] = self.movementVector[3]
+		self.movementVector[3] = self.movementVector[4]
+		self.movementVector[4] = self.movementVector[5]
+		self.movementVector[5] = self.movementVector[6]
+		self.movementVector[6] = self.movementVector[7]
+		self.movementVector[7] = self.movementVector[8]
+		self.movementVector[8] = self.movementVector[9]
+		self.movementVector[9] = (abs(videoDet.getAccumX() * videoDet.getAccumX()) +
+							 abs(videoDet.getAccumY() * videoDet.getAccumY()))
+		if (self.movementVector[9] >= self.maxPointMovement):
+			self.movementVector[9] = self.maxPointMovement
+		print self.movementVector
 	
 	def mainVideoDetection(self):
 	    import cv as cv
@@ -293,9 +316,12 @@ class sphereVideoDetection():
 	        self.vectorInstantaneo.x += self.movEjeX
 	        self.vectorInstantaneo.y += self.movEjeY
 	        
+	        #se analiza continuidad de movimiento en otra función:
+	        self.continuousMovementAnalysis()
+	        
 	        #Se tiene el vector instantáneo para este fotograma: vectorInstantáneo = (self.movEjeX, self.movEjeY)
 	        #print ("(%d %d .. %d)"%(self.movEjeX, self.movEjeY, numberOfVectors))
-	                
+	        
 	        #finalmente se "muestra" el resultado al usuario (feedback)
 	        cv2.imshow( self.winName , im ) #obs.: NO es estrictamente necesario dar feedback acá.. también está mainFunction
 	        #(imshow se puede sacar si el CPU es un problema.)
