@@ -57,14 +57,23 @@ class trainingDisplay() :
     
     def updateInfo(self, text, newValue):
         #sets from the class lists. the one that has "text", and updates it with newValue
+        a = False
         for i in range(0, len(self.displayText1)):
-            if self.displayText1[i][0] is text:
+            if str(self.displayText1[i][0]) == str(text):
                 self.displayText1[i] = (text,newValue)
                 #print "updated : " + text
+                a= True
         for i in range(0, len(self.displayText2)):
-            if self.displayText2[i][0] is text:
+            if str(self.displayText2[i][0]) == str(text):
                 self.displayText2[i] = (text,newValue)
                 #print "updated : " + text
+                a = True
+        """
+        if (a == False):
+            print "Info with text : " + text + " not found, value: " + str(newValue) + " not updated."
+            print self.displayText1
+            print self.displayText2
+        """
         self.renderAgain()
 
 if __name__ == '__main__':
