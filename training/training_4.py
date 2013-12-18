@@ -34,7 +34,7 @@ class gVariables():
     maxMovementThreshold = 1000
     movementThreshold = initialMovementThreshold #amount of movement after which movement is considered '1'
     movementVectorLength = 15 #length of vector, should be greater than movementVectorCount
-    movementVectorCount = 3 #number of elements from vector to be looked at as 1 when detecting movement
+    movementVectorCount = 8 #number of elements from vector to be looked at as 1 when detecting movement
     
     
     soundGenDuration = duration1_Sound
@@ -111,10 +111,10 @@ def loopFunction():
     import sphereVideoDetection
     gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
     
-    movementVector = [] #has the history of previous movements, separated by 0.1 seconds
+    gVariables.movementVector = [] #has the history of previous movements, separated by 0.1 seconds
     for i in range (0, gVariables.movementVectorLength):
-        movementVector.append(0)
-    print movementVector
+        gVariables.movementVector.append(0)
+    print gVariables.movementVector
     #Display initialization.
     initDisplay()
     try:
@@ -125,17 +125,17 @@ def loopFunction():
                 #####################
                 updateDisplayInfo()
                 #####################
-                movementVector[0:-1] = movementVector[1:]
-                movementVector[gVariables.movementVectorLength-1] = (abs(gVariables.videoDet.getAccumX() * gVariables.videoDet.getAccumX())  + abs( gVariables.videoDet.getAccumY()*gVariables.videoDet.getAccumY() ))
-                if (movementVector[gVariables.movementVectorLength-1] >= gVariables.movementThreshold):
-                    movementVector[gVariables.movementVectorLength-1] = 1
+                gVariables.movementVector[0:-1] = gVariables.movementVector[1:]
+                gVariables.movementVector[gVariables.movementVectorLength-1] = (abs(gVariables.videoDet.getAccumX() * gVariables.videoDet.getAccumX())  + abs( gVariables.videoDet.getAccumY()*gVariables.videoDet.getAccumY() ))
+                if (gVariables.movementVector[gVariables.movementVectorLength-1] >= gVariables.movementThreshold):
+                    gVariables.movementVector[gVariables.movementVectorLength-1] = 1
                 else:
-                    movementVector[gVariables.movementVectorLength-1] = 0
-                logger.debug('Movement Vector: %s',movementVector)
+                    gVariables.movementVector[gVariables.movementVectorLength-1] = 0
+                logger.debug('Movement Vector: %s',gVariables.movementVector)
                 
                 thresholdReached = True
                 for i in range (gVariables.movementVectorLength-1 - gVariables.movementVectorCount, gVariables.movementVectorLength-1):
-                    if (movementVector[i] == 0):
+                    if (gVariables.movementVector[i] == 0):
                         thresholdReached = False
                         break
                 if (thresholdReached == True):
@@ -258,6 +258,18 @@ if __name__ == '__main__':
                         gVariables.movementThreshold = 10
                     print "Movement Threshold changed to : " + str(gVariables.movementThreshold)
                     printInstructions()
+                elif (key == 'e'):
+                    gVariables.movementVectorCount += 1
+                    if gVariables.movementVectorCount > gVariables.movementVectorLength:
+                        gVariables.movementVectorCount = gVariables.movementVectorLength
+                    print "Movement Vector count changed to : " + str(gVariables.movementVectorCount)
+                    printInstructions()
+                elif (key == 'E'):
+                    gVariables.movementVectorCount -= 1
+                    if gVariables.movementVectorCount < 1:
+                        gVariables.movementVectorCount = 1
+                    print "Movement Vector count changed to : " + str(gVariables.movementVectorCount)
+                    printInstructions()
                 elif (key == 'w'):
                     movementWindow +=1
                     if movementWindow > gVariables.maxWindowThreshold:
@@ -304,6 +316,7 @@ if __name__ == '__main__':
                     s1.play()
                 if (gVariables.trialTime == gVariables.timeThreshold_01):
                     logger.info('Start trial movement detection')
+		    gVariables.movementVector = [ 0 for i in range(gVariables.movementVectorLength)]
                 elif (gVariables.trialTime == gVariables.timeThreshold_02):
                     logger.info('End trial movement detection')
                     logger.info('Start inter-trial delay')
