@@ -26,15 +26,15 @@ class gVariables():
     duration3_interTrial = 4.0 #in seconds. Amount of delay time between two trials.
     ##
     timeWindowDivider = 10.0
-    maxPointMovement = 2000 #above this amount of movement detected, it will be trimmed to this value.
-    initialMovementThreshold = 4000
     initialWindowThreshold = 1
-    maxMovementThreshold = 14000
     maxWindowThreshold = 5
     
-    movementThreshold = 300
-    movementVectorLength = 50 #length of vector, should be greater than movementVectorCount
-    movementVectorCount = 4 #4 elements from vector to be looked at when detecting movement
+    
+    initialMovementThreshold = 200
+    maxMovementThreshold = 1000
+    movementThreshold = initialMovementThreshold #amount of movement after which movement is considered '1'
+    movementVectorLength = 15 #length of vector, should be greater than movementVectorCount
+    movementVectorCount = 3 #number of elements from vector to be looked at as 1 when detecting movement
     
     
     soundGenDuration = duration1_Sound
@@ -47,6 +47,7 @@ class gVariables():
     
     trialCount = 0
     successTrialCount=0
+    successRate = 0 #success rate = (success trials / total trial count) %
     dropReleased = 0
     trialExecuting = False #if true, the trial is online and working. Else, it has been stopped or never started
     
@@ -73,7 +74,7 @@ def printInstructions():
     print 'd: Water Drop'
     print '1: %d Hz tone' % gVariables.soundGenFrequency1
     print '2: %d Hz tone' % gVariables.soundGenFrequency2
-    print 't/T: increase/decrease threshold (500 - %d)' % gVariables.maxMovementThreshold
+    print 't/T: increase/decrease threshold (10 - %d)' % gVariables.maxMovementThreshold
     print 'w/W: increase/decrease movement window (1 - %d sec)' % gVariables.maxWindowThreshold
     print 'k: set 8 second trial training'
     print 'q or ESC: quit'
@@ -101,7 +102,8 @@ def updateDisplayInfo():
                         tempS = str(tempH)[:4]
                     else:
                         tempS = str(tempH)[:3]
-                    gVariables.display.updateInfo("% s/t", tempS)
+                    gVariables.successRate = tempS
+                    gVariables.display.updateInfo("% s/t", gVariables.successRate)
     gVariables.display.renderAgain()
 
 def loopFunction():
@@ -115,54 +117,32 @@ def loopFunction():
     print movementVector
     #Display initialization.
     initDisplay()
-    
     try:
         while(True):
                 gVariables.videoDet.resetX()
                 gVariables.videoDet.resetY()
                 time.sleep(movementWindow / gVariables.timeWindowDivider)
                 #####################
-                #update display info
-                #####################
                 updateDisplayInfo()
                 #####################
-                movementVector[0] = movementVector[1]
-                movementVector[1] = movementVector[2]
-                movementVector[2] = movementVector[3]
-                movementVector[3] = movementVector[4]
-                movementVector[4] = movementVector[5]
-                movementVector[5] = movementVector[6]
-                movementVector[6] = movementVector[7]
-                movementVector[7] = movementVector[8]
-                movementVector[8] = movementVector[9]
-                movementVector[9] = (abs(gVariables.videoDet.getAccumX() * gVariables.videoDet.getAccumX())  + abs( gVariables.videoDet.getAccumY()*gVariables.videoDet.getAccumY() ))
-                if (movementVector[9]>= gVariables.maxPointMovement):
-                    movementVector[9] = gVariables.maxPointMovement - 1 
-                vectorSum = 0
-                for i in range(0,len(movementVector)):
-                    vectorSum+= movementVector[i]
-                if (vectorSum  > movementThreshold):
-                    gVariables.countMovement += 1
+                movementVector[0:-1] = movementVector[1:]
+                movementVector[gVariables.movementVectorLength-1] = (abs(gVariables.videoDet.getAccumX() * gVariables.videoDet.getAccumX())  + abs( gVariables.videoDet.getAccumY()*gVariables.videoDet.getAccumY() ))
+                if (movementVector[gVariables.movementVectorLength-1] >= gVariables.movementThreshold):
+                    movementVector[gVariables.movementVectorLength-1] = 1
                 else:
-                    gVariables.countIdleTime += 1
+                    movementVector[gVariables.movementVectorLength-1] = 0
                 logger.debug('Movement Vector: %s',movementVector)
-                #print "vector sum: " + str(vectorSum) + "       movement count: "+ str(countMovement)        
-                logger.debug('%s',"vector sum: " + str(vectorSum) + "       movement count: "+ str(gVariables.countMovement))
-                if (gVariables.countIdleTime >9):
-                    #durante 1000 ms no se estuvo moviendo. Resetear contadores
-                    gVariables.countMovement = 0
-                    gVariables.countIdleTime = 0
-                if (gVariables.countMovement > 9):
-                    #se estuvo moviendo durante 1000 ms. Dar recompensa.
-                    gVariables.countMovement = 0
-                    for i in range(0,len(movementVector)):
-                        movementVector[i] = 0
-                    #print "Release drop of water."
-                    if (trialTime > gVariables.timeThreshold_01 and trialTime < gVariables.timeThreshold_02 and gVariables.dropReleased == 0):
-                        gVariables.valve1.drop()
-                        logger.debug("Release drop of water.")
-                        gVariables.successTrialCount+=1
-                        gVariables.dropReleased = 1
+                
+                thresholdReached = True
+                for i in range (gVariables.movementVectorLength-1 - gVariables.movementVectorCount, gVariables.movementVectorLength-1):
+                    if (movementVector[i] == 0):
+                        thresholdReached = False
+                        break
+                if (thresholdReached == True):
+                    #there are n 1's in a row, give Reward
+                    thresholdReached = True
+                    giveReward()
+                    
     finally:
         return
 
@@ -180,6 +160,17 @@ def restartTraining():
     
 def stopTraining():
         gVariables.trialExecuting = False
+
+
+def giveReward():
+    if (gVariables.dropReleased == 0):
+        if (gVariables.trialTime > gVariables.timeThreshold_01 
+            and gVariables.trialTime < gVariables.timeThreshold_02):
+            #print "Release drop of water."
+            gVariables.valve1.drop()
+            logger.debug("Release drop of water.")
+            gVariables.successTrialCount+=1
+            gVariables.dropReleased = 1
 
 if __name__ == '__main__':
     import time
@@ -227,9 +218,9 @@ if __name__ == '__main__':
     s1 = soundGen.soundGen(gVariables.soundGenFrequency1, gVariables.soundGenDuration)
     s2 = soundGen.soundGen(gVariables.soundGenFrequency2, gVariables.soundGenDuration)
     #variables to be used as calibration
-    movementThreshold = gVariables.initialMovementThreshold
+    gVariables.movementThreshold = gVariables.initialMovementThreshold
     movementWindow = gVariables.initialWindowThreshold
-    trialTime = 0
+    gVariables.trialTime = 0
     isTrial = 0 #boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
     # Create thread for executing detection tasks without interrupting user input.
     fred1 = threading.Thread(target=loopFunction)
@@ -256,16 +247,16 @@ if __name__ == '__main__':
                     logger.info('tone 2: %d Hz'% gVariables.soundGenFrequency2)
                     s2.play()
                 elif (key == 't'):
-                    movementThreshold += 500
-                    if movementThreshold > gVariables.maxMovementThreshold:
-                        movementThreshold = gVariables.maxMovementThreshold
-                    print "Movement Threshold changed to : " + str(movementThreshold)
+                    gVariables.movementThreshold += 10
+                    if gVariables.movementThreshold > gVariables.maxMovementThreshold:
+                        gVariables.movementThreshold = gVariables.maxMovementThreshold
+                    print "Movement Threshold changed to : " + str(gVariables.movementThreshold)
                     printInstructions()
                 elif (key == 'T'):
-                    movementThreshold -= 500
-                    if movementThreshold < 500:
-                        movementThreshold = 500
-                    print "Movement Threshold changed to : " + str(movementThreshold)
+                    gVariables.movementThreshold -= 10
+                    if gVariables.movementThreshold < 10:
+                        gVariables.movementThreshold = 10
+                    print "Movement Threshold changed to : " + str(gVariables.movementThreshold)
                     printInstructions()
                 elif (key == 'w'):
                     movementWindow +=1
@@ -282,7 +273,7 @@ if __name__ == '__main__':
                 elif (key == 'k'):
                     if isTrial == 0:
                         isTrial = 1
-                        trialTime = 0
+                        gVariables.trialTime = 0
                         restartTraining()
                         print "8 second trial activated:"
                         print "  %d second: tone" %gVariables.soundGenDuration
@@ -304,30 +295,31 @@ if __name__ == '__main__':
                     print "another key pressed"
             except IOError: pass
             if (isTrial == 1):
-                trialTime +=1
-                if (trialTime == 1 ):
-                    logger.info('Starting new trial')
+                gVariables.trialTime +=1
+                if (gVariables.trialTime == 1 ):
+                    logger.info('Starting trial:%d' % gVariables.trialCount)
                     gVariables.trialCount+=1
                     gVariables.dropReleased = 0
                     logger.info('tone 1: 1 kHz')
                     s1.play()
-                if (trialTime == gVariables.timeThreshold_01):
+                if (gVariables.trialTime == gVariables.timeThreshold_01):
                     logger.info('Start trial movement detection')
-                elif (trialTime == gVariables.timeThreshold_02):
+                elif (gVariables.trialTime == gVariables.timeThreshold_02):
                     logger.info('End trial movement detection')
                     logger.info('Start inter-trial delay')
-                elif trialTime> gVariables.timeThreshold_03:
-                    trialTime = 0
-                    logger.info('End inter-trial delay')
+                elif gVariables.trialTime> gVariables.timeThreshold_03:
+                    gVariables.trialTime = 0
+                    logger.info('End trial:%d' % gVariables.trialCount)
+                    logger.info('Success rate:%r' % (gVariables.successRate))
             #print trialTime
             time.sleep(.05)
     except:
-        print "Closing Training 3."
+        print "Closing Training 4."
     finally:
         print "."
         termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
-        logger.info('End Training 3')
+        logger.info('End Training 4')
         print "-"
         import os
         os._exit(0)
