@@ -75,8 +75,10 @@ def printInstructions():
     print '1: %d Hz tone' % gVariables.soundGenFrequency1
     print '2: %d Hz tone' % gVariables.soundGenFrequency2
     print 't/T: increase/decrease threshold (10 - %d)' % gVariables.maxMovementThreshold
+    print 'e/E: increase/decrease threshold count (1 - %d)' % gVariables.movementVectorLength
     print 'w/W: increase/decrease movement window (1 - %d sec)' % gVariables.maxWindowThreshold
     print 'k: set 8 second trial training'
+    print 'l/L: recalibrate Video Input with/without noise filtering.'
     print 'q or ESC: quit'
 
 def initDisplay():
@@ -270,6 +272,12 @@ if __name__ == '__main__':
                         gVariables.movementVectorCount = 1
                     print "Movement Vector count changed to : " + str(gVariables.movementVectorCount)
                     printInstructions()
+                elif (key == 'l'):
+                    gVariables.videoDet.calibrate()
+                    gVariables.videoDet.setNoiseFiltering(True)
+                elif (key == 'L'):
+                    gVariables.videoDet.calibrate()
+                    gVariables.videoDet.setNoiseFiltering(False)
                 elif (key == 'w'):
                     movementWindow +=1
                     if movementWindow > gVariables.maxWindowThreshold:
@@ -316,7 +324,7 @@ if __name__ == '__main__':
                     s1.play()
                 if (gVariables.trialTime == gVariables.timeThreshold_01):
                     logger.info('Start trial movement detection')
-		    gVariables.movementVector = [ 0 for i in range(gVariables.movementVectorLength)]
+                    gVariables.movementVector = [ 0 for i in range(gVariables.movementVectorLength)]
                 elif (gVariables.trialTime == gVariables.timeThreshold_02):
                     logger.info('End trial movement detection')
                     logger.info('Start inter-trial delay')
