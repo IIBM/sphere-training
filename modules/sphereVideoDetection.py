@@ -25,15 +25,16 @@ class sphereVideoDetection():
 		    #declare self variables to use.
 		    import track_bola_utils
 		    self.vectorInstantaneo = track_bola_utils.vectorSimple() #vector acumulado
-		    self.calibrate = True
+		    self.startCalibration = True
 		    self.VIDEOSOURCE = videosource
 		    self.CAM_WIDTH = width
 		    self.CAM_HEIGHT = height
-		    self.CV2THRESHOLD = 150
+		    self.CV2THRESHOLD = 160
 		    #variables for keeping track of continuous movement.
 		    self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected until now
 		    self.continuousIdleTime = 0 #amount of seconds that no movement was detected until now.
 		    self.isMoving = False #if true, it is currently in movement. False => currently idle
+		    self.noiseFiltering = True
 		    self.maxPointMovement = 2000 #movementThreshold
 		    self.movementVector = [0,0,0,0,0,0,0,0,0,0] #has the history of previous movements, separated by 0.1 seconds
 			
@@ -55,7 +56,13 @@ class sphereVideoDetection():
 		return self.vectorInstantaneo.y
 
 	def calibrate(self):
-		self.calibrate = True
+		self.startCalibration = True
+	
+	def setNoiseFiltering(self, bool):
+		#Set Noise FIltering: False if you DON'T want noise filtering , because you consider that your input
+		#has no noise at all. Set to True if you consider your video has noise.
+		self.noiseFiltering = bool
+
 	
 	def continuousMovementAnalysis(self):
 		#this function analyzes continuous movement. If detected, saves the amount of seconds of the movement so far.
@@ -150,14 +157,13 @@ class sphereVideoDetection():
 	    if not cam:
 	        print "Error opening capture device"
 	        sys.exit(1)
-	
+	    
 	    
 	    cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
 	    
 	    # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
 	    t_current = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
 	    t_plus = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
-	    calibrar = True
 	    time.sleep(1.5)
 	    #################################################################
 	    ###    CALIBRACIÓN  ##
@@ -201,21 +207,31 @@ class sphereVideoDetection():
 	            maxRadius = circleRadius[i]
 	        if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
 	            minRadius = circleRadius[i]
-	    self.MAX_CIRCLE_MOVEMENT = expectedValue*1.5
-	    self.MIN_CIRCLE_MOVEMENT = expectedValue/5
-	    if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-	        self.MIN_CIRCLE_MOVEMENT = 2
+	    if (self.noiseFiltering == False):
+	    	print "No noise filtering set."
+	        self.MAX_CIRCLE_MOVEMENT = expectedValue*2
+	        self.MIN_CIRCLE_MOVEMENT = expectedValue/8
+	        minRadius = 1
+	        if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+	            self.MIN_CIRCLE_MOVEMENT = 2
+	    else:
+	         self.MAX_CIRCLE_MOVEMENT = expectedValue*1.5
+	         self.MIN_CIRCLE_MOVEMENT = expectedValue/5
+	         if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+	             self.MIN_CIRCLE_MOVEMENT = 2
 	    print "Número de muestras: %d" % len(circleCenters)
 	    print "Valor Esperado: %d" % expectedValue
 	    print "Radio menor: %d" % minRadius
 	    print "Radio mayor: %d" % maxRadius
 	    print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
 	    print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
-	    self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.7
+	    self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
 	    self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
-	    time.sleep(4)
+	    
+	    
+	    time.sleep(1.5)
 	    print "Fin calibración."
-	    calibrar = False
+	    self.startCalibration = False
 	    #################################################################
 	    ######### fin calibración
 	    #################################################################
@@ -227,6 +243,63 @@ class sphereVideoDetection():
 	        
 	        #im toma una captura para t_plus, y para algunas geometrías que se dibujan encima de él.
 	        im = cam.read()[1]
+	        #calibrate if necessary
+	        if (self.startCalibration == True):
+	            print "Recalibrating:"
+	            t_calib = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+	            cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
+	            ret,thresh = cv2.threshold(t_calib,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
+	            contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+	            #recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
+	            circleCenters = []
+	            circleRadius = []
+	            for i in range(0,len(contours)):
+	                cnt = contours[i]
+	                (x,y),radius = cv2.minEnclosingCircle(cnt)
+	                center = (int(x),int(y))
+	                radius = int(radius)
+	                if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
+	                    #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
+	                    cv2.circle(im,center,radius,(0,255,0),2)
+	                    circleCenters.append(center)
+	                    circleRadius.append(radius)
+	            expectedValue = 0
+	            minRadius = 9999
+	            maxRadius = 0
+	            for i in range (0,10):
+	                cv2.imshow( self.winName , im )
+	                time.sleep(0.01)
+	                key = cv2.waitKey(10)
+	            for i in range(0, len(circleRadius)):
+	                expectedValue +=  circleRadius[i]
+	            
+	            expectedValue /= len(circleCenters)
+	            for i in range (0, len(circleCenters)):
+	                if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
+	                    maxRadius = circleRadius[i]
+	                if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
+	                    minRadius = circleRadius[i]
+	            if (self.noiseFiltering == False):
+	                print "No noise filtering set."
+	                self.MAX_CIRCLE_MOVEMENT = expectedValue*2
+	                self.MIN_CIRCLE_MOVEMENT = expectedValue/8
+	                minRadius = 1
+	                if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+	                    self.MIN_CIRCLE_MOVEMENT = 2
+	            else:
+	                 self.MAX_CIRCLE_MOVEMENT = expectedValue*1.5
+	                 self.MIN_CIRCLE_MOVEMENT = expectedValue/5
+	                 if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+	                     self.MIN_CIRCLE_MOVEMENT = 2
+	            print "Número de muestras: %d" % len(circleCenters)
+	            print "Valor Esperado: %d" % expectedValue
+	            print "Radio menor: %d" % minRadius
+	            print "Radio mayor: %d" % maxRadius
+	            print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
+	            print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
+	            self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
+	            self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
+	            self.startCalibration = False
 	        
 	        #t_current es el del anterior ciclo, t_plus es el recién capturado (procesándolo 1ero..),
 	        t_current = t_plus
@@ -349,7 +422,12 @@ if __name__ == '__main__':
 	except:
 		print "otro error"
 	videoDet = sphereVideoDetection(VIDEOSOURCE,CAM_WIDTH, CAM_HEIGHT)
+	videoDet.setNoiseFiltering(True)
 	import time
+	time.sleep(10)
+	videoDet.setNoiseFiltering(False)
+	videoDet.calibrate()
+
 	while(True):
 		print "x:  "+str(videoDet.getAccumX())
 		print "y:  "+str(videoDet.getAccumY()) #<>
