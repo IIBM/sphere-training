@@ -19,26 +19,23 @@ import timeit
 import logging
 
 class gVariables():
-    trainingName = "Training 4"
+    trainingName = "training_4"
     #relevant Training variables
-    eventTime1_sound = 1.0 #in seconds. Instant of time when the soundGen is executed.
+    eventTime1_sound = 1.0 #in seconds. Instant of time when the soundGen ends.
     eventTime2_movement = 3.0 #in seconds. Instant of time when movement ceases to be considered for reward
     eventTime3_trialEnd = 7.0 #in seconds. Instant of time when the trial ends.
-    durationTotal = eventTime1_sound + eventTime2_movement + eventTime3_trialEnd
-    ##
-    timeWindowDivider = 10.0
-    initialWindowThreshold = 1
-    maxWindowThreshold = 5
+    
     
     initialMovementThreshold = 200
     maxMovementThreshold = 1000
     movementThreshold = initialMovementThreshold #amount of movement after which movement is considered '1'
-    movementVectorLength = 15 #length of vector, should be greater than movementVectorCount
-    movementVectorCount = 8 #number of elements from vector to be looked at as 1 when detecting movement
+    maxMovementTime = 11 #max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
+    movementTime = 5 # time for a continuous time that should be reached to give reward.
+    #ex.: movementTime = 5 means that there should be movement detected over 500 ms at least
     
-    soundGenDuration = eventTime1_sound
-    soundGenFrequency1 = 1000.0
-    soundGenFrequency2 = 2000.0
+    soundGenDuration = 1.0
+    soundGenFrequency1 = 1000.0 #in Hz
+    soundGenFrequency2 = 2000.0 #in Hz
     
     trialCount = 0 #total number of trials
     successTrialCount=0 #total number of succesful trials
@@ -72,8 +69,7 @@ def printInstructions():
     print '1: %d Hz tone' % gVariables.soundGenFrequency1
     print '2: %d Hz tone' % gVariables.soundGenFrequency2
     print 't/T: increase/decrease threshold (10 - %d)' % gVariables.maxMovementThreshold
-    print 'e/E: increase/decrease threshold count (1 - %d)' % gVariables.movementVectorLength
-    print 'w/W: increase/decrease movement window (1 - %d sec)' % gVariables.maxWindowThreshold
+    print 'e/E: increase/decrease Movement Time needed for reward (100 ms - %d ms)' % (gVariables.maxMovementTime * 100)
     print 'k: set 8 second trial training'
     print 'l/L: recalibrate Video Input with/without noise filtering.'
     print 'q or ESC: quit'
@@ -109,39 +105,20 @@ def loopFunction():
     print gVariables.trainingName
     import sphereVideoDetection
     gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
-    gVariables.movementVector = [] #has the history of previous movements, separated by 0.1 seconds
-    for i in range (0, gVariables.movementVectorLength):
-        gVariables.movementVector.append(0)
-    print gVariables.movementVector
     #Display initialization.
     initDisplay()
     try:
         while(True):
-                trialLoop()
-                gVariables.videoDet.resetX()
-                gVariables.videoDet.resetY()
-                time.sleep(movementWindow / gVariables.timeWindowDivider)
+                trialLoop() #
+                time.sleep(0.05)
                 #####################
                 updateDisplayInfo()
+                #gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
                 #####################
-                gVariables.movementVector[0:-1] = gVariables.movementVector[1:]
-                gVariables.movementVector[gVariables.movementVectorLength-1] = (abs(gVariables.videoDet.getAccumX() * gVariables.videoDet.getAccumX())  + abs( gVariables.videoDet.getAccumY()*gVariables.videoDet.getAccumY() ))
-                if (gVariables.movementVector[gVariables.movementVectorLength-1] >= gVariables.movementThreshold):
-                    gVariables.movementVector[gVariables.movementVectorLength-1] = 1
-                else:
-                    gVariables.movementVector[gVariables.movementVectorLength-1] = 0
-                gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
-                
-                thresholdReached = True
-                for i in range (gVariables.movementVectorLength-1 - gVariables.movementVectorCount, gVariables.movementVectorLength-1):
-                    if (gVariables.movementVector[i] == 0):
-                        thresholdReached = False
-                        break
-                if (thresholdReached == True):
-                    #there are n 1's in a row, give Reward
-                    thresholdReached = True
+                if (gVariables.videoDet.getMovementStatus() == True and 
+                    gVariables.videoDet.getMovementTime() >= (gVariables.movementTime / 10.0) ):
                     giveReward()
-                    
+                    #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
     finally:
         return
 
@@ -160,11 +137,12 @@ def trialLoop():
                     gVariables.logger.info('tone 1: 1 kHz')
                     gVariables.s1.play()
                     gVariables.current_trial_number = 0
+                    
                 if ( int(gVariables.current_trial_time) >= gVariables.eventTime1_sound and 
                      int(gVariables.current_trial_time) <= gVariables.eventTime2_movement 
                      and gVariables.current_trial_number == 0):
                     gVariables.logger.info('Start trial movement detection')
-                    gVariables.movementVector = [ 0 for i in range(gVariables.movementVectorLength)]
+                    gVariables.videoDet.resetMovementTime()
                     gVariables.current_trial_number = 1
                 elif (int(gVariables.current_trial_time) >= gVariables.eventTime2_movement and 
                       gVariables.current_trial_number == 1):
@@ -212,18 +190,17 @@ def giveReward():
 if __name__ == '__main__':
     import time
     import threading
+    
     try:
         from configvideo import *
     except ImportError:
         print "File configvideo.py not found."
     except:
         print "Error importing configvideo" 
-    #logging
-    import logging
 
+    #Input
     import termios, fcntl, sys, os
     fd = sys.stdin.fileno()
-    
     try:
         oldterm = termios.tcgetattr(fd)
         newattr = termios.tcgetattr(fd)
@@ -234,19 +211,15 @@ if __name__ == '__main__':
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
     except:
         print "Error capturing input."
-    
+    #logging
     formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     dateformat = '%Y/%m/%d %I:%M:%S %p'
-    
-    
-
-    logging.basicConfig(filename='logs/training_4_%s.log' % (time.strftime("%Y-%m-%d")), filemode='a',
+    import logging
+    logging.basicConfig(filename='logs/%s_%s.log' % (gVariables.trainingName,time.strftime("%Y-%m-%d")), filemode='a',
     level=logging.DEBUG, format=formatter, datefmt = dateformat)
-
     gVariables.logger = logging.getLogger('main')
     gVariables.logger.info('===============================================')
-    gVariables.logger.info('Start Training 4')
-    #end logging
+    gVariables.logger.info('Start %s' % gVariables.trainingName)
     #valve:
     import valve
     gVariables.valve1 = valve.Valve()
@@ -256,13 +229,12 @@ if __name__ == '__main__':
     gVariables.s2 = soundGen.soundGen(gVariables.soundGenFrequency2, gVariables.soundGenDuration)
     #variables to be used as calibration
     gVariables.movementThreshold = gVariables.initialMovementThreshold
-    movementWindow = gVariables.initialWindowThreshold
     gVariables.trialTime = 0
     gVariables.trialExecuting = 0 #boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
     # Create thread for executing detection tasks without interrupting user input.
     fred1 = threading.Thread(target=loopFunction)
     fred1.start()
-    time.sleep(1.5)
+    time.sleep(1.3) #to print Instructions after calibration printings.
     printInstructions()
     try:
         while(True):
@@ -296,16 +268,16 @@ if __name__ == '__main__':
                     print "Movement Threshold changed to : " + str(gVariables.movementThreshold)
                     printInstructions()
                 elif (key == 'e'):
-                    gVariables.movementVectorCount += 1
-                    if gVariables.movementVectorCount > gVariables.movementVectorLength:
-                        gVariables.movementVectorCount = gVariables.movementVectorLength
-                    print "Movement Vector count changed to : " + str(gVariables.movementVectorCount)
+                    gVariables.movementTime += 1
+                    if gVariables.movementTime > gVariables.maxMovementTime:
+                        gVariables.movementTime = gVariables.maxMovementTime
+                    print "Movement Time changed to : " + str(gVariables.movementTime * 100) + " ms"
                     printInstructions()
                 elif (key == 'E'):
-                    gVariables.movementVectorCount -= 1
-                    if gVariables.movementVectorCount < 1:
-                        gVariables.movementVectorCount = 1
-                    print "Movement Vector count changed to : " + str(gVariables.movementVectorCount)
+                    gVariables.movementTime -= 1
+                    if gVariables.movementTime < 1:
+                        gVariables.movementTime = 1
+                    print "Movement Time changed to : " + str(gVariables.movementTime * 100) + " ms"
                     printInstructions()
                 elif (key == 'l'):
                     gVariables.videoDet.calibrate()
@@ -313,18 +285,6 @@ if __name__ == '__main__':
                 elif (key == 'L'):
                     gVariables.videoDet.calibrate()
                     gVariables.videoDet.setNoiseFiltering(False)
-                elif (key == 'w'):
-                    movementWindow +=1
-                    if movementWindow > gVariables.maxWindowThreshold:
-                        movementWindow = gVariables.maxWindowThreshold
-                    print "Movement Window changed to : " + str(movementWindow) + "seconds"
-                    printInstructions()
-                elif (key == 'W'):
-                    movementWindow -=1
-                    if movementWindow < 1:
-                        movementWindow = 1
-                    print "Movement Window changed to : " + str(movementWindow) + "seconds"
-                    printInstructions()
                 elif (key == 'k'):
                     if gVariables.trialExecuting == 0:
                         restartTraining()
@@ -349,14 +309,12 @@ if __name__ == '__main__':
             except IOError: pass
             
             #print trialTime
-            time.sleep(.05)
+            time.sleep(0.08)
     except:
-        print "Closing Training 4."
+        print "Closing %s." % gVariables.trainingName
     finally:
-        print "."
         termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
-        gVariables.logger.info('End Training 4')
-        print "-"
+        gVariables.logger.info('End %s'% gVariables.trainingName)
         import os
         os._exit(0)
