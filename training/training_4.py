@@ -24,7 +24,7 @@ class gVariables():
     eventTime1_sound = 1.0 #in seconds. Instant of time when the soundGen ends.
     eventTime2_movement = 3.0 #in seconds. Instant of time when movement ceases to be considered for reward
     eventTime3_trialEnd = 7.0 #in seconds. Instant of time when the trial ends.
-    
+    minIdleIntertrialTime = 2.0 #no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
     
     initialMovementThreshold = 200
     maxMovementThreshold = 1000
@@ -129,7 +129,9 @@ def trialLoop():
             #print gVariables.current_trial_time
             
             if (gVariables.trialExecuting == True):
-                if (gVariables.current_trial_number == 3 ):
+                if (gVariables.current_trial_number == 3 and 
+                    gVariables.videoDet.getIdleTime() > gVariables.minIdleIntertrialTime and
+                    gVariables.videoDet.getMovementStatus() == False):
                     gVariables.logger.info('Starting trial:%d' % gVariables.trialCount)
                     gVariables.trialCount+=1
                     gVariables.dropReleased = 0
@@ -286,7 +288,7 @@ if __name__ == '__main__':
                     gVariables.videoDet.calibrate()
                     gVariables.videoDet.setNoiseFiltering(False)
                 elif (key == 'k'):
-                    if gVariables.trialExecuting == 0:
+                    if gVariables.trialExecuting == False:
                         restartTraining()
                         print "8 second trial activated:"
                         print "  %d second: tone" %gVariables.soundGenDuration
@@ -294,7 +296,7 @@ if __name__ == '__main__':
                         print "  4 second: inter trial delay time"
                         
                     else:
-                        gVariables.trialExecuting = 0
+                        gVariables.trialExecuting = False
                         stopTraining()
                         print "8 second trial deactivated."
                         
