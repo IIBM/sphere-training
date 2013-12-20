@@ -36,32 +36,27 @@ class gVariables():
     movementVectorLength = 15 #length of vector, should be greater than movementVectorCount
     movementVectorCount = 8 #number of elements from vector to be looked at as 1 when detecting movement
     
-    
     soundGenDuration = eventTime1_sound
     soundGenFrequency1 = 1000.0
     soundGenFrequency2 = 2000.0
-    totalTimeDuration = eventTime1_sound + eventTime2_movement + eventTime3_trialEnd #in seconds
-    timeThreshold_01 = 20
-    timeThreshold_02 = 64
-    timeThreshold_03 = 150
     
-    trialCount = 0
-    successTrialCount=0
+    trialCount = 0 #total number of trials
+    successTrialCount=0 #total number of succesful trials
     successRate = 0 #success rate = (success trials / total trial count) %
-    dropReleased = 0
+    dropReleased = 0 #0: no drop of water released this trial, 1: drop of water released
     trialExecuting = False #if true, the trial is online and working. Else, it has been stopped or never started
     
     countMovement = 0 #if it reaches 10, there has been detected a sustained movement for 1000 ms => give reward
     countIdleTime = 0 #if it reaches 10, there has NOT been detected a sustained movement for 1000 ms => reset counters
     
     #video Detection:
-    videoDet=0 #initialized on the main.
+    videoDet=0 # video Detection object. initialized in the main.
     
     start_time = timeit.default_timer() #time when training with tone started.
     current_trial_start_time = timeit.default_timer() #current trial in execution, absolute time it started
     current_trial_time = timeit.default_timer() #second of the current trial (between 0 and the maximum length of a trial)
     
-    current_trial_number = 0 #0: tone, 1: movement detection, 3: inter-trial
+    current_trial_number = 0 #0: tone, 1: movement detection, 2: inter-trial, 3: instant before changing to 0
 
             
     def recalculateTimeIntervals(self):
@@ -207,8 +202,7 @@ def stopTraining():
 
 def giveReward():
     if (gVariables.dropReleased == 0):
-        if (gVariables.trialTime > gVariables.timeThreshold_01 
-            and gVariables.trialTime < gVariables.timeThreshold_02):
+        if (gVariables.current_trial_number == 1):
             #print "Release drop of water."
             gVariables.valve1.drop()
             gVariables.logger.debug("Release drop of water.")
