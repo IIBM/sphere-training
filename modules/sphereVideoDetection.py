@@ -20,25 +20,27 @@ class sphereVideoDetection():
 	def __init__ (self,videosource, width=640, height=480) :
 		    
 		    
-		    import multiprocessing
-		    #import threading
-		    
-		    
-		    #container = track_bola_utils.emptyVariableContainer()
-		    
+		    self.winName = "Track-bola - Video Detection"
 
-		    
-		    
+		    #declare self variables to use.
+		    import track_bola_utils
+		    self.vectorInstantaneo = track_bola_utils.vectorSimple() #vector acumulado
+		    self.startCalibration = True
+		    self.VIDEOSOURCE = videosource
+		    self.CAM_WIDTH = width
+		    self.CAM_HEIGHT = height
+		    self.CV2THRESHOLD = 160
+		    #variables for keeping track of continuous movement.
+		    self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected until now
+		    self.continuousIdleTime = 0 #amount of seconds that no movement was detected until now.
+		    self.isMoving = False #if true, it is currently in movement. False => currently idle
+		    self.noiseFiltering = True
+		    self.maxPointMovement = 2000 #movementThreshold
+		    self.movementVector = [0,0,0,0,0,0,0,0,0,0] #has the history of previous movements, separated by 0.1 seconds
+		    import threading
 		    # Create one non-blocking thread for capturing video Stream
-		    #fred1 = threading.Thread(target=self.mainVideoDetection(videosource, width, height))
-		    #fred1.start()
-		    
-		    
-		    
-		    p = multiprocessing.Process(target=self.mainVideoDetection(videosource, width, height))
-		    p.start()
-		    #print "Video detection started"
-		    
+		    fred1 = threading.Thread(target=self.mainVideoDetection)
+		    fred1.start()
 			
 	def getAccumulatedVector(self):
 		return [self.vectorInstantaneo.x, self.vectorInstantaneo.y]
@@ -84,7 +86,7 @@ class sphereVideoDetection():
 			self.movementVector[9] = self.maxPointMovement
 		#print self.movementVector
 	
-	def mainVideoDetection(self, videosource, width, height):
+	def mainVideoDetection(self):
 	    import cv as cv
 	    import cv2
 	    import math
@@ -94,24 +96,6 @@ class sphereVideoDetection():
 	    import sys
 	    import os
 	    import signal
-	    import track_bola_utils
-	
-	
-	    self.winName = "Track-bola - Video Detection"
-	    self.vectorInstantaneo = track_bola_utils.vectorSimple() #vector acumulado
-	    self.startCalibration = True
-	    self.VIDEOSOURCE = videosource
-	    self.CAM_WIDTH = width
-	    self.CAM_HEIGHT = height
-	    self.CV2THRESHOLD = 160
-	    #variables for keeping track of continuous movement.
-	    self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected until now
-	    self.continuousIdleTime = 0 #amount of seconds that no movement was detected until now.
-	    self.isMoving = False #if true, it is currently in movement. False => currently idle
-	    self.noiseFiltering = True
-	    self.maxPointMovement = 2000 #movementThreshold
-	    self.movementVector = [0,0,0,0,0,0,0,0,0,0] #has the history of previous movements, separated by 0.1 seconds
-	    
 	    """
 	        Programa de detección de movimiento:
 	        Se enciende timer de socket para enviar datos de mouse.
@@ -132,7 +116,7 @@ class sphereVideoDetection():
 	    MIN_CONTOUR_AREA = 60 #mínimo área del contorno para que sea válido.
 	    MAX_CONTOUR_AREA = 2600 #máximo área del contorno para que sea válido.
 	    self.WORKING_MIN_CONTOUR_AREA = 9999 #ídem pero calibrado para situación actual
-	    WORKING__CONTOUR_AREA = 0 #ídem pero calibrado para situación actual
+	    self.WORKING_MAX_CONTOUR_AREA = 0 #ídem pero calibrado para situación actual
 	    self.MIN_CIRCLE_MOVEMENT = 3 #mínima diferencia en movimiento del círculo para considerarlo como movimiento
 	    self.MAX_CIRCLE_MOVEMENT = 35 #máx diferencia en movimiento del círculo para considerarlo como movimiento
 	    
@@ -183,7 +167,7 @@ class sphereVideoDetection():
 	    # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
 	    t_current = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
 	    t_plus = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
-	    time.sleep(0.5)
+	    time.sleep(0.3)
 	    #################################################################
 	    ###    CALIBRACIÓN  ##
 	    #################################################################
@@ -248,7 +232,7 @@ class sphereVideoDetection():
 	    self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
 	    
 	    
-	    time.sleep(0.5)
+	    time.sleep(0.3)
 	    print "Fin calibración."
 	    self.startCalibration = False
 	    #################################################################
