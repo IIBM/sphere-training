@@ -23,8 +23,11 @@ class gVariables():
     #relevant Training variables
     eventTime1_sound = 1.0 #in seconds. Instant of time when the soundGen ends.
     eventTime2_movement = 3.0 #in seconds. Instant of time when movement ceases to be considered for reward
-    eventTime3_trialEnd = 7.0 #in seconds. Instant of time when the trial ends.
+    eventTime3_trialEnd = 10.0 #in seconds. Instant of time when the trial ends.
     minIdleIntertrialTime = 2.0 #no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
+    
+    interTrialRandom1Time = 5.0 #intertrial time is random between this value and the random2 value
+    interTrialRandom2Time = 10.0 #intertrial time is random between previous value and this value.
     
     initialMovementThreshold = 200
     maxMovementThreshold = 1000
@@ -79,8 +82,10 @@ def initDisplay():
     gVariables.display = trainingDisplay.trainingDisplay()
     gVariables.display.addImportantInfo(("Trials", 0))
     gVariables.display.addImportantInfo(("Succesful Trials", 0))
+    gVariables.display.addImportantInfo(("Time", 0))
     gVariables.display.addSecondaryInfo(("% s/t",0.0))
-    gVariables.display.addSecondaryInfo(("Time", 0))
+    gVariables.display.addSecondaryInfo(("Trial Time","0 - 10"))
+    
     gVariables.display.renderAgain()
 
 def updateDisplayInfo():
@@ -99,6 +104,8 @@ def updateDisplayInfo():
                         tempS = str(tempH)[:3]
                     gVariables.successRate = tempS
                     gVariables.display.updateInfo("% s/t", gVariables.successRate)
+                    a = str(gVariables.current_trial_time)[:4] + " - " + str(gVariables.eventTime3_trialEnd)
+                    gVariables.display.updateInfo("Trial Time", a)
     gVariables.display.renderAgain()
 
 def loopFunction():
@@ -139,6 +146,12 @@ def trialLoop():
                     gVariables.logger.info('tone 1: 1 kHz')
                     gVariables.s1.play()
                     gVariables.current_trial_number = 0
+                    
+                    #add random factor to the intertrial time in the next one:
+                    from random import randint
+                    i = randint(0,10)
+                    scaleF = (gVariables.interTrialRandom2Time - gVariables.interTrialRandom1Time) / 10
+                    gVariables.eventTime3_trialEnd = gVariables.eventTime2_movement + gVariables.interTrialRandom1Time + (i * scaleF)
                     
                 if ( int(gVariables.current_trial_time) >= gVariables.eventTime1_sound and 
                      int(gVariables.current_trial_time) <= gVariables.eventTime2_movement 
