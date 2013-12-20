@@ -29,9 +29,7 @@ class gVariables():
     interTrialRandom1Time = 5.0 #intertrial time is random between this value and the random2 value
     interTrialRandom2Time = 10.0 #intertrial time is random between previous value and this value.
     
-    initialMovementThreshold = 200
-    maxMovementThreshold = 1000
-    movementThreshold = initialMovementThreshold #amount of movement after which movement is considered '1'
+    maxMovementThreshold = 200
     maxMovementTime = 11 #max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
     movementTime = 5 # time for a continuous time that should be reached to give reward.
     #ex.: movementTime = 5 means that there should be movement detected over 500 ms at least
@@ -242,8 +240,6 @@ if __name__ == '__main__':
     import soundGen
     gVariables.s1 = soundGen.soundGen(gVariables.soundGenFrequency1, gVariables.soundGenDuration)
     gVariables.s2 = soundGen.soundGen(gVariables.soundGenFrequency2, gVariables.soundGenDuration)
-    #variables to be used as calibration
-    gVariables.movementThreshold = gVariables.initialMovementThreshold
     gVariables.trialTime = 0
     gVariables.trialExecuting = 0 #boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
     # Create thread for executing detection tasks without interrupting user input.
@@ -271,16 +267,16 @@ if __name__ == '__main__':
                     gVariables.logger.info('tone 2: %d Hz'% gVariables.soundGenFrequency2)
                     gVariables.s2.play()
                 elif (key == 't'):
-                    gVariables.movementThreshold += 10
-                    if gVariables.movementThreshold > gVariables.maxMovementThreshold:
-                        gVariables.movementThreshold = gVariables.maxMovementThreshold
-                    print "Movement Threshold changed to : " + str(gVariables.movementThreshold)
+                    gVariables.videoDet.setMovementThreshold(gVariables.videoDet.getMovementThreshold() + 10)
+                    if gVariables.videoDet.getMovementThreshold() > gVariables.maxMovementThreshold:
+                        gVariables.videoDet.setMovementThreshold(gVariables.maxMovementThreshold)
+                    print "Movement Threshold changed to : " + str(gVariables.videoDet.getMovementThreshold())
                     printInstructions()
                 elif (key == 'T'):
-                    gVariables.movementThreshold -= 10
-                    if gVariables.movementThreshold < 10:
-                        gVariables.movementThreshold = 10
-                    print "Movement Threshold changed to : " + str(gVariables.movementThreshold)
+                    gVariables.videoDet.setMovementThreshold(gVariables.videoDet.getMovementThreshold() - 10)
+                    if gVariables.videoDet.getMovementThreshold() < 10:
+                        gVariables.videoDet.setMovementThreshold(10)
+                    print "Movement Threshold changed to : " + str(gVariables.videoDet.getMovementThreshold())
                     printInstructions()
                 elif (key == 'e'):
                     gVariables.movementTime += 1
