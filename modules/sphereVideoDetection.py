@@ -31,12 +31,12 @@ class sphereVideoDetection():
         self.CAM_HEIGHT = height
         self.CV2THRESHOLD = 160
         #variables for keeping track of continuous movement.
-
         self.noiseFiltering = True
         self.internalMovementCounter = 0 #counter, amount of cycles over which integration of movement is made.
         
         self.sleepTime = 0.012 #Main loop sleep time.
         self.movement_loopNumberSpan = 20 #amount of main loops that movement is integrated into.
+        self.movementThreshold = 50 #threshold set to 50
         
         self.loopDuration = self.sleepTime * 1.0 #the duration of the main loop is the sleep time + some correction
         
@@ -71,7 +71,7 @@ class sphereVideoDetection():
     def getInstantX(self):
        return self.vectorInstantaneo.x
 	
-    def getInstantX(self):
+    def getInstantY(self):
         return self.vectorInstantaneo.y
 
     def calibrate(self):
@@ -101,6 +101,13 @@ class sphereVideoDetection():
     def resetIdleTime(self):
         self.continuousIdleTime = 0
     
+    def setMovementThreshold(self, thres):
+        #Movement threshold: how much "movement" between two frames should be considered as "movement"
+        #Be careful changing this value, it is extremely sensitive.
+        self.movementThreshold = int(thres)
+    
+    def getMovementThreshold(self):
+        return int(self.movementThreshold)
     
     def getMovementStatus(self):
         return self.isMoving #true if right now it is moving, false otherwise.
@@ -112,7 +119,7 @@ class sphereVideoDetection():
             #this function analyzes continuous movement. If detected, saves the amount of seconds of the movement so far.
             #if idle is detected, it saves how much time the subject is idle.
             if (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
-                abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= 50):
+                abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= self.movementThreshold):
                 #print "moving"
                 if (self.isMoving == False):
                     #was idle, now started to move. We erase time movement counter and start from 0 now
