@@ -149,6 +149,7 @@ def loopFunction():
         return
 
 def restartTraining():
+        logger.info('Restarting.')
         print "Restarting."
         try:
             import timeit
@@ -181,8 +182,10 @@ if __name__ == '__main__':
         from configvideo import *
     except ImportError:
         print "File configvideo.py not found."
+        logger.error("File configvideo.py not found.")
     except:
         print "Error importing configvideo" 
+        logger.error("Error importing configvideo")
     #logging
     import logging
 
@@ -199,18 +202,20 @@ if __name__ == '__main__':
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
     except:
         print "Error capturing input."
+        logger.error("Error capturing input.")
 
     time.sleep(2)
 
     formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     dateformat = '%Y/%m/%d %I:%M:%S %p'
 
-    logging.basicConfig(filename='logs/training4.log', filemode='a',
+    logging.basicConfig(filename='logs/training_4_%s.log' %(time.strftime("%Y-%m-%d")), filemode='a',
     level=logging.DEBUG, format=formatter, datefmt = dateformat)
 
     logger = logging.getLogger('main')
     logger.info('===============================================')
     logger.info('Start Training 4')
+    
     #end logging
     #valve:
     import valve
@@ -331,6 +336,10 @@ if __name__ == '__main__':
                 elif gVariables.trialTime> gVariables.timeThreshold_03:
                     gVariables.trialTime = 0
                     logger.info('End trial:%d' % gVariables.trialCount)
+                    if (gVariables.dropReleased == 1):
+                        logger.info('Trial was successful')
+                    else:
+                        logger.info('Trial was not successful')
                     logger.info('Success rate:%r' % (gVariables.successRate))
             #print trialTime
             time.sleep(.05)
