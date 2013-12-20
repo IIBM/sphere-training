@@ -21,14 +21,14 @@ import logging
 class gVariables():
     trainingName = "Training 4"
     #relevant Training variables
-    duration1_Sound = 1.0 #in seconds. Amount of time that the soundGen is executed.
-    duration2_Movement = 2.0 #in seconds. Amount of time during which movement is considered
-    duration3_interTrial = 4.0 #in seconds. Amount of delay time between two trials.
+    eventTime1_sound = 1.0 #in seconds. Instant of time when the soundGen is executed.
+    eventTime2_movement = 3.0 #in seconds. Instant of time when movement ceases to be considered for reward
+    eventTime3_trialEnd = 7.0 #in seconds. Instant of time when the trial ends.
+    durationTotal = eventTime1_sound + eventTime2_movement + eventTime3_trialEnd
     ##
     timeWindowDivider = 10.0
     initialWindowThreshold = 1
     maxWindowThreshold = 5
-    
     
     initialMovementThreshold = 200
     maxMovementThreshold = 1000
@@ -37,10 +37,10 @@ class gVariables():
     movementVectorCount = 8 #number of elements from vector to be looked at as 1 when detecting movement
     
     
-    soundGenDuration = duration1_Sound
+    soundGenDuration = eventTime1_sound
     soundGenFrequency1 = 1000.0
     soundGenFrequency2 = 2000.0
-    totalTimeDuration = duration1_Sound + duration2_Movement + duration3_interTrial #in seconds
+    totalTimeDuration = eventTime1_sound + eventTime2_movement + eventTime3_trialEnd #in seconds
     timeThreshold_01 = 20
     timeThreshold_02 = 64
     timeThreshold_03 = 150
@@ -57,9 +57,11 @@ class gVariables():
     #video Detection:
     videoDet=0 #initialized on the main.
     
-    import timeit
-    start_time = timeit.default_timer()
+    start_time = timeit.default_timer() #time when training with tone started.
+    current_trial_start_time = timeit.default_timer() #current trial in execution, absolute time it started
+    current_trial_time = timeit.default_timer() #second of the current trial (between 0 and the maximum length of a trial)
     
+    current_trial_number = 0 #0: tone, 1: movement detection, 3: inter-trial
 
             
     def recalculateTimeIntervals(self):
@@ -112,7 +114,6 @@ def loopFunction():
     print gVariables.trainingName
     import sphereVideoDetection
     gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
-    
     gVariables.movementVector = [] #has the history of previous movements, separated by 0.1 seconds
     for i in range (0, gVariables.movementVectorLength):
         gVariables.movementVector.append(0)
@@ -121,6 +122,7 @@ def loopFunction():
     initDisplay()
     try:
         while(True):
+                trialLoop()
                 gVariables.videoDet.resetX()
                 gVariables.videoDet.resetY()
                 time.sleep(movementWindow / gVariables.timeWindowDivider)
@@ -133,7 +135,7 @@ def loopFunction():
                     gVariables.movementVector[gVariables.movementVectorLength-1] = 1
                 else:
                     gVariables.movementVector[gVariables.movementVectorLength-1] = 0
-                logger.debug('Movement Vector: %s',gVariables.movementVector)
+                gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
                 
                 thresholdReached = True
                 for i in range (gVariables.movementVectorLength-1 - gVariables.movementVectorCount, gVariables.movementVectorLength-1):
@@ -148,15 +150,53 @@ def loopFunction():
     finally:
         return
 
+
+def trialLoop():
+            #This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
+            gVariables.current_trial_time = (timeit.default_timer() - gVariables.current_trial_start_time)
+            #print gVariables.current_trial_time
+            
+            if (gVariables.trialExecuting == True):
+                if (gVariables.current_trial_number == 3 ):
+                    gVariables.logger.info('Starting trial:%d' % gVariables.trialCount)
+                    gVariables.trialCount+=1
+                    gVariables.dropReleased = 0
+                    gVariables.current_trial_start_time = timeit.default_timer()
+                    gVariables.logger.info('tone 1: 1 kHz')
+                    gVariables.s1.play()
+                    gVariables.current_trial_number = 0
+                if ( int(gVariables.current_trial_time) >= gVariables.eventTime1_sound and 
+                     int(gVariables.current_trial_time) <= gVariables.eventTime2_movement 
+                     and gVariables.current_trial_number == 0):
+                    gVariables.logger.info('Start trial movement detection')
+                    gVariables.movementVector = [ 0 for i in range(gVariables.movementVectorLength)]
+                    gVariables.current_trial_number = 1
+                elif (int(gVariables.current_trial_time) >= gVariables.eventTime2_movement and 
+                      gVariables.current_trial_number == 1):
+                    gVariables.logger.info('End trial movement detection')
+                    gVariables.logger.info('Start inter-trial delay')
+                    gVariables.current_trial_number = 2
+                elif (int(gVariables.current_trial_time) >= gVariables.eventTime3_trialEnd and
+                      gVariables.current_trial_number == 2):
+                    gVariables.trialTime = 0
+                    gVariables.logger.info('End trial:%d' % gVariables.trialCount)
+                    if(gVariables.dropReleased==1):
+                        gVariables.logger.info('Trial succesful')
+                    else:
+                        gVariables.logger.info('Trial not succesful')
+                    gVariables.logger.info('Success rate:%r' % (gVariables.successRate))
+                    gVariables.current_trial_number = 3
+
+
 def restartTraining():
-        logger.info('Restarting.')
         print "Restarting."
         try:
             import timeit
             gVariables.start_time = timeit.default_timer()
+            gVariables.current_trial_start_time = timeit.default_timer()
         except:
             pass
-        
+        gVariables.current_trial_number = 3
         gVariables.trialCount = 0
         gVariables.successTrialCount=0
         gVariables.trialExecuting = True
@@ -171,7 +211,7 @@ def giveReward():
             and gVariables.trialTime < gVariables.timeThreshold_02):
             #print "Release drop of water."
             gVariables.valve1.drop()
-            logger.debug("Release drop of water.")
+            gVariables.logger.debug("Release drop of water.")
             gVariables.successTrialCount+=1
             gVariables.dropReleased = 1
 
@@ -182,10 +222,8 @@ if __name__ == '__main__':
         from configvideo import *
     except ImportError:
         print "File configvideo.py not found."
-        logger.error("File configvideo.py not found.")
     except:
         print "Error importing configvideo" 
-        logger.error("Error importing configvideo")
     #logging
     import logging
 
@@ -202,57 +240,55 @@ if __name__ == '__main__':
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
     except:
         print "Error capturing input."
-        logger.error("Error capturing input.")
-
-    time.sleep(2)
-
+    
     formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     dateformat = '%Y/%m/%d %I:%M:%S %p'
+    
+    
 
-    logging.basicConfig(filename='logs/training_4_%s.log' %(time.strftime("%Y-%m-%d")), filemode='a',
+    logging.basicConfig(filename='logs/training_4_%s.log' % (time.strftime("%Y-%m-%d")), filemode='a',
     level=logging.DEBUG, format=formatter, datefmt = dateformat)
 
-    logger = logging.getLogger('main')
-    logger.info('===============================================')
-    logger.info('Start Training 4')
-    
+    gVariables.logger = logging.getLogger('main')
+    gVariables.logger.info('===============================================')
+    gVariables.logger.info('Start Training 4')
     #end logging
     #valve:
     import valve
     gVariables.valve1 = valve.Valve()
     #soundGen
     import soundGen
-    s1 = soundGen.soundGen(gVariables.soundGenFrequency1, gVariables.soundGenDuration)
-    s2 = soundGen.soundGen(gVariables.soundGenFrequency2, gVariables.soundGenDuration)
+    gVariables.s1 = soundGen.soundGen(gVariables.soundGenFrequency1, gVariables.soundGenDuration)
+    gVariables.s2 = soundGen.soundGen(gVariables.soundGenFrequency2, gVariables.soundGenDuration)
     #variables to be used as calibration
     gVariables.movementThreshold = gVariables.initialMovementThreshold
     movementWindow = gVariables.initialWindowThreshold
     gVariables.trialTime = 0
-    isTrial = 0 #boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
+    gVariables.trialExecuting = 0 #boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
     # Create thread for executing detection tasks without interrupting user input.
     fred1 = threading.Thread(target=loopFunction)
     fred1.start()
-    time.sleep(4)
+    time.sleep(1.5)
     printInstructions()
     try:
         while(True):
             try:
                 key = sys.stdin.read(1)#cv2.waitKey(100) #in miliseconds
                 if (key == 'o'): #escape pressed
-                    logger.info('valve open')
+                    gVariables.logger.info('valve open')
                     gVariables.valve1.open()
                 elif (key == 'c'):
-                    logger.info('valve close')
+                    gVariables.logger.info('valve close')
                     gVariables.valve1.close()
                 elif (key == 'd'):
-                    logger.info('valve drop')
+                    gVariables.logger.info('valve drop')
                     gVariables.valve1.drop()
                 elif (key == '1'):
-                    logger.info('tone 1: %d Hz' % gVariables.soundGenFrequency1)
-                    s1.play()
+                    gVariables.logger.info('tone 1: %d Hz' % gVariables.soundGenFrequency1)
+                    gVariables.s1.play()
                 elif (key == '2'):
-                    logger.info('tone 2: %d Hz'% gVariables.soundGenFrequency2)
-                    s2.play()
+                    gVariables.logger.info('tone 2: %d Hz'% gVariables.soundGenFrequency2)
+                    gVariables.s2.play()
                 elif (key == 't'):
                     gVariables.movementThreshold += 10
                     if gVariables.movementThreshold > gVariables.maxMovementThreshold:
@@ -296,9 +332,7 @@ if __name__ == '__main__':
                     print "Movement Window changed to : " + str(movementWindow) + "seconds"
                     printInstructions()
                 elif (key == 'k'):
-                    if isTrial == 0:
-                        isTrial = 1
-                        gVariables.trialTime = 0
+                    if gVariables.trialExecuting == 0:
                         restartTraining()
                         print "8 second trial activated:"
                         print "  %d second: tone" %gVariables.soundGenDuration
@@ -306,41 +340,20 @@ if __name__ == '__main__':
                         print "  4 second: inter trial delay time"
                         
                     else:
-                        isTrial = 0
+                        gVariables.trialExecuting = 0
                         stopTraining()
                         print "8 second trial deactivated."
                         
                 elif (key=='\x1b' or key=='q'):
                     print "Exiting."
-                    logger.info('Exit signal key = %s',key)
+                    gVariables.logger.info('Exit signal key = %s',key)
                     import signal
                     os.kill(os.getpid(), signal.SIGINT)
                     sys.exit()
                 else :
                     print "another key pressed"
             except IOError: pass
-            if (isTrial == 1):
-                gVariables.trialTime +=1
-                if (gVariables.trialTime == 1 ):
-                    logger.info('Starting trial:%d' % gVariables.trialCount)
-                    gVariables.trialCount+=1
-                    gVariables.dropReleased = 0
-                    logger.info('tone 1: 1 kHz')
-                    s1.play()
-                if (gVariables.trialTime == gVariables.timeThreshold_01):
-                    logger.info('Start trial movement detection')
-                    gVariables.movementVector = [ 0 for i in range(gVariables.movementVectorLength)]
-                elif (gVariables.trialTime == gVariables.timeThreshold_02):
-                    logger.info('End trial movement detection')
-                    logger.info('Start inter-trial delay')
-                elif gVariables.trialTime> gVariables.timeThreshold_03:
-                    gVariables.trialTime = 0
-                    logger.info('End trial:%d' % gVariables.trialCount)
-                    if (gVariables.dropReleased == 1):
-                        logger.info('Trial was successful')
-                    else:
-                        logger.info('Trial was not successful')
-                    logger.info('Success rate:%r' % (gVariables.successRate))
+            
             #print trialTime
             time.sleep(.05)
     except:
@@ -349,7 +362,7 @@ if __name__ == '__main__':
         print "."
         termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
-        logger.info('End Training 4')
+        gVariables.logger.info('End Training 4')
         print "-"
         import os
         os._exit(0)
