@@ -8,7 +8,6 @@
     generate movement or not, and a reward in case there has been detected continous movement. Then follows a 5 second delay
     between this and the next trial.<>
     
-    Different algorithm than training_3
 """
 ######################################################><
 import os, sys
@@ -53,6 +52,7 @@ class gVariables():
     start_time = timeit.default_timer() #time when training with tone started.
     current_trial_start_time = timeit.default_timer() #current trial in execution, absolute time it started
     current_trial_time = timeit.default_timer() #second of the current trial (between 0 and the maximum length of a trial)
+    current_trial_paused_time = 0 #to handle pause and resume correctly..
     
     current_trial_number = 0 #0: tone, 1: movement detection, 2: inter-trial, 3: instant before changing to 0
 
@@ -71,8 +71,9 @@ def printInstructions():
     print '2: %d Hz tone' % gVariables.soundGenFrequency2
     print 't/T: increase/decrease threshold (10 - %d)' % gVariables.maxMovementThreshold
     print 'e/E: increase/decrease Movement Time needed for reward (100 ms - %d ms)' % (gVariables.maxMovementTime * 100)
-    print 'k: set 8 second trial training'
-    print 'l/L: recalibrate Video Input with/without noise filtering.'
+    print 'k: start or stop tone training'
+    print 'p: pause or resume tone training'
+    print 'l/L: recalibrate video input with/without noise filtering.'
     print 'q or ESC: quit'
 
 def initDisplay():
@@ -130,10 +131,14 @@ def loopFunction():
 
 def trialLoop():
             #This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
-            gVariables.current_trial_time = (timeit.default_timer() - gVariables.current_trial_start_time)
-            #print gVariables.current_trial_time
             
             if (gVariables.trialExecuting == True):
+                #Update Trial Time. Important since this is where events happen at certain moments in this line.
+                gVariables.current_trial_start_time += gVariables.current_trial_paused_time
+                gVariables.start_time += gVariables.current_trial_paused_time #we consider that training time has not passed in the pause state.
+                gVariables.current_trial_paused_time = 0
+                gVariables.current_trial_time = (timeit.default_timer() - gVariables.current_trial_start_time)
+                
                 if (gVariables.current_trial_number == 3 and 
                     gVariables.videoDet.getIdleTime() > gVariables.minIdleIntertrialTime and
                     gVariables.videoDet.getMovementStatus() == False):
@@ -144,6 +149,7 @@ def trialLoop():
                     gVariables.logger.info('tone 1: 1 kHz')
                     gVariables.s1.play()
                     gVariables.current_trial_number = 0
+                    gVariables.current_trial_paused_time = 0
                     
                     #add random factor to the intertrial time in the next one:
                     from random import randint
@@ -164,7 +170,6 @@ def trialLoop():
                     gVariables.current_trial_number = 2
                 elif (int(gVariables.current_trial_time) >= gVariables.eventTime3_trialEnd and
                       gVariables.current_trial_number == 2):
-                    gVariables.trialTime = 0
                     gVariables.logger.info('End trial:%d' % gVariables.trialCount)
                     if(gVariables.dropReleased==1):
                         gVariables.logger.info('Trial succesful')
@@ -175,7 +180,7 @@ def trialLoop():
 
 
 def restartTraining():
-        print "Restarting."
+        #print "Restarting."
         try:
             import timeit
             gVariables.start_time = timeit.default_timer()
@@ -186,10 +191,22 @@ def restartTraining():
         gVariables.trialCount = 0
         gVariables.successTrialCount=0
         gVariables.trialExecuting = True
+        gVariables.logger.info('Variables set. Starting %s' % gVariables.trainingName)
     
 def stopTraining():
         gVariables.trialExecuting = False
+        gVariables.logger.info('%s stopped.' % gVariables.trainingName)
 
+def pauseTraining():
+    gVariables.trialExecuting = False
+    gVariables.current_trial_paused_time = timeit.default_timer()
+    gVariables.logger.info('%s paused.' % gVariables.trainingName)
+
+def resumeTraining():
+    gVariables.trialExecuting = True
+    gVariables.current_trial_paused_time = (timeit.default_timer() - gVariables.current_trial_paused_time)
+    print gVariables.current_trial_paused_time
+    gVariables.logger.info('%s resumed.' % gVariables.trainingName)
 
 def giveReward():
     if (gVariables.dropReleased == 0):
@@ -200,30 +217,8 @@ def giveReward():
             gVariables.successTrialCount+=1
             gVariables.dropReleased = 1
 
-if __name__ == '__main__':
-    import time
-    import threading
-    
-    try:
-        from configvideo import *
-    except ImportError:
-        print "File configvideo.py not found."
-    except:
-        print "Error importing configvideo" 
 
-    #Input
-    import termios, fcntl, sys, os
-    fd = sys.stdin.fileno()
-    try:
-        oldterm = termios.tcgetattr(fd)
-        newattr = termios.tcgetattr(fd)
-        newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
-        termios.tcsetattr(fd, termios.TCSANOW, newattr)
-    
-        oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
-        fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
-    except:
-        print "Error capturing input."
+def trainingInit():
     #logging
     formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     dateformat = '%Y/%m/%d %I:%M:%S %p'
@@ -240,13 +235,42 @@ if __name__ == '__main__':
     import soundGen
     gVariables.s1 = soundGen.soundGen(gVariables.soundGenFrequency1, gVariables.soundGenDuration)
     gVariables.s2 = soundGen.soundGen(gVariables.soundGenFrequency2, gVariables.soundGenDuration)
-    gVariables.trialTime = 0
-    gVariables.trialExecuting = 0 #boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
+    gVariables.trialExecuting = False #boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
     # Create thread for executing detection tasks without interrupting user input.
+    import threading
     fred1 = threading.Thread(target=loopFunction)
     fred1.start()
     time.sleep(1.3) #to print Instructions after calibration printings.
     printInstructions()
+
+if __name__ == '__main__':
+    ######
+    #Input
+    ######
+    import termios, fcntl, sys, os
+    fd = sys.stdin.fileno()
+    try:
+        oldterm = termios.tcgetattr(fd)
+        newattr = termios.tcgetattr(fd)
+        newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+        termios.tcsetattr(fd, termios.TCSANOW, newattr)
+    
+        oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
+        fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+    except:
+        print "Error capturing input."
+    ####################
+    #Video configuration
+    ####################
+    try:
+        from configvideo import *
+    except ImportError:
+        print "File configvideo.py not found."
+    except:
+        print "Error importing configvideo" 
+    ###############
+    trainingInit()
+    ###############
     try:
         while(True):
             try:
@@ -293,22 +317,31 @@ if __name__ == '__main__':
                 elif (key == 'l'):
                     gVariables.videoDet.calibrate()
                     gVariables.videoDet.setNoiseFiltering(True)
+                    print "Calibrated. Noise Filtering is ON."
                 elif (key == 'L'):
                     gVariables.videoDet.calibrate()
                     gVariables.videoDet.setNoiseFiltering(False)
+                    print "Calibrated. Noise Filtering is OFF."
                 elif (key == 'k'):
                     if gVariables.trialExecuting == False:
                         restartTraining()
-                        print "8 second trial activated:"
-                        print "  %d second: tone" %gVariables.soundGenDuration
-                        print "  2 second: detection of movement"
-                        print "  4 second: inter trial delay time"
-                        
+                        print "Tone Training started."
+                        print "  %d seconds: tone" %gVariables.soundGenDuration
+                        print "  %d seconds: detection of movement" % (gVariables.eventTime2_movement -
+                                                                       gVariables.eventTime1_sound)
+                        print "  (%r - %r) seconds: inter trial delay time" % (gVariables.interTrialRandom1Time , 
+                                                                               gVariables.interTrialRandom2Time)
                     else:
-                        gVariables.trialExecuting = False
                         stopTraining()
-                        print "8 second trial deactivated."
+                        print "Tone Training stopped."
                         
+                elif (key == 'p'):
+                    if gVariables.trialExecuting == False:
+                        resumeTraining()
+                        print "Resuming Tone Training."
+                    else:
+                        pauseTraining()
+                        print "Tone Training paused."
                 elif (key=='\x1b' or key=='q'):
                     print "Exiting."
                     gVariables.logger.info('Exit signal key = %s',key)
@@ -318,8 +351,6 @@ if __name__ == '__main__':
                 else :
                     print "another key pressed"
             except IOError: pass
-            
-            #print trialTime
             time.sleep(0.08)
     except:
         print "Closing %s." % gVariables.trainingName
