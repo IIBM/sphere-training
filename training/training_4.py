@@ -23,10 +23,10 @@ class gVariables():
     eventTime1_sound = 1.0 #in seconds. Instant of time when the soundGen ends.
     eventTime2_movement = 3.0 #in seconds. Instant of time when movement ceases to be considered for reward
     eventTime3_trialEnd = 10.0 #in seconds. Instant of time when the trial ends.
-    minIdleIntertrialTime = 2.0 #no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
+    minIdleIntertrialTime = 1.0 #no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
     
-    interTrialRandom1Time = 5.0 #intertrial time is random between this value and the random2 value
-    interTrialRandom2Time = 10.0 #intertrial time is random between previous value and this value.
+    interTrialRandom1Time = 4.0 #intertrial time is random between this value and the random2 value
+    interTrialRandom2Time = 7.0 #intertrial time is random between previous value and this value.
     
     maxMovementThreshold = 200
     maxMovementTime = 11 #max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration

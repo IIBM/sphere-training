@@ -11,8 +11,7 @@
 
 import pygame
 from pygame.locals import *
-
-
+import logging
 
 class sphereVideoDetection():
 	
@@ -35,10 +34,10 @@ class sphereVideoDetection():
         self.internalMovementCounter = 0 #counter, amount of cycles over which integration of movement is made.
         
         self.sleepTime = 0.012 #Main loop sleep time.
-        self.movement_loopNumberSpan = 20 #amount of main loops that movement is integrated into.
+        self.movement_loopNumberSpan = 3 #amount of main loops that movement is integrated into.
         self.movementThreshold = 50 #threshold set to 50
         
-        self.loopDuration = self.sleepTime * 1.0 #the duration of the main loop is the sleep time + some correction
+        self.loopDuration = self.sleepTime * 3.0 #the duration of the main loop is the sleep time + some correction
         
         self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected last time it moved or currently
         self.continuousIdleTime = 0 #amount of seconds that no movement was detected last time it ceased movement or currently
@@ -135,7 +134,7 @@ class sphereVideoDetection():
                     self.continuousIdleTime = 0
                     self.isMoving = False
                 self.continuousIdleTime += self.movement_loopNumberSpan * self.loopDuration
-            #print self.continuousMovementTime , "...", self.continuousIdleTime
+            logging.info( str(self.continuousMovementTime) +"..." + str(self.continuousIdleTime) )
 
     def mainVideoDetection(self):
         import cv as cv
@@ -147,6 +146,7 @@ class sphereVideoDetection():
         import sys
         import os
         import signal
+	
         """
             Programa de detección de movimiento:
             Se enciende timer de socket para enviar datos de mouse.
