@@ -28,7 +28,7 @@ class sphereVideoDetection():
         self.VIDEOSOURCE = videosource
         self.CAM_WIDTH = width
         self.CAM_HEIGHT = height
-        self.CV2THRESHOLD = 160
+        self.CV2THRESHOLD = 160  #no esta claro para que sirve
         #variables for keeping track of continuous movement.
         self.noiseFiltering = True
         self.internalMovementCounter = 0 #counter, amount of cycles over which integration of movement is made.
@@ -78,7 +78,6 @@ class sphereVideoDetection():
         
     def setNoiseFiltering(self, bool):
         #Set Noise FIltering: False if you DON'T want noise filtering , because you consider that your input video has no noise.
-		#has no noi
         self.noiseFiltering = bool
 
     def getMovementTime(self):
@@ -211,85 +210,86 @@ class sphereVideoDetection():
         cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
         
         # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
-        t_current = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
-        t_plus = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
+        t_before = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
+        t_now = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
         time.sleep(0.3)
+
         #################################################################
         ###    CALIBRACIÓN  ##
         #################################################################
-        print "Calibrando"
-        im = cam.read()[1]
-        t_calib = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
-        cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
+#        print "Calibrando"
+#        im = cam.read()[1]
+#        t_calib = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+#        cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
         #ret,thresh = cv2.threshold(t_calib,127,255,cv2.THRESH_BINARY)
-        ret,thresh = cv2.threshold(t_calib,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
+#        ret,thresh = cv2.threshold(t_calib,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
         #Tomo los contornos (lo importante para analizar)
-        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+#        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
         
         #recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
-        circleCenters = []
-        circleRadius = []
-        for i in range(0,len(contours)):
-            cnt = contours[i]
-            (x,y),radius = cv2.minEnclosingCircle(cnt)
-            center = (int(x),int(y))
-            radius = int(radius)
-            if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
-                #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
-                cv2.circle(im,center,radius,(0,255,0),2)
-                circleCenters.append(center)
-                circleRadius.append(radius)
+#        circleCenters = []
+#        circleRadius = []
+#        for i in range(0,len(contours)):
+#            cnt = contours[i]
+#            (x,y),radius = cv2.minEnclosingCircle(cnt)
+#            center = (int(x),int(y))
+#            radius = int(radius)
+#            if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
+#                #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
+#                cv2.circle(im,center,radius,(0,255,0),2)
+#                circleCenters.append(center)
+#                circleRadius.append(radius)
                 
-        expectedValue = 0
-        minRadius = 9999
-        maxRadius = 0
-        for i in range (0,10):
-            cv2.imshow( self.winName , im )
-            time.sleep(0.01)
-            key = cv2.waitKey(10)
-        for i in range(0, len(circleRadius)):
-            expectedValue +=  circleRadius[i]
+#        expectedValue = 0
+#        minRadius = 9999
+#        maxRadius = 0
+#        for i in range (0,10):
+#            cv2.imshow( self.winName , im )
+#            time.sleep(0.01)
+#            key = cv2.waitKey(10)
+#        for i in range(0, len(circleRadius)):
+#            expectedValue +=  circleRadius[i]
              
-        expectedValue /= len(circleCenters)
-        for i in range (0, len(circleCenters)):
-            if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
-                maxRadius = circleRadius[i]
-            if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
-                minRadius = circleRadius[i]
-        if (self.noiseFiltering == False):
-            print "No noise filtering set."
-            self.MAX_CIRCLE_MOVEMENT = expectedValue*2
-            self.MIN_CIRCLE_MOVEMENT = expectedValue/8
-            minRadius = 1
-            if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-                self.MIN_CIRCLE_MOVEMENT = 2
-        else:
-             self.MAX_CIRCLE_MOVEMENT = expectedValue*1.5
-             self.MIN_CIRCLE_MOVEMENT = expectedValue/5
-             if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-                 self.MIN_CIRCLE_MOVEMENT = 2
-        print "Número de muestras: %d" % len(circleCenters)
-        print "Valor Esperado: %d" % expectedValue
-        print "Radio menor: %d" % minRadius
-        print "Radio mayor: %d" % maxRadius
-        print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
-        print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
-        self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
-        self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
+#        expectedValue /= len(circleCenters)
+#        for i in range (0, len(circleCenters)):
+#            if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
+#                maxRadius = circleRadius[i]
+#            if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
+#                minRadius = circleRadius[i]
+#        if (self.noiseFiltering == False):
+#            print "No noise filtering set."
+#            self.MAX_CIRCLE_MOVEMENT = expectedValue*2
+#            self.MIN_CIRCLE_MOVEMENT = expectedValue/8
+#            minRadius = 1
+#            if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+#                self.MIN_CIRCLE_MOVEMENT = 2
+#        else:
+#             self.MAX_CIRCLE_MOVEMENT = expectedValue*1.5
+#             self.MIN_CIRCLE_MOVEMENT = expectedValue/5
+#             if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+#                 self.MIN_CIRCLE_MOVEMENT = 2
+#        print "Número de muestras: %d" % len(circleCenters)
+#        print "Valor Esperado: %d" % expectedValue
+#        print "Radio menor: %d" % minRadius
+#        print "Radio mayor: %d" % maxRadius
+#        print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
+#        print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
+#        self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
+#        self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
         
         
         time.sleep(0.3)
         print "Fin calibración."
-        self.startCalibration = False
+        self.startCalibration = True
         #################################################################
         ######### fin calibración
         #################################################################
-        
+        Lnew = []
         while True:
                 ###########################################<>
                 # Preparo las imgs antigûa, actual y futura
                 ##########################################
-                #im toma una captura para t_plus, y para algunas geometrías que se dibujan encima de él.
+                #im toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
                 im = cam.read()[1]
                 #calibrate if necessary
                 if (self.startCalibration == True):
@@ -301,8 +301,7 @@ class sphereVideoDetection():
                     #recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
                     circleCenters = []
                     circleRadius = []
-                    for i in range(0,len(contours)):
-                        cnt = contours[i]
+                    for cnt in contours:
                         (x,y),radius = cv2.minEnclosingCircle(cnt)
                         center = (int(x),int(y))
                         radius = int(radius)
@@ -321,12 +320,17 @@ class sphereVideoDetection():
                     for i in range(0, len(circleRadius)):
                         expectedValue +=  circleRadius[i]
                     
-                    expectedValue /= len(circleCenters)
+                    if len(circleCenters) > 0:
+                      expectedValue /= len(circleCenters)
+                    else:
+                      expectedValue = 1
+
                     for i in range (0, len(circleCenters)):
                         if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
                             maxRadius = circleRadius[i]
                         if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
                             minRadius = circleRadius[i]
+
                     if (self.noiseFiltering == False):
                         print "No noise filtering set."
                         self.MAX_CIRCLE_MOVEMENT = expectedValue*2
@@ -349,55 +353,53 @@ class sphereVideoDetection():
                     self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
                     self.startCalibration = False
                 
-                #t_current es el del anterior ciclo, t_plus es el recién capturado (procesándolo 1ero..),
-                t_current = t_plus
-                t_plus = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+                #t_before es el del anterior ciclo, t_now es el recién capturado (procesándolo 1ero..),
+                t_before = t_now
+                t_now = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
                 
-                cv.Smooth(cv.fromarray(t_plus), cv.fromarray(t_plus), cv.CV_BLUR, 3);
-                #cv.Smooth(cv.fromarray(t_plus), cv.fromarray(t_plus), cv.CV_GAUSSIAN, 3, 0);
+                cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
+                #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_GAUSSIAN, 3, 0);
                 
                 #############################
-                #Proceso la imagen "antigUa": t_current
+                #Proceso la imagen "antigUa": t_before
                 #############################
-                ret,thresh = cv2.threshold(t_current,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
+                #ret,thresh = cv2.threshold(t_before,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
                 #Tomo los contornos (lo importante para analizar)
-                contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+                #contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
                 
                 ############
                 #Recorrido1:
                 ############
                 #recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
-                L = []
-                for i in range(0,len(contours)):
-                    cnt = contours[i]
-                    (x,y),radius = cv2.minEnclosingCircle(cnt)
-                    center = (int(x),int(y))
-                    radius = int(radius)
-                    if cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA: 
-                        #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
-                        cv2.circle(im,center,radius,(0,255,0),2)
-                        L.append(center)
+                Lbefore = Lnew
+#                for cnt in contours:
+#                    (x,y),radius = cv2.minEnclosingCircle(cnt)
+#                    center = (int(x),int(y))
+#                    radius = int(radius)
+#                    if cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA: 
+#                        #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
+#                        cv2.circle(im,center,radius,(0,255,0),2)
+#                        L.append(center)
                 
                 #############################
-                #Proceso la imagen "futura": t_plus
+                #Proceso la imagen actual: t_now
                 #############################        
-                ret,thresh = cv2.threshold(t_plus,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
+                ret,thresh = cv2.threshold(t_now,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
                 contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
                 
                 ############
                 #Recorrido2:
                 ############
                 #recorro los contornos NUEVAMENTE, capturando centros. Esta vez, para el frame "futuro"
-                Lnuevo = []
-                for i in range(0,len(contours)):
-                    cnt = contours[i]
+                Lnew = []
+                for cnt in contours:
                     (x,y),radius = cv2.minEnclosingCircle(cnt)
                     center = (int(x),int(y))
                     radius = int(radius)
                     #a continuaciOn, si el contorno tiene suficiente área, pero también si no es TAN grande:
                     if cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA:
                         cv2.circle(im,center,radius,(0,255,0),2)
-                        Lnuevo.append(center)
+                        Lnew.append(center)
                 
                 
                 ##################################################
@@ -410,22 +412,23 @@ class sphereVideoDetection():
                 self.movEjeY=0
                 numberOfVectors=1
                 
-                for index in range(len(Lnuevo)):
-                    for j in range(index, len(L)):
-                        if (math.sqrt((Lnuevo[index][0] - L[j][0]) ** 2 + (Lnuevo[index][1] - L[j][1]) **
-                                       2)) <= self.MAX_CIRCLE_MOVEMENT and (math.sqrt((Lnuevo[index][0] - L[j][0]) ** 2 + (Lnuevo[index][1] - L[j][1]) **
-                                                                 2)) >= self.MIN_CIRCLE_MOVEMENT:
+                for index in range(len(Lnew)):
+                    for j in range(index, len(Lbefore)):
+                        if (math.sqrt((Lnew[index][0] - Lbefore[j][0]) ** 2 + (Lnew[index][1] - Lbefore[j][1]) ** 
+                          2)) <= self.MAX_CIRCLE_MOVEMENT and (math.sqrt((Lnew[index][0] - Lbefore[j][0]) ** 
+                          2 + (Lnew[index][1] - Lbefore[j][1]) **2)) >= self.MIN_CIRCLE_MOVEMENT:
                             #print "Hay colisión: %d %d" % (index,j)
-                            cv2.circle(im, (Lnuevo[index][0], Lnuevo[index][1]),3,(0,0,255),2)
-                            cv2.line(im, (Lnuevo[index][0], Lnuevo[index][1]), (L[j][0], L[j][1]), (0,255,0), 5)
+                            cv2.circle(im, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
+                            cv2.line(im, (Lnew[index][0], Lnew[index][1]),(Lbefore[j][0], Lbefore[j][1]), (0,255,0), 5)
                             
                             
                             #Condición para que se procese la colisión: esté en la mitad inferior. (ver doc.)
-                            self.movEjeY+=Lnuevo[index][1] - L[j][1]
+                            self.movEjeY+=Lnew[index][1] - Lbefore[j][1]
                             numberOfVectors+=1
-                            if (Lnuevo[index][1] > self.CAM_HEIGHT / 2):
-                                self.movEjeX+= Lnuevo[index][0] - L[j][0]
-                            #print "colisión entre %r -y- %r :: %r %r ::: " % (index, j, Lnuevo[index], L[j])
+                            if (Lnew[index][1] > self.CAM_HEIGHT / 2):
+                                self.movEjeX+= Lnew[index][0] - Lbefore[j][0]
+                            #print "colisión entre %r -y- %r :: %r %r ::: " %
+                            (index, j, Lnew[index], Lbefore[j])
                 
                 #falta dividir las componentes del vector obtenido, dividiendo por N, para obtener vector Instantáneo
                 if (numberOfVectors == 0):
