@@ -18,7 +18,7 @@ import timeit
 import logging
 
 class gVariables():
-    trainingName = "training_4"
+    trainingName = "training_one_tone"
     #relevant Training variables
     eventTime1_sound = 1.0 #in seconds. Instant of time when the soundGen ends.
     eventTime2_movement = 3.0 #in seconds. Instant of time when movement ceases to be considered for reward
