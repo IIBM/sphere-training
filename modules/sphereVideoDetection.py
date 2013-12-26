@@ -212,78 +212,9 @@ class sphereVideoDetection():
         # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
         t_before = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
         t_now = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
-        time.sleep(0.3)
+        time.sleep(0.1)
 
-        #################################################################
-        ###    CALIBRACIÓN  ##
-        #################################################################
-#        print "Calibrando"
-#        im = cam.read()[1]
-#        t_calib = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
-#        cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
-        #ret,thresh = cv2.threshold(t_calib,127,255,cv2.THRESH_BINARY)
-#        ret,thresh = cv2.threshold(t_calib,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
-        #Tomo los contornos (lo importante para analizar)
-#        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-        
-        #recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
-#        circleCenters = []
-#        circleRadius = []
-#        for i in range(0,len(contours)):
-#            cnt = contours[i]
-#            (x,y),radius = cv2.minEnclosingCircle(cnt)
-#            center = (int(x),int(y))
-#            radius = int(radius)
-#            if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
-#                #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
-#                cv2.circle(im,center,radius,(0,255,0),2)
-#                circleCenters.append(center)
-#                circleRadius.append(radius)
-                
-#        expectedValue = 0
-#        minRadius = 9999
-#        maxRadius = 0
-#        for i in range (0,10):
-#            cv2.imshow( self.winName , im )
-#            time.sleep(0.01)
-#            key = cv2.waitKey(10)
-#        for i in range(0, len(circleRadius)):
-#            expectedValue +=  circleRadius[i]
-             
-#        expectedValue /= len(circleCenters)
-#        for i in range (0, len(circleCenters)):
-#            if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
-#                maxRadius = circleRadius[i]
-#            if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
-#                minRadius = circleRadius[i]
-#        if (self.noiseFiltering == False):
-#            print "No noise filtering set."
-#            self.MAX_CIRCLE_MOVEMENT = expectedValue*2
-#            self.MIN_CIRCLE_MOVEMENT = expectedValue/8
-#            minRadius = 1
-#            if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-#                self.MIN_CIRCLE_MOVEMENT = 2
-#        else:
-#             self.MAX_CIRCLE_MOVEMENT = expectedValue*1.5
-#             self.MIN_CIRCLE_MOVEMENT = expectedValue/5
-#             if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-#                 self.MIN_CIRCLE_MOVEMENT = 2
-#        print "Número de muestras: %d" % len(circleCenters)
-#        print "Valor Esperado: %d" % expectedValue
-#        print "Radio menor: %d" % minRadius
-#        print "Radio mayor: %d" % maxRadius
-#        print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
-#        print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
-#        self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
-#        self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
-        
-        
-        time.sleep(0.3)
-        print "Fin calibración."
         self.startCalibration = True
-        #################################################################
-        ######### fin calibración
-        #################################################################
         Lnew = []
         while True:
                 ###########################################<>
