@@ -36,11 +36,11 @@ class gVariables():
     maxMovementTime = 11 #max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
     movementTime = 5 # time for a continuous time that should be reached to give reward.
     #ex.: movementTime = 5 means that there should be movement detected over 500 ms at least
-    idleTime = 18 # time for a continuous time that should be reached to give reward.
+    idleTime = 14 # time for a continuous time that should be reached to give reward.
     
     soundGenDuration = 1.0
     soundGenFrequency1 = 1000.0 #in Hz
-    soundGenFrequency2 = 6000.0 #in Hz
+    soundGenFrequency2 = 8000.0 #in Hz
     
     trialCount = 0 #total number of trials
     successTrialCount=0 #total number of succesful trials
@@ -205,6 +205,7 @@ def trialLoop():
                      and gVariables.current_trial_number == 0):
                     gVariables.logger.info('Start trial movement detection')
                     gVariables.videoDet.resetMovementTime()
+                    gVariables.videoDet.resetIdleTime()
                     gVariables.current_trial_number = 1
                 elif (int(gVariables.current_trial_time) >= gVariables.eventTime2_movement and 
                       gVariables.current_trial_number == 1):
