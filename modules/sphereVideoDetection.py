@@ -179,27 +179,48 @@ class sphereVideoDetection():
         #Opciones de ejecuciOn: 640x480 => 60 fps.
         cam.set(3,self.CAM_WIDTH)
         cam.set(4,self.CAM_HEIGHT)
+        
+        #set camera properties:
+        #this configuration is very dependent on the type and model of camera.
+        
+        cam.set(CAM_BRIGHTNESS_VAR,CAM_BRIGHTNESS_VALUE)
+        cam.set(CAM_CONTRAST_VAR,CAM_CONTRAST_VALUE)
+        cam.set(CAM_SATURATION_VAR,CAM_SATURATION_VALUE)
+        cam.set(CAM_HUE_VAR,CAM_HUE_VALUE)
+        cam.set(CAM_GAIN_VAR,CAM_GAIN_VALUE)
+        cam.set(CAM_EXPOSURE_VAR,CAM_EXPOSURE_VALUE)
+        print "camera: Width %r" % cam.get(3)
+        print "camera: Height %r" % cam.get(4)
+        #print "camera: FPS %r" % cam.get(5) #prints error for many cameras.
+        print "camera: Brightness %r" % cam.get(CAM_BRIGHTNESS_VAR)
+        print "camera: Contrast %r" % cam.get(CAM_CONTRAST_VAR)
+        print "camera: Saturation %r" % cam.get(CAM_SATURATION_VAR)
+        print "camera: Hue %r" % cam.get(CAM_HUE_VAR)
+        print "camera: Gain %r" % cam.get(CAM_GAIN_VAR)
+        print "camera: Exposure %r" % cam.get(CAM_EXPOSURE_VAR)
+        
+        
         time.sleep(0.2)
         """
-        CV_CAP_PROP_POS_MSEC Current position of the video file in milliseconds.
-        CV_CAP_PROP_POS_FRAMES 0-based index of the frame to be decoded/captured next.
-        CV_CAP_PROP_POS_AVI_RATIO Relative position of the video file
-        CV_CAP_PROP_FRAME_WIDTH Width of the frames in the video stream.
-        CV_CAP_PROP_FRAME_HEIGHT Height of the frames in the video stream.
-        CV_CAP_PROP_FPS Frame rate.
-        CV_CAP_PROP_FOURCC 4-character code of codec.
-        CV_CAP_PROP_FRAME_COUNT Number of frames in the video file.
-        CV_CAP_PROP_FORMAT Format of the Mat objects returned by retrieve() .
-        CV_CAP_PROP_MODE Backend-specific value indicating the current capture mode.
-        CV_CAP_PROP_BRIGHTNESS Brightness of the image (only for cameras).
-        CV_CAP_PROP_CONTRAST Contrast of the image (only for cameras).
-        CV_CAP_PROP_SATURATION Saturation of the image (only for cameras).
-        CV_CAP_PROP_HUE Hue of the image (only for cameras).
-        CV_CAP_PROP_GAIN Gain of the image (only for cameras).
-        CV_CAP_PROP_EXPOSURE Exposure (only for cameras).
-        CV_CAP_PROP_CONVERT_RGB Boolean flags indicating whether images should be converted to RGB.
-        CV_CAP_PROP_WHITE_BALANCE Currently unsupported
-        CV_CAP_PROP_RECTIFICATION Rectification flag for stereo cameras (note: only supported by DC1394 v 2.x backend currently)
+        1-CV_CAP_PROP_POS_MSEC Current position of the video file in milliseconds.
+        2-CV_CAP_PROP_POS_FRAMES 0-based index of the frame to be decoded/captured next.
+        3-CV_CAP_PROP_POS_AVI_RATIO Relative position of the video file
+        4-CV_CAP_PROP_FRAME_WIDTH Width of the frames in the video stream.
+        5-CV_CAP_PROP_FRAME_HEIGHT Height of the frames in the video stream.
+        6-CV_CAP_PROP_FPS Frame rate.
+        7-CV_CAP_PROP_FOURCC 4-character code of codec.
+        8-CV_CAP_PROP_FRAME_COUNT Number of frames in the video file.
+        9-CV_CAP_PROP_FORMAT Format of the Mat objects returned by retrieve() .
+        10-CV_CAP_PROP_MODE Backend-specific value indicating the current capture mode.
+        11-CV_CAP_PROP_BRIGHTNESS Brightness of the image (only for cameras).
+        12-CV_CAP_PROP_CONTRAST Contrast of the image (only for cameras).
+        13-CV_CAP_PROP_SATURATION Saturation of the image (only for cameras).
+        14-CV_CAP_PROP_HUE Hue of the image (only for cameras).
+        15-CV_CAP_PROP_GAIN Gain of the image (only for cameras).
+        16-CV_CAP_PROP_EXPOSURE Exposure (only for cameras).
+        17-CV_CAP_PROP_CONVERT_RGB Boolean flags indicating whether images should be converted to RGB.
+        18-CV_CAP_PROP_WHITE_BALANCE Currently unsupported
+        19-CV_CAP_PROP_RECTIFICATION Rectification flag for stereo cameras (note: only supported by DC1394 v 2.x backend currently)
         """
         
         if not cam:
@@ -402,9 +423,16 @@ if __name__ == '__main__':
     try:
         from configvideo import *
     except ImportError:
-        print "No existe el archivo configvideo.py"
+        print "File configvideo.py doesn't exist"
     except:
-        print "otro error"
+        print "Error with configVideo"
+    
+    try:
+        from configCamera import *
+    except ImportError:
+        print "File configCamera.py doesn't exist"
+    except:
+        print "Error with configCamera"
     videoDet = sphereVideoDetection(VIDEOSOURCE,CAM_WIDTH, CAM_HEIGHT)
     videoDet.setNoiseFiltering(True)
     import time
