@@ -105,7 +105,7 @@ def updateDisplayInfo():
                     gVariables.display.updateInfo("% s/t", gVariables.successRate)
                     a = str(gVariables.current_trial_time)[:4] + " - " + str(gVariables.eventTime3_trialEnd)
                     b = getFormattedTime(a)
-                    gVariables.display.updateInfo("Trial Time", a)
+                    gVariables.display.updateInfo("Trial Time", b)
     gVariables.display.renderAgain()
 
 def loopFunction():
@@ -226,15 +226,12 @@ def getFormattedTime(a):
         hours = str(hours) + "hs "
     else:
         hours = ""
-    if minutes > 0:
+    if (minutes > 0 or hours > 0):
         minutes = str(minutes) + "' "
     else:
         minutes = ''  
     
-    if seconds >0:
-        seconds  = str(seconds) + '" '
-    else:
-        seconds  = ""
+    seconds  = str(seconds) + '" '
     return str(hours+"hs "+ minutes + "' " + seconds +'" ')
 
 def trainingInit():
@@ -287,6 +284,13 @@ if __name__ == '__main__':
         print "File configvideo.py not found."
     except:
         print "Error importing configvideo" 
+    try:
+        from configCamera import *
+        print CAM_BRIGHTNESS_VAR
+    except ImportError:
+        print "File configCamera.py not found."
+    except:
+        print "Error importing configCamera" 
     ###############
     trainingInit()
     ###############
