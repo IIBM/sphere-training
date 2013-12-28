@@ -104,6 +104,7 @@ def updateDisplayInfo():
                     gVariables.successRate = tempS
                     gVariables.display.updateInfo("% s/t", gVariables.successRate)
                     a = str(gVariables.current_trial_time)[:4] + " - " + str(gVariables.eventTime3_trialEnd)
+                    b = getFormattedTime(a)
                     gVariables.display.updateInfo("Trial Time", a)
     gVariables.display.renderAgain()
 
@@ -217,6 +218,24 @@ def giveReward():
             gVariables.successTrialCount+=1
             gVariables.dropReleased = 1
 
+def getFormattedTime(a):
+    hours = int (int(a) / 3600)  #hours
+    minutes = int((int(a) - hours*3600) / 60) #minutes
+    seconds = int(int(a) - hours*3600 - minutes*60 )
+    if hours >0:
+        hours = str(hours) + "hs "
+    else:
+        hours = ""
+    if minutes > 0:
+        minutes = str(minutes) + "' "
+    else:
+        minutes = ''  
+    
+    if seconds >0:
+        seconds  = str(seconds) + '" '
+    else:
+        seconds  = ""
+    return str(hours+"hs "+ minutes + "' " + seconds +'" ')
 
 def trainingInit():
     #logging
