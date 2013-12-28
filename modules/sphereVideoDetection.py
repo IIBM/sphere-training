@@ -183,21 +183,21 @@ class sphereVideoDetection():
         #set camera properties:
         #this configuration is very dependent on the type and model of camera.
         
-        cam.set(CAM_BRIGHTNESS_VAR,CAM_BRIGHTNESS_VALUE)
-        cam.set(CAM_CONTRAST_VAR,CAM_CONTRAST_VALUE)
-        cam.set(CAM_SATURATION_VAR,CAM_SATURATION_VALUE)
-        cam.set(CAM_HUE_VAR,CAM_HUE_VALUE)
-        cam.set(CAM_GAIN_VAR,CAM_GAIN_VALUE)
-        cam.set(CAM_EXPOSURE_VAR,CAM_EXPOSURE_VALUE)
+        cam.set(self.CAM_BRIGHTNESS_VAR,self.CAM_BRIGHTNESS_VALUE)
+        cam.set(self.CAM_CONTRAST_VAR,self.CAM_CONTRAST_VALUE)
+        cam.set(self.CAM_SATURATION_VAR,self.CAM_SATURATION_VALUE)
+        cam.set(self.CAM_HUE_VAR,self.CAM_HUE_VALUE)
+        cam.set(self.CAM_GAIN_VAR,self.CAM_GAIN_VALUE)
+        cam.set(self.CAM_EXPOSURE_VAR,self.CAM_EXPOSURE_VALUE)
         print "camera: Width %r" % cam.get(3)
         print "camera: Height %r" % cam.get(4)
         #print "camera: FPS %r" % cam.get(5) #prints error for many cameras.
-        print "camera: Brightness %r" % cam.get(CAM_BRIGHTNESS_VAR)
-        print "camera: Contrast %r" % cam.get(CAM_CONTRAST_VAR)
-        print "camera: Saturation %r" % cam.get(CAM_SATURATION_VAR)
-        print "camera: Hue %r" % cam.get(CAM_HUE_VAR)
-        print "camera: Gain %r" % cam.get(CAM_GAIN_VAR)
-        print "camera: Exposure %r" % cam.get(CAM_EXPOSURE_VAR)
+        print "camera: Brightness %r" % cam.get(self.CAM_BRIGHTNESS_VAR)
+        print "camera: Contrast %r" % cam.get(self.CAM_CONTRAST_VAR)
+        print "camera: Saturation %r" % cam.get(self.CAM_SATURATION_VAR)
+        print "camera: Hue %r" % cam.get(self.CAM_HUE_VAR)
+        print "camera: Gain %r" % cam.get(self.CAM_GAIN_VAR)
+        print "camera: Exposure %r" % cam.get(self.CAM_EXPOSURE_VAR)
         
         
         time.sleep(0.2)
