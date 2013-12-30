@@ -28,7 +28,7 @@ class sphereVideoDetection():
         self.VIDEOSOURCE = videosource
         self.CAM_WIDTH = width
         self.CAM_HEIGHT = height
-        self.CV2THRESHOLD = 160  #no esta claro para que sirve
+        self.CV2THRESHOLD = 160  #binary threshold. A black pixel is only considered if its color is greater than 160
         #variables for keeping track of continuous movement.
         self.noiseFiltering = True
         self.internalMovementCounter = 0 #counter, amount of cycles over which integration of movement is made.
@@ -42,6 +42,22 @@ class sphereVideoDetection():
         self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected last time it moved or currently
         self.continuousIdleTime = 0 #amount of seconds that no movement was detected last time it ceased movement or currently
         self.isMoving = False #if true, it is currently in movement. False => currently idle
+        
+        #import camera parameters from file:
+        import configCamera
+        self.CAM_BRIGHTNESS_VAR = configCamera.CAM_BRIGHTNESS_VAR
+        self.CAM_CONTRAST_VAR = configCamera.CAM_CONTRAST_VAR
+        self.CAM_SATURATION_VAR = configCamera.CAM_SATURATION_VAR
+        self.CAM_HUE_VAR = configCamera.CAM_HUE_VAR
+        self.CAM_GAIN_VAR = configCamera.CAM_GAIN_VAR
+        self.CAM_EXPOSURE_VAR = configCamera.CAM_EXPOSURE_VAR
+        
+        self.CAM_BRIGHTNESS_VALUE = configCamera.CAM_BRIGHTNESS_VALUE
+        self.CAM_CONTRAST_VALUE = configCamera.CAM_CONTRAST_VALUE
+        self.CAM_SATURATION_VALUE = configCamera.CAM_SATURATION_VALUE
+        self.CAM_HUE_VALUE = configCamera.CAM_HUE_VALUE
+        self.CAM_GAIN_VALUE = configCamera.CAM_GAIN_VALUE
+        self.CAM_EXPOSURE_VALUE = configCamera.CAM_EXPOSURE_VALUE
         
         import threading
         # Create one non-blocking thread for capturing video Stream
@@ -427,12 +443,6 @@ if __name__ == '__main__':
     except:
         print "Error with configVideo"
     
-    try:
-        from configCamera import *
-    except ImportError:
-        print "File configCamera.py doesn't exist"
-    except:
-        print "Error with configCamera"
     videoDet = sphereVideoDetection(VIDEOSOURCE,CAM_WIDTH, CAM_HEIGHT)
     videoDet.setNoiseFiltering(True)
     import time
