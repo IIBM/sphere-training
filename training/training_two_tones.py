@@ -92,6 +92,7 @@ def initDisplay():
     gVariables.display.addImportantInfo(("Time", 0))
     gVariables.display.addSecondaryInfo(("% s/t",0.0))
     gVariables.display.addSecondaryInfo(("Trial Time","0 - 10"))
+    gVariables.display.addSecondaryInfo(("Trial status",""))
     
     gVariables.display.renderAgain()
 
@@ -100,6 +101,13 @@ def updateDisplayInfo():
                     now = timeit.default_timer()
                     b = getFormattedTime(int(now - gVariables.start_time ) )
                     gVariables.display.updateInfo("Time", b )
+                    if (gVariables.current_trial_time < gVariables.eventTime2_movement):
+                        gVariables.display.updateInfo("Trial status","running")
+                    else:
+                        if gVariables.dropReleased == 1:
+                             gVariables.display.updateInfo("Trial status","SUCCESS")
+                        else:
+                            gVariables.display.updateInfo("Trial status","FAIL")
     gVariables.display.updateInfo("Trials", gVariables.trialCount)
     gVariables.display.updateInfo("Succesful Trials", gVariables.successTrialCount)
     if (gVariables.trialCount > 0):
