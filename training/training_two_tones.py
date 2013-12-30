@@ -32,7 +32,7 @@ class gVariables():
     interTrialRandom1Time = 4.0 #intertrial time is random between this value and the random2 value
     interTrialRandom2Time = 7.0 #intertrial time is random between previous value and this value.
     
-    maxMovementThreshold = 200
+    maxMovementThreshold = 2000
     maxMovementTime = 11 #max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
     movementTime = 5 # time for a continuous time that should be reached to give reward.
     #ex.: movementTime = 5 means that there should be movement detected over 500 ms at least
