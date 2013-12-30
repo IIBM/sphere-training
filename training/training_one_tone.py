@@ -90,7 +90,8 @@ def initDisplay():
 def updateDisplayInfo():
     if (gVariables.trialExecuting == True):
                     now = timeit.default_timer()
-                    gVariables.display.updateInfo("Time", int(now - gVariables.start_time ) )
+                    b = getFormattedTime(int(now - gVariables.start_time) )
+                    gVariables.display.updateInfo("Time", b )
     gVariables.display.updateInfo("Trials", gVariables.trialCount)
     gVariables.display.updateInfo("Succesful Trials", gVariables.successTrialCount)
     if (gVariables.trialCount > 0):
@@ -104,8 +105,7 @@ def updateDisplayInfo():
                     gVariables.successRate = tempS
                     gVariables.display.updateInfo("% s/t", gVariables.successRate)
                     a = str(gVariables.current_trial_time)[:4] + " - " + str(gVariables.eventTime3_trialEnd)
-                    b = getFormattedTime(a)
-                    gVariables.display.updateInfo("Trial Time", b)
+                    gVariables.display.updateInfo("Trial Time", a)
     gVariables.display.renderAgain()
 
 def loopFunction():
@@ -219,20 +219,23 @@ def giveReward():
             gVariables.dropReleased = 1
 
 def getFormattedTime(a):
-    hours = int (int(a) / 3600)  #hours
-    minutes = int((int(a) - hours*3600) / 60) #minutes
-    seconds = int(int(a) - hours*3600 - minutes*60 )
-    if hours >0:
-        hours = str(hours) + "hs "
-    else:
-        hours = ""
-    if (minutes > 0 or hours > 0):
-        minutes = str(minutes) + "' "
-    else:
-        minutes = ''  
-    
-    seconds  = str(seconds) + '" '
-    return str(hours+"hs "+ minutes + "' " + seconds +'" ')
+    try:
+        hours = int (int(a) / 3600)  #hours
+        minutes = int((int(a) - hours*3600) / 60) #minutes
+        seconds = int(int(a) - hours*3600 - minutes*60 )
+        if hours >0:
+            hours = str(hours) + " h   "
+        else:
+            hours = ""
+        if (int(minutes) > 0 or int(hours) > 0):
+            minutes = str(minutes) + " m   "
+        else:
+            minutes = ''  
+        
+        seconds  = str(int(seconds) ) + " s   " 
+        return str(hours+ minutes + seconds)
+    except:
+        return str(a) + ' s   '
 
 def trainingInit():
     #logging
@@ -284,13 +287,6 @@ if __name__ == '__main__':
         print "File configvideo.py not found."
     except:
         print "Error importing configvideo" 
-    try:
-        from configCamera import *
-        print CAM_BRIGHTNESS_VAR
-    except ImportError:
-        print "File configCamera.py not found."
-    except:
-        print "Error importing configCamera" 
     ###############
     trainingInit()
     ###############
@@ -372,7 +368,7 @@ if __name__ == '__main__':
                     os.kill(os.getpid(), signal.SIGINT)
                     sys.exit()
                 else :
-                    print "another key pressed"
+                    print "Key not supported: %r" %key
             except IOError: pass
             time.sleep(0.08)
     except:
