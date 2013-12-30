@@ -132,7 +132,10 @@ class sphereVideoDetection():
             self.internalMovementCounter = 0
             #this function analyzes continuous movement. If detected, saves the amount of seconds of the movement so far.
             #if idle is detected, it saves how much time the subject is idle.
-            if (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
+            logging.info("   ----" + 
+str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
+                abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)) )
+	    if (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
                 abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= self.movementThreshold):
                 #print "moving"
                 if (self.isMoving == False):
@@ -146,11 +149,13 @@ class sphereVideoDetection():
                 #print "not moving"
                 if (self.isMoving == True):
                     #was moving and now it is not. We erase the old idle time counter, and we start counting idle time from 0
-                    self.continuousIdleTime = 0
                     self.isMoving = False
+                    self.continuousIdleTime = 0
+                self.vectorInstantaneo.x = 0
+	        self.vectorInstantaneo.y = 0
+
                 self.continuousIdleTime += self.movement_loopNumberSpan * self.loopDuration
             logging.info( str(self.continuousMovementTime) +"..." + str(self.continuousIdleTime) )
-
     def mainVideoDetection(self):
         import cv as cv
         import cv2
