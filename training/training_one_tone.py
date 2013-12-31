@@ -63,7 +63,7 @@ class gVariables():
         #This should be executed by the program only once, at the beginning of the run.
     
 def printInstructions():
-    print 'Options:'
+    print '\nOptions:'
     print 'o: Open Valve'
     print 'c: Close Valve'
     print 'd: Water Drop'
@@ -74,7 +74,7 @@ def printInstructions():
     print 'k: start or stop tone training'
     print 'p: pause or resume tone training'
     print 'l/L: recalibrate video input with/without noise filtering.'
-    print 'q or ESC: quit'
+    print 'q or ESC: quit\n'
 
 def initDisplay():
     import trainingDisplay #display for showing different variables of interest
@@ -122,9 +122,10 @@ def loopFunction():
                 updateDisplayInfo()
                 #gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
                 #####################
-                if (gVariables.videoDet.getMovementStatus() == True and 
-                    gVariables.videoDet.getMovementTime() >= (gVariables.movementTime / 10.0) ):
-                    giveReward()
+                if (gVariables.trialExecuting == True):
+                    if (gVariables.videoDet.getMovementStatus() == True and 
+                        gVariables.videoDet.getMovementTime() >= (gVariables.movementTime / 10.0) ):
+                        giveReward()
                     #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
     finally:
         return
@@ -225,15 +226,17 @@ def getFormattedTime(a):
         seconds = int(int(a) - hours*3600 - minutes*60 )
         if hours >0:
             hours = str(hours) + " h   "
-        else:
-            hours = ""
-        if (int(minutes) > 0 or int(hours) > 0):
             minutes = str(minutes) + " m   "
         else:
-            minutes = ''  
+            hours = ""
+            if (int(minutes) > 0):
+                
+                minutes = str(minutes) + " m   "
+            else:
+                minutes = ''  
         
         seconds  = str(int(seconds) ) + " s   " 
-        return str(hours+ minutes + seconds)
+        return str(hours)+ str(minutes) + str(seconds)
     except:
         return str(a) + ' s   '
 
