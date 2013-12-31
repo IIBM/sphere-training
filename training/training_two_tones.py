@@ -138,7 +138,7 @@ def loopFunction():
                 updateDisplayInfo()
                 #gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
                 #####################
-                if (gVariables.trialExecuting == True):
+                if (gVariables.trialExecuting == True and gVariables.current_trial_number == 1):
                     if (gVariables.current_trial_type == 1):
                       if (gVariables.videoDet.getMovementStatus() == True and 
                         gVariables.videoDet.getMovementTime() >= (gVariables.movementTime / 10.0) ):
