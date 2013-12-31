@@ -99,7 +99,7 @@ def initDisplay():
 def updateDisplayInfo():
     if (gVariables.trialExecuting == True):
                     now = timeit.default_timer()
-                    b = getFormattedTime(int(now - gVariables.start_time + 3589) )
+                    b = getFormattedTime(int(now - gVariables.start_time ) )
                     gVariables.display.updateInfo("Time", b )
                     if (gVariables.current_trial_time < gVariables.eventTime2_movement):
                         gVariables.display.updateInfo("Trial status","running")
