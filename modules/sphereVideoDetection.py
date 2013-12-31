@@ -118,9 +118,11 @@ class sphereVideoDetection():
     
     def resetMovementTime(self):
         self.continuousMovementTime = 0
+        self.last_saved_time_movement = timeit.default_timer() 
         
     def resetIdleTime(self):
         self.continuousIdleTime = 0
+        self.last_saved_time_movement = timeit.default_timer()
     
     def setMovementThreshold(self, thres):
         #Movement threshold: how much "movement" between two frames should be considered as "movement"
