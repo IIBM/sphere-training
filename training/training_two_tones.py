@@ -71,7 +71,7 @@ class gVariables():
         #This should be executed by the program only once, at the beginning of the run.
     
 def printInstructions():
-    print 'Options:'
+    print '\nOptions:'
     print 'o: Open Valve'
     print 'c: Close Valve'
     print 'd: Water Drop'
@@ -82,7 +82,7 @@ def printInstructions():
     print 'k: start or stop tone training'
     print 'p: pause or resume tone training'
     print 'l/L: recalibrate video input with/without noise filtering.'
-    print 'q or ESC: quit'
+    print 'q or ESC: quit\n'
 
 def initDisplay():
     import trainingDisplay #display for showing different variables of interest
@@ -99,7 +99,7 @@ def initDisplay():
 def updateDisplayInfo():
     if (gVariables.trialExecuting == True):
                     now = timeit.default_timer()
-                    b = getFormattedTime(int(now - gVariables.start_time ) )
+                    b = getFormattedTime(int(now - gVariables.start_time + 3589) )
                     gVariables.display.updateInfo("Time", b )
                     if (gVariables.current_trial_time < gVariables.eventTime2_movement):
                         gVariables.display.updateInfo("Trial status","running")
@@ -138,16 +138,17 @@ def loopFunction():
                 updateDisplayInfo()
                 #gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
                 #####################
-                if (gVariables.current_trial_type == 1):
-                  if (gVariables.videoDet.getMovementStatus() == True and 
-                    gVariables.videoDet.getMovementTime() >= (gVariables.movementTime / 10.0) ):
-                    giveReward()
-                    #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
-                elif (gVariables.current_trial_type == 2):
-                  if (gVariables.videoDet.getMovementStatus() == False and 
-                    gVariables.videoDet.getIdleTime() >= (gVariables.idleTime / 10.0) ):
-                    giveReward()
-                    #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
+                if (gVariables.trialExecuting == True):
+                    if (gVariables.current_trial_type == 1):
+                      if (gVariables.videoDet.getMovementStatus() == True and 
+                        gVariables.videoDet.getMovementTime() >= (gVariables.movementTime / 10.0) ):
+                        giveReward()
+                        #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
+                    elif (gVariables.current_trial_type == 2):
+                      if (gVariables.videoDet.getMovementStatus() == False and 
+                        gVariables.videoDet.getIdleTime() >= (gVariables.idleTime / 10.0) ):
+                        giveReward()
+                        #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
     finally:
         return
 
@@ -277,15 +278,17 @@ def getFormattedTime(a):
         seconds = int(int(a) - hours*3600 - minutes*60 )
         if hours >0:
             hours = str(hours) + " h   "
-        else:
-            hours = ""
-        if (int(minutes) > 0 or int(hours) > 0):
             minutes = str(minutes) + " m   "
         else:
-            minutes = ''  
+            hours = ""
+            if (int(minutes) > 0):
+                
+                minutes = str(minutes) + " m   "
+            else:
+                minutes = ''  
         
         seconds  = str(int(seconds) ) + " s   " 
-        return str(hours+ minutes + seconds)
+        return str(hours)+ str(minutes) + str(seconds)
     except:
         return str(a) + ' s   '
 
@@ -311,7 +314,7 @@ def trainingInit():
     import threading
     fred1 = threading.Thread(target=loopFunction)
     fred1.start()
-    time.sleep(1.3) #to print Instructions after calibration printings.
+    time.sleep(2.3) #to print Instructions after calibration printings.
     printInstructions()
 
 if __name__ == '__main__':
