@@ -44,5 +44,6 @@ nosetests.xml
 
 # configuration files
 modules/configvideo.py
+modules/configCamera.py
 
 
