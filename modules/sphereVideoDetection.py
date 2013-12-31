@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
-
-
 #sphereVideoDetection.py
 '''
-	Programa que detecta movimiento de un flujo de video (webcam o video) configurado en un archivo de configuración:
-	En base al video, establece un vector que corresponde a la dirección del movimiento detectado.
-	El movimiento se detecta de círculos negros en movimiento, comparando posición actual con su posición pasada (probable).
-	Este archivo reemplaza spherevideotracker.py.<>
+    Programa que detecta movimiento de un flujo de video (webcam o video) configurado en un archivo de configuración:
+    En base al video, establece un vector que corresponde a la dirección del movimiento detectado.
+    El movimiento se detecta de círculos negros en movimiento, comparando posición actual con su posición pasada (probable).
+    Este archivo reemplaza spherevideotracker.py.<>
+    
 '''
 
 import pygame
 from pygame.locals import *
 import logging
+import timeit
+
 
 class sphereVideoDetection():
-	
-	
     def __init__ (self,videosource, width=640, height=480) :
         
         
@@ -37,11 +36,19 @@ class sphereVideoDetection():
         self.movement_loopNumberSpan = 3 #amount of main loops that movement is integrated into.
         self.movementThreshold = 50 #threshold set to 50
         
+        self.movementMethod = 0 #Type of movement analysis method used.0=Accumulate time, 1= movementVector
+        
         self.loopDuration = self.sleepTime * 3.0 #the duration of the main loop is the sleep time + some correction
         
         self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected last time it moved or currently
         self.continuousIdleTime = 0 #amount of seconds that no movement was detected last time it ceased movement or currently
         self.isMoving = False #if true, it is currently in movement. False => currently idle
+        
+        self.movementVector = []
+        self.movementVectorLength = 20
+        
+        self.last_saved_time_idle = timeit.default_timer() #will be used to check differences in time (determine idle time)
+        self.last_saved_time_movement = timeit.default_timer() #will be used to check differences in time (determine mvnt time)
         
         #import camera parameters from file:
         import configCamera
@@ -85,7 +92,7 @@ class sphereVideoDetection():
     
     def getInstantX(self):
        return self.vectorInstantaneo.x
-	
+    
     def getInstantY(self):
         return self.vectorInstantaneo.y
 
@@ -125,37 +132,94 @@ class sphereVideoDetection():
     
     def getMovementStatus(self):
         return self.isMoving #true if right now it is moving, false otherwise.
-
-    def continuousMovementAnalysis(self):
+    
+    
+    def Method_MovementVector(self):
+        #Movement Vector method:
+        #Each cycle, an element is added to movement vector.
+        #If there are N past 1's in the vector, then it was moving and currently is. (includes certain 0's tolerance)
+        #Else: it is idle.
+        if (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
+                    abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= self.movementThreshold):
+            self.movementVector.append(1)
+        else:
+            self.movementVector.append(0)
+    
+    
+    def Method_AccumulateTime(self):
+                #this function analyzes continuous movement. If detected, saves the amount of seconds of the movement so far.
+        #if idle is detected, it saves how much time the subject is idle.
         self.internalMovementCounter+=1
+        
         if (self.internalMovementCounter >self.movement_loopNumberSpan):
             self.internalMovementCounter = 0
-            #this function analyzes continuous movement. If detected, saves the amount of seconds of the movement so far.
-            #if idle is detected, it saves how much time the subject is idle.
             logging.info("   ----" + 
-str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
+                            str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
                 abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)) )
-	    if (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
-                abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= self.movementThreshold):
-                #print "moving"
-                if (self.isMoving == False):
-                    #was idle, now started to move. We erase time movement counter and start from 0 now
-                    self.continuousMovementTime = 0
-                    self.isMoving = True
-                self.continuousMovementTime += self.movement_loopNumberSpan * self.loopDuration
-                self.vectorInstantaneo.x = 0
-                self.vectorInstantaneo.y = 0
+            if (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
+                    abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= self.movementThreshold):
+                    #print "It is currently moving"
+                    if (self.isMoving == False):
+                        #was idle, now started to move. We erase time movement counter and start from 0 now
+                        self.continuousMovementTime = 0
+                        self.isMoving = True
+                        #CHECK SOLUTION FOR THE NEXT LINE.
+                        self.last_saved_time_movement = timeit.default_timer() #this substracts the first loop movement
+                    
+                    
+                    now = timeit.default_timer()
+                    timeDif = (now - self.last_saved_time_movement)
+                    if (timeDif < 0.001):
+                        timeDif = 0
+                    self.continuousMovementTime = timeDif
+                    #self.last_saved_time_movement = timeit.default_timer()
+                    #self.continuousMovementTime += self.movement_loopNumberSpan * self.loopDuration #adds amount of time that was moving
+                    self.vectorInstantaneo.x = 0
+                    self.vectorInstantaneo.y = 0
             else:
-                #print "not moving"
-                if (self.isMoving == True):
-                    #was moving and now it is not. We erase the old idle time counter, and we start counting idle time from 0
-                    self.isMoving = False
-                    self.continuousIdleTime = 0
-                self.vectorInstantaneo.x = 0
-	        self.vectorInstantaneo.y = 0
-
-                self.continuousIdleTime += self.movement_loopNumberSpan * self.loopDuration
+                    #print "not moving"
+                    if (self.isMoving == True):
+                        #was moving and now it is not. We erase the old idle time counter, and we start counting idle time from 0
+                        self.isMoving = False
+                        self.continuousIdleTime = 0
+                        self.last_saved_time_idle = timeit.default_timer()
+                    now = timeit.default_timer()
+                    #self.continuousIdleTime += self.movement_loopNumberSpan * self.loopDuration
+                    timeDif = (now - self.last_saved_time_idle)
+                    if (timeDif < 0.001):
+                        timeDif = 0
+                    self.continuousIdleTime = timeDif
+                    #self.last_saved_time_idle = timeit.default_timer()
+                    self.vectorInstantaneo.x = 0
+                    self.vectorInstantaneo.y = 0
             logging.info( str(self.continuousMovementTime) +"..." + str(self.continuousIdleTime) )
+    
+    def continuousMovementAnalysis(self):
+        if (self.movementMethod == 0):
+            self.Method_AccumulateTime()
+        
+    def setMovementMethod(self, mthd):
+        """set Movement Analysis method. There are:
+            0- Accumulate time method (default): 
+                Each main cycle, the continuous movement (or idle) time is updated. 
+                If the status changes, the counter is restarted.
+            1- Movement vector method:
+                Each main cycle, an element is added to a vector. 1 if movement detected, 0 else.
+                The program returns if there is "movement" and for how much time if the vector contains
+                enough 1's and 0's, and considers the case where a nearly smooth movement was detected (1111011111)
+            2- Many cycles integration method:
+                Similar to 0, it integrates among many cycles, averaging the movement, making less probable
+                to have a false negatives, but losses certain precision.
+            3- Goodness of fit method:
+                A movement vector, with non-binary values, is compared against a statistical model that predicts
+                the subject movement. If the movement is similar to the statistical model, then it is moving.
+        """
+        try:
+            methodNumber = int(mthd)
+        except:
+            return
+        self.movementMethod = methodNumber
+    
     def mainVideoDetection(self):
         import cv as cv
         import cv2
@@ -166,7 +230,7 @@ str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
         import sys
         import os
         import signal
-	
+    
         """
             Programa de detección de movimiento:
             Se enciende timer de socket para enviar datos de mouse.
@@ -327,8 +391,9 @@ str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
                     self.startCalibration = False
                 
                 #t_before es el del anterior ciclo, t_now es el recién capturado (procesándolo 1ero..),
-                t_before = t_now
-                t_now = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+                
+                t_before = t_now #saves old matrix
+                t_now = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY) #current matrix
                 
                 cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
                 #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_GAUSSIAN, 3, 0);
@@ -395,28 +460,26 @@ str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
                             cv2.line(im, (Lnew[index][0], Lnew[index][1]),(Lbefore[j][0], Lbefore[j][1]), (0,255,0), 5)
                             
                             
-                            #Condición para que se procese la colisión: esté en la mitad inferior. (ver doc.)
+                            #se suma a todos los desplazamientos (en x, en y).
                             self.movEjeY+=Lnew[index][1] - Lbefore[j][1]
                             numberOfVectors+=1
-                            if (Lnew[index][1] > self.CAM_HEIGHT / 2):
-                                self.movEjeX+= Lnew[index][0] - Lbefore[j][0]
-                            #print "colisión entre %r -y- %r :: %r %r ::: " %
-                            (index, j, Lnew[index], Lbefore[j])
+                            self.movEjeX+= Lnew[index][0] - Lbefore[j][0]
+                            #print "colisión entre %r -y- %r :: %r %r ::: " % (index, j, Lnew[index], Lbefore[j])
                 
-                #falta dividir las componentes del vector obtenido, dividiendo por N, para obtener vector Instantáneo
+                #falta dividir las componentes del vector obtenido, dividiendo por N, para obtener vector Instantáneo promedio
                 if (numberOfVectors == 0):
-                	numberOfVectors = 1
+                    numberOfVectors = 1
                 
-                self.movEjeX /= numberOfVectors
-                self.movEjeY /= numberOfVectors
+                self.movEjeX /= numberOfVectors #movimiento x promedio, ponderación de todos los movimientos en x.
+                self.movEjeY /= numberOfVectors #movimiento y promedio, ponderación de todos los movimientos en y.
                 
                 self.vectorAcumulado.x += self.movEjeX
                 self.vectorAcumulado.y += self.movEjeY
                 
-                self.vectorInstantaneo.x += self.movEjeX
-                self.vectorInstantaneo.y += self.movEjeY
+                self.vectorInstantaneo.x += self.movEjeX #suma contrib. x en este ciclo (se establece a 0 en otro método)
+                self.vectorInstantaneo.y += self.movEjeY #suma contrib. y en este ciclo (se establece a 0 en otro método)
                 
-                #se analiza continuidad de movimiento en otra función:
+                #se analiza continuidad de movimiento en función:
                 self.continuousMovementAnalysis()
                 
                 #Se tiene el vector instantáneo para este fotograma: vectorInstantáneo = (self.movEjeX, self.movEjeY)
@@ -439,6 +502,8 @@ str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
 ################################################################
 #Prueba unitaria de la clase si es ejecutada independientemente:
 ################################################################
+
+
 if __name__ == '__main__':
     #Crea un objeto de captura de video, imprime 'x' e 'y' del vector movimiento detectado de forma acumulada.
     try:
@@ -458,8 +523,8 @@ if __name__ == '__main__':
     while(True):
         #print "x:  "+str(videoDet.getAccumX())
         #print "y:  "+str(videoDet.getAccumY()) #<>
-        print "Continuous movement time: %r    Idle movement time: %r" % (videoDet.getMovementTime() , videoDet.getIdleTime())
-        time.sleep(0.8)
+        print "Continuous movement time: %r    Idle movement time: %r   IsMoving: %r"  % (videoDet.getMovementTime() , videoDet.getIdleTime(), videoDet.getMovementStatus())
+        time.sleep(0.3)
 
 """
 if __name__ == '__main__':
@@ -474,33 +539,33 @@ if __name__ == '__main__':
     #fred2.start()
     print "prueba ejecutada."
     try:
-    	from configvideo import *
+        from configvideo import *
     except ImportError:
-    	print "No existe el archivo configvideo.py"
+        print "No existe el archivo configvideo.py"
     except:
-    	print "otro error"
+        print "otro error"
     videoDet = sphereVideoDetection(VIDEOSOURCE,CAM_WIDTH, CAM_HEIGHT)
     
     
     import time
     try:
-	import valve
+    import valve
     except:
-	print "error importing Valve"
+    print "error importing Valve"
     while(True):
-	time.sleep(2)
-	print "x:  "+str(videoDet.getAccumX())
-	print "y:  "+str(videoDet.getAccumY()) #<>
-	if (abs(videoDet.getAccumX()) > 100  or abs(videoDet.getAccumY()) > 100):
-		#resetear lo acumulado:
-		videoDet.resetX()
-		videoDet.resetY()
-		#abrir la válvula
-		print "abro VAlvula"
-		val1 = valve.Valve()
-		val1.open()
-		time.sleep(0.2)
-		val1.close()
-		time.sleep(0.2)
-		print "fin apertura vAlvula"
+    time.sleep(2)
+    print "x:  "+str(videoDet.getAccumX())
+    print "y:  "+str(videoDet.getAccumY()) #<>
+    if (abs(videoDet.getAccumX()) > 100  or abs(videoDet.getAccumY()) > 100):
+        #resetear lo acumulado:
+        videoDet.resetX()
+        videoDet.resetY()
+        #abrir la válvula
+        print "abro VAlvula"
+        val1 = valve.Valve()
+        val1.open()
+        time.sleep(0.2)
+        val1.close()
+        time.sleep(0.2)
+        print "fin apertura vAlvula"
 """
