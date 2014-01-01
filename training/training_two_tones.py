@@ -147,7 +147,6 @@ def loopFunction():
     finally:
         return
 
-
 def trialLoop():
             #This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
             
@@ -226,7 +225,6 @@ def trialLoop():
                         gVariables.logger.info('Trial not succesful')
                     gVariables.logger.info('Success rate:%r' % (gVariables.successRate))
                     gVariables.current_trial_number = 3
-
 
 def restartTraining():
         #print "Restarting."
