@@ -64,11 +64,6 @@ class gVariables():
     history_trial = [1, 2, 1, 2, 1, 2]
     current_trial_type = 0  # 1: for tone one, reward after movement 2: for tone two, reward after stand still
     toneOneProbability = 0.9
-
-    def recalculateTimeIntervals(self):
-        print "recalculating time intervals."
-        #Should recalculate timeThreshold_0x according to total Time DUration.
-        #This should be executed by the program only once, at the beginning of the run.
     
 def printInstructions():
     print '\nOptions:'
@@ -318,11 +313,14 @@ def trainingInit():
     printInstructions()
 
 
-def exitTraining():
+def exitTraining(key):
     #Finalize this training and exits.
     #Should get a comment from user before finishing, for documentation purposes.
+    print "Asking user for comments about this training:"
+    st = gVariables.display.askUserInput("Write comment on this training:")
     print "Exiting."
     gVariables.logger.info('Exit signal key = %s', key)
+    gVariables.logger.info('Comment about this training: %s', st)
     import signal
     os.kill(os.getpid(), signal.SIGINT)
     sys.exit()
@@ -427,7 +425,7 @@ if __name__ == '__main__':
                         pauseTraining()
                         print "Tone Training paused."
                 elif (key=='\x1b' or key=='q'):
-                    exitTraining()
+                    exitTraining(key)
                 else :
                     print "Key not supported: %r" %key
             except IOError: pass
