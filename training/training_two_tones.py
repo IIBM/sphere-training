@@ -315,6 +315,8 @@ def exitTraining(key):
     #Finalize this training and exits.
     #Should get a comment from user before finishing, for documentation purposes.
     print "Asking user for comments about this training:"
+    import pygame
+    pygame.event.set_grab(True)
     st = gVariables.display.askUserInput("Write comment on this training:")
     print "Exiting."
     gVariables.logger.info('Exit signal key = %s', key)
