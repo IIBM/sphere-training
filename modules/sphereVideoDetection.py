@@ -293,13 +293,11 @@ class sphereVideoDetection():
     
         """
             Programa de detección de movimiento:
-            Se enciende timer de socket para enviar datos de mouse.
             Se enciende y configura cámara.
             Por cada ciclo de programa, se compara el fotograma actual con el anterior.
                 Si hay diferencias en el movimiento de un círculo particular (comparando
                 si son iguales por el hecho de que hay colisión en el espacio 2D-tiempo)
                 entonces añadir valor en el vector en el que este círculo se movió.
-                En cada ciclo se envía por socket.
     """    
         CAM_NUMBER = 0 #cam number, 0 for integrated webcam, 1 for the next detected camera.
         
@@ -316,17 +314,14 @@ class sphereVideoDetection():
         self.MAX_CIRCLE_MOVEMENT = 35 #máx diferencia en movimiento del círculo para considerarlo como movimiento
         
         #Inicio de programa: se declara como se captura video.
-        print self.VIDEOSOURCE
+        print "Video Source: ", (self.VIDEOSOURCE)
         cam = cv2.VideoCapture(self.VIDEOSOURCE)
-        #cam = cv2.VideoCapture("../../Labyrinth/files_movement/videos_prueba/abajo_y_arriba_2.avi")
-        #cam = cv2.VideoCapture(CAM_NUMBER)
         
         #Opciones de ejecuciOn: 640x480 => 60 fps.
         cam.set(3,self.CAM_WIDTH)
         cam.set(4,self.CAM_HEIGHT)
         
-        #set camera properties:
-        #this configuration is very dependent on the type and model of camera.
+        #set camera properties: this configuration is very dependent on the type and model of camera.
         
         cam.set(self.CAM_BRIGHTNESS_VAR,self.CAM_BRIGHTNESS_VALUE)
         cam.set(self.CAM_CONTRAST_VAR,self.CAM_CONTRAST_VALUE)
@@ -336,7 +331,7 @@ class sphereVideoDetection():
         cam.set(self.CAM_EXPOSURE_VAR,self.CAM_EXPOSURE_VALUE)
         print "camera: Width %r" % cam.get(3)
         print "camera: Height %r" % cam.get(4)
-        #print "camera: FPS %r" % cam.get(5) #prints error for many cameras.
+        #print "camera: FPS %r" % cam.get(5) #prints error for most cameras.
         print "camera: Brightness %r" % cam.get(self.CAM_BRIGHTNESS_VAR)
         print "camera: Contrast %r" % cam.get(self.CAM_CONTRAST_VAR)
         print "camera: Saturation %r" % cam.get(self.CAM_SATURATION_VAR)
@@ -378,22 +373,20 @@ class sphereVideoDetection():
         # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
         t_before = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
         t_now = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
+        capturedImage = cam.read()[1]
         time.sleep(0.1)
 
         self.startCalibration = True
         Lnew = []
         while True:
-                ###########################################<>
-                # Preparo las imgs antigûa, actual y futura
-                ##########################################
-                #im toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
-                im = cam.read()[1]
-                #calibrate if necessary
+                #===============================================================
+                # #calibrate if necessary
+                #===============================================================
                 if (self.startCalibration == True):
                     if (self.manageCalibrationVariables(0) == False):
                         print "Calibration file missing. A new calibration file will be created.."
                         print "Recalibrating:"
-                        t_calib = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+                        t_calib = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)
                         cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
                         ret,thresh = cv2.threshold(t_calib,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
                         contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
@@ -406,14 +399,14 @@ class sphereVideoDetection():
                             radius = int(radius)
                             if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
                                 #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
-                                cv2.circle(im,center,radius,(0,255,0),2)
+                                cv2.circle(capturedImage,center,radius,(0,255,0),2)
                                 circleCenters.append(center)
                                 circleRadius.append(radius)
                         expectedValue = 0
                         minRadius = 9999
                         maxRadius = 0
                         for i in range (0,10):
-                            cv2.imshow( self.winName , im )
+                            cv2.imshow( self.winName , capturedImage )
                             time.sleep(0.01)
                             key = cv2.waitKey(10)
                         for i in range(0, len(circleRadius)):
@@ -446,12 +439,12 @@ class sphereVideoDetection():
                         self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
                         self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
                         
-                        print "Número de muestras: %d" % len(circleCenters)
-                        print "Valor Esperado del radio: %d" % expectedValue
-                        print "Radio menor: %d" % minRadius
-                        print "Radio mayor: %d" % maxRadius
-                        print "Círculo Máximo de movimiento: %d" % int(self.MAX_CIRCLE_MOVEMENT)
-                        print "Círculo Mínimo de movimiento: %d" % int(self.MIN_CIRCLE_MOVEMENT)
+                        print "Number of samples: %d" % len(circleCenters)
+                        print "Radius expected value: %d" % expectedValue
+                        print "Minor Radius: %d" % minRadius
+                        print "Major Radius: %d" % maxRadius
+                        print "Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)
+                        print "Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)
                         print "Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)
                         print "Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)
                         
@@ -462,73 +455,70 @@ class sphereVideoDetection():
                         self.startCalibration = False
                     else:
                         #Calibration file exists, there is no need to calibrate.
-                        print "Using calibration file."
-                        print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
-                        print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
-                        print "Min contour area: %d" % self.WORKING_MIN_CONTOUR_AREA
-                        print "Max contour area: %d" % self.WORKING_MAX_CONTOUR_AREA
+                        print " - Calibration file exists. Using calibration file. - "
+                        print "Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)
+                        print "Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)
+                        print "Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)
+                        print "Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)
                         self.startCalibration = False
                         pass
                 
+                #===============================================================
+                # # Preparo las imgs antigûa, actual y futura<>
+                #===============================================================
+                #capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
+                capturedImage = cam.read()[1]
                 #t_before es el del anterior ciclo, t_now es el recién capturado (procesándolo 1ero..),
                 
-                t_before = t_now #saves old matrix
-                t_now = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY) #current matrix
+                #t_before = t_now #saves old matrix unnecessary since what is important from old matrix is the circle and point matrix
+                t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY) #current matrix
                 
                 cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
                 #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_GAUSSIAN, 3, 0);
                 
-                #############################
-                #Proceso la imagen "antigUa": t_before
-                #############################
-                #ret,thresh = cv2.threshold(t_before,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
-                #Tomo los contornos (lo importante para analizar)
-                #contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
                 
-                ############
-                #Recorrido1:
-                ############
+                #===============================================================
+                # #Recorrido1:
+                #===============================================================
                 #recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
-                Lbefore = Lnew
+                Lbefore = Lnew #guardo vieja matriz de movimiento; actualizo la nueva
 #                for cnt in contours:
 #                    (x,y),radius = cv2.minEnclosingCircle(cnt)
 #                    center = (int(x),int(y))
 #                    radius = int(radius)
 #                    if cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA: 
 #                        #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
-#                        cv2.circle(im,center,radius,(0,255,0),2)
+#                        cv2.circle(capturedImage,center,radius,(0,255,0),2)
 #                        L.append(center)
                 
-                #############################
-                #Proceso la imagen actual: t_now
-                #############################        
+                #===============================================================
+                # #Proceso la imagen actual: t_now    
+                #===============================================================
                 ret,thresh = cv2.threshold(t_now,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
                 contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
                 
-                ############
-                #Recorrido2:
-                ############
+                #===============================================================
+                # #Recorrido2:
+                #===============================================================
                 #recorro los contornos NUEVAMENTE, capturando centros. Esta vez, para el frame "futuro"
                 Lnew = []
                 for cnt in contours:
-                    (x,y),radius = cv2.minEnclosingCircle(cnt)
-                    center = (int(x),int(y))
+                    (x, y), radius = cv2.minEnclosingCircle(cnt)
+                    center = (int(x), int(y))
                     radius = int(radius)
-                    #a continuaciOn, si el contorno tiene suficiente área, pero también si no es TAN grande:
+                    # a continuaciOn, si el contorno tiene suficiente área, pero también si no es TAN grande:
                     if cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA:
-                        cv2.circle(im,center,radius,(0,255,0),2)
+                        cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)
                         Lnew.append(center)
-                
-                
-                ##################################################
-                #analizo si hay colisiones en el espacio 2D-tiempo
-                ##################################################
+                #===============================================================
+                # #analizo si hay colisiones en el espacio 2D-tiempo
+                #===============================================================
                 
                 #Si las hubiera, voy sumando contribuciones para ver hacia donde apunta el movimiento medio.
                 #Se analizan ambos versores del vector en el plano bidireccional:
-                self.movEjeX=0
-                self.movEjeY=0
-                numberOfVectors=1
+                self.movEjeX = 0
+                self.movEjeY = 0
+                numberOfVectors = 1
                 
                 for index in range(len(Lnew)):
                     for j in range(index, len(Lbefore)):
@@ -536,8 +526,8 @@ class sphereVideoDetection():
                           2)) <= self.MAX_CIRCLE_MOVEMENT and (math.sqrt((Lnew[index][0] - Lbefore[j][0]) ** 
                           2 + (Lnew[index][1] - Lbefore[j][1]) **2)) >= self.MIN_CIRCLE_MOVEMENT:
                             #print "Hay colisión: %d %d" % (index,j)
-                            cv2.circle(im, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
-                            cv2.line(im, (Lnew[index][0], Lnew[index][1]),(Lbefore[j][0], Lbefore[j][1]), (0,255,0), 5)
+                            cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
+                            cv2.line(capturedImage, (Lnew[index][0], Lnew[index][1]),(Lbefore[j][0], Lbefore[j][1]), (0,255,0), 5)
                             
                             
                             #se suma a todos los desplazamientos (en x, en y).
@@ -550,29 +540,32 @@ class sphereVideoDetection():
                 if (numberOfVectors == 0):
                     numberOfVectors = 1
                 
-                self.movEjeX /= numberOfVectors #movimiento x promedio, ponderación de todos los movimientos en x.
-                self.movEjeY /= numberOfVectors #movimiento y promedio, ponderación de todos los movimientos en y.
+                self.movEjeX /= numberOfVectors  # movimiento x promedio, ponderación de todos los movimientos en x.
+                self.movEjeY /= numberOfVectors  # movimiento y promedio, ponderación de todos los movimientos en y.
                 
                 self.vectorAcumulado.x += self.movEjeX
                 self.vectorAcumulado.y += self.movEjeY
                 
-                self.vectorInstantaneo.x += self.movEjeX #suma contrib. x en este ciclo (se establece a 0 en otro método)
-                self.vectorInstantaneo.y += self.movEjeY #suma contrib. y en este ciclo (se establece a 0 en otro método)
+                self.vectorInstantaneo.x += self.movEjeX  # suma contrib. x en este ciclo (se establece a 0 en otro método)
+                self.vectorInstantaneo.y += self.movEjeY  # suma contrib. y en este ciclo (se establece a 0 en otro método)
                 
-                #se analiza continuidad de movimiento en función:
+                # se analiza continuidad de movimiento en función:
                 self.continuousMovementAnalysis()
                 
-                #Se tiene el vector instantáneo para este fotograma: vectorInstantáneo = (self.movEjeX, self.movEjeY)
-                #print ("(%d %d .. %d)"%(self.movEjeX, self.movEjeY, numberOfVectors))
                 
-                #finalmente se "muestra" el resultado al usuario (feedback)
-                cv2.imshow( self.winName , im ) #obs.: NO es estrictamente necesario dar feedback acá.. también está mainFunction
+                #===============================================================
+                # se "muestra" el resultado al usuario (feedback)
+                #===============================================================
+                cv2.imshow( self.winName , capturedImage ) #obs.: NO es estrictamente necesario dar feedback acá.. también está mainFunction
                 #(imshow se puede sacar si el CPU es un problema.)
                 
-                #para finalizar programa, usuario presiona "Escape":
+                #===============================================================
+                # #para finalizar programa, usuario presiona "Escape":
+                #===============================================================
                 key = cv2.waitKey(self.sleepTime)
                 if (key == 27 or key==1048603): #escape pressed
                     #end Program.
+                    cam.release()
                     cv2.destroyWindow(self.winName)
                     os.kill(os.getpid(), signal.SIGINT)
                     sys.exit()
