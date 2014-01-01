@@ -215,7 +215,7 @@ class sphereVideoDetection():
         
         if (self.internalMovementCounter >self.movement_loopNumberSpan):
             self.internalMovementCounter = 0
-            logging.info("   ----" + 
+            logging.debug("   ----" + 
                             str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
                 abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)) )
             if (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
@@ -252,7 +252,7 @@ class sphereVideoDetection():
                     #self.last_saved_time_idle = timeit.default_timer()
                     self.vectorInstantaneo.x = 0
                     self.vectorInstantaneo.y = 0
-            logging.info( str(self.continuousMovementTime) +"..." + str(self.continuousIdleTime) )
+            logging.debug("Continuous: "+ str(self.continuousMovementTime) +"  ...  Idle: " + str(self.continuousIdleTime) )
     
     def continuousMovementAnalysis(self):
         if (self.movementMethod == 0):
