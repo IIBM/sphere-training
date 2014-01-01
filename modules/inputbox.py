@@ -1,4 +1,4 @@
-# by Timothy Downs, inputbox written for my map editor
+# by Timothy Downs, inputbox written for my map editor (edited by alfredoivan for sphere-training)
 
 # This program needs a little cleaning up
 # It ignores the shift key
