@@ -16,36 +16,41 @@ import timeit
 
 class sphereVideoDetection():
     def __init__ (self,videosource, width=640, height=480) :
-        
-        
-        self.winName = "Track-bola - Video Detection"
-        #declare self variables to use.
         import track_bola_utils
+        import configSphereVideoDetection
+        self.winName = configSphereVideoDetection.WINDOW_TITLE
+        #declare self variables to use.
+        
         self.vectorInstantaneo = track_bola_utils.vectorSimple() #vector acumulado
         self.vectorAcumulado = track_bola_utils.vectorSimple() #vector acumulado
-        self.startCalibration = True
+        self.startCalibration = True #if True, a calibration will be performed
+        
+        self.firstCalibration = False #if True, a first calibration was performed.
+        
         self.VIDEOSOURCE = videosource
         self.CAM_WIDTH = width
         self.CAM_HEIGHT = height
-        self.CV2THRESHOLD = 160  #binary threshold. A black pixel is only considered if its color is greater than 160
+        
+        
+        self.CV2THRESHOLD = configSphereVideoDetection.CV2_THRESHOLD  #binary threshold. A black pixel is only considered if its color is greater than 160
+        
         #variables for keeping track of continuous movement.
-        self.noiseFiltering = True
+        self.noiseFiltering = configSphereVideoDetection.NOISE_FILTERING_INITIAL_VALUE
         self.internalMovementCounter = 0 #counter, amount of cycles over which integration of movement is made.
         
-        self.sleepTime = 0.012 #Main loop sleep time.
-        self.movement_loopNumberSpan = 3 #amount of main loops that movement is integrated into.
-        self.movementThreshold = 50 #threshold set to 50
+        self.sleepTime = configSphereVideoDetection.MAIN_SLEEP_TIME #Main loop sleep time in ms
+        self.movement_loopNumberSpan = configSphereVideoDetection.MOVEMENT_LOOPS_INTEGRATED #amount of main loops that movement is integrated into.
+        self.movementThreshold = configSphereVideoDetection.MOVEMENT_THRESHOLD_INITIAL_VALUE #threshold, below this, we consider it noise.
         
-        self.movementMethod = 0 #Type of movement analysis method used.0=Accumulate time, 1= movementVector
+        self.movementMethod = configSphereVideoDetection.MOVEMENT_METHOD_INITIAL_VALUE #Type of movement analysis method used.0=Accumulate time, 1= movementVector
         
-        self.loopDuration = self.sleepTime * 3.0 #the duration of the main loop is the sleep time + some correction
         
         self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected last time it moved or currently
         self.continuousIdleTime = 0 #amount of seconds that no movement was detected last time it ceased movement or currently
         self.isMoving = False #if true, it is currently in movement. False => currently idle
         
-        self.movementVector = []
-        self.movementVectorLength = 20
+        self.movementVector = [] #binary vector, each loop adds 1 if moving, 0 otherwise
+        self.movementVectorLength = configSphereVideoDetection.MOVEMENT_VECTOR_LENGTH
         
         self.last_saved_time_idle = timeit.default_timer() #will be used to check differences in time (determine idle time)
         self.last_saved_time_movement = timeit.default_timer() #will be used to check differences in time (determine mvnt time)
@@ -115,6 +120,43 @@ class sphereVideoDetection():
         #if it is not moving now, amount of time it is idle until now.
         return self.continuousIdleTime
     
+    def manageCalibrationVariables(self, flag):
+        #this method loads calibration variables from file, if the file exists.
+        #else: it will create a file where the calibration will be saved.
+        
+        if (self.firstCalibration == True):
+            #A first calibration was executed. So the user is asking for a re-calibration, which means
+            #that the calibration file shouldn' be used.
+            if (flag == 0):
+                return False
+        
+        if (flag == 0):
+            #Flag 0: Check whether calibration file exists or not.
+            try:
+                import calibrationCamera
+                self.MIN_CIRCLE_MOVEMENT = calibrationCamera.MIN_CIRCLE_MOVEMENT
+                self.MAX_CIRCLE_MOVEMENT = calibrationCamera.MAX_CIRCLE_MOVEMENT
+                self.WORKING_MIN_CONTOUR_AREA = calibrationCamera.WORKING_MIN_CONTOUR_AREA
+                self.WORKING_MAX_CONTOUR_AREA = calibrationCamera.WORKING_MAX_CONTOUR_AREA
+                return True #True, calibration file was there.
+            except:
+                #probably: file doesn't exists.
+                return False #False, calibration file was not there. A new one will be created AFTER calib. variables are determined"
+
+        if (flag == 1):
+            #flag 1: A new calibration file should be created. It will have the calibrated variables just determined.
+            with open("calibrationCamera.py", "w") as text_file:
+                    text_file.write("#This file has calibration variables for the camera \n")
+                    text_file.write("#if this file exists, these values will be used in execution. Else, a new file \n")
+                    text_file.write("#with calibration variables will be created and used. \n")
+                    
+                    text_file.write("MAX_CIRCLE_MOVEMENT = %d \n"%int(self.MAX_CIRCLE_MOVEMENT) )
+                    text_file.write("MIN_CIRCLE_MOVEMENT = %d \n"%int(self.MIN_CIRCLE_MOVEMENT)  )
+                    text_file.write("WORKING_MIN_CONTOUR_AREA = %d \n"%int(self.WORKING_MIN_CONTOUR_AREA)  )
+                    text_file.write("WORKING_MAX_CONTOUR_AREA = %d \n"%int(self.WORKING_MAX_CONTOUR_AREA)  )
+                    return True #True, file was written OK
+            return False #False, file couldn't be written (or it was written and it's status is unknown)
+    
     
     def resetMovementTime(self):
         self.continuousMovementTime = 0
@@ -171,11 +213,10 @@ class sphereVideoDetection():
                     
                     now = timeit.default_timer()
                     timeDif = (now - self.last_saved_time_movement)
-                    if (timeDif < 0.001):
+                    if (timeDif < 0.001): #prevent from saving extremely low values (exp-10 etc..)
                         timeDif = 0
                     self.continuousMovementTime = timeDif
                     #self.last_saved_time_movement = timeit.default_timer()
-                    #self.continuousMovementTime += self.movement_loopNumberSpan * self.loopDuration #adds amount of time that was moving
                     self.vectorInstantaneo.x = 0
                     self.vectorInstantaneo.y = 0
             else:
@@ -186,9 +227,8 @@ class sphereVideoDetection():
                         self.continuousIdleTime = 0
                         self.last_saved_time_idle = timeit.default_timer()
                     now = timeit.default_timer()
-                    #self.continuousIdleTime += self.movement_loopNumberSpan * self.loopDuration
                     timeDif = (now - self.last_saved_time_idle)
-                    if (timeDif < 0.001):
+                    if (timeDif < 0.001): #prevent from saving extremely low values
                         timeDif = 0
                     self.continuousIdleTime = timeDif
                     #self.last_saved_time_idle = timeit.default_timer()
@@ -250,10 +290,10 @@ class sphereVideoDetection():
         #variables "de movimiento":
         #CAM_WIDTH = 640
         #CAM_HEIGHT = 480
-        MIN_CONTOUR_AREA = 60 #mínimo área del contorno para que sea válido.
-        MAX_CONTOUR_AREA = 2600 #máximo área del contorno para que sea válido.
-        self.WORKING_MIN_CONTOUR_AREA = 9999 #ídem pero calibrado para situación actual
-        self.WORKING_MAX_CONTOUR_AREA = 0 #ídem pero calibrado para situación actual
+        MIN_CONTOUR_AREA = 60 #min contour area to be valid, used in calibration
+        MAX_CONTOUR_AREA = 2600 #max contour area to be valid , used in calibration
+        self.WORKING_MIN_CONTOUR_AREA = 9999 #min contour area to be valid, used in every main loop
+        self.WORKING_MAX_CONTOUR_AREA = 0 #max contour area to be valid, used in every main loop
         self.MIN_CIRCLE_MOVEMENT = 3 #mínima diferencia en movimiento del círculo para considerarlo como movimiento
         self.MAX_CIRCLE_MOVEMENT = 35 #máx diferencia en movimiento del círculo para considerarlo como movimiento
         
@@ -332,65 +372,82 @@ class sphereVideoDetection():
                 im = cam.read()[1]
                 #calibrate if necessary
                 if (self.startCalibration == True):
-                    print "Recalibrating:"
-                    t_calib = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
-                    cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
-                    ret,thresh = cv2.threshold(t_calib,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
-                    contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-                    #recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
-                    circleCenters = []
-                    circleRadius = []
-                    for cnt in contours:
-                        (x,y),radius = cv2.minEnclosingCircle(cnt)
-                        center = (int(x),int(y))
-                        radius = int(radius)
-                        if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
-                            #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
-                            cv2.circle(im,center,radius,(0,255,0),2)
-                            circleCenters.append(center)
-                            circleRadius.append(radius)
-                    expectedValue = 0
-                    minRadius = 9999
-                    maxRadius = 0
-                    for i in range (0,10):
-                        cv2.imshow( self.winName , im )
-                        time.sleep(0.01)
-                        key = cv2.waitKey(10)
-                    for i in range(0, len(circleRadius)):
-                        expectedValue +=  circleRadius[i]
-                    
-                    if len(circleCenters) > 0:
-                      expectedValue /= len(circleCenters)
+                    if (self.manageCalibrationVariables(0) == False):
+                        print "Calibration file missing. A new calibration file will be created.."
+                        print "Recalibrating:"
+                        t_calib = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+                        cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
+                        ret,thresh = cv2.threshold(t_calib,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
+                        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+                        #recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
+                        circleCenters = []
+                        circleRadius = []
+                        for cnt in contours:
+                            (x,y),radius = cv2.minEnclosingCircle(cnt)
+                            center = (int(x),int(y))
+                            radius = int(radius)
+                            if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
+                                #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
+                                cv2.circle(im,center,radius,(0,255,0),2)
+                                circleCenters.append(center)
+                                circleRadius.append(radius)
+                        expectedValue = 0
+                        minRadius = 9999
+                        maxRadius = 0
+                        for i in range (0,10):
+                            cv2.imshow( self.winName , im )
+                            time.sleep(0.01)
+                            key = cv2.waitKey(10)
+                        for i in range(0, len(circleRadius)):
+                            expectedValue +=  circleRadius[i]
+                        
+                        if len(circleCenters) > 0:
+                          expectedValue /= len(circleCenters)
+                        else:
+                          expectedValue = 1
+    
+                        for i in range (0, len(circleCenters)):
+                            if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
+                                maxRadius = circleRadius[i]
+                            if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
+                                minRadius = circleRadius[i]
+    
+                        if (self.noiseFiltering == False):
+                            print "No noise filtering set."
+                            self.MAX_CIRCLE_MOVEMENT = expectedValue*2
+                            self.MIN_CIRCLE_MOVEMENT = expectedValue/8
+                            minRadius = 1
+                            if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+                                self.MIN_CIRCLE_MOVEMENT = 2
+                        else:
+                             self.MAX_CIRCLE_MOVEMENT = expectedValue*1.5
+                             self.MIN_CIRCLE_MOVEMENT = expectedValue/5
+                             if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+                                 self.MIN_CIRCLE_MOVEMENT = 2
+                        print "Número de muestras: %d" % len(circleCenters)
+                        print "Valor Esperado del radio: %d" % expectedValue
+                        print "Radio menor: %d" % minRadius
+                        print "Radio mayor: %d" % maxRadius
+                        print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
+                        print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
+                        print "Min contour area: %d" % self.WORKING_MIN_CONTOUR_AREA
+                        print "Max contour area: %d" % self.WORKING_MAX_CONTOUR_AREA
+                        self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
+                        self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
+                        if (self.manageCalibrationVariables(1) == False):
+                            print "Error writting calibration file."
+                        else:
+                            print "Calibration file saved."
+                        self.startCalibration = False
                     else:
-                      expectedValue = 1
-
-                    for i in range (0, len(circleCenters)):
-                        if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
-                            maxRadius = circleRadius[i]
-                        if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
-                            minRadius = circleRadius[i]
-
-                    if (self.noiseFiltering == False):
-                        print "No noise filtering set."
-                        self.MAX_CIRCLE_MOVEMENT = expectedValue*2
-                        self.MIN_CIRCLE_MOVEMENT = expectedValue/8
-                        minRadius = 1
-                        if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-                            self.MIN_CIRCLE_MOVEMENT = 2
-                    else:
-                         self.MAX_CIRCLE_MOVEMENT = expectedValue*1.5
-                         self.MIN_CIRCLE_MOVEMENT = expectedValue/5
-                         if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-                             self.MIN_CIRCLE_MOVEMENT = 2
-                    print "Número de muestras: %d" % len(circleCenters)
-                    print "Valor Esperado: %d" % expectedValue
-                    print "Radio menor: %d" % minRadius
-                    print "Radio mayor: %d" % maxRadius
-                    print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
-                    print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
-                    self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
-                    self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
-                    self.startCalibration = False
+                        #Calibration file exists, there is no need to calibrate.
+                        print "Using calibration file."
+                        print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
+                        print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
+                        print "Min contour area: %d" % self.WORKING_MIN_CONTOUR_AREA
+                        print "Max contour area: %d" % self.WORKING_MAX_CONTOUR_AREA
+                        self.startCalibration = False
+                        pass
                 
                 #t_before es el del anterior ciclo, t_now es el recién capturado (procesándolo 1ero..),
                 
@@ -468,7 +525,7 @@ class sphereVideoDetection():
                             self.movEjeX+= Lnew[index][0] - Lbefore[j][0]
                             #print "colisión entre %r -y- %r :: %r %r ::: " % (index, j, Lnew[index], Lbefore[j])
                 
-                #falta dividir las componentes del vector obtenido, dividiendo por N, para obtener vector Instantáneo promedio
+                #we divide each instant vector components by N, to obtain average instant vector.
                 if (numberOfVectors == 0):
                     numberOfVectors = 1
                 
@@ -491,10 +548,8 @@ class sphereVideoDetection():
                 cv2.imshow( self.winName , im ) #obs.: NO es estrictamente necesario dar feedback acá.. también está mainFunction
                 #(imshow se puede sacar si el CPU es un problema.)
                 
-                time.sleep(0.005)
-                
                 #para finalizar programa, usuario presiona "Escape":
-                key = cv2.waitKey(10)
+                key = cv2.waitKey(self.sleepTime)
                 if (key == 27 or key==1048603): #escape pressed
                     #end Program.
                     cv2.destroyWindow(self.winName)
