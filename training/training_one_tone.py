@@ -265,6 +265,20 @@ def trainingInit():
     time.sleep(1.3) #to print Instructions after calibration printings.
     printInstructions()
 
+
+def exitTraining(key):
+    #Finalize this training and exits.
+    #Should get a comment from user before finishing, for documentation purposes.
+    print "Asking user for comments about this training:"
+    st = gVariables.display.askUserInput("Write comment on this training:")
+    print "Exiting."
+    gVariables.logger.info('Exit signal key = %s', key)
+    gVariables.logger.info('Comment about this training: %s', st)
+    import signal
+    os.kill(os.getpid(), signal.SIGINT)
+    sys.exit()
+
+
 if __name__ == '__main__':
     ######
     #Input
@@ -365,11 +379,7 @@ if __name__ == '__main__':
                         pauseTraining()
                         print "Tone Training paused."
                 elif (key=='\x1b' or key=='q'):
-                    print "Exiting."
-                    gVariables.logger.info('Exit signal key = %s',key)
-                    import signal
-                    os.kill(os.getpid(), signal.SIGINT)
-                    sys.exit()
+                    exitTraining(key)
                 else :
                     print "Key not supported: %r" %key
             except IOError: pass
