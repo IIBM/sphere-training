@@ -130,6 +130,8 @@ class sphereVideoDetection():
             if (flag == 0):
                 return False
         
+        self.firstCalibration = True
+        
         if (flag == 0):
             #Flag 0: Check whether calibration file exists or not.
             try:
@@ -140,12 +142,20 @@ class sphereVideoDetection():
                 self.WORKING_MAX_CONTOUR_AREA = calibrationCamera.WORKING_MAX_CONTOUR_AREA
                 return True #True, calibration file was there.
             except:
-                #probably: file doesn't exists.
+                #probably: file doesn't exist.
                 return False #False, calibration file was not there. A new one will be created AFTER calib. variables are determined"
 
         if (flag == 1):
             #flag 1: A new calibration file should be created. It will have the calibrated variables just determined.
-            with open("calibrationCamera.py", "w") as text_file:
+            try:
+                import os
+                os.remove("../modules/calibrationCamera.py")
+                os.remove("../modules/calibrationCamera.pyc")
+                print "Previous calibrationCamera file exists. File erased."
+            except:
+                print "Error creating / erasing previous calibration file. Probably file does not exist."
+                
+            with open("../modules/calibrationCamera.py", "w") as text_file:
                     text_file.write("#This file has calibration variables for the camera \n")
                     text_file.write("#if this file exists, these values will be used in execution. Else, a new file \n")
                     text_file.write("#with calibration variables will be created and used. \n")
@@ -154,6 +164,14 @@ class sphereVideoDetection():
                     text_file.write("MIN_CIRCLE_MOVEMENT = %d \n"%int(self.MIN_CIRCLE_MOVEMENT)  )
                     text_file.write("WORKING_MIN_CONTOUR_AREA = %d \n"%int(self.WORKING_MIN_CONTOUR_AREA)  )
                     text_file.write("WORKING_MAX_CONTOUR_AREA = %d \n"%int(self.WORKING_MAX_CONTOUR_AREA)  )
+                    
+                    print self.MAX_CIRCLE_MOVEMENT
+                    print self.MIN_CIRCLE_MOVEMENT
+                    print self.WORKING_MIN_CONTOUR_AREA
+                    print self.WORKING_MAX_CONTOUR_AREA
+                    
+                    
+                    print "calibration file overwritten."
                     return True #True, file was written OK
             return False #False, file couldn't be written (or it was written and it's status is unknown)
     
@@ -424,16 +442,19 @@ class sphereVideoDetection():
                              self.MIN_CIRCLE_MOVEMENT = expectedValue/5
                              if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
                                  self.MIN_CIRCLE_MOVEMENT = 2
+
+                        self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
+                        self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
+                        
                         print "Número de muestras: %d" % len(circleCenters)
                         print "Valor Esperado del radio: %d" % expectedValue
                         print "Radio menor: %d" % minRadius
                         print "Radio mayor: %d" % maxRadius
-                        print "Círculo Máximo de movimiento: %d" % self.MAX_CIRCLE_MOVEMENT
-                        print "Círculo Mínimo de movimiento: %d" % self.MIN_CIRCLE_MOVEMENT
-                        print "Min contour area: %d" % self.WORKING_MIN_CONTOUR_AREA
-                        print "Max contour area: %d" % self.WORKING_MAX_CONTOUR_AREA
-                        self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
-                        self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
+                        print "Círculo Máximo de movimiento: %d" % int(self.MAX_CIRCLE_MOVEMENT)
+                        print "Círculo Mínimo de movimiento: %d" % int(self.MIN_CIRCLE_MOVEMENT)
+                        print "Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)
+                        print "Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)
+                        
                         if (self.manageCalibrationVariables(1) == False):
                             print "Error writting calibration file."
                         else:
