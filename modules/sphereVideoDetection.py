@@ -48,6 +48,7 @@ class sphereVideoDetection():
         self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected last time it moved or currently
         self.continuousIdleTime = 0 #amount of seconds that no movement was detected last time it ceased movement or currently
         self.isMoving = False #if true, it is currently in movement. False => currently idle
+        self.isTracking = True #True: is tracking correctly. False: could not keep up with the circles movement
         
         self.movementVector = [] #binary vector, each loop adds 1 if moving, 0 otherwise
         
@@ -57,6 +58,9 @@ class sphereVideoDetection():
         self.movementDelayVector = []
         
         self.movementDelayVectorLength = 20
+        
+        self.movementHistoryVector = [0,0,0,0,0,0] #saves past movements . Helps track interrupted movements
+        self.movementDelayHistoryVector = [0,0,0,0,0,0] #saves past delays. Helps track interrupted delays
         
         self.VECTOR_COUNT_PERCENTAGE = 60 #percentage of 1's needed for the mvnt.vector. method to consider it "moving"
         
@@ -218,6 +222,12 @@ class sphereVideoDetection():
         #Else: it is idle.
         
         #=======================================================================
+        # # Variables for recognizing changes in state.
+        #=======================================================================
+        
+        current_state_change = 0 #0: invalid, 1: changed from idle to moving, 2: changed from moving to idle, 3: stays idle, 4: stays moving
+        
+        #=======================================================================
         # # Keep track of the time it takes to process the whole loop
         #=======================================================================
         
@@ -225,7 +235,8 @@ class sphereVideoDetection():
         
         timeDif = (timeit.default_timer() - self.last_saved_time_gp)
         self.last_saved_time_gp = timeit.default_timer()
-        logging.debug ( "Current Loop time (ms): %d" %  int(timeDif * 1000))
+        sttemp = "Current Loop time (ms): %d" %  int(timeDif * 1000)
+        sttemp += "            "
         
         self.movementDelayVector[0:-1] = self.movementDelayVector[1:]
         self.movementDelayVector[self.movementDelayVectorLength - 1] = int(timeDif * 1000)
@@ -235,13 +246,17 @@ class sphereVideoDetection():
         
         average_delay /= self.movementDelayVectorLength
         
-        logging.debug ( "Average Loop time (ms): %d" % average_delay)
+        logging.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
         
         self.last_saved_time_movement = timeit.default_timer()
         
         #=======================================================================
         #process new vector entry, appends a 1 or 0 to the movement vector.
         #=======================================================================
+        
+        
+        
+        
         
         self.movementVector[0:-1] = self.movementVector[1:]
         movementAmount = (abs(self.getInstantX() * self.getInstantX()) + abs(self.getInstantY() * self.getInstantY()))
@@ -257,15 +272,17 @@ class sphereVideoDetection():
         if (self.movementVector[self.movementVectorLength - 1] == 1 and self.isMoving == True ):
             #new 1 detected, and it was moving, so it is still moving. Add 1 LOOP TIME to the total movement time.
             self.continuousMovementTime += (timeDif )
+            current_state_change = 4
         
-        if (self.movementVector[self.movementVectorLength - 1] == 0 and self.isMoving == False ):
+        elif (self.movementVector[self.movementVectorLength - 1] == 0 and self.isMoving == False ):
             #new 0 detected, and it was idle, so it is still idle. Add 1 LOOP TIME to the total idle time.
             self.continuousIdleTime += (timeDif )
+            current_state_change = 3
         
-        if (self.movementVector[self.movementVectorLength - 1] == 0 and self.isMoving == True ):
+        elif (self.movementVector[self.movementVectorLength - 1] == 0 and self.isMoving == True ):
             #cero detected, and was previously moving.
             #It should be checked whether this 0 nullifies the continuous mvmnt. or not
-            number_of_elements_to_check = int(self.continuousMovementTime*1000) / average_delay
+            number_of_elements_to_check = int (int(self.continuousMovementTime*1000) / average_delay)
             if (number_of_elements_to_check >= self.movementVectorLength):
                 #the number of elements to check is too large, better check all the vector
                 number_of_elements_to_check = self.movementVectorLength
@@ -283,14 +300,16 @@ class sphereVideoDetection():
             if ((ones_count * (100 / number_of_elements_to_check)) >= self.VECTOR_COUNT_PERCENTAGE):
                 #the ones and ceros were counted, and it is still moving because the 1's are greater than the percentage.
                 self.isMoving = True
+                current_state_change = 4
                 self.continuousMovementTime += (timeDif )
             else:
-                #now that a 0 was found, there are not enough 1's. So it is currently idle.
+                #now that a 0 was found, there are not enough 1's. So it changed from moving to currently idle.
                 self.isMoving = False
+                current_state_change = 2
                 self.continuousIdleTime = (timeDif )
         
         
-        if (self.movementVector[self.movementVectorLength - 1] == 1 and self.isMoving == False ):
+        elif (self.movementVector[self.movementVectorLength - 1] == 1 and self.isMoving == False ):
             #one detected, and was previously idle.
             #It should be checked whether this 1 nullifies the idle state or not
             number_of_elements_to_check = int(self.continuousMovementTime*1000) / average_delay
@@ -309,25 +328,27 @@ class sphereVideoDetection():
                 else:
                     ceros_count += 1
             if ((ones_count * (100 / number_of_elements_to_check)) >= self.VECTOR_COUNT_PERCENTAGE):
-                #the ones and ceros were counted, and it is now moving because the 1's are greater than the percentage.
+                #the ones and ceros were counted, and it changed, it is now moving because the 1's are greater than the percentage.
                 self.isMoving = True
+                current_state_change = 1
                 self.continuousMovementTime = (timeDif )
             else:
                 #the 1 found does not alter the idle state
                 self.isMoving = False
+                current_state_change = 3
                 self.continuousIdleTime += (timeDif )
         
         logging.debug( self.movementVector )
         logging.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) )
         logging.debug ( "       isMoving: %r" % self.isMoving)
-            
+        
+        #=======================================================================
+        # # Save history of movements and idle
+        #=======================================================================
+        #CONTINUAR
+        
         self.vectorInstantaneo.x = 0
         self.vectorInstantaneo.y = 0
-#         if (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
-#                     abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= self.movementThreshold):
-#             self.movementVector.append(1)
-#         else:
-#             self.movementVector.append(0)
     
     
     def Method_AccumulateTime(self):
@@ -629,27 +650,34 @@ class sphereVideoDetection():
                 #Se analizan ambos versores del vector en el plano bidireccional:
                 self.movEjeX = 0
                 self.movEjeY = 0
-                numberOfVectors = 1
+                number_of_moving_vectors = 0
+                number_of_standing_vectors = 0
                 
                 for index in range(len(Lnew)):
-                    for j in range(index, len(Lbefore)):
-                        if (math.sqrt((Lnew[index][0] - Lbefore[j][0]) ** 2 + (Lnew[index][1] - Lbefore[j][1]) ** 
-                          2)) <= self.MAX_CIRCLE_MOVEMENT and (math.sqrt((Lnew[index][0] - Lbefore[j][0]) ** 
-                          2 + (Lnew[index][1] - Lbefore[j][1]) **2)) >= self.MIN_CIRCLE_MOVEMENT:
-                            #print "Hay colisión: %d %d" % (index,j)
-                            #cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
-                            cv2.line(capturedImage, (Lnew[index][0], Lnew[index][1]),(Lbefore[j][0], Lbefore[j][1]), (255,0,0), 5)
-                            #se suma a todos los desplazamientos (en x, en y).
-                            self.movEjeX+= Lnew[index][0] - Lbefore[j][0]
-                            self.movEjeY+=Lnew[index][1] - Lbefore[j][1]
-                            numberOfVectors+=1
-                
+                    for jndex in range(index, len(Lbefore)):
+                        movement_difference = (Lnew[index][0] - Lbefore[jndex][0]) ** 2 + (Lnew[index][1] - Lbefore[jndex][1]) ** 2
+                        if (math.sqrt(movement_difference) >= self.MIN_CIRCLE_MOVEMENT):
+                             if (
+                            
+                              math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
+                                #print "Hay colisión: %d %d" % (index,jndex)
+                                #cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
+                                cv2.line(capturedImage, (Lnew[index][0], Lnew[index][1]),(Lbefore[jndex][0], Lbefore[jndex][1]), (255,0,0), 5)
+                                #se suma a todos los desplazamientos (en x, en y).
+                                self.movEjeX+= Lnew[index][0] - Lbefore[jndex][0]
+                                self.movEjeY+=Lnew[index][1] - Lbefore[jndex][1]
+                                number_of_moving_vectors+=1
+                        else:
+                            #están muy cerca, son probablemente el mismo.
+                            number_of_standing_vectors +=1
+                            
+                    
                 #we divide each instant vector components by N, to obtain average instant vector.
-                if (numberOfVectors == 0):
-                    numberOfVectors = 1
+                if (number_of_moving_vectors == 0):
+                    number_of_moving_vectors = 1
                 
-                self.movEjeX /= numberOfVectors  # movimiento x promedio, ponderación de todos los movimientos en x.
-                self.movEjeY /= numberOfVectors  # movimiento y promedio, ponderación de todos los movimientos en y.
+                self.movEjeX /= number_of_moving_vectors  # movimiento x promedio, ponderación de todos los movimientos en x.
+                self.movEjeY /= number_of_moving_vectors  # movimiento y promedio, ponderación de todos los movimientos en y.
                 
                 self.vectorAcumulado.x += self.movEjeX
                 self.vectorAcumulado.y += self.movEjeY
