@@ -62,7 +62,8 @@ class gVariables():
     current_trial_number = 0 #0: tone, 1: movement detection, 2: inter-trial, 3: instant before changing to 0
 
     history_trial = [1, 2, 1, 2, 1, 2]
-    current_trial_type = 0  # 1: for tone one, reward after movement 2: for tone two, reward after stand still
+    current_trial_type = 0  # 1: for tone one, reward after movement 2: for tone two, reward after standing still
+    current_trial_type_str = "" #same as type but with string format.
     toneOneProbability = 0.9
     
 def printInstructions():
@@ -96,13 +97,20 @@ def updateDisplayInfo():
                     now = timeit.default_timer()
                     b = getFormattedTime(int(now - gVariables.start_time ) )
                     gVariables.display.updateInfo("Time", b )
+                    if (gVariables.current_trial_type == 1):
+                        sttrial = "move"
+                    elif (gVariables.current_trial_type == 2):
+                        sttrial = "still"
+                    else:
+                        sttrial = ""
+                    gVariables.current_trial_type_str = sttrial
                     if (gVariables.current_trial_time < gVariables.eventTime2_movement):
-                        gVariables.display.updateInfo("Trial status","running")
+                        gVariables.display.updateInfo("Trial status",sttrial+" - running")
                     else:
                         if gVariables.dropReleased == 1:
-                             gVariables.display.updateInfo("Trial status","SUCCESS")
+                             gVariables.display.updateInfo("Trial status",sttrial+"SUCCESS")
                         else:
-                            gVariables.display.updateInfo("Trial status","FAIL")
+                            gVariables.display.updateInfo("Trial status",sttrial+"FAIL")
     gVariables.display.updateInfo("Trials", gVariables.trialCount)
     gVariables.display.updateInfo("Succesful Trials", gVariables.successTrialCount)
     if (gVariables.trialCount > 0):
@@ -219,10 +227,11 @@ def trialLoop():
                 elif (int(gVariables.current_trial_time) >= gVariables.eventTime3_trialEnd and
                       gVariables.current_trial_number == 2):
                     gVariables.logger.info('End trial:%d' % gVariables.trialCount)
+                    gVariables.logger.info('Trial type: '+str(gVariables.current_trial_type_str))
                     if(gVariables.dropReleased==1):
-                        gVariables.logger.info('Trial succesful')
+                        gVariables.logger.info('Trial successful')
                     else:
-                        gVariables.logger.info('Trial not succesful')
+                        gVariables.logger.info('Trial not successful')
                     gVariables.logger.info('Success rate:%r' % (gVariables.successRate))
                     gVariables.current_trial_number = 3
 
