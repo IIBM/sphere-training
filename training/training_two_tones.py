@@ -105,12 +105,12 @@ def updateDisplayInfo():
                         sttrial = ""
                     gVariables.current_trial_type_str = sttrial
                     if (gVariables.current_trial_time < gVariables.eventTime2_movement):
-                        gVariables.display.updateInfo("Trial status",sttrial+" - running")
+                        gVariables.display.updateInfo("Trial status",sttrial+" - "+"running")
                     else:
                         if gVariables.dropReleased == 1:
-                             gVariables.display.updateInfo("Trial status",sttrial+"SUCCESS")
+                             gVariables.display.updateInfo("Trial status",sttrial+" - "+"SUCCESS")
                         else:
-                            gVariables.display.updateInfo("Trial status",sttrial+"FAIL")
+                            gVariables.display.updateInfo("Trial status",sttrial+" - "+"FAIL")
     gVariables.display.updateInfo("Trials", gVariables.trialCount)
     gVariables.display.updateInfo("Succesful Trials", gVariables.successTrialCount)
     if (gVariables.trialCount > 0):
