@@ -222,8 +222,6 @@ class sphereVideoDetection():
         #=======================================================================
         
         #work in ms, at the end it passes to s again
-        self.continuousIdleTime *= 1000
-        self.continuousMovementTime *= 1000
         
         timeDif = (timeit.default_timer() - self.last_saved_time_gp)
         self.last_saved_time_gp = timeit.default_timer()
@@ -258,16 +256,16 @@ class sphereVideoDetection():
         #=======================================================================
         if (self.movementVector[self.movementVectorLength - 1] == 1 and self.isMoving == True ):
             #new 1 detected, and it was moving, so it is still moving. Add 1 LOOP TIME to the total movement time.
-            self.continuousMovementTime += int(timeDif * 1000)
+            self.continuousMovementTime += (timeDif )
         
         if (self.movementVector[self.movementVectorLength - 1] == 0 and self.isMoving == False ):
             #new 0 detected, and it was idle, so it is still idle. Add 1 LOOP TIME to the total idle time.
-            self.continuousIdleTime += int(timeDif * 1000)
+            self.continuousIdleTime += (timeDif )
         
         if (self.movementVector[self.movementVectorLength - 1] == 0 and self.isMoving == True ):
             #cero detected, and was previously moving.
             #It should be checked whether this 0 nullifies the continuous mvmnt. or not
-            number_of_elements_to_check = self.continuousMovementTime / average_delay
+            number_of_elements_to_check = int(self.continuousMovementTime*1000) / average_delay
             if (number_of_elements_to_check >= self.movementVectorLength):
                 #the number of elements to check is too large, better check all the vector
                 number_of_elements_to_check = self.movementVectorLength
@@ -277,7 +275,7 @@ class sphereVideoDetection():
             #a comparisson is made between the last N elements, to see if this new 0 alters the balance
             ones_count = 0
             ceros_count = 0
-            for i in range(self.movementVectorLength - number_of_elements_to_check , self.movementVectorLength):
+            for i in range(int(self.movementVectorLength - number_of_elements_to_check) , int (self.movementVectorLength)  ):
                 if (self.movementVector[i] == 1):
                     ones_count += 1
                 else:
@@ -285,17 +283,17 @@ class sphereVideoDetection():
             if ((ones_count * (100 / number_of_elements_to_check)) >= self.VECTOR_COUNT_PERCENTAGE):
                 #the ones and ceros were counted, and it is still moving because the 1's are greater than the percentage.
                 self.isMoving = True
-                self.continuousMovementTime += int(timeDif * 1000)
+                self.continuousMovementTime += (timeDif )
             else:
                 #now that a 0 was found, there are not enough 1's. So it is currently idle.
                 self.isMoving = False
-                self.continuousIdleTime = int(timeDif * 1000)
+                self.continuousIdleTime = (timeDif )
         
         
         if (self.movementVector[self.movementVectorLength - 1] == 1 and self.isMoving == False ):
             #one detected, and was previously idle.
             #It should be checked whether this 1 nullifies the idle state or not
-            number_of_elements_to_check = self.continuousMovementTime / average_delay
+            number_of_elements_to_check = int(self.continuousMovementTime*1000) / average_delay
             if (number_of_elements_to_check >= self.movementVectorLength):
                 #the number of elements to check is too large, better check all the vector
                 number_of_elements_to_check = self.movementVectorLength
@@ -305,7 +303,7 @@ class sphereVideoDetection():
             #a comparisson is made between the last N elements, to see if this new 1 alters the balance
             ones_count = 0
             ceros_count = 0
-            for i in range(self.movementVectorLength - number_of_elements_to_check , self.movementVectorLength):
+            for i in range(int(self.movementVectorLength - number_of_elements_to_check) , int(self.movementVectorLength)):
                 if (self.movementVector[i] == 1):
                     ones_count += 1
                 else:
@@ -313,14 +311,12 @@ class sphereVideoDetection():
             if ((ones_count * (100 / number_of_elements_to_check)) >= self.VECTOR_COUNT_PERCENTAGE):
                 #the ones and ceros were counted, and it is now moving because the 1's are greater than the percentage.
                 self.isMoving = True
-                self.continuousMovementTime = int(timeDif * 1000)
+                self.continuousMovementTime = (timeDif )
             else:
                 #the 1 found does not alter the idle state
                 self.isMoving = False
-                self.continuousIdleTime += int(timeDif * 1000)
+                self.continuousIdleTime += (timeDif )
         
-        self.continuousIdleTime /= 1000
-        self.continuousMovementTime /= 1000
         logging.debug( self.movementVector )
         logging.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) )
         logging.debug ( "       isMoving: %r" % self.isMoving)
