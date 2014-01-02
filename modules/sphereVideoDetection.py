@@ -220,6 +220,11 @@ class sphereVideoDetection():
         #=======================================================================
         # # Keep track of the time it takes to process the whole loop
         #=======================================================================
+        
+        #work in ms, at the end it passes to s again
+        self.continuousIdleTime *= 1000
+        self.continuousMovementTime *= 1000
+        
         timeDif = (timeit.default_timer() - self.last_saved_time_gp)
         self.last_saved_time_gp = timeit.default_timer()
         logging.debug ( "Current Loop time (ms): %d" %  int(timeDif * 1000))
@@ -314,6 +319,8 @@ class sphereVideoDetection():
                 self.isMoving = False
                 self.continuousIdleTime += int(timeDif * 1000)
         
+        self.continuousIdleTime /= 1000
+        self.continuousMovementTime /= 1000
         logging.debug( self.movementVector )
         logging.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) )
         logging.debug ( "       isMoving: %r" % self.isMoving)
