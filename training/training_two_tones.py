@@ -59,7 +59,7 @@ class gVariables():
     current_trial_time = timeit.default_timer() #second of the current trial (between 0 and the maximum length of a trial)
     current_trial_paused_time = 0 #to handle pause and resume correctly..
     
-    current_trial_number = 0 #0: tone, 1: movement detection, 2: inter-trial, 3: instant before changing to 0
+    current_trial_stage = 0 #0: tone, 1: movement detection, 2: inter-trial, 3: instant before changing to 0
 
     history_trial = [1, 2, 1, 2, 1, 2]
     current_trial_type = 0  # 1: for tone one, reward after movement 2: for tone two, reward after standing still
@@ -141,16 +141,18 @@ def loopFunction():
                 updateDisplayInfo()
                 #gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
                 #####################
-                if (gVariables.trialExecuting == True and gVariables.current_trial_number == 1):
+                if (gVariables.trialExecuting == True and gVariables.current_trial_stage == 1):
                     if (gVariables.current_trial_type == 1):
                       if (gVariables.videoDet.getMovementStatus() == True and 
                         gVariables.videoDet.getMovementTime() >= (gVariables.movementTime / 10.0) ):
-                        giveReward()
+                        if (gVariables.current_trial_stage == 1):
+                            giveReward()
                         #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
                     elif (gVariables.current_trial_type == 2):
                       if (gVariables.videoDet.getMovementStatus() == False and 
                         gVariables.videoDet.getIdleTime() >= (gVariables.idleTime / 10.0) ):
-                        giveReward()
+                        if (gVariables.current_trial_stage == 1):
+                            giveReward()
                         #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
     finally:
         return
@@ -165,7 +167,7 @@ def trialLoop():
                 gVariables.current_trial_paused_time = 0
                 gVariables.current_trial_time = (timeit.default_timer() - gVariables.current_trial_start_time)
                 
-                if (gVariables.current_trial_number == 3 and 
+                if (gVariables.current_trial_stage == 3 and 
                     gVariables.videoDet.getIdleTime() > gVariables.minIdleIntertrialTime and
                     gVariables.videoDet.getMovementStatus() == False):
                     gVariables.logger.info('Starting trial:%d' % gVariables.trialCount)
@@ -203,7 +205,7 @@ def trialLoop():
                     gVariables.history_trial[0:-1] = gVariables.history_trial[1:]
                     gVariables.history_trial[-1] = gVariables.current_trial_type
 
-                    gVariables.current_trial_number = 0
+                    gVariables.current_trial_stage = 0
                     gVariables.current_trial_paused_time = 0
                     
                     #add random factor to the intertrial time in the next one:
@@ -214,18 +216,18 @@ def trialLoop():
                     
                 if ( int(gVariables.current_trial_time) >= gVariables.eventTime1_sound and 
                      int(gVariables.current_trial_time) <= gVariables.eventTime2_movement 
-                     and gVariables.current_trial_number == 0):
+                     and gVariables.current_trial_stage == 0):
                     gVariables.logger.info('Start trial movement detection')
                     gVariables.videoDet.resetMovementTime()
                     gVariables.videoDet.resetIdleTime()
-                    gVariables.current_trial_number = 1
+                    gVariables.current_trial_stage = 1
                 elif (int(gVariables.current_trial_time) >= gVariables.eventTime2_movement and 
-                      gVariables.current_trial_number == 1):
+                      gVariables.current_trial_stage == 1):
                     gVariables.logger.info('End trial movement detection')
                     gVariables.logger.info('Start inter-trial delay')
-                    gVariables.current_trial_number = 2
+                    gVariables.current_trial_stage = 2
                 elif (int(gVariables.current_trial_time) >= gVariables.eventTime3_trialEnd and
-                      gVariables.current_trial_number == 2):
+                      gVariables.current_trial_stage == 2):
                     gVariables.logger.info('End trial:%d' % gVariables.trialCount)
                     gVariables.logger.info('Trial type: '+str(gVariables.current_trial_type_str))
                     if(gVariables.dropReleased==1):
@@ -233,7 +235,7 @@ def trialLoop():
                     else:
                         gVariables.logger.info('Trial not successful')
                     gVariables.logger.info('Success rate:%r' % (gVariables.successRate))
-                    gVariables.current_trial_number = 3
+                    gVariables.current_trial_stage = 3
 
 def restartTraining():
         #print "Restarting."
@@ -243,7 +245,7 @@ def restartTraining():
             gVariables.current_trial_start_time = timeit.default_timer()
         except:
             pass
-        gVariables.current_trial_number = 3
+        gVariables.current_trial_stage = 3
         gVariables.trialCount = 0
         gVariables.successTrialCount=0
         gVariables.trialExecuting = True
@@ -265,11 +267,10 @@ def resumeTraining():
     gVariables.logger.info('%s resumed.' % gVariables.trainingName)
 
 def giveReward():
-    if (gVariables.dropReleased == 0):
-        if (gVariables.current_trial_number == 1):
+    if (gVariables.dropReleased == 0 and gVariables.trialExecuting == True):
             #print "Release drop of water."
             gVariables.valve1.drop()
-            gVariables.logger.debug("Release drop of water.")
+            gVariables.logger.debug("Drop of water released.")
             gVariables.successTrialCount+=1
             gVariables.dropReleased = 1
 
@@ -375,6 +376,9 @@ if __name__ == '__main__':
                 elif (key == 'd'):
                     gVariables.logger.info('valve drop')
                     gVariables.valve1.drop()
+                elif (key == 'r'):
+                    gVariables.logger.info('Reward given manually.')
+                    giveReward();
                 elif (key == '1'):
                     gVariables.logger.info('tone 1: %d Hz' % gVariables.soundGenFrequency1)
                     gVariables.s1.play()
