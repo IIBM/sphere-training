@@ -5,13 +5,15 @@
     En base al video, establece un vector que corresponde a la dirección del movimiento detectado.
     El movimiento se detecta de círculos negros en movimiento, comparando posición actual con su posición pasada (probable).
     Este archivo reemplaza spherevideotracker.py.<>
-    
+     
 '''
 
 import pygame
 from pygame.locals import *
 import logging
 import timeit
+
+
 
 
 class sphereVideoDetection():
@@ -42,7 +44,8 @@ class sphereVideoDetection():
         self.movement_loopNumberSpan = configSphereVideoDetection.MOVEMENT_LOOPS_INTEGRATED #amount of main loops that movement is integrated into.
         self.movementThreshold = configSphereVideoDetection.MOVEMENT_THRESHOLD_INITIAL_VALUE #threshold, below this, we consider it noise.
         
-        self.movementMethod = configSphereVideoDetection.MOVEMENT_METHOD_INITIAL_VALUE #Type of movement analysis method used.0=Accumulate time, 1= movementVector
+        self.movementMethod = configSphereVideoDetection.MOVEMENT_METHOD_INITIAL_VALUE #Type of movement analysis method used.
+        #Current methods: 0=Accumulate time, 1= movementVector, 2=(WIP) movementVectorBinary
         
         
         self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected last time it moved or currently
@@ -215,11 +218,73 @@ class sphereVideoDetection():
         return self.isMoving #true if right now it is moving, false otherwise.
     
     
+    def Method_MovementVectorBinary(self):
+        
+        #=======================================================================
+        # # Movement Vector Binary (a variant of the non binary method)
+        #=======================================================================
+        
+        # This method will set the movement time in a preset value, and no more or less, only if that much time
+        # is detected. For example:
+        # If it was moving for 1 second, and the time window in the training
+        # files set this module to detect at least 0.5 s, this method will set movingTIme to 0.5 s
+        # If this method does not detect 0.5 s , it will set movingTime to 0 and idle time to 0
+        #=======================================================================
+        # # Keep track of the time it takes to process the whole loop
+        #=======================================================================
+        
+        #work in seconds.
+        
+        timeDif = (timeit.default_timer() - self.last_saved_time_gp)
+        self.last_saved_time_gp = timeit.default_timer()
+        #sttemp = "Current Loop time (ms): %d" %  int(timeDif * 1000)
+        #sttemp += "            "
+        
+        self.movementDelayVector[0:-1] = self.movementDelayVector[1:]
+        self.movementDelayVector[self.movementDelayVectorLength - 1] = int(timeDif * 1000)
+        average_delay=0
+        for i in range(0, self.movementDelayVectorLength):
+            average_delay+= self.movementDelayVector[i]
+        
+        average_delay /= self.movementDelayVectorLength
+        
+        #logging.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
+        
+        self.last_saved_time_movement = timeit.default_timer()
+        
+        #Time window is the amount of time that it is asked to the subject to perform continuous movement
+        # For example, timewindow = 0.5 s , so each loop this method will determine if continuous movement
+        #is detected for that amount of time.
+        
+        #=======================================================================
+        #process last loop. Appends a 1 or 0 to the movement vector if the amount was above threshold.
+        #=======================================================================
+        
+        self.movementVector[0:-1] = self.movementVector[1:]
+        movementAmount = (abs(self.getInstantX() * self.getInstantX()) + abs(self.getInstantY() * self.getInstantY()))
+        #logging.debug( "Amount of movement: %d" % movementAmount)
+        if (movementAmount >= self.movementThreshold):
+                    self.movementVector[self.movementVectorLength - 1] = 1
+        else:
+                    self.movementVector[self.movementVectorLength - 1] = 0
+        
+        
+        #=======================================================================
+        # # Determines if there are enough 1's in the time window (which was already set)
+        #=======================================================================
+        
+    
+    
+    
+    
     def Method_MovementVector(self):
         #Movement Vector method:
         #Each cycle, an element is added to movement vector.
         #If there are N past 1's in the vector, then it was moving and currently is. (includes certain 0's tolerance)
         #Else: it is idle.
+        
+
+        
         
         #=======================================================================
         # # Variables for recognizing changes in state.
@@ -235,8 +300,8 @@ class sphereVideoDetection():
         
         timeDif = (timeit.default_timer() - self.last_saved_time_gp)
         self.last_saved_time_gp = timeit.default_timer()
-        sttemp = "Current Loop time (ms): %d" %  int(timeDif * 1000)
-        sttemp += "            "
+        #sttemp = "Current Loop time (ms): %d" %  int(timeDif * 1000)
+        #sttemp += "            "
         
         self.movementDelayVector[0:-1] = self.movementDelayVector[1:]
         self.movementDelayVector[self.movementDelayVectorLength - 1] = int(timeDif * 1000)
@@ -246,17 +311,13 @@ class sphereVideoDetection():
         
         average_delay /= self.movementDelayVectorLength
         
-        logging.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
+        #logging.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
         
         self.last_saved_time_movement = timeit.default_timer()
         
         #=======================================================================
         #process new vector entry, appends a 1 or 0 to the movement vector.
         #=======================================================================
-        
-        
-        
-        
         
         self.movementVector[0:-1] = self.movementVector[1:]
         movementAmount = (abs(self.getInstantX() * self.getInstantX()) + abs(self.getInstantY() * self.getInstantY()))
@@ -340,12 +401,16 @@ class sphereVideoDetection():
         
         logging.debug( self.movementVector )
         logging.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) )
-        logging.debug ( "       isMoving: %r" % self.isMoving)
+        #logging.debug ( "       isMoving: %r" % self.isMoving)
         
         #=======================================================================
         # # Save history of movements and idle
         #=======================================================================
         #CONTINUAR
+        # ESTE MÉTODO TIENE QUE PODER CONTESTAR LA SIGUIENTE PREGUNTA: SE MOVIÓ HACE 0.5 SEGUNDOS? SI O NO.
+        # DEBEN HABER 3 ESTADOS. SE MOVIÓ HACE 0.5 SEGUNDOS, IDLE HACE 0.5 SEGUNDOS, ESTADO INVÁLIDO.
+        # LO DE HISTORIA DE MOVIMIENTO CONTINUARLO PERO NO ES ESTRICTAMENTE NECESARIO ACÁ. EN EL OTRO MÉTODO ES MUY IMMPORTANTE.
+        
         
         self.vectorInstantaneo.x = 0
         self.vectorInstantaneo.y = 0
