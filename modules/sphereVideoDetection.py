@@ -243,6 +243,7 @@ class sphereVideoDetection():
         #=======================================================================
         #work in seconds.
         
+        #print "MVB Start."
         timeDif = (timeit.default_timer() - self.last_saved_time_gp)
         self.last_saved_time_gp = timeit.default_timer()
         #sttemp = "Current Loop time (ms): %d" %  int(timeDif * 1000)
@@ -302,16 +303,18 @@ class sphereVideoDetection():
             #More ones than the percentage. This is considered movement along the given time window.
             #return OK
             self.continuousMovementTime = self.movementTimeWindow
-            self.continuousIdleTime = 0
+            self.continuousIdleTime = 0.01
             self.isMoving = True
         elif (ceros_count * (100 / numElementsToCheck) >= self.VECTOR_COUNT_PERCENTAGE):
             self.continuousIdleTime = self.movementTimeWindow
-            self.continuousMovementTime = 0
+            self.continuousMovementTime = 0.01
             self.isMoving = False
         else:
             #it is not moving nor staying idle
-            self.continuousMovementTime = 0
-            self.continuousIdleTime = 0
+            self.continuousMovementTime = 0.01
+            self.continuousIdleTime = 0.01
+            self.isMoving = False
+        #print "MVB end."
         return
     
     
