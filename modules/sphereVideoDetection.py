@@ -219,13 +219,16 @@ class sphereVideoDetection():
     def getMovementStatus(self):
         return self.isMoving #true if right now it is moving, false otherwise.
     
+    def getMovementTimeWindow(self):
+        return self.movementTimeWindow
+    
     def setMovementTimeWindow(self, wind):
         #This method sets the time window.
         #Especially useful with the movement analysis method: Method_MovementVectorBinary
         #Seconds that will be detected for movement.
         if (wind > 0.0):
             self.movementTimeWindow = wind;
-            print "videoDetection: Movement time window changed to %f seconds."%self.movementTimeWindow
+            logging.debug("videoDetection: Movement time window changed to %f seconds."%self.movementTimeWindow)
     
     def Method_MovementVectorBinary(self):
         
@@ -272,7 +275,8 @@ class sphereVideoDetection():
         #=======================================================================
         
         self.movementVector[0:-1] = self.movementVector[1:]
-        movementAmount = (abs(self.getInstantX() * self.getInstantX()) + abs(self.getInstantY() * self.getInstantY()))
+        movementAmount = (abs(self.getInstantX() * self.getInstantX()) +
+                           abs(self.getInstantY() * self.getInstantY()))
         #logging.debug( "Amount of movement: %d" % movementAmount)
         if (movementAmount >= self.movementThreshold):
                     self.movementVector[self.movementVectorLength - 1] = 1
