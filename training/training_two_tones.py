@@ -34,7 +34,7 @@ class gVariables():
     
     maxMovementThreshold = 2000
     maxMovementTime = 11 #max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
-    movementTime = 5 # time for a continuous time that should be reached to give reward.
+    movementTime = 5 # time for a continuous time that should be reached to give reward. 5 = 500 ms
     #ex.: movementTime = 5 means that there should be movement detected over 500 ms at least
     idleTime = 14 # time for a continuous time that should be reached to give reward.
     
@@ -71,6 +71,7 @@ def printInstructions():
     print 'o: Open Valve'
     print 'c: Close Valve'
     print 'd: Water Drop'
+    print 'r: Give Reward manually'
     print '1: %d Hz tone' % gVariables.soundGenFrequency1
     print '2: %d Hz tone' % gVariables.soundGenFrequency2
     print 't/T: increase/decrease threshold (10 - %d)' % gVariables.maxMovementThreshold
@@ -131,6 +132,7 @@ def loopFunction():
     print gVariables.trainingName
     import sphereVideoDetection
     gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
+    gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime / 10.0) #seconds that should be moving.
     #Display initialization.
     initDisplay()
     try:
@@ -379,6 +381,9 @@ if __name__ == '__main__':
                 elif (key == 'r'):
                     gVariables.logger.info('Reward given manually.')
                     giveReward();
+                elif (key == 'R'):
+                    gVariables.logger.info('Reward given manually.')
+                    giveReward();
                 elif (key == '1'):
                     gVariables.logger.info('tone 1: %d Hz' % gVariables.soundGenFrequency1)
                     gVariables.s1.play()
@@ -401,12 +406,14 @@ if __name__ == '__main__':
                     gVariables.movementTime += 1
                     if gVariables.movementTime > gVariables.maxMovementTime:
                         gVariables.movementTime = gVariables.maxMovementTime
+                    gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime / 10.0)
                     print "Movement Time changed to : " + str(gVariables.movementTime * 100) + " ms"
                     printInstructions()
                 elif (key == 'E'):
                     gVariables.movementTime -= 1
                     if gVariables.movementTime < 1:
                         gVariables.movementTime = 1
+                    gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime / 10.0)
                     print "Movement Time changed to : " + str(gVariables.movementTime * 100) + " ms"
                     printInstructions()
                 elif (key == 'l'):
