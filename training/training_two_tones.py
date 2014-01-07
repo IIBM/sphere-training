@@ -34,9 +34,9 @@ class gVariables():
     
     maxMovementThreshold = 2000
     maxMovementTime = 11 #max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
-    movementTime = 5 # time for a continuous time that should be reached to give reward. 5 = 500 ms
+    movementTime = 5 # continuous moving time that should be reached to give reward. 5 = 500 ms
     #ex.: movementTime = 5 means that there should be movement detected over 500 ms at least
-    idleTime = 14 # time for a continuous time that should be reached to give reward.
+    idleTime = 10 # continuous idle time that should be reached to give reward. 10= 1000 ms
     
     soundGenDuration = 1.0
     soundGenFrequency1 = 1000.0 #in Hz
@@ -155,6 +155,7 @@ def loopFunction():
                         gVariables.videoDet.getIdleTime() >= (gVariables.idleTime / 10.0) ):
                         if (gVariables.current_trial_stage == 1):
                             giveReward()
+                      
                         #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
     finally:
         return
@@ -199,9 +200,15 @@ def trialLoop():
                     if (gVariables.current_trial_type == 1) :
                             gVariables.logger.info('tone 1: 1 kHz')
                             gVariables.s1.play()
+                            #a new "time window" should be set for 
+                            # some movement analysis methods to work.
+                            gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime / 10.0)
                     else :
                             gVariables.logger.info('tone 2: 8 kHz')
                             gVariables.s2.play()
+                            #a new "time window" should be set for 
+                            # some movement analysis methods to work.
+                            gVariables.videoDet.setMovementTimeWindow(gVariables.idleTime / 10.0)
 
                     gVariables.history_trial[0:-1] = gVariables.history_trial[1:]
                     gVariables.history_trial[-1] = gVariables.current_trial_type
