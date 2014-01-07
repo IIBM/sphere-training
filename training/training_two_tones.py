@@ -27,7 +27,7 @@ class gVariables():
     eventTime1_sound = 1.0 #in seconds. Instant of time when the soundGen ends.
     eventTime2_movement = 3.0 #in seconds. Instant of time when movement ceases to be considered for reward
     eventTime3_trialEnd = 10.0 #in seconds. Instant of time when the trial ends.
-    minIdleIntertrialTime = 1.0 #no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
+    minIdleIntertrialTime = 0.5 #no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
     
     interTrialRandom1Time = 4.0 #intertrial time is random between this value and the random2 value
     interTrialRandom2Time = 7.0 #intertrial time is random between previous value and this value.
@@ -168,9 +168,8 @@ def trialLoop():
                 gVariables.start_time += gVariables.current_trial_paused_time #we consider that training time has not passed in the pause state.
                 gVariables.current_trial_paused_time = 0
                 gVariables.current_trial_time = (timeit.default_timer() - gVariables.current_trial_start_time)
-                
                 if (gVariables.current_trial_stage == 3 and 
-                    gVariables.videoDet.getIdleTime() > gVariables.minIdleIntertrialTime and
+                    gVariables.videoDet.getIdleTime() >= gVariables.minIdleIntertrialTime and
                     gVariables.videoDet.getMovementStatus() == False):
                     gVariables.logger.info('Starting trial:%d' % gVariables.trialCount)
                     gVariables.trialCount+=1
