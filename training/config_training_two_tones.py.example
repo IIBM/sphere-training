@@ -10,9 +10,9 @@ interTrialRandom2Time = 7.0  # intertrial time is random between previous value 
 
 maxMovementThreshold = 2000 #max movement threshold that could be set with user input
 maxMovementTime = 11  # max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
-movementTime = 5  # continuous moving time that should be reached to give reward. 5 = 500 ms
+movementTime = 10  # continuous moving time that should be reached to give reward. 5 = 500 ms
 # ex.: movementTime = 5 means that there should be movement detected over 500 ms at least
-idleTime = 10  # continuous idle time that should be reached to give reward. 10 = 1000 ms
+idleTime = 16  # continuous idle time that should be reached to give reward. 10 = 1000 ms
 maxIdleTime = 20
 
 soundGenDuration = 1.0 #tone duration in seconds
