@@ -35,6 +35,7 @@ class gVariables():
     
     maxMovementThreshold = cfgtwotones.maxMovementThreshold
     maxMovementTime = cfgtwotones.maxMovementTime #max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
+    maxIdleTime = cfgtwotones.maxIdleTime
     movementTime = cfgtwotones.movementTime # continuous moving time that should be reached to give reward. 5 = 500 ms
     #ex.: movementTime = 5 means that there should be movement detected over 500 ms at least
     idleTime = cfgtwotones.idleTime # continuous idle time that should be reached to give reward. 10= 1000 ms
@@ -78,6 +79,7 @@ def printInstructions():
     print '2: %d Hz tone' % gVariables.soundGenFrequency2
     print 't/T: increase/decrease threshold (10 - %d)' % gVariables.maxMovementThreshold
     print 'e/E: increase/decrease Movement Time needed for reward (100 ms - %d ms)' % (gVariables.maxMovementTime * 100)
+    print 'i/I: increase/decrease Idle Time needed for reward (100 ms - %d ms)' % (gVariables.maxIdleTime * 100)
     print 'k: start or stop tone training'
     print 'p: pause or resume tone training'
     print 'l/L: recalibrate video input with/without noise filtering.'
@@ -149,14 +151,12 @@ def loopFunction():
                     if (gVariables.current_trial_type == 1):
                       if (gVariables.videoDet.getMovementStatus() == True and 
                         gVariables.videoDet.getMovementTime() >= (gVariables.movementTime / 10.0) ):
-                        if (gVariables.current_trial_stage == 1):
-                            giveReward()
+                        giveReward()
                         #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
                     elif (gVariables.current_trial_type == 2):
                       if (gVariables.videoDet.getMovementStatus() == False and 
                         gVariables.videoDet.getIdleTime() >= (gVariables.idleTime / 10.0) ):
-                        if (gVariables.current_trial_stage == 1):
-                            giveReward()
+                        giveReward()
                       
                         #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
     finally:
@@ -228,8 +228,10 @@ def trialLoop():
                      int(gVariables.current_trial_time) <= gVariables.eventTime2_movement 
                      and gVariables.current_trial_stage == 0):
                     gVariables.logger.info('Start trial movement detection')
-                    gVariables.videoDet.resetMovementTime()
-                    gVariables.videoDet.resetIdleTime()
+                    if (gVariables.current_trial_type == 1) :
+                        gVariables.videoDet.resetMovementTime()
+                    else:
+                        gVariables.videoDet.resetIdleTime()
                     gVariables.current_trial_stage = 1
                 elif (int(gVariables.current_trial_time) >= gVariables.eventTime2_movement and 
                       gVariables.current_trial_stage == 1):
@@ -425,6 +427,18 @@ if __name__ == '__main__':
                         gVariables.movementTime = 1
                     gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime / 10.0)
                     print "Movement Time changed to : " + str(gVariables.movementTime * 100) + " ms"
+                    printInstructions()
+                elif (key == 'i'):
+                    gVariables.idleTime += 1
+                    if gVariables.idleTime > gVariables.maxIdleTime:
+                        gVariables.idleTime = gVariables.maxIdleTime
+                    print "Idle Time changed to : " + str(gVariables.idleTime * 100) + " ms"
+                    printInstructions()
+                elif (key == 'I'):
+                    gVariables.idleTime -= 1
+                    if gVariables.idleTime < 1:
+                        gVariables.idleTime = 1
+                    print "Idle Time changed to : " + str(gVariables.idleTime * 100) + " ms"
                     printInstructions()
                 elif (key == 'l'):
                     gVariables.videoDet.calibrate()
