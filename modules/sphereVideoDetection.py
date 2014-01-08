@@ -5,7 +5,7 @@
     En base al video, establece un vector que corresponde a la dirección del movimiento detectado.
     El movimiento se detecta de círculos negros en movimiento, comparando posición actual con su posición pasada (probable).
     Este archivo reemplaza spherevideotracker.py.<>
-    
+     
 '''
 
 import pygame
