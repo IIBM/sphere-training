@@ -22,25 +22,26 @@ import timeit
 import logging
 
 class gVariables():
-    trainingName = "training_two_tones"
+    import config_training_two_tones as cfgtwotones
+    trainingName = cfgtwotones.trainingName
     #relevant Training variables
-    eventTime1_sound = 1.0 #in seconds. Instant of time when the soundGen ends.
-    eventTime2_movement = 3.0 #in seconds. Instant of time when movement ceases to be considered for reward
-    eventTime3_trialEnd = 10.0 #in seconds. Instant of time when the trial ends.
-    minIdleIntertrialTime = 0.5 #no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
+    eventTime1_sound = cfgtwotones.eventTime1_sound #in seconds. Instant of time when the soundGen ends.
+    eventTime2_movement = cfgtwotones.eventTime2_movement #in seconds. Instant of time when movement ceases to be considered for reward
+    eventTime3_trialEnd = cfgtwotones.eventTime3_trialEnd #in seconds. Instant of time when the trial ends.
+    minIdleIntertrialTime = cfgtwotones.minIdleIntertrialTime #no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
     
-    interTrialRandom1Time = 4.0 #intertrial time is random between this value and the random2 value
-    interTrialRandom2Time = 7.0 #intertrial time is random between previous value and this value.
+    interTrialRandom1Time = cfgtwotones.interTrialRandom1Time #intertrial time is random between this value and the random2 value
+    interTrialRandom2Time = cfgtwotones.interTrialRandom2Time #intertrial time is random between previous value and this value.
     
-    maxMovementThreshold = 2000
-    maxMovementTime = 11 #max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
-    movementTime = 5 # continuous moving time that should be reached to give reward. 5 = 500 ms
+    maxMovementThreshold = cfgtwotones.maxMovementThreshold
+    maxMovementTime = cfgtwotones.maxMovementTime #max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
+    movementTime = cfgtwotones.movementTime # continuous moving time that should be reached to give reward. 5 = 500 ms
     #ex.: movementTime = 5 means that there should be movement detected over 500 ms at least
-    idleTime = 10 # continuous idle time that should be reached to give reward. 10= 1000 ms
+    idleTime = cfgtwotones.idleTime # continuous idle time that should be reached to give reward. 10= 1000 ms
     
-    soundGenDuration = 1.0
-    soundGenFrequency1 = 1000.0 #in Hz
-    soundGenFrequency2 = 8000.0 #in Hz
+    soundGenDuration = cfgtwotones.soundGenDuration
+    soundGenFrequency1 = cfgtwotones.soundGenFrequency1 #in Hz
+    soundGenFrequency2 = cfgtwotones.soundGenFrequency2 #in Hz
     
     trialCount = 0 #total number of trials
     successTrialCount=0 #total number of succesful trials
@@ -61,10 +62,11 @@ class gVariables():
     
     current_trial_stage = 0 #0: tone, 1: movement detection, 2: inter-trial, 3: instant before changing to 0
 
+    toneOneProbability = cfgtwotones.toneOneProbability
     history_trial = [1, 2, 1, 2, 1, 2]
     current_trial_type = 0  # 1: for tone one, reward after movement 2: for tone two, reward after standing still
     current_trial_type_str = "" #same as type but with string format.
-    toneOneProbability = 0.9
+    
     
 def printInstructions():
     print '\nOptions:'
@@ -169,9 +171,9 @@ def trialLoop():
                 gVariables.start_time += gVariables.current_trial_paused_time #we consider that training time has not passed in the pause state.
                 gVariables.current_trial_paused_time = 0
                 gVariables.current_trial_time = (timeit.default_timer() - gVariables.current_trial_start_time)
-                if (gVariables.current_trial_stage == 3 and 
+                if ((gVariables.current_trial_stage == 3 and 
                     gVariables.videoDet.getIdleTime() >= gVariables.minIdleIntertrialTime and
-                    gVariables.videoDet.getMovementStatus() == False):
+                    gVariables.videoDet.getMovementStatus() == False) or (gVariables.trialCount == 0) ):
                     gVariables.logger.info('Starting trial:%d' % gVariables.trialCount)
                     gVariables.trialCount+=1
                     gVariables.dropReleased = 0
@@ -238,6 +240,8 @@ def trialLoop():
                       gVariables.current_trial_stage == 2):
                     gVariables.logger.info('End trial:%d' % gVariables.trialCount)
                     gVariables.logger.info('Trial type: '+str(gVariables.current_trial_type_str))
+                    ##
+                    gVariables.videoDet.setMovementTimeWindow(gVariables.minIdleIntertrialTime)
                     if(gVariables.dropReleased==1):
                         gVariables.logger.info('Trial successful')
                     else:
