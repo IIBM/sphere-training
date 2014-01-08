@@ -5,7 +5,11 @@ CV2_THRESHOLD = 160 #CV2 Pixel threshold. If the pixel is darker than this, it i
 NOISE_FILTERING_INITIAL_VALUE = True #enable or disable noise filtering at startup (can be changed during runtime)
 MAIN_SLEEP_TIME = 10 #sleep time for the main loop, in ms.
 MOVEMENT_LOOPS_INTEGRATED = 3 #amount of main loops that movement is integrated into.
-MOVEMENT_THRESHOLD_INITIAL_VALUE = 50 #initial movement threshold value (amount of difference in sum, to consider a movement valid)
-MOVEMENT_METHOD_INITIAL_VALUE = 0 #Type of movement analysis method used initially.
+MOVEMENT_THRESHOLD_INITIAL_VALUE = 30 #initial movement threshold value (amount of difference in sum, to consider a movement valid)
+MOVEMENT_METHOD_INITIAL_VALUE = 2 #Type of movement analysis method used initially.
 MOVEMENT_VECTOR_LENGTH = 100 #
+VECTOR_COUNT_PERCENTAGE_MOVEMENT = 80 #
+VECTOR_COUNT_PERCENTAGE_IDLE = 80 #
+
+VECTOR_COUNT_PERCENTAGE = 80
 
