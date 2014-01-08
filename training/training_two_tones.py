@@ -83,6 +83,7 @@ def printInstructions():
     print 'k: start or stop tone training'
     print 'p: pause or resume tone training'
     print 'l/L: recalibrate video input with/without noise filtering.'
+    print 'b/B: increase/decrease one tone probability.'
     print 'q or ESC: quit\n'
 
 def initDisplay():
@@ -182,7 +183,7 @@ def trialLoop():
                     gVariables.logger.debug(gVariables.history_trial)
                     gVariables.logger.debug(gVariables.toneOneProbability)
                     gVariables.logger.debug(gVariables.current_trial_type)
-                    if (gVariables.history_trial[-1] == gVariables.history_trial[-2]) and (gVariables.history_trial[-2] == gVariables.history_trial[-3]) :
+                    if (gVariables.toneOneProbability < 0.75) and (gVariables.toneOneProbability > 0.25) and (gVariables.history_trial[-1] == gVariables.history_trial[-2]) and (gVariables.history_trial[-2] == gVariables.history_trial[-3]) :
                         # 3 equal trial have past. forced changing trial
                         gVariables.logger.info('fixed tone')
                         gVariables.toneOneProbability = 0.5
@@ -194,10 +195,8 @@ def trialLoop():
                         from random import random
                         if (random() < gVariables.toneOneProbability) :
                             gVariables.current_trial_type = 1
-                            gVariables.toneOneProbability -= 0.15
                         else :
                             gVariables.current_trial_type = 2
-                            gVariables.toneOneProbability += 0.15
                             
                     if (gVariables.current_trial_type == 1) :
                             gVariables.logger.info('tone 1: 1 kHz')
@@ -413,6 +412,18 @@ if __name__ == '__main__':
                     if gVariables.videoDet.getMovementThreshold() < 10:
                         gVariables.videoDet.setMovementThreshold(10)
                     print "Movement Threshold changed to : " + str(gVariables.videoDet.getMovementThreshold())
+                    printInstructions()
+                elif (key == 'b'):
+                    gVariables.toneOneProbability += 0.05
+                    if gVariables.toneOneProbability > 1.0 :
+			gVariables.toneOneProbability = 1.0
+                    print "Tone One Probabilty changed to : " + str(gVariables.toneOneProbability * 100) + " %"
+                    printInstructions()
+                elif (key == 'B'):
+                    gVariables.toneOneProbability -= 0.05
+                    if gVariables.toneOneProbability < 0.0 :
+			gVariables.toneOneProbability = 0.0
+                    print "Tone One Probabilty changed to : " + str(gVariables.toneOneProbability * 100) + " %"
                     printInstructions()
                 elif (key == 'e'):
                     gVariables.movementTime += 1

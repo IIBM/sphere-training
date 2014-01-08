@@ -19,4 +19,4 @@ soundGenDuration = 1.0 #tone duration in seconds
 soundGenFrequency1 = 1000.0  # in Hz
 soundGenFrequency2 = 8000.0  # in Hz
 
-toneOneProbability = 0.9
+toneOneProbability = 0.5
