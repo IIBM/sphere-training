@@ -67,7 +67,10 @@ class sphereVideoDetection():
         
         self.movementTimeWindow = 0.5 #0.5 seconds for the method movementVector_Binary
         
-        self.VECTOR_COUNT_PERCENTAGE = 60 #percentage of 1's needed for the mvnt.vector. method to consider it "moving"
+        self.VECTOR_COUNT_PERCENTAGE = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE #percentage of 1's needed for the mvnt.vector. method to consider it "moving"
+        self.VECTOR_COUNT_PERCENTAGE_MOVEMENT = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE_MOVEMENT #
+        self.VECTOR_COUNT_PERCENTAGE_IDLE = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE_IDLE 
+        
         
         for i in range (0, self.movementVectorLength):
             self.movementVector.append(0)
@@ -201,12 +204,17 @@ class sphereVideoDetection():
     
     
     def resetMovementTime(self):
-        self.continuousMovementTime = 0
-        self.last_saved_time_movement = timeit.default_timer() 
+        self.continuousMovementTime = 0.0
+        self.last_saved_time_movement = timeit.default_timer()
+        for i in range(0, len(self.movementVector)):
+            self.movementVector[i]=0
+        
         
     def resetIdleTime(self):
-        self.continuousIdleTime = 0
+        self.continuousIdleTime = 0.0
         self.last_saved_time_idle = timeit.default_timer()
+        for i in range(0, len(self.movementVector)):
+            self.movementVector[i]=1
     
     def setMovementThreshold(self, thres):
         #Movement threshold: how much "movement" between two frames should be considered as "movement"
@@ -247,6 +255,8 @@ class sphereVideoDetection():
         #work in seconds.
         
         #print "MVB Start."
+        self.continuousMovementTime = 0.0
+        self.continuousIdleTime = 0.0
         timeDif = (timeit.default_timer() - self.last_saved_time_gp)
         self.last_saved_time_gp = timeit.default_timer()
         #sttemp = "Current Loop time (ms): %d" %  int(timeDif * 1000)
@@ -303,13 +313,13 @@ class sphereVideoDetection():
                 ceros_count += 1
         #print "1's: ", ones_count
         #print "0's: ", ceros_count
-        if (ones_count * (100 / numElementsToCheck) >= self.VECTOR_COUNT_PERCENTAGE):
+        if (ones_count * (100.0 / numElementsToCheck) >= self.VECTOR_COUNT_PERCENTAGE_MOVEMENT):
             #More ones than the percentage. This is considered movement along the given time window.
             #return OK
             self.continuousMovementTime = self.movementTimeWindow
             self.continuousIdleTime = 0.0
             self.isMoving = True
-        elif (ceros_count * (100 / numElementsToCheck) >= self.VECTOR_COUNT_PERCENTAGE):
+        elif (ceros_count * (100.0 / numElementsToCheck) >= self.VECTOR_COUNT_PERCENTAGE_IDLE):
             self.continuousIdleTime = self.movementTimeWindow
             self.continuousMovementTime = 0.0
             self.isMoving = False
@@ -319,7 +329,8 @@ class sphereVideoDetection():
             self.continuousIdleTime = 0.0
             self.isMoving = False
         #print "MVB end."
-        logging.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) )
+        logging.debug(self.movementVector)
+        logging.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) + ("   Elements to check: %d" %numElementsToCheck) )
         logging.debug ( "       isMoving: %r" % self.isMoving)
         return
     
