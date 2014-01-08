@@ -186,7 +186,6 @@ def trialLoop():
                     if (gVariables.toneOneProbability < 0.75) and (gVariables.toneOneProbability > 0.25) and (gVariables.history_trial[-1] == gVariables.history_trial[-2]) and (gVariables.history_trial[-2] == gVariables.history_trial[-3]) :
                         # 3 equal trial have past. forced changing trial
                         gVariables.logger.info('fixed tone')
-                        gVariables.toneOneProbability = 0.5
                         if (gVariables.history_trial[-1]) == 2:
                             gVariables.current_trial_type = 1
                         else :
