@@ -149,9 +149,12 @@ def loopFunction():
                 #gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
                 #####################
                 if (gVariables.trialExecuting == True and gVariables.current_trial_stage == 1):
+                    #print gVariables.videoDet.getTrackingStatus()
                     if (gVariables.current_trial_type == 1):
                       if (gVariables.videoDet.getMovementStatus() == True and 
-                        gVariables.videoDet.getMovementTime() >= (gVariables.movementTime / 10.0) ):
+                        (  ( gVariables.videoDet.getMovementTime() >= (gVariables.movementTime / 10.0) )
+                           ) 
+                          ):
                         giveReward()
                         #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
                     elif (gVariables.current_trial_type == 2):
