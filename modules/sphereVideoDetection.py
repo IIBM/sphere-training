@@ -51,7 +51,9 @@ class sphereVideoDetection():
         self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected last time it moved or currently
         self.continuousIdleTime = 0 #amount of seconds that no movement was detected last time it ceased movement or currently
         self.isMoving = False #if true, it is currently in movement. False => currently idle
-        self.isTracking = True #True: is tracking correctly. False: could not keep up with the circles movement
+        self.isTrackingTemp = True #temp, very instantaneous tracking boolean.
+        self.isTracking = True#True: is tracking correctly. False: could not keep up with the circles movement
+        self.trackingVector = [True,True,True,True,True,True,True,True,True,True]
         
         self.movementVector = [] #binary vector, each loop adds 1 if moving, 0 otherwise
         
@@ -227,6 +229,9 @@ class sphereVideoDetection():
     def getMovementStatus(self):
         return self.isMoving #true if right now it is moving, false otherwise.
     
+    def getTrackingStatus(self):
+        return self.isTracking #true if it is tracking, false if it lost tracking.
+    
     def getMovementTimeWindow(self):
         return self.movementTimeWindow
     
@@ -288,7 +293,8 @@ class sphereVideoDetection():
         movementAmount = (abs(self.getInstantX() * self.getInstantX()) +
                            abs(self.getInstantY() * self.getInstantY()))
         #logging.debug( "Amount of movement: %d" % movementAmount)
-        if (movementAmount >= self.movementThreshold):
+        #if it surpasses threshold OR if it lost tracking (so it is moving quite fast..)
+        if (movementAmount >= self.movementThreshold or self.isTracking == False):
                     self.movementVector[self.movementVectorLength - 1] = 1
                     #print "1 appended   ", movementAmount ,"    Thres: ", self.movementThreshold
         else:
@@ -383,7 +389,7 @@ class sphereVideoDetection():
         self.movementVector[0:-1] = self.movementVector[1:]
         movementAmount = (abs(self.getInstantX() * self.getInstantX()) + abs(self.getInstantY() * self.getInstantY()))
         logging.debug( "Amount of movement: %d" % movementAmount)
-        if (movementAmount >= self.movementThreshold):
+        if (movementAmount >= self.movementThreshold or self.isTracking == False):
                     self.movementVector[self.movementVectorLength - 1] = 1
         else:
                     self.movementVector[self.movementVectorLength - 1] = 0
@@ -487,8 +493,9 @@ class sphereVideoDetection():
             logging.debug("   ----" + 
                             str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
                 abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)) )
-            if (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
-                    abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= self.movementThreshold):
+            if ( (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
+                    abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= self.movementThreshold)
+                or self.isTracking == False):
                     #print "It is currently moving"
                     if (self.isMoving == False):
                         #was idle, now started to move. We erase time movement counter and start from 0 now
@@ -785,9 +792,7 @@ class sphereVideoDetection():
                     for jndex in range(index, len(Lbefore)):
                         movement_difference = (Lnew[index][0] - Lbefore[jndex][0]) ** 2 + (Lnew[index][1] - Lbefore[jndex][1]) ** 2
                         if (math.sqrt(movement_difference) >= self.MIN_CIRCLE_MOVEMENT):
-                             if (
-                            
-                              math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
+                             if ( math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
                                 #print "Hay colisión: %d %d" % (index,jndex)
                                 #cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
                                 cv2.line(capturedImage, (Lnew[index][0], Lnew[index][1]),(Lbefore[jndex][0], Lbefore[jndex][1]), (255,0,0), 5)
@@ -798,8 +803,26 @@ class sphereVideoDetection():
                         else:
                             #están muy cerca, son probablemente el mismo.
                             number_of_standing_vectors +=1
-                            
-                #CONTINUAR DETECCIÓN TRACKING LOST
+                self.isTrackingTemp = True
+                if (number_of_standing_vectors < len(Lnew)/3 and number_of_moving_vectors < len(Lnew)/3): #see docs.
+                    if (len(Lnew) > 2): #else too few circles to deatermine loss of tracking
+                        self.isTrackingTemp = False
+                
+                self.trackingVector[0:-1] = self.trackingVector[1:]
+                self.trackingVector[-1] = self.isTrackingTemp
+                cant_tracking = 0
+                self.isTracking = True
+                for i in range(0, len(self.trackingVector) ):
+                    if self.trackingVector[i] == True:
+                        cant_tracking +=1
+                if (cant_tracking < 8):
+                    self.isTracking = False
+                #print "Standing vectors ", number_of_standing_vectors
+                #print "Moving vectors ", number_of_moving_vectors
+                #print "circles " , len(Lnew)
+                #print "Tracking : " , self.isTracking
+                #print "----"
+                
                 #we divide each instant vector components by N, to obtain average instant vector.
                 if (number_of_moving_vectors == 0):
                     number_of_moving_vectors = 1
