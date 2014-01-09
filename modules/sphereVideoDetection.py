@@ -336,7 +336,7 @@ class sphereVideoDetection():
             self.isMoving = False
         #print "MVB end."
         logging.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) + ("   Elements to check: %d" %numElementsToCheck) )
-        logging.debug ( "       isMoving: %r" % self.isMoving)
+        logging.debug ( "       isMoving: %r      isTracking: %r" %( self.isMoving , self.isTracking) )
         return
     
     
