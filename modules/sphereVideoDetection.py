@@ -50,7 +50,8 @@ class sphereVideoDetection():
         
         self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected last time it moved or currently
         self.continuousIdleTime = 0 #amount of seconds that no movement was detected last time it ceased movement or currently
-        self.isMoving = False #if true, it is currently in movement. False => currently idle
+        self.isMoving = False #if true, it is currently in movement. False => not moving (not necessarily moving)
+        self.isIdle = False #true: it is idle.
         self.isTrackingTemp = True #temp, very instantaneous tracking boolean.
         self.isTracking = True#True: is tracking correctly. False: could not keep up with the circles movement
         self.trackingVector = [True,True,True,True,True,True,True,True,True,True]
@@ -229,6 +230,10 @@ class sphereVideoDetection():
     def getMovementStatus(self):
         return self.isMoving #true if right now it is moving, false otherwise.
     
+    def getIdleStatus(self):
+        return self.isIdle #true if right now it is idle, false otherwise.
+    
+    
     def getTrackingStatus(self):
         return self.isTracking #true if it is tracking, false if it lost tracking.
     
@@ -325,15 +330,18 @@ class sphereVideoDetection():
             self.continuousMovementTime = self.movementTimeWindow
             self.continuousIdleTime = 0.0
             self.isMoving = True
+            self.isIdle = False
         elif (ceros_count * (100.0 / numElementsToCheck) >= self.VECTOR_COUNT_PERCENTAGE_IDLE):
             self.continuousIdleTime = self.movementTimeWindow
             self.continuousMovementTime = 0.0
             self.isMoving = False
+            self.isIdle = True
         else:
             #it is not moving nor staying idle
             self.continuousMovementTime = 0.0
             self.continuousIdleTime = 0.0
             self.isMoving = False
+            self.isIdle = False
         #print "MVB end."
         logging.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) + ("   Elements to check: %d" %numElementsToCheck) )
         logging.debug ( "       isMoving: %r      isTracking: %r" %( self.isMoving , self.isTracking) )
@@ -350,7 +358,6 @@ class sphereVideoDetection():
         #This method returns the estimated movement time (how much time it was moving) or idle time.
         #This method does not considers anything different than moving or idle (there is no extra state).
         
-
         
         
         #=======================================================================
@@ -402,7 +409,7 @@ class sphereVideoDetection():
             self.continuousMovementTime += (timeDif )
             current_state_change = 4
         
-        elif (self.movementVector[self.movementVectorLength - 1] == 0 and self.isMoving == False ):
+        elif (self.movementVector[self.movementVectorLength - 1] == 0 and self.isIdle == True ):
             #new 0 detected, and it was idle, so it is still idle. Add 1 LOOP TIME to the total idle time.
             self.continuousIdleTime += (timeDif )
             current_state_change = 3
@@ -428,16 +435,18 @@ class sphereVideoDetection():
             if ((ones_count * (100 / number_of_elements_to_check)) >= self.VECTOR_COUNT_PERCENTAGE):
                 #the ones and ceros were counted, and it is still moving because the 1's are greater than the percentage.
                 self.isMoving = True
+                self.isIdle = False
                 current_state_change = 4
                 self.continuousMovementTime += (timeDif )
             else:
                 #now that a 0 was found, there are not enough 1's. So it changed from moving to currently idle.
                 self.isMoving = False
+                self.isIdle = True
                 current_state_change = 2
                 self.continuousIdleTime = (timeDif )
         
         
-        elif (self.movementVector[self.movementVectorLength - 1] == 1 and self.isMoving == False ):
+        elif (self.movementVector[self.movementVectorLength - 1] == 1 and self.isIdle == True ):
             #one detected, and was previously idle.
             #It should be checked whether this 1 nullifies the idle state or not
             number_of_elements_to_check = int(self.continuousMovementTime*1000) / average_delay
@@ -458,11 +467,13 @@ class sphereVideoDetection():
             if ((ones_count * (100 / number_of_elements_to_check)) >= self.VECTOR_COUNT_PERCENTAGE):
                 #the ones and ceros were counted, and it changed, it is now moving because the 1's are greater than the percentage.
                 self.isMoving = True
+                self.isIdle = False
                 current_state_change = 1
                 self.continuousMovementTime = (timeDif )
             else:
                 #the 1 found does not alter the idle state
                 self.isMoving = False
+                self.isIdle = True
                 current_state_change = 3
                 self.continuousIdleTime += (timeDif )
         
@@ -474,9 +485,9 @@ class sphereVideoDetection():
         # # Save history of movements and idle
         #=======================================================================
         #CONTINUAR
-        # ESTE MÉTODO TIENE QUE PODER CONTESTAR LA SIGUIENTE PREGUNTA: SE MOVIÓ HACE 0.5 SEGUNDOS? SI O NO.
         # DEBEN HABER 3 ESTADOS. SE MOVIÓ HACE 0.5 SEGUNDOS, IDLE HACE 0.5 SEGUNDOS, ESTADO INVÁLIDO.
-        # LO DE HISTORIA DE MOVIMIENTO CONTINUARLO PERO NO ES ESTRICTAMENTE NECESARIO ACÁ. EN EL OTRO MÉTODO ES MUY IMMPORTANTE.
+        # Historia de movimiento para saber cuánto suman los movimientos interrumpidos.
+        #EJ: [ 0.3 0.5 1.0 0.0 0.1 0.0 ]  suma bastante movimiento en total. Es mejor que preguntar instantáneamente cuanto se está moviendo.
         
         
         self.vectorInstantaneo.x = 0
@@ -497,10 +508,11 @@ class sphereVideoDetection():
                     abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= self.movementThreshold)
                 or self.isTracking == False):
                     #print "It is currently moving"
-                    if (self.isMoving == False):
+                    if (self.isIdle == True):
                         #was idle, now started to move. We erase time movement counter and start from 0 now
                         self.continuousMovementTime = 0
                         self.isMoving = True
+                        self.isIdle = False
                         #CHECK SOLUTION FOR THE NEXT LINE.
                         self.last_saved_time_movement = timeit.default_timer() #this substracts the first loop movement
                     
@@ -518,6 +530,7 @@ class sphereVideoDetection():
                     if (self.isMoving == True):
                         #was moving and now it is not. We erase the old idle time counter, and we start counting idle time from 0
                         self.isMoving = False
+                        self.isIdle = True
                         self.continuousIdleTime = 0
                         self.last_saved_time_idle = timeit.default_timer()
                     now = timeit.default_timer()
@@ -528,6 +541,7 @@ class sphereVideoDetection():
                     #self.last_saved_time_idle = timeit.default_timer()
                     self.vectorInstantaneo.x = 0
                     self.vectorInstantaneo.y = 0
+            #history of movement mejoraría la performance de este método.
             logging.debug("Continuous: "+ str(self.continuousMovementTime) +"  ...  Idle: " + str(self.continuousIdleTime) )
     
     def continuousMovementAnalysis(self):
