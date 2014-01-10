@@ -25,7 +25,7 @@ class trainingDisplay() :
                 text1 = self.secondaryFont.render('%s: %r' % (self.displayText2[i][0],self.displayText2[i][1]), True, (255,255,255))
                 textRect1 = text1.get_rect()
                 textRect1.centerx = self.windowSurface.get_rect().centerx
-                textRect1.centery = 25+40+len(self.displayText1)*25 + i*30
+                textRect1.centery = 25+60+len(self.displayText1)*25 + i*30
                 self.windowSurface.blit(text1, textRect1)
             # draw the window onto the screen
             pygame.display.update()
@@ -36,7 +36,7 @@ class trainingDisplay() :
         self.displayText1 = [] #important text to display in a relatively big font
         self.displayText2 = [] #less important text to display in a smaller font
         pygame.init()
-        self.windowWidth = 400
+        self.windowWidth = 500
         self.windowHeight = 200
         self.windowSurface = pygame.display.set_mode((self.windowWidth, self.windowHeight), 0, 32)
         self.isUserWriting = False
@@ -59,13 +59,13 @@ class trainingDisplay() :
     
     def addImportantInfo(self, info):
         self.displayText1.append(info)
-        self.windowHeight = 55 + len(self.displayText1) * 35 + len(self.displayText2) * 30
+        self.windowHeight = 55 + len(self.displayText1) * 32 + len(self.displayText2) * 29
         self.windowSurface = pygame.display.set_mode((self.windowWidth, self.windowHeight), 0, 32)
         self.renderAgain()
     
     def addSecondaryInfo(self, info):
         self.displayText2.append(info)
-        self.windowHeight = 55 + len(self.displayText1) * 35 + len(self.displayText2) * 30
+        self.windowHeight = 55 + len(self.displayText1) * 32 + len(self.displayText2) * 29
         self.windowSurface = pygame.display.set_mode((self.windowWidth, self.windowHeight), 0, 32)
         self.renderAgain()
     
