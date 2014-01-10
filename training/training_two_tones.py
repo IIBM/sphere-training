@@ -11,7 +11,7 @@
     There 50 % propabilty of ocurrance for each tone. If one tone appears three
     time in a row, the other tone is fixed in the next trial. 
     The inter trial delay is random between 3 to 6 seconds.
-
+ 
     
 """
 ######################################################><
@@ -45,7 +45,11 @@ class gVariables():
     soundGenFrequency2 = cfgtwotones.soundGenFrequency2 #in Hz
     
     trialCount = 0 #total number of trials
+    movementTrialCount = 0 #total number of trials which requires the subject to move
+    idleTrialCount = 0 #total number of trials which requires the subject to stay idle.
     successTrialCount=0 #total number of succesful trials
+    successMovementTrialCount=0 #total number of succesful trials regarding movement state
+    successIdleTrialCount=0 #total number of succesful trials regarding idle state
     successRate = 0 #success rate = (success trials / total trial count) %
     dropReleased = 0 #0: no drop of water released this trial, 1: drop of water released
     trialExecuting = False #if true, the trial is online and working. Else, it has been stopped or never started
@@ -90,7 +94,9 @@ def initDisplay():
     import trainingDisplay #display for showing different variables of interest
     gVariables.display = trainingDisplay.trainingDisplay()
     gVariables.display.addImportantInfo(("Trials", 0))
-    gVariables.display.addImportantInfo(("Succesful Trials", 0))
+    gVariables.display.addImportantInfo(("Successful Trials", 0))
+    gVariables.display.addImportantInfo(("Successful Trials mvnt", 0))
+    gVariables.display.addImportantInfo(("Successful Trials idle", 0))
     gVariables.display.addImportantInfo(("Time", 0))
     gVariables.display.addSecondaryInfo(("% s/t",0.0))
     gVariables.display.addSecondaryInfo(("Trial Time","0 - 10"))
@@ -118,7 +124,11 @@ def updateDisplayInfo():
                         else:
                             gVariables.display.updateInfo("Trial status",sttrial+" - "+"FAIL")
     gVariables.display.updateInfo("Trials", gVariables.trialCount)
-    gVariables.display.updateInfo("Succesful Trials", gVariables.successTrialCount)
+    gVariables.display.updateInfo("Successful Trials", gVariables.successTrialCount)
+    stmvnt = str(gVariables.successMovementTrialCount) + " / " + str(gVariables.movementTrialCount )
+    stidle = str(gVariables.successIdleTrialCount) + " / " + str(gVariables.idleTrialCount )
+    gVariables.display.updateInfo("Successful Trials mvnt", stmvnt)
+    gVariables.display.updateInfo("Successful Trials idle", stidle)
     if (gVariables.trialCount > 0):
                     temp =  (1.0*gVariables.successTrialCount/ gVariables.trialCount)
                     tempH = temp*100.0
@@ -203,12 +213,14 @@ def trialLoop():
                     if (gVariables.current_trial_type == 1) :
                             gVariables.logger.info('tone 1: 1 kHz')
                             gVariables.s1.play()
+                            gVariables.movementTrialCount += 1
                             #a new "time window" should be set for 
                             # some movement analysis methods to work.
                             gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime)
                     else :
                             gVariables.logger.info('tone 2: 8 kHz')
                             gVariables.s2.play()
+                            gVariables.idleTrialCount += 1
                             #a new "time window" should be set for 
                             # some movement analysis methods to work.
                             gVariables.videoDet.setMovementTimeWindow(gVariables.idleTime )
@@ -288,6 +300,10 @@ def giveReward():
             gVariables.logger.debug("Drop of water released.")
             gVariables.successTrialCount+=1
             gVariables.dropReleased = 1
+            if (gVariables.current_trial_type == 1) :
+                            gVariables.successMovementTrialCount += 1
+            else:
+                gVariables.successIdleTrialCount += 1
 
 def getFormattedTime(a):
     try:
