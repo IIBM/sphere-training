@@ -6,7 +6,26 @@ class trainingDisplay() :
     #Created because the need of showing Trials and Successful trials to the user on a regular training.
     #This class should be able to display two different types of information (important, in a bigger font, and 
     # less important information in a regular font) and adjust the graphical window according to the amount of information.
-    #This class is a WIP.
+    #This class is a WIP.><
+
+    def __init__(self):
+        self.displayText1 = [] #important text to display in a relatively big font
+        self.displayText2 = [] #less important text to display in a smaller font
+        pygame.init()
+        self.windowWidth = 500
+        self.windowHeight = 200
+        self.windowSurface = pygame.display.set_mode((self.windowWidth, self.windowHeight), 0, 32)
+        self.TEXT1_FONT_SIZE = 35 #size in height of the font 1
+        self.TEXT2_FONT_SIZE = 30 #size in height of the font 2
+        self.TEXT_1_2_SEPARATION = 25 #separation between the two texts
+        self.INITIAL_SEPARATION = 25 #separation between top of the window and text1
+        self.isUserWriting = False
+        pygame.display.set_caption('Variables')
+        self.basicFont = pygame.font.SysFont(None, 48)
+        time.sleep(1)
+        self.renderAgain()
+        self.secondaryFont = pygame.font.SysFont(None, 36)
+
 
     def renderAgain(self):
         #render things in pygame again.
@@ -18,33 +37,21 @@ class trainingDisplay() :
                 text1 = self.basicFont.render('%s: %r' % (self.displayText1[i][0],self.displayText1[i][1]), True, (255,255,255))
                 textRect1 = text1.get_rect()
                 textRect1.centerx = self.windowSurface.get_rect().centerx
-                textRect1.centery = 25+ i*35
+                textRect1.centery = self.INITIAL_SEPARATION+ i*self.TEXT1_FONT_SIZE
                 self.windowSurface.blit(text1, textRect1)
             
             for i in range(0, len(self.displayText2)):
                 text1 = self.secondaryFont.render('%s: %r' % (self.displayText2[i][0],self.displayText2[i][1]), True, (255,255,255))
                 textRect1 = text1.get_rect()
                 textRect1.centerx = self.windowSurface.get_rect().centerx
-                textRect1.centery = 25+60+len(self.displayText1)*25 + i*30
+                textRect1.centery = (self.INITIAL_SEPARATION + self.TEXT_1_2_SEPARATION + len(self.displayText1) * self.TEXT1_FONT_SIZE +
+                                      i*self.TEXT2_FONT_SIZE)
                 self.windowSurface.blit(text1, textRect1)
             # draw the window onto the screen
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: sys.exit()
         
-    def __init__(self):
-        self.displayText1 = [] #important text to display in a relatively big font
-        self.displayText2 = [] #less important text to display in a smaller font
-        pygame.init()
-        self.windowWidth = 500
-        self.windowHeight = 200
-        self.windowSurface = pygame.display.set_mode((self.windowWidth, self.windowHeight), 0, 32)
-        self.isUserWriting = False
-        pygame.display.set_caption('Variables')
-        self.basicFont = pygame.font.SysFont(None, 48)
-        time.sleep(1)
-        self.renderAgain()
-        self.secondaryFont = pygame.font.SysFont(None, 36)
 
     
     def askUserInput(self, texts):
