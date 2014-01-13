@@ -53,9 +53,12 @@ class gVariables():
     successRate = 0 #success rate = (success trials / total trial count) %
     dropReleased = 0 #0: no drop of water released this trial, 1: drop of water released
     trialExecuting = False #if true, the trial is online and working. Else, it has been stopped or never started
+    trialSuccessful = False #true: this trial was successful , false it was not.
     
     countMovement = 0 #if it reaches 10, there has been detected a sustained movement for 1000 ms => give reward
     countIdleTime = 0 #if it reaches 10, there has NOT been detected a sustained movement for 1000 ms => reset counters
+    
+    LOOP_FUNCTION_SLEEP_TIME = 0.05 #sleep time for the trial loop function (how frequently it asks videodet)
     
     #video Detection:
     videoDet=0 # video Detection object. initialized in the main.
@@ -153,7 +156,7 @@ def loopFunction():
     try:
         while(True):
                 trialLoop() #
-                time.sleep(0.05)
+                time.sleep(gVariables.LOOP_FUNCTION_SLEEP_TIME)
                 #####################
                 updateDisplayInfo()
                 #gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
@@ -165,12 +168,14 @@ def loopFunction():
                         (  ( gVariables.videoDet.getMovementTime() >= (gVariables.movementTime) )
                            ) 
                           ):
-                        giveReward()
+                        #giveReward()
+                        gVariables.trialSuccessful = True
                         #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
                     elif (gVariables.current_trial_type == 2):
                       if (gVariables.videoDet.getMovementStatus() == False and 
                         gVariables.videoDet.getIdleTime() >= (gVariables.idleTime ) ):#
-                        giveReward()
+                        #giveReward()
+                        gVariables.trialSuccessful = True
                       
                         #print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
     finally:
@@ -249,6 +254,11 @@ def trialLoop():
                 elif (int(gVariables.current_trial_time) >= gVariables.eventTime2_movement and 
                       gVariables.current_trial_stage == 1):
                     gVariables.logger.info('End trial movement detection')
+                    if (gVariables.trialSuccessful == True):
+                        giveReward()
+                        gVariables.logger.info('Reward given because trial was successful')
+                    else:
+                        gVariables.logger.info('Reward not given because trial was not successful')
                     gVariables.logger.info('Start inter-trial delay')
                     gVariables.current_trial_stage = 2
                 elif (int(gVariables.current_trial_time) >= gVariables.eventTime3_trialEnd and
