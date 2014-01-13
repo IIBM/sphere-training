@@ -246,6 +246,7 @@ def trialLoop():
                      int(gVariables.current_trial_time) <= gVariables.eventTime2_movement 
                      and gVariables.current_trial_stage == 0):
                     gVariables.logger.info('Start trial movement detection')
+                    gVariables.trialSuccessful = False
                     if (gVariables.current_trial_type == 1) :
                         gVariables.videoDet.resetMovementTime()
                     else:
