@@ -52,6 +52,7 @@ class gVariables():
     successIdleTrialCount=0 #total number of succesful trials regarding idle state
     successRate = 0 #success rate = (success trials / total trial count) %
     dropReleased = 0 #0: no drop of water released this trial, 1: drop of water released
+    dropsAmountGivenManually = 0 #number of drops given manually.
     trialExecuting = False #if true, the trial is online and working. Else, it has been stopped or never started
     trialSuccessful = False #true: this trial was successful , false it was not.
     
@@ -128,11 +129,32 @@ def updateDisplayInfo():
                             gVariables.display.updateInfo("Trial status",sttrial+" - "+"FAIL")
     gVariables.display.updateInfo("Trials", gVariables.trialCount)
     gVariables.display.updateInfo("Successful Trials", gVariables.successTrialCount)
-    stmvnt = str(gVariables.successMovementTrialCount) + " / " + str(gVariables.movementTrialCount )
-    stidle = str(gVariables.successIdleTrialCount) + " / " + str(gVariables.idleTrialCount )
-    gVariables.display.updateInfo("Successful Trials mvnt", stmvnt)
-    gVariables.display.updateInfo("Successful Trials idle", stidle)
+    
+    #stmvnt = str(gVariables.successMovementTrialCount) + " / " + str(gVariables.movementTrialCount )
+    #stidle = str(gVariables.successIdleTrialCount) + " / " + str(gVariables.idleTrialCount )
+    
+    
     if (gVariables.trialCount > 0):
+                    if (gVariables.movementTrialCount > 0):
+                        temp1 = (1.0 * gVariables.successMovementTrialCount / gVariables.movementTrialCount)
+                        tempH1 = temp1 * 100.0
+                        tempString1 = str(tempH1)
+                        if (len(tempString1) > 3):
+                                            tempS1 = str(tempH1)[:4]
+                        else:
+                                            tempS1 = str(tempH1)[:3]
+                        gVariables.display.updateInfo("Successful Trials mvnt", tempS1)
+                    
+                    if (gVariables.idleTrialCount > 0):
+                        temp2 = (1.0 * gVariables.successIdleTrialCount / gVariables.idleTrialCount)
+                        tempH2 = temp2 * 100.0
+                        tempString2 = str(tempH2)
+                        if (len(tempString2) > 3):
+                                            tempS2 = str(tempH2)[:4]
+                        else:
+                                            tempS2 = str(tempH2)[:3]
+                        gVariables.display.updateInfo("Successful Trials idle", tempS2)
+                    ########
                     temp =  (1.0*gVariables.successTrialCount/ gVariables.trialCount)
                     tempH = temp*100.0
                     tempString = str(tempH)
@@ -292,6 +314,10 @@ def restartTraining():
 def stopTraining():
         gVariables.trialExecuting = False
         gVariables.logger.info('%s stopped.' % gVariables.trainingName)
+        gVariables.logger.info('Success rate: %s' % gVariables.successRate)
+        gVariables.logger.info('Movement trials: %d / %d' % (gVariables.successMovementTrialCount, gVariables.movementTrialCount ) )
+        gVariables.logger.info('Idle trials: %d / %d' % (gVariables.successIdleTrialCount, gVariables.idleTrialCount ) )
+        gVariables.logger.info('Drops given manually: %r' % gVariables.dropsAmountGivenManually)
 
 def pauseTraining():
     gVariables.trialExecuting = False
@@ -418,12 +444,25 @@ if __name__ == '__main__':
                 elif (key == 'd'):
                     gVariables.logger.info('valve drop')
                     gVariables.valve1.drop()
+                    if (gVariables.trialExecuting == True):
+                        gVariables.logger.info('Drop given manually.')
+                        dropsAmountGivenManually += 1
+                elif (key == 'D'):
+                    gVariables.logger.info('valve drop')
+                    gVariables.valve1.drop()
+                    if (gVariables.trialExecuting == True):
+                        gVariables.logger.info('Drop given manually.')
+                        dropsAmountGivenManually += 1
                 elif (key == 'r'):
-                    gVariables.logger.info('Reward given manually.')
                     giveReward();
+                    if (gVariables.trialExecuting == True):
+                        gVariables.logger.info('Reward given manually.')
+                        dropsAmountGivenManually += 1
                 elif (key == 'R'):
-                    gVariables.logger.info('Reward given manually.')
                     giveReward();
+                    if (gVariables.trialExecuting == True):
+                        gVariables.logger.info('Reward given manually.')
+                        dropsAmountGivenManually += 1
                 elif (key == '1'):
                     gVariables.logger.info('tone 1: %d Hz' % gVariables.soundGenFrequency1)
                     gVariables.s1.play()
