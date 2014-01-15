@@ -308,6 +308,7 @@ def restartTraining():
         gVariables.current_trial_stage = 3
         gVariables.trialCount = 0
         gVariables.successTrialCount=0
+        gVariables.dropsAmountGivenManually = 0
         gVariables.trialExecuting = True
         gVariables.logger.info('Variables set. Starting %s' % gVariables.trainingName)
     
@@ -446,23 +447,23 @@ if __name__ == '__main__':
                     gVariables.valve1.drop()
                     if (gVariables.trialExecuting == True):
                         gVariables.logger.info('Drop given manually.')
-                        dropsAmountGivenManually += 1
+                        gVariables.dropsAmountGivenManually += 1
                 elif (key == 'D'):
                     gVariables.logger.info('valve drop')
                     gVariables.valve1.drop()
                     if (gVariables.trialExecuting == True):
                         gVariables.logger.info('Drop given manually.')
-                        dropsAmountGivenManually += 1
+                        gVariables.dropsAmountGivenManually += 1
                 elif (key == 'r'):
                     giveReward();
                     if (gVariables.trialExecuting == True):
                         gVariables.logger.info('Reward given manually.')
-                        dropsAmountGivenManually += 1
+                        gVariables.dropsAmountGivenManually += 1
                 elif (key == 'R'):
                     giveReward();
                     if (gVariables.trialExecuting == True):
                         gVariables.logger.info('Reward given manually.')
-                        dropsAmountGivenManually += 1
+                        gVariables.dropsAmountGivenManually += 1
                 elif (key == '1'):
                     gVariables.logger.info('tone 1: %d Hz' % gVariables.soundGenFrequency1)
                     gVariables.s1.play()
