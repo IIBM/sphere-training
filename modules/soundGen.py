@@ -45,6 +45,13 @@ class soundGen():
     def play(self):
         logger.info('Tone freq = %s Hz, duration = %s s',self.freq,self.duration)
         self.sound.play()
+
+    def getFrequency(self):
+        return self.freq
+    
+    def getDuration(self):
+        return self.duration
+
         #there is needed a delay, after the play command.
 
 if __name__ == '__main__':
