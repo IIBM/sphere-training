@@ -17,46 +17,49 @@ import timeit
 
 
 class sphereVideoDetection():
-    def __init__ (self,videosource, width=640, height=480) :
+    def __init__ (self, videosource, width=640, height=480) :
         import track_bola_utils
         import configSphereVideoDetection
         self.winName = configSphereVideoDetection.WINDOW_TITLE
-        #declare self variables to use.
+        # declare self variables to use.
         
-        self.vectorInstantaneo = track_bola_utils.vectorSimple() #vector acumulado
-        self.vectorAcumulado = track_bola_utils.vectorSimple() #vector acumulado
-        self.startCalibration = True #if True, a calibration will be performed
+        self.vectorInstantaneo = track_bola_utils.vectorSimple()  # vector acumulado
+        self.vectorAcumulado = track_bola_utils.vectorSimple()  # vector acumulado
+        self.startCalibration = True  # if True, a calibration will be performed
         
-        self.firstCalibration = False #if True, a first calibration was performed.
+        self.firstCalibration = False  # if True, a first calibration was performed.
         
         self.VIDEOSOURCE = videosource
         self.CAM_WIDTH = width
         self.CAM_HEIGHT = height
         
         
-        self.CV2THRESHOLD = configSphereVideoDetection.CV2_THRESHOLD  #binary threshold. A black pixel is only considered if its color is greater than 160
+        self.CV2THRESHOLD = configSphereVideoDetection.CV2_THRESHOLD  # binary threshold. A black pixel is only considered if its color is greater than 160
         
-        #variables for keeping track of continuous movement.
+        # variables for keeping track of continuous movement.
         self.noiseFiltering = configSphereVideoDetection.NOISE_FILTERING_INITIAL_VALUE
-        self.internalMovementCounter = 0 #counter, amount of cycles over which integration of movement is made.
+        self.internalMovementCounter = 0  # counter, amount of cycles over which integration of movement is made.
         
-        self.sleepTime = configSphereVideoDetection.MAIN_SLEEP_TIME #Main loop sleep time in ms
-        self.movement_loopNumberSpan = configSphereVideoDetection.MOVEMENT_LOOPS_INTEGRATED #amount of main loops that movement is integrated into.
-        self.movementThreshold = configSphereVideoDetection.MOVEMENT_THRESHOLD_INITIAL_VALUE #threshold, below this, we consider it noise.
+        self.sleepTime = configSphereVideoDetection.MAIN_SLEEP_TIME  # Main loop sleep time in ms
+        self.movement_loopNumberSpan = configSphereVideoDetection.MOVEMENT_LOOPS_INTEGRATED  # amount of main loops that movement is integrated into.
+        self.movementThreshold = configSphereVideoDetection.MOVEMENT_THRESHOLD_INITIAL_VALUE  # threshold, below this, we consider it noise.
         
-        self.movementMethod = configSphereVideoDetection.MOVEMENT_METHOD_INITIAL_VALUE #Type of movement analysis method used.
-        #Current methods: 0=Accumulate time, 1= movementVector, 2=(WIP) movementVectorBinary
+        self.movementMethod = configSphereVideoDetection.MOVEMENT_METHOD_INITIAL_VALUE  # Type of movement analysis method used.
+        # Current methods: 0=Accumulate time, 1= movementVector, 2=(WIP) movementVectorBinary
         
         
-        self.continuousMovementTime = 0 #amount of seconds that a continous movement was detected last time it moved or currently
-        self.continuousIdleTime = 0 #amount of seconds that no movement was detected last time it ceased movement or currently
-        self.isMoving = False #if true, it is currently in movement. False => not moving (not necessarily moving)
-        self.isIdle = False #true: it is idle.
-        self.isTrackingTemp = True #temp, very instantaneous tracking boolean.
-        self.isTracking = True#True: is tracking correctly. False: could not keep up with the circles movement
-        self.trackingVector = [True,True,True,True,True,True,True,True,True,True]
+        self.continuousMovementTime = 0  # amount of seconds that a continous movement was detected last time it moved or currently
+        self.continuousIdleTime = 0  # amount of seconds that no movement was detected last time it ceased movement or currently
+        self.isMoving = False  # if true, it is currently in movement. False => not moving (not necessarily moving)
+        self.isIdle = False  # true: it is idle.
+        self.isTrackingTemp = True  # temp, very instantaneous tracking boolean.
+        self.isTracking = True  # True: is tracking correctly. False: could not keep up with the circles movement
+        self.trackingVector = [True, True, True, True, True, True, True, True, True, True]
         
-        self.movementVector = [] #binary vector, each loop adds 1 if moving, 0 otherwise
+        self.showTrackingFeedback = True #circles, dots and lines for the user
+        self.showUserFeedback = True #show or hide video window.
+        
+        self.movementVector = []  # binary vector, each loop adds 1 if moving, 0 otherwise
         
         
         self.movementVectorLength = configSphereVideoDetection.MOVEMENT_VECTOR_LENGTH
@@ -65,13 +68,13 @@ class sphereVideoDetection():
         
         self.movementDelayVectorLength = 20
         
-        self.movementHistoryVector = [0,0,0,0,0,0] #saves past movements . Helps track interrupted movements
-        self.movementDelayHistoryVector = [0,0,0,0,0,0] #saves past delays. Helps track interrupted delays
+        self.movementHistoryVector = [0, 0, 0, 0, 0, 0]  # saves past movements . Helps track interrupted movements
+        self.movementDelayHistoryVector = [0, 0, 0, 0, 0, 0]  # saves past delays. Helps track interrupted delays
         
-        self.movementTimeWindow = 0.5 #0.5 seconds for the method movementVector_Binary
+        self.movementTimeWindow = 0.5  # 0.5 seconds for the method movementVector_Binary
         
-        self.VECTOR_COUNT_PERCENTAGE = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE #percentage of 1's needed for the mvnt.vector. method to consider it "moving"
-        self.VECTOR_COUNT_PERCENTAGE_MOVEMENT = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE_MOVEMENT #
+        self.VECTOR_COUNT_PERCENTAGE = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE  # percentage of 1's needed for the mvnt.vector. method to consider it "moving"
+        self.VECTOR_COUNT_PERCENTAGE_MOVEMENT = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE_MOVEMENT  #
         self.VECTOR_COUNT_PERCENTAGE_IDLE = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE_IDLE 
         
         
@@ -81,11 +84,11 @@ class sphereVideoDetection():
         for i in range (0, self.movementDelayVectorLength):
             self.movementDelayVector.append(0)
         
-        self.last_saved_time_idle = timeit.default_timer() #will be used to check differences in time (determine idle time)
-        self.last_saved_time_movement = timeit.default_timer() #will be used to check differences in time (determine mvnt time)
-        self.last_saved_time_gp = timeit.default_timer() #general purpose time counter
+        self.last_saved_time_idle = timeit.default_timer()  # will be used to check differences in time (determine idle time)
+        self.last_saved_time_movement = timeit.default_timer()  # will be used to check differences in time (determine mvnt time)
+        self.last_saved_time_gp = timeit.default_timer()  # general purpose time counter
         
-        #import camera parameters from file:
+        # import camera parameters from file:
         import configCamera
         self.CAM_BRIGHTNESS_VAR = configCamera.CAM_BRIGHTNESS_VAR
         self.CAM_CONTRAST_VAR = configCamera.CAM_CONTRAST_VAR
@@ -233,6 +236,15 @@ class sphereVideoDetection():
     def getIdleStatus(self):
         return self.isIdle #true if right now it is idle, false otherwise.
     
+    def setTrackingFeedback(self,trc):
+        self.showTrackingFeedback = trc
+    
+    def setUserFeedback(self, fdb):
+        self.showUserFeedback = fdb
+        if (fdb == False):
+            import cv2
+            #cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
+            cv2.destroyWindow(self.winName)
     
     def getTrackingStatus(self):
         return self.isTracking #true if it is tracking, false if it lost tracking.
@@ -574,6 +586,9 @@ class sphereVideoDetection():
             return
         self.movementMethod = methodNumber
     
+    def getMovementMethod(self):
+        return self.movementMethod
+    
     def mainVideoDetection(self):
         import cv as cv
         import cv2
@@ -663,6 +678,7 @@ class sphereVideoDetection():
         
         
         cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
+        
         
         # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
         t_before = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
@@ -790,7 +806,8 @@ class sphereVideoDetection():
                     # a continuaciOn, si el contorno tiene suficiente área, pero también si no es TAN grande:
                     if (cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and
                          cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA):
-                        cv2.circle(capturedImage, center, radius, (0, 255, 0), 2) #visual feedback to user.
+                        if (self.showTrackingFeedback):
+                            cv2.circle(capturedImage, center, radius, (0, 255, 0), 2) #visual feedback to user.
                         Lnew.append(center)
                 #===============================================================
                 # #analizo si hay colisiones en el espacio 2D-tiempo
@@ -809,7 +826,8 @@ class sphereVideoDetection():
                              if ( math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
                                 #print "Hay colisión: %d %d" % (index,jndex)
                                 #cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
-                                cv2.line(capturedImage, (Lnew[index][0], Lnew[index][1]),(Lbefore[jndex][0], Lbefore[jndex][1]), (255,0,0), 5)
+                                if (self.showTrackingFeedback):
+                                    cv2.line(capturedImage, (Lnew[index][0], Lnew[index][1]),(Lbefore[jndex][0], Lbefore[jndex][1]), (255,0,0), 5) #user feedback
                                 #se suma a todos los desplazamientos (en x, en y).
                                 self.movEjeX+= Lnew[index][0] - Lbefore[jndex][0]
                                 self.movEjeY+=Lnew[index][1] - Lbefore[jndex][1]
@@ -857,7 +875,8 @@ class sphereVideoDetection():
                 #===============================================================
                 # se "muestra" el resultado al usuario (feedback)
                 #===============================================================
-                cv2.imshow( self.winName , capturedImage ) #obs.: NO es estrictamente necesario dar feedback acá
+                if (self.showUserFeedback):
+                    cv2.imshow( self.winName , capturedImage ) #obs.: NO es estrictamente necesario mostrar la ventana para que funcione
                 #(imshow se puede sacar si el CPU es un problema.)
                 
                 #===============================================================
