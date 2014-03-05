@@ -72,9 +72,9 @@ class Form1(Toplevel):
         self.__Frame11.pack(side='left')
         self.__Frame12 = Frame(self.__Frame10)
         self.__Frame12.pack(side='left')
-        self.__Scale1 = Scale(self.__Frame12,length=200,orient='horizontal'
-            ,sliderlength=20)
-        self.__Scale1.pack(side='top')
+#         self.__Scale1 = Scale(self.__Frame12,length=200,orient='horizontal'
+#             ,sliderlength=20)
+#         self.__Scale1.pack(side='top')
         self.__Frame24 = Frame(self.__Frame15)
         self.__Frame24.pack(side='left')
         self.__Label1 = Label(self.__Frame24,text='Tone Start:')
@@ -533,8 +533,12 @@ class Form3(Toplevel):
     def __on_Button5_ButRel_1(self,Event=None):
         print "Apply Movement method"
         #self.__Listbox1.
-        num_selected = self.__Listbox1.curselection()[0] #this gets the element selected by the user.
-        self.gVariables.fn_setMovementMethod(num_selected)
+        try:
+            num_selected = self.__Listbox1.curselection()[0] #this gets the element selected by the user.
+            self.gVariables.fn_setMovementMethod(num_selected)
+        except:
+            print "No movement method selected. Please click on the list and browse with arrow keys to select one."
+            pass
 #         if (num_selected == 0):
 #             #accumulate time
 #             pass
