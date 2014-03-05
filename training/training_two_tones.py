@@ -841,12 +841,29 @@ def executeUserInputFrm3():
             gVariables.AppFrm3.configureData()
             gVariables.AppFrm1.configureData()
             
+            
             #App.pack(expand='yes', fill='both')
             #App.gVariables = gVariables
-            gVariables.AppFrm1.protocol('WM_DELETE_WINDOW', gVariables.hideForm1)
-            gVariables.AppFrm3.protocol('WM_DELETE_WINDOW', gVariables.hideForm3)
-            gVariables.AppFrm5.protocol('WM_DELETE_WINDOW', gVariables.hideForm5)
- 
+            gVariables.AppFrm1.protocol('WM_DELETE_WINDOW', gVariables.dummy_fn)
+            gVariables.AppFrm3.protocol('WM_DELETE_WINDOW', gVariables.dummy_fn)
+            gVariables.AppFrm5.protocol('WM_DELETE_WINDOW', gVariables.dummy_fn)
+            #gVariables.AppFrm1.protocol('WM_DELETE_WINDOW', gVariables.hideForm1)
+            #gVariables.AppFrm3.protocol('WM_DELETE_WINDOW', gVariables.hideForm3)
+            #gVariables.AppFrm5.protocol('WM_DELETE_WINDOW', gVariables.hideForm5)
+            
+            
+            #gVariables.AppFrm1.overrideredirect(True)
+            #gVariables.AppFrm3.overrideredirect(True)
+            #gVariables.AppFrm5.overrideredirect(True)
+            
+            #gVariables.AppFrm1.attributes('-fullscreen', True)
+            #gVariables.AppFrm3.attributes('-fullscreen', True)
+            #gVariables.AppFrm5.attributes('-fullscreen', True)
+            
+            #gVariables.AppFrm1.minsize(600,450)
+            #gVariables.AppFrm1.maxsize(500,850)
+            #gVariables.AppFrm1.geometry(500,400)
+            
             #gVariables.AppFrm3.geometry('640x480+10+10')
             
             
