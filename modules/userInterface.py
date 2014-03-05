@@ -63,6 +63,9 @@ class Form1(Toplevel):
         self.__ApplyBtn = Button(self.__Frame38,text='Apply')
         self.__ApplyBtn.pack(side='top')
         self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
+        self.__CloseBtn = Button(self.__Frame38,text='Close')
+        self.__CloseBtn.pack(side='top')
+        self.__CloseBtn.bind('<ButtonRelease-1>',self.__on_CloseBtn_ButRel_1)
         self.__Frame37 = Frame(self.__Frame7)
         self.__Frame37.pack(side='top')
         self.__Frame11 = Frame(self.__Frame10,width=80)
@@ -148,6 +151,11 @@ class Form1(Toplevel):
     def __on_ApplyBtn_ButRel_1(self,Event=None):
         print "Test Apply Frm1"
         self.gVariables.hideForm1(False)
+        pass
+    
+    def __on_CloseBtn_ButRel_1(self,Event=None):
+        print "Test Close Frm1"
+        self.gVariables.hideForm1(True)
         pass
 
     def __on_Form1_Dstry(self,Event=None):
@@ -244,6 +252,9 @@ class Form3(Toplevel):
         self.__ApplyBtn = Button(self.__Frame62,text='Apply')
         self.__ApplyBtn.pack(side='top')
         self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
+        self.__CloseBtn = Button(self.__Frame62,text='Close')
+        self.__CloseBtn.pack(side='top')
+        self.__CloseBtn.bind('<ButtonRelease-1>',self.__on_CloseBtn_ButRel_1)
         self.__Frame4 = Frame(self.__Frame70,height=30)
         self.__Frame4.pack(side='left')
         self.__Label1 = Label(self.__Frame4,text='Parameters')
@@ -446,6 +457,10 @@ class Form3(Toplevel):
     #Start of event handler methods
     #
 
+    def __on_CloseBtn_ButRel_1(self,Event=None):
+        print "Test Apply Frm3"
+        self.gVariables.hideForm3(True)
+        pass
 
     def __on_ApplyBtn_ButRel_1(self,Event=None):
         print "Test Apply Frm3"
@@ -576,16 +591,27 @@ class Form5(Toplevel):
         self.__EntryComment = Entry(self)
         self.__EntryComment.pack(side='top')
         self.__EntryComment.bind('<KeyRelease>',self.__on_EntryComment_KeyRel)
+        
+        self.__Frame62 = Frame(self,height=30,width=30)
+        self.__Frame62.pack(side='top')
+        self.__ApplyBtn = Button(self.__Frame62,text='Apply')
+        self.__ApplyBtn.pack(side='top')
+        self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
         #
         #Your code here
         self.__alreadyGone = 0
-        #self.__CommentString = ""
+        self.__CommentString = ""
         print "Form5: Comment Frame loaded"
         #
     #
     #Start of event handler methods
     #
-
+    
+    
+    def __on_ApplyBtn_ButRel_1(self,Event=None):
+        print "Test Apply Form 5"
+        self.gVariables.hideForm5(True)
+        pass
 
     def __on_EntryComment_KeyRel(self,Event=None):
         self.__CommentString = self.__EntryComment.get()
