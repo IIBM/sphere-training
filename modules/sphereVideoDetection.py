@@ -8,15 +8,16 @@
      
 '''
 
-import pygame
-from pygame.locals import *
 import logging
 import timeit
+import cv as cv
+import cv2
 
 
 
 
 class sphereVideoDetection():
+    mustquit = 0
     def __init__ (self, videosource, width=640, height=480) :
         import track_bola_utils
         import configSphereVideoDetection
@@ -106,7 +107,7 @@ class sphereVideoDetection():
         
         import threading
         # Create one non-blocking thread for capturing video Stream
-        fred1 = threading.Thread(target=self.mainVideoDetection)
+        fred1 = threading.Thread(target=self.mainVideoDetection, name="VideoDetection")
         fred1.start()
             
     def getAccumulatedVector(self):
@@ -136,7 +137,14 @@ class sphereVideoDetection():
 
     def calibrate(self):
         self.startCalibration = True
-        
+    
+    def exit(self):
+        #print "Exiting sphereVideoDetection"
+        #import os
+        #os._exit(0)
+        #self.exit()
+        self.mustquit = 1
+    
     def setNoiseFiltering(self, bool):
         #Set Noise FIltering: False if you DON'T want noise filtering , because you consider that your input video has no noise.
         self.noiseFiltering = bool
@@ -590,8 +598,7 @@ class sphereVideoDetection():
         return self.movementMethod
     
     def mainVideoDetection(self):
-        import cv as cv
-        import cv2
+
         import math
         import threading
         import socket
@@ -883,11 +890,11 @@ class sphereVideoDetection():
                 # #para finalizar programa, usuario presiona "Escape":
                 #===============================================================
                 key = cv2.waitKey(self.sleepTime)
-                if (key == 27 or key==1048603): #escape pressed
+                if (key == 27 or key==1048603 or self.mustquit==1  ): #escape pressed
                     #end Program.
                     cam.release()
                     cv2.destroyWindow(self.winName)
-                    os.kill(os.getpid(), signal.SIGINT)
+                    #os.kill(os.getpid(), signal.SIGINT)
                     sys.exit()
 
 
