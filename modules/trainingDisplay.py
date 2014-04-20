@@ -22,13 +22,19 @@ class trainingDisplay() :
         self.isUserWriting = False
         pygame.display.set_caption('Variables')
         self.basicFont = pygame.font.SysFont(None, 48)
-        time.sleep(1)
-        self.renderAgain()
         self.secondaryFont = pygame.font.SysFont(None, 36)
+        time.sleep(0.5)
+        self.renderAgain()
 
 
     def renderAgain(self):
         #render things in pygame again.
+        try:
+            if ( (len(self.displayText1) <= 0) and  (len(self.displayText2) <= 0) ):
+                return;
+        except:
+            return;
+        
         if (self.isUserWriting == False):
             # draw the white background onto the surface
             self.windowSurface.fill((55,55,55))
@@ -51,7 +57,6 @@ class trainingDisplay() :
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: sys.exit()
-        
 
     
     def askUserInput(self, texts):
@@ -76,9 +81,19 @@ class trainingDisplay() :
         self.windowSurface = pygame.display.set_mode((self.windowWidth, self.windowHeight), 0, 32)
         self.renderAgain()
     
+    def exitDisplay(self):
+        #print "exiting Display."
+        pygame.quit()
+    
     def updateInfo(self, text, newValue):
         #sets from the class lists. the one that has "text", and updates it with newValue
         a = False
+        try:
+            if ( (len(self.displayText1) <= 0) and  (len(self.displayText2) <= 0) ):
+                return;
+        except:
+            return;
+            
         for i in range(0, len(self.displayText1)):
             if str(self.displayText1[i][0]) == str(text):
                 self.displayText1[i] = (text,newValue)
@@ -106,7 +121,11 @@ if __name__ == '__main__':
     a.addSecondaryInfo(("% s/t", 45.0))
     a.addSecondaryInfo(("Other secondary information", 45.5))
     a.renderAgain()
+    var = 0
     while(True):
         time.sleep(1)
-        a.updateInfo("Text2 : example", 7)
-        
+        a.updateInfo("Other secondary information", var)
+        var+=1
+        print "loop: " , var
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT: sys.exit()
