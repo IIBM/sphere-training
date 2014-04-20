@@ -9,3 +9,4 @@ class vectorSimple:
 class emptyVariableContainer:
     #Empty container for referencing instead of using "self."
     empty=True
+
