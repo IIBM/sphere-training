@@ -20,8 +20,9 @@ import time
 import timeit
 import logging
 
+
 class gVariables():
-    #class functions():
+    #class functions(): 
     
     @staticmethod
     def hideForm1(toHide = True):
@@ -442,7 +443,8 @@ class gVariables():
     current_trial_type_str = ""  # same as type but with string format.
     
     trial_comment = "" #comment about this training session.
-    
+    ns = 0
+    #fin gVariables.
     
 def printInstructions():
     print '\nOptions:'
@@ -546,6 +548,7 @@ def loopFunction():
     initDisplay()
     try:
         while(True):
+                GUICheck() #check if any GUI input periodically.
                 trialLoop()  #
                 time.sleep(gVariables.LOOP_FUNCTION_SLEEP_TIME)
                 #####################
@@ -671,6 +674,120 @@ def trialLoop():
                     gVariables.logger.info('Success rate:%r' % (gVariables.successRate))
                     gVariables.current_trial_stage = 3
 
+def GUICheck():
+        if (gVariables.ns.message1 != 0 ):
+            print "GUICheck: Got a Message:", gVariables.ns.message1
+            index = gVariables.ns.message1
+            if (index == 1):
+                print "GUICheck: 'Drop' message."
+                gVariables.fn_giveDrop()
+            elif (index == 2):
+                print "GUICheck: 'Reward' message"
+                gVariables.fn_giveReward()
+            elif (index == 3):
+                print "GUICheck: 'Open' message"
+                gVariables.fn_openValve()
+            elif (index == 4):
+                print "GUICheck: 'Close' message"
+                gVariables.fn_closeValve()
+            elif (index == 5):
+                print "GUICheck: 'Start Training' message"
+                gVariables.fn_startStopTraining() ######
+            elif (index == 6):
+                print "GUICheck: 'Stop Training' message"
+                gVariables.fn_startStopTraining() ########
+            elif (index == 7):
+                print "GUICheck: 'Pause Training' message"
+                gVariables.fn_pauseResumeTraining() ########
+            elif (index == 8):
+                print "GUICheck: 'Resume Training' message"
+                gVariables.fn_pauseResumeTraining() ########
+            elif (index == 9):
+                print "GUICheck: 'Exit Training' message"
+                exitTraining(0)
+            elif (index == 10):
+                print "GUICheck: 'Tone 1' message"
+                gVariables.fn_tone1Test()
+            elif (index == 11):
+                print "GUICheck: 'Tone 2' message"
+                gVariables.fn_tone2Test()
+            elif (index == 12):
+                print "GUICheck: 'Show Feedback' message"
+                gVariables.fn_showUserFeedback()
+            elif (index == 13):
+                print "GUICheck: 'Hide Feedback' message"
+                gVariables.fn_hideUserFeedback()
+            elif (index == 14):
+                print "GUICheck: 'Show Tracking' message"
+                gVariables.fn_showTrackingFeedback()
+            elif (index == 15):
+                print "GUICheck: 'Hide Tracking' message"
+                gVariables.fn_hideTrackingFeedback()
+            elif (index == 16):
+                print "GUICheck: 'Variable change: comment' message"
+                gVariables.trial_comment = gVariables.ns.message2
+                print "GUICheck: comment read from ns: ", gVariables.trial_comment
+            elif (index == 17):
+                print "GUICheck: 'Variable change: Tone1 Frequency' message"
+                gVariables.fn_setFrequencyT1( gVariables.ns.message2 )
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 18):
+                print "GUICheck: 'Variable change: Tone2 Frequency' message"
+                gVariables.fn_setFrequencyT2( gVariables.ns.message2 )
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 19):
+                print "GUICheck: 'Variable change: Movement Amount' message"
+                gVariables.fn_movementThresholdSet(gVariables.ns.message2)
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 20):
+                print "GUICheck: 'Variable change: Method Used' message"
+                gVariables.fn_setMovementMethod(gVariables.ns.message2)
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 21):
+                print "GUICheck: 'Variable change: Movement Time' message"
+                gVariables.fn_movementTimeSet(gVariables.ns.message2)
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 22):
+                print "GUICheck: 'Variable change: Idle Time' message"
+                gVariables.fn_idleTimeSet(gVariables.ns.message2)
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 23):
+                print "GUICheck: 'Variable change: Tone Start' message"
+                ####gVariables.fn_efe
+                print "Tone Start variable is not meant to change. Add intertrial delay instead."
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 24):
+                print "GUICheck: 'Variable change: Tone End' message"
+                gVariables.fn_setTone1Duration(float(gVariables.ns.message2))
+                gVariables.fn_setTone2Duration(float(gVariables.ns.message2))
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 25):
+                print "GUICheck: 'Variable change: Movement Window Start' message"
+                gVariables.fn_setMovementWindowStart( float(gVariables.ns.message2) )
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 26):
+                print "GUICheck: 'Variable change: Movement Window End' message"
+                gVariables.fn_setMovementWindowEnd( float(gVariables.ns.message2) )
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 27):
+                print "GUICheck: 'Variable change: Inter Trial Start' message"
+                gVariables.fn_setITRandom1( float(gVariables.ns.message2) )
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 28):
+                print "GUICheck: 'Variable change: Inter Trial End' message"
+                gVariables.fn_setITRandom2( float(gVariables.ns.message2) )
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            elif (index == 29):
+                print "GUICheck: 'Variable change: Probability Tone One' message"
+                gVariables.fn_toneOneProbabilitySet( float(gVariables.ns.message2) )
+                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+            
+            print "GUICheck: Reestablishing namespace", gVariables.ns
+            gVariables.ns.message1 = 0
+            gVariables.ns.message2 = 0
+            print "GUICheck: Namespace set:", gVariables.ns
+            print "GUICheck: done."
+
 def restartTraining():
         # print "Restarting."
         try:
@@ -757,26 +874,22 @@ def trainingInit():
     gVariables.s1 = soundGen.soundGen(gVariables.soundGenFrequency1, gVariables.soundGenDuration1)
     gVariables.s2 = soundGen.soundGen(gVariables.soundGenFrequency2, gVariables.soundGenDuration2)
     gVariables.trialExecuting = False  # boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
+    #GUI
+    import multiprocessing
+    import userInterfaceAPI
+    manager = multiprocessing.Manager()
+    gVariables.ns = manager.Namespace()
+    gVariables.p = multiprocessing.Process(target=userInputGUI, args=(gVariables.ns,))
+    gVariables.p.start()
+    #p.join()
+    print "process started."
+    #userInputGUI() #initialize user input GUI
     # Create thread for executing detection tasks without interrupting user input.
     import threading
-    fred1 = threading.Thread(target=loopFunction)
-    fred1.start()
+    gVariables.fred1 = threading.Thread(target=loopFunction)
+    gVariables.fred1.start()
     
     
-    
-    fred2 = threading.Thread(target=executeUserInput)
-    fred2.start()
-    
-    
-    
-#     fred3 = threading.Thread(target=executeUserInputFrm1)
-#     fred3.start()
-     
-    fred4 = threading.Thread(target=executeUserInputFrm3) #all userinputs embeded here.
-    fred4.start()
-     
-#     fred5 = threading.Thread(target=executeUserInputFrm5)
-#     fred5.start()
     
     
     
@@ -785,51 +898,82 @@ def trainingInit():
     #printInstructions()
 
 
+def userInputGUI(ns):
+    #initialize user input GUI and associated variables.
+    #this function uses trainingAPI to handle graphical user interfaces
+    #ns = is the NameSpace associated with multiprocessing , contains the shared variables (messages)
+    import userInterfaceAPI
+    import threading
+    #fred2 = threading.Thread(target=executeUserInputMainWindow) #main window
+    #fred2.start()
+    #fred4 = threading.Thread(target=executeUserInputOtherWindows) #the other windows (comments, etc)
+    #fred4.start()
+    #time.sleep()
+    print "ns uigui: ",ns
+    currentGUI = userInterfaceAPI.userInterface_API(False)
+    #currentGUI.ns = ns
+    ns.message1 = 0
+    ns.message2 = 0
+    currentGUI.setNamespace(ns)
+    
+    currentGUI.launch_glade()
+    #gVariables.currentGUI.launch_glade()
+    #fredGUI = threading.Thread(target=executeMainInputGlade) #Glade GUI
+    #print "daemon: ", fredGUI.isDaemon()
+    #fredGUI.setDaemon(True)
+    #print "daemon: ", fredGUI.isDaemon()
+    #print threading.enumerate()
+    #fredGUI.start()
+    #userInterfaceAPI.dummy_fn()
+    #var1.dummy_fn()
 
-def executeUserInputFrm5():
+def executeMainInputGlade():
+    try:
+        import userInterfaceAPI
+        appgui = userInterfaceAPI.userInterface_API()
+        appgui.launch_glade()
+    except:
+        print "err glade"
+        pass
+
+def executeUserInputMainWindow():
         #import rpErrorHandler
-        time.sleep(2.2)
         try:
-            import userInterface
+            import userInterface_tk
+            print "imported tk"
             import Tkinter
             Root = Tkinter.Tk()
-            Root.withdraw()
             #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
             del Tkinter
-            print "creating frm5"
-            gVariables.AppFrm5 = userInterface.Form5(Root)
-            gVariables.AppFrm5.gVariables = gVariables
-            gVariables.AppFrm5.configureData()
-            #App.pack(expand='yes', fill='both')
-            #App.gVariables = gVariables
-            gVariables.AppFrm5.protocol('WM_DELETE_WINDOW', gVariables.hideForm5)
-            
-            #gVariables.AppFrm1.geometry('640x480+10+10')
-            gVariables.AppFrm5.title('Form5')
-            gVariables.AppFrm5.withdraw()
-            gVariables.AppFrm5.mainloop()
-            print "finish initializing frm5"
+         
+            App = userInterface_tk.userInput(Root)
+            App.pack(expand='yes', fill='both')
+            App.gVariables = gVariables
+             
+            Root.geometry('640x480+10+10')
+            Root.title('userInput')
+            Root.mainloop()
 #             while(True):
 #                 print "bucleando"
 #                 time.sleep(1)
         except:
+            print "err"
             pass
 
-
-def executeUserInputFrm3():
+def executeUserInputOtherWindows():
         #import rpErrorHandler
         time.sleep(0.8)
         try:
-            import userInterface
+            import userInterface_tk
             import Tkinter
             Root = Tkinter.Tk()
             Root.withdraw() #hide empty window that always appears after invoking TK
             #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
             del Tkinter
             
-            gVariables.AppFrm5 = userInterface.Form5(Root)
-            gVariables.AppFrm3 = userInterface.Form3(Root)
-            gVariables.AppFrm1 = userInterface.Form1(Root)
+            gVariables.AppFrm5 = userInterface_tk.Form5(Root)
+            gVariables.AppFrm3 = userInterface_tk.Form3(Root)
+            gVariables.AppFrm1 = userInterface_tk.Form1(Root)
             
             
             
@@ -885,75 +1029,25 @@ def executeUserInputFrm3():
         except:
             pass
 
-def executeUserInputFrm1():
-        #import rpErrorHandler
-        time.sleep(0.2)
-        try:
-            import userInterface
-            import Tkinter
-            Root = Tkinter.Tk()
-            Root.withdraw()
-            #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
-            del Tkinter
-         
-            gVariables.AppFrm1 = userInterface.Form1(Root)
-            gVariables.AppFrm1.gVariables = gVariables
-            gVariables.AppFrm1.configureData()
-            #App.pack(expand='yes', fill='both')
-            #App.gVariables = gVariables
-            gVariables.AppFrm1.protocol('WM_DELETE_WINDOW', gVariables.hideForm1)
-            
-            #gVariables.AppFrm1.geometry('640x480+10+10')
-            gVariables.AppFrm1.title('Trial Events.')
-            gVariables.AppFrm1.withdraw()
-            gVariables.AppFrm1.mainloop()
-#             while(True):
-#                 print "bucleando"
-#                 time.sleep(1)
-        except:
-            pass
-
-
-
-def executeUserInput():
-        #import rpErrorHandler
-        try:
-            import userInterface
-            import Tkinter
-            Root = Tkinter.Tk()
-            #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
-            del Tkinter
-         
-            App = userInterface.userInput(Root)
-            App.pack(expand='yes', fill='both')
-            App.gVariables = gVariables
-             
-            Root.geometry('640x480+10+10')
-            Root.title('userInput')
-            Root.mainloop()
-#             while(True):
-#                 print "bucleando"
-#                 time.sleep(1)
-        except:
-            pass
-        
-        
-        
-
 
 def exitTraining(key):
     # Finalize this training and exits.
     # Should get a comment from user before finishing, for documentation purposes.
-    print "Asking user for comments about this training:"
-    import pygame
-    pygame.event.set_grab(True)
-    st = gVariables.display.askUserInput("Write comment on this training:")
+    #print "Asking user for comments about this training:"
+    #import pygame
+    #pygame.event.set_grab(True)
+    #st = gVariables.display.askUserInput("Write comment on this training:")
     print "Exiting."
-    gVariables.logger.info('Exit signal key = %s', key)
-    gVariables.logger.info('Comment about this training: %s', st)
-    import signal
-    os.kill(os.getpid(), signal.SIGINT)
-    sys.exit()
+    #gVariables.logger.info('Exit signal key = %s', key)
+    #gVariables.logger.info('Comment about this training: %s', st)
+    gVariables.p.terminate()
+    gVariables.display.exitDisplay()
+    #print "done with display"
+    #gVariables.videoDet.exit()
+    gVariables.videoDet.exit()
+    #print "done with videodet"
+    sys.exit(0)
+    
 
 
 
@@ -962,18 +1056,18 @@ if __name__ == '__main__':
     ######
     # Input
     ######
-    import termios, fcntl, sys, os
-    fd = sys.stdin.fileno()
-    try:
-        oldterm = termios.tcgetattr(fd)
-        newattr = termios.tcgetattr(fd)
-        newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
-        termios.tcsetattr(fd, termios.TCSANOW, newattr)
-    
-        oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
-        fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
-    except:
-        print "Error capturing input."
+#     import termios, fcntl, sys, os
+#     fd = sys.stdin.fileno()
+#     try:
+#         oldterm = termios.tcgetattr(fd)
+#         newattr = termios.tcgetattr(fd)
+#         newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+#         termios.tcsetattr(fd, termios.TCSANOW, newattr)
+#     
+#         oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
+#         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+#     except:
+#         print "Error capturing input."
     ####################
     # Video configuration
     ####################
@@ -985,75 +1079,3 @@ if __name__ == '__main__':
         print "Error importing configvideo" 
     ###############
     trainingInit()
-    ###############
-    try:
-        while(True):
-            try:
-                key = sys.stdin.read(1)  # cv2.waitKey(100) #in miliseconds
-                if (key == 'o'):  # escape pressed
-                    gVariables.fn_openValve()
-                elif (key == 'c'):
-                    gVariables.fn_closeValve()
-                elif (key == 'd'):
-                    gVariables.fn_giveDrop()
-                elif (key == 'D'):
-                    gVariables.fn_giveDrop(self)
-                elif (key == 'r'):
-                    gVariables.fn_giveReward()
-                elif (key == 'R'):
-                    gVariables.fn_giveReward()
-                elif (key == '1'):
-                    gVariables.fn_tone1Test()
-                elif (key == '2'):
-                    gVariables.fn_tone2Test()
-                elif (key == 't'):
-                    pass
-
-                elif (key == 'T'):
-                    pass
-                
-                elif (key == 'b'):
-                    pass
-                
-                elif (key == 'B'):
-                    pass
-                
-                elif (key == 'e'):
-                    pass
-                
-                elif (key == 'E'):
-                    pass
-                
-                elif (key == 'i'):
-                    pass
-                
-                elif (key == 'I'):
-                    pass
-                elif (key == 'l'):
-                    pass
-                elif (key == 'L'):
-                    pass
-                
-                elif (key == 'k'):
-                    pass
-                        
-                elif (key == 'p'):
-                    pass
-                
-                elif (key == '\x1b' or key == 'q'):
-                    exitTraining(key)
-                else :
-                    print "Key not supported: %r" % key
-            except IOError: pass
-            time.sleep(0.08)
-    except:
-        print "Closing %s." % gVariables.trainingName
-    finally:
-        termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
-        fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
-        gVariables.logger.info('Comment on this training session: %s' % gVariables.trial_comment)
-        print "Comment on this training: ", gVariables.trial_comment
-        gVariables.logger.info('End %s' % gVariables.trainingName)
-        
-        import os
-        os._exit(0)
