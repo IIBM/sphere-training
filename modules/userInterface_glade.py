@@ -343,6 +343,8 @@ class GUIGTK_Class:
         
         def action_testT1(self, button):
                 #print "Test T1"
+                self.frequencyTone1 = self.glade.get_object("entreTone1").get_text()
+                self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
                 try:
                     self.overrideaction_testT1()
                 except:
@@ -350,6 +352,8 @@ class GUIGTK_Class:
         
         def action_testT2(self, button):
                 #print "Test T2"
+                self.frequencyTone1 = self.glade.get_object("entreTone1").get_text()
+                self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
                 try:
                     self.overrideaction_testT2()
                 except:
