@@ -201,16 +201,20 @@ class userInterface_API:
         print "Default API: Test T1"
         print "ns: ", ns
         print ns.message1
+        self.frequencyTone1 = self.currentGUI.frequencyTone1
         ns.message1 = 10
-        print ns.message1
+        ns.message2 = self.frequencyTone1
+        print "Namespace to send: ", ns
         print "Default API: done."
     
     def overrideaction_testT2(self):
         print "Default API: Test T2"
         print "ns: ", ns
         print ns.message1
+        self.frequencyTone2 = self.currentGUI.frequencyTone2
         ns.message1 = 11
-        print ns.message1
+        ns.message2 = self.frequencyTone2
+        print "Namespace to send: ", ns
         print "Default API: done."
     
     def overrideaction_showfeedback(self):
