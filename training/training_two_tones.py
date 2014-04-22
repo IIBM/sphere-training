@@ -148,13 +148,21 @@ class gVariables():
         gVariables.valve1.open()
     
     @staticmethod
-    def fn_tone1Test():
-        gVariables.logger.info('tone 1: %d Hz' % gVariables.soundGenFrequency1)
+    def fn_tone1Test(newfreq):
+        #Tests the tone n°1
+        #the argument is the new frequency (if it changed). FIrst updates freq then plays.
+        beforefreq = gVariables.soundGenFrequency1
+        gVariables.fn_setFrequencyT1(newfreq)
+        gVariables.logger.info('Changed Tone 1 Frequency to: %d Hz  (before was %d Hz)' % (gVariables.soundGenFrequency1, beforefreq ) )
         gVariables.s1.play()
     
     @staticmethod
-    def fn_tone2Test():
-        gVariables.logger.info('tone 2: %d Hz' % gVariables.soundGenFrequency2)
+    def fn_tone2Test(newfreq):
+        #Tests the tone n°2
+        #the argument is the new frequency (if it changed). FIrst updates freq then plays.
+        beforefreq = gVariables.soundGenFrequency2
+        gVariables.fn_setFrequencyT2(newfreq)
+        gVariables.logger.info('Changed Tone 2 Frequency to: %d Hz  (before was %d Hz)' % (gVariables.soundGenFrequency2, beforefreq ) )
         gVariables.s2.play()
     
     @staticmethod
@@ -165,35 +173,12 @@ class gVariables():
     @staticmethod
     def fn_movementThresholdSet(value_given):
         #aumentar threshold
-#         Variables.videoDet.setMovementThreshold(gVariables.videoDet.getMovementThreshold() + 10)
-#         if gVariables.videoDet.getMovementThreshold() > gVariables.maxMovementThreshold:
-#             gVariables.videoDet.setMovementThreshold(gVariables.maxMovementThreshold)
-#         print "Movement Threshold changed to : " + str(gVariables.videoDet.getMovementThreshold())
-#         printInstructions()
-#         ##disminuir threshold
-#         gVariables.videoDet.setMovementThreshold(gVariables.videoDet.getMovementThreshold() - 10)
-#         if gVariables.videoDet.getMovementThreshold() < 10:
-#             gVariables.videoDet.setMovementThreshold(10)
-#         print "Movement Threshold changed to : " + str(gVariables.videoDet.getMovementThreshold())
-#         printInstructions()
         gVariables.videoDet.setMovementThreshold(int(value_given) )
         print "Movement Threshold changed to : " + str(gVariables.videoDet.getMovementThreshold())
     
     @staticmethod
     def fn_toneOneProbabilitySet(value_given):
-        #increase
-#         gVariables.toneOneProbability += 0.05
-#         if gVariables.toneOneProbability > 1.0 :
-#             gVariables.toneOneProbability = 1.0
-#         print "Tone One Probabilty changed to : " + str(gVariables.toneOneProbability * 100) + " %"
-#         printInstructions()
-#         #decrease 
-#         gVariables.toneOneProbability -= 0.05
-#         if gVariables.toneOneProbability < 0.0 :
-#             gVariables.toneOneProbability = 0.0
-#         print "Tone One Probabilty changed to : " + str(gVariables.toneOneProbability * 100) + " %"
-#         printInstructions()
-        #set to value
+        #set Probability of the tone nr1 to value
         if (isinstance( value_given, float ) == False ):
             return;
         gVariables.toneOneProbability = value_given
@@ -281,21 +266,7 @@ class gVariables():
     
     @staticmethod
     def fn_movementTimeSet(nwmvnt):
-        #increase
-#         gVariables.movementTime += 0.1
-#         if gVariables.movementTime > gVariables.maxMovementTime:
-#             gVariables.movementTime = gVariables.maxMovementTime
-#         gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime)
-#         print "Movement Time changed to : " + str(gVariables.movementTime * 1000) + " ms"
-#         printInstructions()
-#         #decrease
-#         gVariables.movementTime -= 0.1
-#         if gVariables.movementTime < 0.1:
-#             gVariables.movementTime = 0.1
-#         gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime)
-#         print "Movement Time changed to : " + str(gVariables.movementTime * 1000) + " ms"
-#         printInstructions()
-        #set
+        #set movement time
         movement_time = float(nwmvnt)
         gVariables.movementTime = movement_time
         gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime)
@@ -303,18 +274,7 @@ class gVariables():
     
     @staticmethod
     def fn_idleTimeSet(nwmvnt):
-#         #increase
-#         gVariables.idleTime += 0.1
-#         if gVariables.idleTime > gVariables.maxIdleTime:
-#             gVariables.idleTime = gVariables.maxIdleTime
-#         print "Idle Time changed to : " + str(gVariables.idleTime * 1000) + " ms"
-#         printInstructions()
-#         #decrease
-#         gVariables.idleTime -= 0.1
-#         if gVariables.idleTime < 0.1:
-#             gVariables.idleTime = 0.1
-#         print "Idle Time changed to : " + str(gVariables.idleTime * 1000) + " ms"
-#         printInstructions()
+        #set idle time.
         idle_time = float(nwmvnt)
         gVariables.idleTime = idle_time
         print "Idle Time changed to : " + str(gVariables.idleTime * 1000) + " ms"
@@ -332,28 +292,19 @@ class gVariables():
         print "Calibrated. Noise Filtering is OFF."
     
     @staticmethod
-    def fn_startStopTraining():
-        if gVariables.trialExecuting == False:
+    def fn_startStopTraining(flag):
+        if (flag == 1):
             restartTraining()
-            gVariables.trialStarted = True
-            print "Tone Training started."
-            print "  %d seconds: tone" % gVariables.soundGenDuration1
-            print "  %d seconds: detection of movement" % (gVariables.eventTime2_movement - 
-                                                                       gVariables.eventTime1_movement_start)
-            print "  (%r - %r) seconds: inter trial delay time" % (gVariables.interTrialRandom1Time ,
-                                                                               gVariables.interTrialRandom2Time)
-        else:
+        if (flag == 2):
             stopTraining()
-            gVariables.trialStarted = False
-            print "Tone Training stopped."
     
     @staticmethod
-    def fn_pauseResumeTraining():
+    def fn_pauseResumeTraining(flag):
         if (gVariables.trialStarted == True):
-            if gVariables.trialExecuting == False:
+            if (flag == 1):
                 resumeTraining()
                 #print "Resuming Tone Training."
-            else:
+            if (flag == 2):
                 pauseTraining()
                 #print "Tone Training paused."
         else:
@@ -445,23 +396,7 @@ class gVariables():
     trial_comment = "" #comment about this training session.
     ns = 0
     #fin gVariables.
-    
-def printInstructions():
-    print '\nOptions:'
-    print 'o: Open Valve'
-    print 'c: Close Valve'
-    print 'd: Water Drop'
-    print 'r: Give Reward manually'
-    print '1: %d Hz tone' % gVariables.soundGenFrequency1
-    print '2: %d Hz tone' % gVariables.soundGenFrequency2
-    print 't/T: increase/decrease threshold (10 - %d)' % gVariables.maxMovementThreshold
-    print 'e/E: increase/decrease Movement Time needed for reward (100 ms - %d ms)' % (gVariables.maxMovementTime * 1000)
-    print 'i/I: increase/decrease Idle Time needed for reward (100 ms - %d ms)' % (gVariables.maxIdleTime * 1000)
-    print 'k: start or stop tone training'
-    print 'p: pause or resume tone training'
-    print 'l/L: recalibrate video input with/without noise filtering.'
-    print 'b/B: increase/decrease one tone probability.'
-    print 'q or ESC: quit\n'
+    pass
 
 def initDisplay():
     import trainingDisplay  # display for showing different variables of interest
@@ -474,7 +409,6 @@ def initDisplay():
     gVariables.display.addSecondaryInfo(("% s/t", 0.0))
     gVariables.display.addSecondaryInfo(("Trial Time", "0 - 10"))
     gVariables.display.addSecondaryInfo(("Trial status", ""))
-    
     gVariables.display.renderAgain()
 
 def updateDisplayInfo():
@@ -538,46 +472,18 @@ def updateDisplayInfo():
     gVariables.display.renderAgain()
 
 def loopFunction():
-    print gVariables.trainingName
-    import sphereVideoDetection
-    gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
-    gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime)  # seconds that should be moving.
-    # Display initialization.
-    #gVarvideoMovementMethod =
-    gVariables.videoMovementMethod =  gVariables.videoDet.getMovementMethod()
-    initDisplay()
-    try:
-        while(True):
-                GUICheck() #check if any GUI input periodically.
-                trialLoop()  #
+    while(True):
                 time.sleep(gVariables.LOOP_FUNCTION_SLEEP_TIME)
-                #####################
+                GUICheck() #check if any GUI input was received
+                trialLoop()  #
                 updateDisplayInfo()
-                # gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
-                #####################
-                if (gVariables.trialExecuting == True and gVariables.current_trial_stage == 1):
-                    # print gVariables.videoDet.getTrackingStatus()
-                    if (gVariables.current_trial_type == 1):
-                      if (gVariables.videoDet.getMovementStatus() == True and 
-                        ((gVariables.videoDet.getMovementTime() >= (gVariables.movementTime))
-                           ) 
-                          ):
-                        # giveReward()
-                        gVariables.trialSuccessful = True
-                        # print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
-                    elif (gVariables.current_trial_type == 2):
-                      if (gVariables.videoDet.getMovementStatus() == False and 
-                        gVariables.videoDet.getIdleTime() >= (gVariables.idleTime)):  #
-                        # giveReward()
-                        gVariables.trialSuccessful = True
-                      
-                        # print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
-    finally:
-        return
 
 def trialLoop():
             # This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
             
+            #===================================================================
+            # Check / update current trial stage and time
+            #===================================================================
             if (gVariables.trialExecuting == True):
                 # Update Trial Time. Important since this is where events happen at certain moments in this line.
                 gVariables.current_trial_start_time += gVariables.current_trial_paused_time
@@ -591,7 +497,6 @@ def trialLoop():
                     gVariables.trialCount += 1
                     gVariables.dropReleased = 0
                     gVariables.current_trial_start_time = timeit.default_timer()
-
                     gVariables.logger.debug(gVariables.history_trial)
                     gVariables.logger.debug(gVariables.toneOneProbability)
                     gVariables.logger.debug(gVariables.current_trial_type)
@@ -673,10 +578,40 @@ def trialLoop():
                         gVariables.logger.info('Trial not successful')
                     gVariables.logger.info('Success rate:%r' % (gVariables.successRate))
                     gVariables.current_trial_stage = 3
+            # gVariables.logger.debug('Movement Vector: %s',gVariables.movementVector)
+            
+            #===============================================================
+            # Check if should give reward
+            #===============================================================
+            
+            if (gVariables.trialExecuting == True and gVariables.current_trial_stage == 1):
+                # print gVariables.videoDet.getTrackingStatus()
+                if (gVariables.current_trial_type == 1):
+                  if (gVariables.videoDet.getMovementStatus() == True and 
+                    ((gVariables.videoDet.getMovementTime() >= (gVariables.movementTime))
+                       ) ):
+                    # giveReward() #the reward is given at the end of the mvnt window
+                    gVariables.trialSuccessful = True
+                    # print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
+                elif (gVariables.current_trial_type == 2):
+                  if (gVariables.videoDet.getMovementStatus() == False and 
+                    gVariables.videoDet.getIdleTime() >= (gVariables.idleTime)):  #
+                    # giveReward() #the reward is given at the end of the mvnt window
+                    gVariables.trialSuccessful = True
+                    # print "Continuous total time: %r"%gVariables.videoDet.getMovementTime()
+                    pass
+            else:
+                #trial not executing or tr.stage not 1, so it is unnecessary to check if should give reward..
+                pass
 
 def GUICheck():
+        #GUICheck: this function is called once in every thread loop, and checks if
+        #    the shared variables between training_ and GUI Process contain new info
+        #    if it does, checks which message type was sent, and it's argument (if applies)
+        #    and executes the corresponding routine for that type of message.
         if (gVariables.ns.message1 != 0 ):
             print "GUICheck: Got a Message:", gVariables.ns.message1
+            print "GUICheck: Message's argument:", gVariables.ns.message2
             index = gVariables.ns.message1
             if (index == 1):
                 print "GUICheck: 'Drop' message."
@@ -692,25 +627,25 @@ def GUICheck():
                 gVariables.fn_closeValve()
             elif (index == 5):
                 print "GUICheck: 'Start Training' message"
-                gVariables.fn_startStopTraining() ######
+                gVariables.fn_startStopTraining(1)
             elif (index == 6):
                 print "GUICheck: 'Stop Training' message"
-                gVariables.fn_startStopTraining() ########
+                gVariables.fn_startStopTraining(2)
             elif (index == 7):
                 print "GUICheck: 'Pause Training' message"
-                gVariables.fn_pauseResumeTraining() ########
+                gVariables.fn_pauseResumeTraining(2) ########
             elif (index == 8):
                 print "GUICheck: 'Resume Training' message"
-                gVariables.fn_pauseResumeTraining() ########
+                gVariables.fn_pauseResumeTraining(1) ########
             elif (index == 9):
                 print "GUICheck: 'Exit Training' message"
-                exitTraining(0)
+                exitTraining()
             elif (index == 10):
-                print "GUICheck: 'Tone 1' message"
-                gVariables.fn_tone1Test()
+                print "GUICheck: 'Tone 1 Test' message"
+                gVariables.fn_tone1Test(gVariables.ns.message2)
             elif (index == 11):
-                print "GUICheck: 'Tone 2' message"
-                gVariables.fn_tone2Test()
+                print "GUICheck: 'Tone 2 Test' message"
+                gVariables.fn_tone2Test(gVariables.ns.message2)
             elif (index == 12):
                 print "GUICheck: 'Show Feedback' message"
                 gVariables.fn_showUserFeedback()
@@ -724,68 +659,67 @@ def GUICheck():
                 print "GUICheck: 'Hide Tracking' message"
                 gVariables.fn_hideTrackingFeedback()
             elif (index == 16):
-                print "GUICheck: 'Variable change: comment' message"
+                print "GUICheck: 'Set Comment' message"
                 gVariables.trial_comment = gVariables.ns.message2
                 print "GUICheck: comment read from ns: ", gVariables.trial_comment
             elif (index == 17):
-                print "GUICheck: 'Variable change: Tone1 Frequency' message"
+                print "GUICheck: 'Variable to change: Tone1 Frequency' message"
                 gVariables.fn_setFrequencyT1( gVariables.ns.message2 )
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 18):
-                print "GUICheck: 'Variable change: Tone2 Frequency' message"
+                print "GUICheck: 'Variable to change: Tone2 Frequency' message"
                 gVariables.fn_setFrequencyT2( gVariables.ns.message2 )
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 19):
-                print "GUICheck: 'Variable change: Movement Amount' message"
+                print "GUICheck: 'Variable to change: Movement Amount' message"
                 gVariables.fn_movementThresholdSet(gVariables.ns.message2)
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 20):
-                print "GUICheck: 'Variable change: Method Used' message"
+                print "GUICheck: 'Variable to change: Method Type to be used' message"
                 gVariables.fn_setMovementMethod(gVariables.ns.message2)
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 21):
-                print "GUICheck: 'Variable change: Movement Time' message"
+                print "GUICheck: 'Variable to change: Movement Time' message"
                 gVariables.fn_movementTimeSet(gVariables.ns.message2)
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 22):
-                print "GUICheck: 'Variable change: Idle Time' message"
+                print "GUICheck: 'Variable to change: Idle Time' message"
                 gVariables.fn_idleTimeSet(gVariables.ns.message2)
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 23):
-                print "GUICheck: 'Variable change: Tone Start' message"
-                ####gVariables.fn_efe
+                print "GUICheck: 'Variable to change: Tone Start' message"
                 print "Tone Start variable is not meant to change. Add intertrial delay instead."
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 24):
-                print "GUICheck: 'Variable change: Tone End' message"
+                print "GUICheck: 'Variable to change: Tone End' message"
                 gVariables.fn_setTone1Duration(float(gVariables.ns.message2))
                 gVariables.fn_setTone2Duration(float(gVariables.ns.message2))
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 25):
-                print "GUICheck: 'Variable change: Movement Window Start' message"
+                print "GUICheck: 'Variable to change: Movement Window Start' message"
                 gVariables.fn_setMovementWindowStart( float(gVariables.ns.message2) )
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 26):
-                print "GUICheck: 'Variable change: Movement Window End' message"
+                print "GUICheck: 'Variable to change: Movement Window End' message"
                 gVariables.fn_setMovementWindowEnd( float(gVariables.ns.message2) )
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 27):
-                print "GUICheck: 'Variable change: Inter Trial Start' message"
+                print "GUICheck: 'Variable to change: Inter Trial Start' message"
                 gVariables.fn_setITRandom1( float(gVariables.ns.message2) )
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 28):
-                print "GUICheck: 'Variable change: Inter Trial End' message"
+                print "GUICheck: 'Variable to change: Inter Trial End' message"
                 gVariables.fn_setITRandom2( float(gVariables.ns.message2) )
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             elif (index == 29):
-                print "GUICheck: 'Variable change: Probability Tone One' message"
+                print "GUICheck: 'Variable to change: Probability Tone One' message"
                 gVariables.fn_toneOneProbabilitySet( float(gVariables.ns.message2) )
-                print "GUICheck: Variable read from ns: ", gVariables.ns.message2
+                print "GUICheck: Argument value read from ns: ", gVariables.ns.message2
             
-            print "GUICheck: Reestablishing namespace", gVariables.ns
+            print "GUICheck: Reestablishing previous namespace: ", gVariables.ns
             gVariables.ns.message1 = 0
             gVariables.ns.message2 = 0
-            print "GUICheck: Namespace set:", gVariables.ns
+            print "GUICheck: Namespace set: ", gVariables.ns
             print "GUICheck: done."
 
 def restartTraining():
@@ -795,6 +729,7 @@ def restartTraining():
             gVariables.start_time = timeit.default_timer()
             gVariables.current_trial_start_time = timeit.default_timer()
         except:
+            gVariables.logger.info( 'Error generating "timeit" variables' )
             pass
         gVariables.current_trial_stage = 3
         gVariables.trialCount = 0
@@ -802,6 +737,13 @@ def restartTraining():
         gVariables.dropsAmountGivenManually = 0
         gVariables.trialExecuting = True
         gVariables.logger.info('Variables set. Starting %s' % gVariables.trainingName)
+        gVariables.trialStarted = True
+        print "Tone Training started."
+        print "  %d seconds: tone" % gVariables.soundGenDuration1
+        print "  %d seconds: detection of movement" % (gVariables.eventTime2_movement - 
+                                                                       gVariables.eventTime1_movement_start)
+        print "  (%r - %r) seconds: inter trial delay time" % (gVariables.interTrialRandom1Time ,
+                                                                               gVariables.interTrialRandom2Time)
     
 def stopTraining():
         gVariables.trialExecuting = False
@@ -810,6 +752,8 @@ def stopTraining():
         gVariables.logger.info('Movement trials: %d / %d' % (gVariables.successMovementTrialCount, gVariables.movementTrialCount))
         gVariables.logger.info('Idle trials: %d / %d' % (gVariables.successIdleTrialCount, gVariables.idleTrialCount))
         gVariables.logger.info('Drops given manually: %r' % gVariables.dropsAmountGivenManually)
+        gVariables.trialStarted = False
+        print "Tone Training stopped."
 
 def pauseTraining():
     gVariables.trialExecuting = False
@@ -836,6 +780,7 @@ def giveReward():
                 gVariables.successIdleTrialCount += 1
 
 def getFormattedTime(a):
+    #returns h m s correctly given the time in seconds, as argument
     try:
         hours = int (int(a) / 3600)  # hours
         minutes = int((int(a) - hours * 3600) / 60)  # minutes
@@ -852,12 +797,32 @@ def getFormattedTime(a):
                 minutes = ''  
         
         seconds = str(int(seconds)) + " s   " 
-        return str(hours) + str(minutes) + str(seconds)
+        return ( str(hours) + str(minutes) + str(seconds) )
     except:
         return str(a) + ' s   '
 
+def userInputGUI(ns):
+    #initialize user input GUI and associated variables.
+    #this function uses trainingAPI to handle graphical user interfaces
+    #ns = is the NameSpace associated with multiprocessing , contains the shared variables (message1 and 2)
+    import userInterfaceAPI
+    currentGUI = userInterfaceAPI.userInterface_API(False)
+    currentGUI.setNamespace(ns)
+    currentGUI.launch_glade()
+
+def exitTraining():
+    # Finalize this training and exits.
+    print "Exiting."
+    gVariables.logger.info('Exit signal.')
+    gVariables.logger.info('Comment about this training: %s', gVariables.trial_comment)
+    gVariables.GUIProcess.terminate()
+    gVariables.display.exitDisplay()
+    gVariables.videoDet.exit()
+    sys.exit(0)
+
 def trainingInit():
-    # logging
+    print gVariables.trainingName
+    # logging:
     formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     dateformat = '%Y/%m/%d %I:%M:%S %p'
     import logging
@@ -869,205 +834,35 @@ def trainingInit():
     # valve:
     import valve
     gVariables.valve1 = valve.Valve()
-    # soundGen
+    # soundGen:
     import soundGen
     gVariables.s1 = soundGen.soundGen(gVariables.soundGenFrequency1, gVariables.soundGenDuration1)
     gVariables.s2 = soundGen.soundGen(gVariables.soundGenFrequency2, gVariables.soundGenDuration2)
     gVariables.trialExecuting = False  # boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
-    #GUI
+    #GUI:
     import multiprocessing
-    import userInterfaceAPI
     manager = multiprocessing.Manager()
     gVariables.ns = manager.Namespace()
-    gVariables.p = multiprocessing.Process(target=userInputGUI, args=(gVariables.ns,))
-    gVariables.p.start()
-    #p.join()
-    print "process started."
-    #userInputGUI() #initialize user input GUI
-    # Create thread for executing detection tasks without interrupting user input.
+    gVariables.ns.message1 = 0
+    gVariables.ns.message2 = 0
+    gVariables.GUIProcess = multiprocessing.Process(target=userInputGUI, args=(gVariables.ns,))
+    gVariables.GUIProcess.start()
+    gVariables.logger.info('GUI Process started.')
+    #Sphere Video Detection:
+    import sphereVideoDetection
+    gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
+    gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime)  # seconds that should be moving.
+    gVariables.videoMovementMethod =  gVariables.videoDet.getMovementMethod()
+    #Display:
+    initDisplay()
+    #main Program Loop
     import threading
     gVariables.fred1 = threading.Thread(target=loopFunction)
     gVariables.fred1.start()
-    
-    
-    
-    
-    
-    
-    #time.sleep(2.3)  # to print Instructions after calibration printings.
-    #printInstructions()
-
-
-def userInputGUI(ns):
-    #initialize user input GUI and associated variables.
-    #this function uses trainingAPI to handle graphical user interfaces
-    #ns = is the NameSpace associated with multiprocessing , contains the shared variables (messages)
-    import userInterfaceAPI
-    import threading
-    #fred2 = threading.Thread(target=executeUserInputMainWindow) #main window
-    #fred2.start()
-    #fred4 = threading.Thread(target=executeUserInputOtherWindows) #the other windows (comments, etc)
-    #fred4.start()
-    #time.sleep()
-    print "ns uigui: ",ns
-    currentGUI = userInterfaceAPI.userInterface_API(False)
-    #currentGUI.ns = ns
-    ns.message1 = 0
-    ns.message2 = 0
-    currentGUI.setNamespace(ns)
-    
-    currentGUI.launch_glade()
-    #gVariables.currentGUI.launch_glade()
-    #fredGUI = threading.Thread(target=executeMainInputGlade) #Glade GUI
-    #print "daemon: ", fredGUI.isDaemon()
-    #fredGUI.setDaemon(True)
-    #print "daemon: ", fredGUI.isDaemon()
-    #print threading.enumerate()
-    #fredGUI.start()
-    #userInterfaceAPI.dummy_fn()
-    #var1.dummy_fn()
-
-def executeMainInputGlade():
-    try:
-        import userInterfaceAPI
-        appgui = userInterfaceAPI.userInterface_API()
-        appgui.launch_glade()
-    except:
-        print "err glade"
-        pass
-
-def executeUserInputMainWindow():
-        #import rpErrorHandler
-        try:
-            import userInterface_tk
-            print "imported tk"
-            import Tkinter
-            Root = Tkinter.Tk()
-            #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
-            del Tkinter
-         
-            App = userInterface_tk.userInput(Root)
-            App.pack(expand='yes', fill='both')
-            App.gVariables = gVariables
-             
-            Root.geometry('640x480+10+10')
-            Root.title('userInput')
-            Root.mainloop()
-#             while(True):
-#                 print "bucleando"
-#                 time.sleep(1)
-        except:
-            print "err"
-            pass
-
-def executeUserInputOtherWindows():
-        #import rpErrorHandler
-        time.sleep(0.8)
-        try:
-            import userInterface_tk
-            import Tkinter
-            Root = Tkinter.Tk()
-            Root.withdraw() #hide empty window that always appears after invoking TK
-            #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
-            del Tkinter
-            
-            gVariables.AppFrm5 = userInterface_tk.Form5(Root)
-            gVariables.AppFrm3 = userInterface_tk.Form3(Root)
-            gVariables.AppFrm1 = userInterface_tk.Form1(Root)
-            
-            
-            
-            gVariables.AppFrm5.gVariables = gVariables
-            gVariables.AppFrm3.gVariables = gVariables
-            gVariables.AppFrm1.gVariables = gVariables
-            
-            gVariables.AppFrm5.configureData()
-            gVariables.AppFrm3.configureData()
-            gVariables.AppFrm1.configureData()
-            
-            
-            #App.pack(expand='yes', fill='both')
-            #App.gVariables = gVariables
-            gVariables.AppFrm1.protocol('WM_DELETE_WINDOW', gVariables.dummy_fn)
-            gVariables.AppFrm3.protocol('WM_DELETE_WINDOW', gVariables.dummy_fn)
-            gVariables.AppFrm5.protocol('WM_DELETE_WINDOW', gVariables.dummy_fn)
-            #gVariables.AppFrm1.protocol('WM_DELETE_WINDOW', gVariables.hideForm1)
-            #gVariables.AppFrm3.protocol('WM_DELETE_WINDOW', gVariables.hideForm3)
-            #gVariables.AppFrm5.protocol('WM_DELETE_WINDOW', gVariables.hideForm5)
-            
-            
-            #gVariables.AppFrm1.overrideredirect(True)
-            #gVariables.AppFrm3.overrideredirect(True)
-            #gVariables.AppFrm5.overrideredirect(True)
-            
-            #gVariables.AppFrm1.attributes('-fullscreen', True)
-            #gVariables.AppFrm3.attributes('-fullscreen', True)
-            #gVariables.AppFrm5.attributes('-fullscreen', True)
-            
-            #gVariables.AppFrm1.minsize(600,450)
-            #gVariables.AppFrm1.maxsize(500,850)
-            #gVariables.AppFrm1.geometry(500,400)
-            
-            #gVariables.AppFrm3.geometry('640x480+10+10')
-            
-            
-            gVariables.AppFrm1.title('Trial Events')
-            gVariables.AppFrm3.title('Parameters')
-            gVariables.AppFrm5.title('Comment')
-            
-            gVariables.AppFrm1.withdraw()
-            #gVariables.AppFrm1.mainloop()
-            gVariables.AppFrm3.withdraw()
-            #gVariables.AppFrm3.mainloop()
-            gVariables.AppFrm5.withdraw()
-            gVariables.AppFrm5.mainloop() #should exist at least one mainloop.
-            
-            
-#             while(True):
-#                 print "bucleando"
-#                 time.sleep(1)
-        except:
-            pass
-
-
-def exitTraining(key):
-    # Finalize this training and exits.
-    # Should get a comment from user before finishing, for documentation purposes.
-    #print "Asking user for comments about this training:"
-    #import pygame
-    #pygame.event.set_grab(True)
-    #st = gVariables.display.askUserInput("Write comment on this training:")
-    print "Exiting."
-    #gVariables.logger.info('Exit signal key = %s', key)
-    #gVariables.logger.info('Comment about this training: %s', st)
-    gVariables.p.terminate()
-    gVariables.display.exitDisplay()
-    #print "done with display"
-    #gVariables.videoDet.exit()
-    gVariables.videoDet.exit()
-    #print "done with videodet"
-    sys.exit(0)
-    
-
-
+    gVariables.logger.info('Training loop function started..')
 
 
 if __name__ == '__main__':
-    ######
-    # Input
-    ######
-#     import termios, fcntl, sys, os
-#     fd = sys.stdin.fileno()
-#     try:
-#         oldterm = termios.tcgetattr(fd)
-#         newattr = termios.tcgetattr(fd)
-#         newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
-#         termios.tcsetattr(fd, termios.TCSANOW, newattr)
-#     
-#         oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
-#         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
-#     except:
-#         print "Error capturing input."
     ####################
     # Video configuration
     ####################
