@@ -22,105 +22,10 @@ import logging
 
 
 class gVariables():
-    #class functions(): 
-    
-    @staticmethod
-    def hideForm1(toHide = True):
-        print "Hide Form 1."
-        #a = gVariables.AppFrm1.__Entry3MvmntWindowStart.get() 
-        if (toHide == True):
-            gVariables.AppFrm1.withdraw()
-            return;
-        gVariables.AppFrm1.get_changes()
-        
-        print "Reading variables "
-        a = gVariables.AppFrm1.var1_TStart #tone duration
-        b = gVariables.AppFrm1.var2_TEnd
-        c = gVariables.AppFrm1.var3_MWS
-        d = gVariables.AppFrm1.var4_MWE
-        e = gVariables.AppFrm1.var5_ITStart #changed to intertrial random1 time
-        f = gVariables.AppFrm1.var6_ITEnd #changed to intertrial random2 time
-        g = gVariables.AppFrm1.var7_Probab1
-        print a
-        print b
-        print c
-        print d
-        print e
-        print f
-        print g
-        gVariables.fn_setTone1Duration( float(a) )
-        gVariables.fn_setTone2Duration( float(b) )
-        gVariables.fn_setMovementWindowStart( float(c) ) 
-        gVariables.fn_setMovementWindowEnd( float(d) ) 
-        gVariables.fn_setITRandom1( float(e) )
-        gVariables.fn_setITRandom2( float(f) ) 
-        gVariables.fn_toneOneProbabilitySet(g/100.0)
-        
-        if (toHide == True):
-            gVariables.AppFrm1.withdraw()
-    
-    
-    @staticmethod
-    def hideForm3(toHide = True):
-        print "Hide Form 3."
-        
-        if (toHide == True):
-            gVariables.AppFrm3.withdraw()
-            return;
-        
-        gVariables.AppFrm3.get_changes()
-        
-        print "Reading variables "
-        a = gVariables.AppFrm3.var1_T1
-        b = gVariables.AppFrm3.var2_T2
-        c = gVariables.AppFrm3.var3_MA
-        d = gVariables.AppFrm3.var4_MT
-        e = gVariables.AppFrm3.var5_IT
-        f = gVariables.AppFrm3.var6_ShowTracking
-        g = gVariables.AppFrm3.var7_ShowFeedback
-        print a
-        print b
-        print c
-        print d
-        print e
-        print f
-        print g
-        gVariables.fn_setFrequencyT1(a)
-        gVariables.fn_setFrequencyT2(b)
-        gVariables.fn_movementThresholdSet(c)
-        gVariables.fn_movementTimeSet(d)
-        gVariables.fn_idleTimeSet(e)
-        if (toHide == True):
-            gVariables.AppFrm3.withdraw()
-    
-    @staticmethod
-    def hideForm5(toHide = True):
-        print "Hide Form 3."
-        if (toHide == True):
-            gVariables.AppFrm5.withdraw()
-            gVariables.AppFrm5.apply_comment()
-            #print "current comment: ", gVariables.trial_comment
-            return;
-        pass
-    
-    @staticmethod
-    def showFrame1():
-        gVariables.AppFrm1.deiconify()
-        print "Showing Frame 1"
-    
-    @staticmethod
-    def showFrame3():
-        gVariables.AppFrm3.deiconify()
-        print "Showing Frame 3"
-    
-    @staticmethod
-    def showFrame5():
-        gVariables.AppFrm5.deiconify()
-        print "Showing Frame 5"
     
     @staticmethod
     def dummy_fn():
-            print "testing"
+        print "testing"
     
     @staticmethod
     def fn_giveDrop():
@@ -142,6 +47,7 @@ class gVariables():
     def fn_closeValve():
             gVariables.logger.info('valve close')
             gVariables.valve1.close()
+    
     @staticmethod
     def fn_openValve():
         gVariables.logger.info('valve open')
@@ -184,8 +90,6 @@ class gVariables():
         gVariables.toneOneProbability = value_given
         print "Tone One Probabilty changed to : " + str(gVariables.toneOneProbability * 100) + " %"
     
-    
-    
     @staticmethod
     def fn_setITRandom1(value_given):
         gVariables.interTrialRandom1Time = value_given
@@ -219,7 +123,6 @@ class gVariables():
         else:
             print "Tone 1 Duration is already at value: ", value_given
     
-    
     @staticmethod
     def fn_setTone2Duration(value_given):
         if (value_given != gVariables.soundGenDuration2):
@@ -230,7 +133,6 @@ class gVariables():
         else:
             print "Tone 2 Duration is already at value: ", value_given
     
-    
     @staticmethod
     def fn_setFrequencyT1(freq):
         if ( int(freq) != gVariables.soundGenFrequency1):
@@ -240,7 +142,6 @@ class gVariables():
             gVariables.s1 = soundGen.soundGen(gVariables.soundGenFrequency1, gVariables.soundGenDuration1)
         else:
             print "frequency for Tone 1 already set at ", freq
-        
     
     @staticmethod
     def fn_setFrequencyT2(freq):
@@ -293,22 +194,35 @@ class gVariables():
     
     @staticmethod
     def fn_startStopTraining(flag):
-        if (flag == 1):
+        #the flag comes from the API/GUICheck system.
+        #However, it is best to check if the training has started probing our own variables
+        #and override the flag information:
+        if (gVariables.trialStarted == False):
+            #the trial is "startable"
+            flg = 1
+        else:
+            #the trial has started, is stoppable.
+            flg = 2
+        
+        if (flg == 1):
             restartTraining()
-        if (flag == 2):
+        if (flg == 2):
             stopTraining()
     
     @staticmethod
     def fn_pauseResumeTraining(flag):
+        #the flag comes from the API/GUICheck system.
+        #However, it is best to check if the training is resumable or pausable probing our own variables
+        #and override the flag information:
         if (gVariables.trialStarted == True):
-            if (flag == 1):
-                resumeTraining()
-                #print "Resuming Tone Training."
-            if (flag == 2):
+            if (gVariables.trialExecuting == True):
+                #trial started and executing, is pausable
                 pauseTraining()
-                #print "Tone Training paused."
+            else:
+                #trial started and NOT executing, is resumable
+                resumeTraining()
         else:
-            print "Trial has not been started and cannot be paused or resumed."
+            print "fn_pauseResumeTraining: \n   Trial has not been started and cannot be paused or resumed."
     
     @staticmethod
     def fn_showTrackingFeedback():
@@ -723,7 +637,7 @@ def GUICheck():
             print "GUICheck: done."
 
 def restartTraining():
-        # print "Restarting."
+        # Starts or restarts training.
         try:
             import timeit
             gVariables.start_time = timeit.default_timer()
@@ -735,9 +649,9 @@ def restartTraining():
         gVariables.trialCount = 0
         gVariables.successTrialCount = 0
         gVariables.dropsAmountGivenManually = 0
-        gVariables.trialExecuting = True
         gVariables.logger.info('Variables set. Starting %s' % gVariables.trainingName)
         gVariables.trialStarted = True
+        gVariables.trialExecuting = True
         print "Tone Training started."
         print "  %d seconds: tone" % gVariables.soundGenDuration1
         print "  %d seconds: detection of movement" % (gVariables.eventTime2_movement - 
@@ -746,13 +660,14 @@ def restartTraining():
                                                                                gVariables.interTrialRandom2Time)
     
 def stopTraining():
-        gVariables.trialExecuting = False
+    #Stop
         gVariables.logger.info('%s stopped.' % gVariables.trainingName)
         gVariables.logger.info('Success rate: %s' % gVariables.successRate)
         gVariables.logger.info('Movement trials: %d / %d' % (gVariables.successMovementTrialCount, gVariables.movementTrialCount))
         gVariables.logger.info('Idle trials: %d / %d' % (gVariables.successIdleTrialCount, gVariables.idleTrialCount))
         gVariables.logger.info('Drops given manually: %r' % gVariables.dropsAmountGivenManually)
         gVariables.trialStarted = False
+        gVariables.trialExecuting = False
         print "Tone Training stopped."
 
 def pauseTraining():
