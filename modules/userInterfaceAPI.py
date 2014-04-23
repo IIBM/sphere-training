@@ -9,6 +9,7 @@ class userInterface_API:
         print "initializing userInterfaceAPI"
         #put initialization variables here.
         #self.launch_glade() # by design, won't initialize the gtk main loop from the init but from outside.
+        self.training_started = False
         if (toStart == True):
             self.launch_glade()
         print "userInterfaceAPI created."
@@ -59,6 +60,7 @@ class userInterface_API:
     
     def overrideaction_startTraining(self):
         print "Default API: Start Training"
+        self.training_started = True 
         print "ns: ", ns
         print ns.message1
         ns.message1 = 5
@@ -67,6 +69,7 @@ class userInterface_API:
     
     def overrideaction_stopTraining(self):
         print "Default API: Stop Training"
+        self.training_started = False
         print "ns: ", ns
         print ns.message1
         ns.message1 = 6
@@ -74,7 +77,7 @@ class userInterface_API:
         print "Default API: done."
     
     def overrideaction_pauseTraining(self):
-        print "Default API: Pause Training"
+        print "Default API: Pause / Resume Training"
         print "ns: ", ns
         print ns.message1
         ns.message1 = 7
@@ -82,7 +85,7 @@ class userInterface_API:
         print "Default API: done."
     
     def overrideaction_resumeTraining(self):
-        print "Default API: Resume Training"
+        print "Default API: Pause / Resume Training"
         print "ns: ", ns
         print ns.message1
         ns.message1 = 8
