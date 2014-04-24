@@ -20,7 +20,37 @@ class sphereVideoDetection():
     mustquit = 0
     def __init__ (self, videosource, width=640, height=480) :
         import track_bola_utils
-        import configSphereVideoDetection
+        import os
+        try:
+            import configSphereVideoDetection
+        except ImportError:
+            print "File configSphereVideoDetection.py not found. Generating a new copy..."
+            a = os.getcwd() + "/"
+            print a
+            import shutil
+            shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
+            import configSphereVideoDetection
+            print "configSphereVideoDetection.py copied and imported successfully."
+        except:
+            print "Error importing configSphereVideoDetection."
+            os._exit(1)
+        #import configSphereVideoDetection
+        
+        try:
+            import configCamera
+        except ImportError:
+            print "File configCamera.py not found. Generating a new copy..."
+            a = os.getcwd() + "/"
+            print a
+            import shutil
+            shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
+            import configCamera
+            print "configCamera.py copied and imported successfully."
+        except:
+            print "Error importing configCamera."
+            os._exit(1)
+        #import configCamera
+        
         self.winName = configSphereVideoDetection.WINDOW_TITLE
         # declare self variables to use.
         
@@ -90,7 +120,6 @@ class sphereVideoDetection():
         self.last_saved_time_gp = timeit.default_timer()  # general purpose time counter
         
         # import camera parameters from file:
-        import configCamera
         self.CAM_BRIGHTNESS_VAR = configCamera.CAM_BRIGHTNESS_VAR
         self.CAM_CONTRAST_VAR = configCamera.CAM_CONTRAST_VAR
         self.CAM_SATURATION_VAR = configCamera.CAM_SATURATION_VAR
