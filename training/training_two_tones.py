@@ -244,7 +244,36 @@ class gVariables():
     def fn_hideUserFeedback():
         gVariables.videoDet.setUserFeedback(False)
         pass
-    ##
+    
+    ####
+    import os
+    try:
+        import configvideo
+    except ImportError:
+        print "File configvideo.py not found. Generating a new copy..."
+        a = (os.getcwd().split("/training") [0]) + "/modules/"
+        import shutil
+        shutil.copyfile(a+"configvideo.py.example", a+"configvideo.py")
+        import configvideo
+        print "configvideo.py copied and imported successfully."
+    except:
+        print "Error importing configvideo."
+        os._exit(1)
+    
+    try:
+        import config_training_two_tones as cfgtwotones
+    except ImportError:
+        print "File config_training_two_tones.py not found. Generating a new copy..."
+        a = os.getcwd() + "/"
+        print a
+        import shutil
+        shutil.copyfile(a+"config_training_two_tones.py.example", a+"config_training_two_tones.py")
+        import config_training_two_tones as cfgtwotones
+        print "config_training_two_tones.py copied and imported successfully."
+    except:
+        print "Error importing config_training_two_tones."
+        os._exit(1)
+    ####
     import config_training_two_tones as cfgtwotones
     trainingName = cfgtwotones.trainingName
     # relevant Training variables
@@ -778,14 +807,7 @@ def trainingInit():
 
 
 if __name__ == '__main__':
-    ####################
-    # Video configuration
-    ####################
-    try:
-        from configvideo import *
-    except ImportError:
-        print "File configvideo.py not found."
-    except:
-        print "Error importing configvideo" 
+    from configvideo import *
     ###############
     trainingInit()
+    
