@@ -245,8 +245,12 @@ class gVariables():
         gVariables.videoDet.setUserFeedback(False)
         pass
     
+    pass
+    ####
+    #training init: check for modules and dependencies. Copy from '*.py.example' if needed
     ####
     import os
+    
     try:
         import configvideo
     except ImportError:
@@ -258,6 +262,33 @@ class gVariables():
         print "configvideo.py copied and imported successfully."
     except:
         print "Error importing configvideo."
+        os._exit(1)
+    
+    
+    try:
+        import configSphereVideoDetection
+    except ImportError:
+        print "File configSphereVideoDetection.py not found. Generating a new copy..."
+        a = (os.getcwd().split("/training") [0]) + "/modules/"
+        import shutil
+        shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
+        import configvideo
+        print "configSphereVideoDetection.py copied and imported successfully."
+    except:
+        print "Error importing configSphereVideoDetection."
+        os._exit(1)
+    
+    try:
+        import configCamera
+    except ImportError:
+        print "File configCamera.py not found. Generating a new copy..."
+        a = (os.getcwd().split("/training") [0]) + "/modules/"
+        import shutil
+        shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
+        import configvideo
+        print "configCamera.py copied and imported successfully."
+    except:
+        print "Error importing configCamera."
         os._exit(1)
     
     try:
@@ -274,6 +305,9 @@ class gVariables():
         print "Error importing config_training_two_tones."
         os._exit(1)
     ####
+    # End of checking existance of config files.
+    #
+    
     import config_training_two_tones as cfgtwotones
     trainingName = cfgtwotones.trainingName
     # relevant Training variables
