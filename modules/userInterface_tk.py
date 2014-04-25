@@ -2,18 +2,44 @@
 
 import rpErrorHandler
 from Tkinter import *
+import time
 #------------------------------------------------------------------------------#
 #                                                                              #
 #                                    Form1                                     #
 #                                                                              #
 #------------------------------------------------------------------------------#
+
+class gVars():
+    pass
+
+class GUIGTK_Class:
+        def __init__(self):
+            import threading
+            print "Initializing GUI GTK class."
+            thread0 = threading.Thread(target=startFrame0 , name="Frame0")
+            thread0.start()
+            
+            thread1 = threading.Thread(target=startFrame1 , name="Frame1")
+            time.sleep(0.2)
+            thread1.start()
+            
+            thread3 = threading.Thread(target=startFrame3 , name="Frame3")
+            time.sleep(0.2)
+            thread3.start()
+            
+            thread5 = threading.Thread(target=startFrame5 , name="Frame5")
+            time.sleep(0.2)
+            thread5.start()
+            
+            #startFrame1()
+            pass
+
 class Form1(Toplevel):
     def __init__(self,Master=None,**kw):
         kw['class_'] = 'Frame'
         #
         #Your code here
         #FORM: Trial Events
-
         apply(Toplevel.__init__,(self,Master),kw)
         self.bind('<Destroy>',self.__on_Form1_Dstry)
         self.__Frame2 = Frame(self)
@@ -774,6 +800,97 @@ class userInput(Frame):
     #Start of event handler methods
     #
 
+    def overrideaction_drop(self):
+        print ".-Drop"
+        pass
+    
+    
+    @staticmethod
+    def hideForm1(self, toHide = True):
+        print "Hide Form 1."
+        #a = gVariables.AppFrm1.__Entry3MvmntWindowStart.get() 
+        if (toHide == True):
+            self.AppFrm1.withdraw()
+            return;
+        self.AppFrm1.get_changes()
+        
+        print "Reading variables "
+        a = self.AppFrm1.var1_TStart #tone duration
+        b = self.AppFrm1.var2_TEnd
+        c = self.AppFrm1.var3_MWS
+        d = self.AppFrm1.var4_MWE
+        e = self.AppFrm1.var5_ITStart #changed to intertrial random1 time
+        f = self.AppFrm1.var6_ITEnd #changed to intertrial random2 time
+        g = self.AppFrm1.var7_Probab1
+        print a
+        print b
+        print c
+        print d
+        print e
+        print f
+        print g
+    
+    
+    @staticmethod
+    def hideForm3(toHide = True):
+        print "Hide Form 3."
+        
+        if (toHide == True):
+            gVariables.AppFrm3.withdraw()
+            return;
+        
+        gVariables.AppFrm3.get_changes()
+        
+        print "Reading variables "
+        a = gVariables.AppFrm3.var1_T1
+        b = gVariables.AppFrm3.var2_T2
+        c = gVariables.AppFrm3.var3_MA
+        d = gVariables.AppFrm3.var4_MT
+        e = gVariables.AppFrm3.var5_IT
+        f = gVariables.AppFrm3.var6_ShowTracking
+        g = gVariables.AppFrm3.var7_ShowFeedback
+        print a
+        print b
+        print c
+        print d
+        print e
+        print f
+        print g
+        gVariables.fn_setFrequencyT1(a)
+        gVariables.fn_setFrequencyT2(b)
+        gVariables.fn_movementThresholdSet(c)
+        gVariables.fn_movementTimeSet(d)
+        gVariables.fn_idleTimeSet(e)
+        if (toHide == True):
+            gVariables.AppFrm3.withdraw()
+    
+    @staticmethod
+    def hideForm5(toHide = True):
+        print "Hide Form 3."
+        if (toHide == True):
+            gVariables.AppFrm5.withdraw()
+            gVariables.AppFrm5.apply_comment()
+            #print "current comment: ", gVariables.trial_comment
+            return;
+        pass
+    
+    @staticmethod
+    def showFrame1():
+        print "Showing Frame 1"
+        gVars.AppFrm1.deiconify()
+        
+        
+    
+    @staticmethod
+    def showFrame3():
+        gVars.AppFrm3.deiconify()
+        print "Showing Frame 3"
+    
+    @staticmethod
+    def showFrame5():
+        gVars.AppFrm5.deiconify()
+        print "Showing Frame 5"
+    
 
     def __on_Text1KeyInput_Key(self,Event=None):
         #print "Key Pressed."
@@ -846,27 +963,13 @@ class userInput(Frame):
         pass
 
     def __on_btnComment_ButRel_1(self,Event=None):
-        #print "Parameters"
-        #tk = Tk()
-#         App = Form3(self)
-#         App.title('Form3')
-#         App.gVariables = self.gVariables
-#         pass
-        try:
-            #tk = Tk()
-            #App = Form1(tk)
-            #App.withdraw()
-            
-            #App.title('Form1')
-            self.gVariables.showFrame5()
-            
-        except:
-            pass
+        self.showFrame5()
 
     def __on_btnDrop_ButRel_1(self,Event=None):
         #pressed Drop
         print "Drop"
-        self.gVariables.fn_giveDrop()
+        #self.gVariables.fn_giveDrop()
+        self.overrideaction_drop()
         pass
 
     def __on_btnExit_ButRel_1(self,Event=None):
@@ -878,38 +981,11 @@ class userInput(Frame):
         pass
 
     def __on_btnFrmEditParameters_ButRel_1(self,Event=None):
-        #print "Parameters"
-        #tk = Tk()
-#         App = Form3(self)
-#         App.title('Form3')
-#         App.gVariables = self.gVariables
-#         pass
-        try:
-            #tk = Tk()
-            #App = Form1(tk)
-            #App.withdraw()
-            
-            #App.title('Form1')
-            self.gVariables.showFrame3()
-            
-        except:
-            pass
+        #print "Parameters
+        self.showFrame3()
 
     def __on_btnFrmTrialEvents_ButRel_1(self,Event=None):
-        try:
-            #tk = Tk()
-            #App = Form1(tk)
-            #App.withdraw()
-            
-            #App.title('Form1')
-            self.gVariables.showFrame1()
-            
-        except:
-            pass
-        
-        
-        
-        #tk.mainloop()
+        self.showFrame1()
         pass
 
     def __on_btnOpen_ButRel_1(self,Event=None):
@@ -954,34 +1030,76 @@ class userInput(Frame):
     #Start of non-Rapyd user code
     #
 
-
-try:
-    #--------------------------------------------------------------------------#
-    # User code should go after this comment so it is inside the "try".        #
-    #     This allows rpErrorHandler to gain control on an error so it         #
-    #     can properly display a Rapyd-aware error message.                    #
-    #--------------------------------------------------------------------------#
-
-    #Adjust sys.path so we can find other modules of this project
-    import sys
-    if '.' not in sys.path:
-        sys.path.append('.')
-    #Put lines to import other modules of this project here
+def startFrame0():
+    Root = Tk()
+    import Tkinter
+    #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
+    del Tkinter
+    App = userInput(Root)
+    App.pack(expand='yes',fill='both')
     
-    if __name__ == '__main__':
+    Root.geometry('640x480+10+10')
+    Root.title('tk GUI Main Frame.')
+    Root.mainloop()
 
-        Root = Tk()
-        import Tkinter
-        Tkinter.CallWrapper = rpErrorHandler.CallWrapper
-        del Tkinter
-        App = userInput(Root)
-        App.pack(expand='yes',fill='both')
+def startFrame1():
+    import Tkinter
+    Root2 = Tkinter.Tk()
+    Root2.withdraw()
+    #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
+    del Tkinter
+    
+    gVars.AppFrm1 = Form1(Root2)
+    #AppFrm1.gVariables = gVariables
+    #AppFrm1.configureData()
+    #App.pack(expand='yes', fill='both')
+    #App.gVariables = gVariables
+    #AppFrm1.protocol('WM_DELETE_WINDOW', gVariables.hideForm1)
+    
+    #gVariables.AppFrm1.geometry('640x480+10+10')
+    gVars.AppFrm1.title('Trial Events.')
+    gVars.AppFrm1.withdraw()
+    gVars.AppFrm1.mainloop()
+    pass
 
-        Root.geometry('640x480+10+10')
-        Root.title('userInput')
-        Root.mainloop()
-    #--------------------------------------------------------------------------#
-    # User code should go above this comment.                                  #
-    #--------------------------------------------------------------------------#
-except:
-    rpErrorHandler.RunError()
+def startFrame3():
+    import Tkinter
+    Root = Tkinter.Tk()
+    Root.withdraw()
+    #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
+    del Tkinter
+    
+    gVars.AppFrm3 = Form3(Root)
+    #AppFrm1.gVariables = gVariables
+    #AppFrm1.configureData()
+    #App.pack(expand='yes', fill='both')
+    #App.gVariables = gVariables
+    #AppFrm1.protocol('WM_DELETE_WINDOW', gVariables.hideForm1)
+    
+    #gVariables.AppFrm1.geometry('640x480+10+10')
+    gVars.AppFrm3.title('Parameters.')
+    gVars.AppFrm3.withdraw()
+    gVars.AppFrm3.mainloop()
+    pass
+
+def startFrame5():
+    import Tkinter
+    Root = Tkinter.Tk()
+    Root.withdraw()
+    #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
+    del Tkinter
+    gVars.AppFrm5 = Form5(Root)
+    #AppFrm1.gVariables = gVariables
+    #AppFrm1.configureData()
+    #App.pack(expand='yes', fill='both')
+    #App.gVariables = gVariables
+    #AppFrm1.protocol('WM_DELETE_WINDOW', gVariables.hideForm1)
+    
+    #gVariables.AppFrm1.geometry('640x480+10+10')
+    gVars.AppFrm5.title('Comment.')
+    gVars.AppFrm5.withdraw()
+    gVars.AppFrm5.mainloop()
+    pass
+
+if __name__ == '__main__':
+    a = GUIGTK_Class()
