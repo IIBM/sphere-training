@@ -10,7 +10,7 @@
     If the subject succed in the task, gets a reward.
     There 50 % propabilty of ocurrance for each tone. If one tone appears three
     time in a row, the other tone is fixed in the next trial. 
-    The inter trial delay is random between 3 to 6 seconds.
+    The inter trial delay is random between 3 to 6 seconds.><
     
 """
 ######################################################><
