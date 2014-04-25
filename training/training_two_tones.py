@@ -245,68 +245,72 @@ class gVariables():
         gVariables.videoDet.setUserFeedback(False)
         pass
     
+    def __checkModules():
+            import os
+            
+            try:
+                import configvideo
+            except ImportError:
+                print "File configvideo.py not found. Generating a new copy..."
+                a = (os.getcwd().split("/training") [0]) + "/modules/"
+                import shutil
+                shutil.copyfile(a+"configvideo.py.example", a+"configvideo.py")
+                import configvideo
+                print "configvideo.py copied and imported successfully."
+            except:
+                print "Error importing configvideo."
+                os._exit(1)
+            
+            
+            try:
+                import configSphereVideoDetection
+            except ImportError:
+                print "File configSphereVideoDetection.py not found. Generating a new copy..."
+                a = (os.getcwd().split("/training") [0]) + "/modules/"
+                import shutil
+                shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
+                import configvideo
+                print "configSphereVideoDetection.py copied and imported successfully."
+            except:
+                print "Error importing configSphereVideoDetection."
+                os._exit(1)
+            
+            try:
+                import configCamera
+            except ImportError:
+                print "File configCamera.py not found. Generating a new copy..."
+                a = (os.getcwd().split("/training") [0]) + "/modules/"
+                import shutil
+                shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
+                import configvideo
+                print "configCamera.py copied and imported successfully."
+            except:
+                print "Error importing configCamera."
+                os._exit(1)
+            
+            try:
+                import config_training_two_tones as cfgtwotones
+            except ImportError:
+                print "File config_training_two_tones.py not found. Generating a new copy..."
+                a = os.getcwd() + "/"
+                print a
+                import shutil
+                shutil.copyfile(a+"config_training_two_tones.py.example", a+"config_training_two_tones.py")
+                import config_training_two_tones as cfgtwotones
+                print "config_training_two_tones.py copied and imported successfully."
+            except:
+                print "Error importing config_training_two_tones."
+                os._exit(1)
+            ####
+            # End of checking existance of config files.
+            
+            pass
+            ####
+            #training init: check for modules and dependencies. Copy from '*.py.example' if needed
+            ####
+    
     pass
-    ####
-    #training init: check for modules and dependencies. Copy from '*.py.example' if needed
-    ####
-    import os
-    
-    try:
-        import configvideo
-    except ImportError:
-        print "File configvideo.py not found. Generating a new copy..."
-        a = (os.getcwd().split("/training") [0]) + "/modules/"
-        import shutil
-        shutil.copyfile(a+"configvideo.py.example", a+"configvideo.py")
-        import configvideo
-        print "configvideo.py copied and imported successfully."
-    except:
-        print "Error importing configvideo."
-        os._exit(1)
-    
-    
-    try:
-        import configSphereVideoDetection
-    except ImportError:
-        print "File configSphereVideoDetection.py not found. Generating a new copy..."
-        a = (os.getcwd().split("/training") [0]) + "/modules/"
-        import shutil
-        shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
-        import configvideo
-        print "configSphereVideoDetection.py copied and imported successfully."
-    except:
-        print "Error importing configSphereVideoDetection."
-        os._exit(1)
-    
-    try:
-        import configCamera
-    except ImportError:
-        print "File configCamera.py not found. Generating a new copy..."
-        a = (os.getcwd().split("/training") [0]) + "/modules/"
-        import shutil
-        shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
-        import configvideo
-        print "configCamera.py copied and imported successfully."
-    except:
-        print "Error importing configCamera."
-        os._exit(1)
-    
-    try:
-        import config_training_two_tones as cfgtwotones
-    except ImportError:
-        print "File config_training_two_tones.py not found. Generating a new copy..."
-        a = os.getcwd() + "/"
-        print a
-        import shutil
-        shutil.copyfile(a+"config_training_two_tones.py.example", a+"config_training_two_tones.py")
-        import config_training_two_tones as cfgtwotones
-        print "config_training_two_tones.py copied and imported successfully."
-    except:
-        print "Error importing config_training_two_tones."
-        os._exit(1)
-    ####
-    # End of checking existance of config files.
-    #
+    __checkModules()
     
     import config_training_two_tones as cfgtwotones
     trainingName = cfgtwotones.trainingName
@@ -812,11 +816,13 @@ def trainingInit():
     # valve:
     import valve
     gVariables.valve1 = valve.Valve()
+    gVariables.logger.info('Valve created.')
     # soundGen:
     import soundGen
     gVariables.s1 = soundGen.soundGen(gVariables.soundGenFrequency1, gVariables.soundGenDuration1)
     gVariables.s2 = soundGen.soundGen(gVariables.soundGenFrequency2, gVariables.soundGenDuration2)
     gVariables.trialExecuting = False  # boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
+    gVariables.logger.info('Soundgen init started..')
     #GUI:
     import multiprocessing
     manager = multiprocessing.Manager()
@@ -831,6 +837,7 @@ def trainingInit():
     gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
     gVariables.videoDet.setMovementTimeWindow(gVariables.movementTime)  # seconds that should be moving.
     gVariables.videoMovementMethod =  gVariables.videoDet.getMovementMethod()
+    gVariables.logger.info('sphereVideoDetection started.')
     #Display:
     initDisplay()
     #main Program Loop
