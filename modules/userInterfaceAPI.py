@@ -5,10 +5,10 @@ logger = logging.getLogger('userInterfaceAPI')
 
 class userInterface_API:
     usingTK = 0 #0: using GTk;   1: using TK
-    ns = 0 # message variable , that will be shared among processes.
+    ns = 0 # message variable (namespace), that will be shared among processes.
     
     
-    def __init__(self, toStart):
+    def __init__(self, toStart = False):
 
         logger.info( "initializing userInterfaceAPI" )
         #put initialization variables here.
@@ -427,11 +427,11 @@ class userInterface_API:
     
     def action_exit(self):
         logger.info( "Default API: Exiting GUI from API." )
-        logger.info( "ns: ", ns.__str__() )
+        #logger.info( "ns: ", str(ns) )
         print ns
         ns.message1 = 9
         print ns
-        logger.info( "ns: ", ns.__str__() )
+        #logger.info( "ns: ", str(ns) )
         logger.info( "Default API: done." )
         try:
                     import os
@@ -468,7 +468,7 @@ class userInterface_API:
         #thread1 = threading.Thread(target=self.thread_function, name="glade_GUI")
         #thread1.start()
         logger.info( "message variables: "+ self.ns.__str__() )
-        logger.info( self.__str__() +  "  Glade Interface Started" )
+        logger.info( str(self) +  "  Glade Interface Started" )
         self.thread_function()
         
         
@@ -478,7 +478,7 @@ class userInterface_API:
         #userInterface_glade.gtk.gdk.threads_init()
         #time.sleep(3)
         userInterface_glade.gtk.main()
-        logger.info( self.__str__() +  "  Glade Interface Finished." )
+        logger.info( str(self) +  "  Glade Interface Finished." )
         #while (True):
             #userInterface_glade.gtk.threads_enter()
             #userInterface_glade.gtk.main()
@@ -489,6 +489,12 @@ class userInterface_API:
         pass
 
 if __name__ == '__main__':
+    # create a logging format
+    formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    dateformat = '%Y/%m/%d %I:%M:%S %p'
+    logging.basicConfig(filename='logs/userInterfaceAPI.log', filemode='w',
+            level=logging.DEBUG, format=formatter, datefmt = dateformat)
+    logging.info('Start userInterfaceAPI Test')
     import multiprocessing
     import time
     print "init.."
@@ -501,3 +507,4 @@ if __name__ == '__main__':
         print p
     #a.dummy_fn()
     #a.launch_glade()
+    logging.info('End userInterfaceAPI Test')
