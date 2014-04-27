@@ -15,8 +15,9 @@ class userInterface_API:
         #self.launch_glade() # by design, won't initialize the gtk main loop from the init but from outside.
         self.training_started = False
         if (toStart == True):
-            self.launch_glade()
-        logger.info( "userInterfaceAPI created." )
+            #self.launch_glade()
+            self.launch_tkinter()
+        logger.info( "userInterfaceAPI started." )
     
     def setNamespace(self, nuevons):
         global ns
@@ -287,6 +288,7 @@ class userInterface_API:
         logger.info( "Default API: done." )
     
     def action_drop(self):
+        print "DROP from API"
         logger.info( "API: Drop" )
         try:
             self.overrideaction_drop()
@@ -471,7 +473,43 @@ class userInterface_API:
         logger.info( str(self) +  "  Glade Interface Started" )
         self.thread_function()
         
+    
+    def launch_tkinter(self):
+        import userInterface_tk
+        print "..1"
+        self.currentGUI = userInterface_tk.GUIGTK_Class()
+        time.sleep(5)
+        print "Overriding functions:"
+        print self.currentGUI.overrideaction_drop
+        self.currentGUI.overrideaction_drop()
+        self.currentGUI.overrideaction_drop = self.action_drop
+        self.currentGUI.overrideaction_drop()
+        print self.currentGUI.overrideaction_drop
+        self.currentGUI.overrideaction_reward = self.action_reward
+        self.currentGUI.overrideaction_open = self.action_open
+        self.currentGUI.overrideaction_close = self.action_close
+        self.currentGUI.overrideaction_startTraining = self.action_startTraining
+        self.currentGUI.overrideaction_stopTraining = self.action_stopTraining
+        self.currentGUI.overrideaction_pauseTraining = self.action_pauseTraining
+        self.currentGUI.overrideaction_resumeTraining = self.action_resumeTraining
+        self.currentGUI.overrideaction_applyC = self.action_applyC
+        self.currentGUI.overrideaction_applyP = self.action_applyP
+        self.currentGUI.overrideaction_applyTE = self.action_applyTE
+        self.currentGUI.overrideaction_testT1 = self.action_testT1
+        self.currentGUI.overrideaction_testT2 = self.action_testT2
+        self.currentGUI.overrideaction_showfeedback = self.action_showfeedback
+        self.currentGUI.overrideaction_showtracking = self.action_showtracking
+        self.currentGUI.overrideaction_hidefeedback = self.action_hidefeedback
+        self.currentGUI.overrideaction_hidetracking = self.action_hidetracking
+        self.currentGUI.overrideaction_exit = self.action_exit
+        print "..2"
+        logger.info( "message variables: "+ self.ns.__str__() )
+        logger.info( str(self) +  "  Tkinter Interface Started" )
+        print "..3"
+        while True:
+            time.sleep(1.0)
         
+    
     def thread_function(self):
         import userInterface_glade
         import time
@@ -500,11 +538,4 @@ if __name__ == '__main__':
     print "init.."
     p = multiprocessing.Process(target=userInterface_API(True))
     p.start()
-    print "finish glade."
-    while(True):
-        time.sleep(1)
-        print "sleeping"
-        print p
-    #a.dummy_fn()
-    #a.launch_glade()
     logging.info('End userInterfaceAPI Test')
