@@ -516,13 +516,20 @@ class Form3(Toplevel):
         self.__Label9.pack(side='top')
         self.__Frame41 = Frame(self.__Frame34)
         self.__Frame41.pack(side='left')
-        self.__Listbox1 = Listbox(self.__Frame41,height=1,width=19)
-        self.__Listbox1.pack(side='top')
+        #self.__Listbox1 = Listbox(self.__Frame41,height=1,width=19)
+        pass
+        #self.__Listbox1.pack(side='top')
+        #
+        self.__EntryMethodUsed = Entry(self.__Frame41,width=6)
+        self.__EntryMethodUsed.pack(side='top')
+        #
         self.__Frame40 = Frame(self.__Frame34)
         self.__Frame40.pack(side='left')
-        self.__Button5 = Button(self.__Frame40,text='Apply')
-        self.__Button5.pack(side='left')
-        self.__Button5.bind('<ButtonRelease-1>',self.__on_Button5_ButRel_1)
+        pass
+        #self.__Button5 = Button(self.__Frame40,text='Apply')
+        #self.__Button5.pack(side='left')
+        #self.__Button5.bind('<ButtonRelease-1>',self.__on_Button5_ButRel_1)
+        pass
         self.__Frame53 = Frame(self.__Frame52)
         self.__Frame53.pack(side='left')
         self.__Label11 = Label(self.__Frame53,text='Movement Time:')
@@ -556,9 +563,11 @@ class Form3(Toplevel):
         #
         #Your code here
         self.__alreadyExecuted = 0
-        self.__Listbox1.insert( 0, "0-Accumulate Time")
-        self.__Listbox1.insert( 1, "1-Movement Vector")
-        self.__Listbox1.insert( 2, "2-Mvnt. Vector Binary")
+        pass
+        #self.__Listbox1.insert( 0, "0-Accumulate Time")
+        #self.__Listbox1.insert( 1, "1-Movement Vector")
+        #self.__Listbox1.insert( 2, "2-Mvnt. Vector Binary")
+        pass
         #let's read actual variables and assign them to the Entry classes and all that.
         
         self.__Entry1Tone1.insert(0, "1350")
@@ -566,6 +575,8 @@ class Form3(Toplevel):
         self.__Entry3MvntAm.insert(0,"40")
         self.__Entry4MvntTime.insert(0,"0.5")
         self.__Entry5IdleTime.insert(0,"1.0")
+        
+        self.__EntryMethodUsed.insert(0, "3")
         self.__showTracking = 0
         self.__showFeedback = 0
         print "Form3: Parameters loaded"
@@ -608,9 +619,6 @@ class Form3(Toplevel):
         freq1 = float( self.gVariables.idleTime )
         self.__Entry5IdleTime.insert(0, str(freq1))
         
-        #pending: select the user-configured listbox item.
-        #self.__Listbox1.
-        #self.__Listbox1.select_set(0, 1)
         #self.gVariables.videoMovementMethod
         
         pass
@@ -649,23 +657,6 @@ class Form3(Toplevel):
         pass
 
     def __on_Button5_ButRel_1(self,Event=None):
-        print "Apply Movement method"
-        #self.__Listbox1.
-        try:
-            self.var8_num_selected = self.__Listbox1.curselection()[0] #this gets the element selected by the user.
-            #This function shouldn't exist as the button was replaced / eliminated in the following versions.
-        except:
-            print "No movement method selected. Please click on the list and browse with arrow keys to select one."
-            pass
-#         if (num_selected == 0):
-#             #accumulate time
-#             pass
-#         elif (num_selected == 1):
-#             #movement vector
-#             pass
-#         elif (num_selected == 2):
-#             #movement vector Binary
-#             pass
         pass
 
     def __on_Form3_Dstry(self,Event=None):
