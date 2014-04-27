@@ -59,11 +59,12 @@ class GUIGTK_Class:
     @staticmethod
     def overrideaction_startTraining():
         #print "Start / Stop training"
-        logging.info( "Default: Start Training" )
+        logging.info( "Default: Start / Stop Training" )
         return 0
     
     @staticmethod
     def overrideaction_stopTraining():
+        #NOT USED
         #print "Start / Stop training"
         logging.info( "Default: Stop Training" )
         return 0
@@ -71,11 +72,12 @@ class GUIGTK_Class:
     @staticmethod
     def overrideaction_pauseTraining():
         #print "Pause / Resume training"
-        logging.info( "Default: Pause Training" )
+        logging.info( "Default: Pause / Resume Training" )
         return 0
     
     @staticmethod
     def overrideaction_resumeTraining():
+        #NOT USED
         #print "Pause / Resume training"
         logging.info( "Default: Resume Training" )
         return 0
@@ -87,12 +89,12 @@ class GUIGTK_Class:
     
     @staticmethod
     def overrideaction_applyP():
-        logging.info( "Default: Parameters" )
+        logging.info( "Default: Apply Parameters" )
         return 0
     
     @staticmethod
     def overrideaction_applyC():
-        logging.info( "Default: Comments" )
+        logging.info( "Default: Apply Comments" )
         return 0
     
     @staticmethod
@@ -267,13 +269,15 @@ class Form1(Toplevel):
 
     def __on_ApplyBtn_ButRel_1(self,Event=None):
         print "Test Apply Frm1"
+        self.get_changes()
         GUIGTK_Class.App.hideForm1(False)
+        GUIGTK_Class.overrideaction_applyTE()
         pass
     
     def __on_CloseBtn_ButRel_1(self,Event=None):
         GUIGTK_Class.App.hideForm1(True)
         pass
-
+    
     def __on_Form1_Dstry(self,Event=None):
         if ( self.__alreadyExecuted == 0):
             self.__alreadyExecuted = 1
@@ -305,7 +309,6 @@ class Form1(Toplevel):
         self.__Entry6ITEnd.delete(0,10) #removes 10 characters.
         self.__Entry6ITEnd.insert(0, self.gVariables.interTrialRandom2Time )
     
-    
     def get_changes(self):
         print "commiting changes to variables in Form 1.."
 #         print self.__Entry1TStart.get()
@@ -322,17 +325,15 @@ class Form1(Toplevel):
         self.var5_ITStart = self.__Entry5ITStart.get()
         self.var6_ITEnd = self.__Entry6ITEnd.get()
         self.var7_Probab1 = self.__Scale2.get()
-    
-    #
-    #Start of non-Rapyd user code
-    #
+        pass
 
+
+class Form3(Toplevel):
 #------------------------------------------------------------------------------#
 #                                                                              #
 #                                    Form3                                     #
 #                                                                              #
 #------------------------------------------------------------------------------#
-class Form3(Toplevel):
     def __init__(self,Master=None,**kw):
         kw['class_'] = 'Frame'
         #
@@ -579,7 +580,9 @@ class Form3(Toplevel):
 
     def __on_ApplyBtn_ButRel_1(self,Event=None):
         print "Test Apply Frm3"
+        self.get_changes()
         GUIGTK_Class.App.hideForm3(False)
+        GUIGTK_Class.overrideaction_applyP()
         pass
     
     def configureData(self):
@@ -614,43 +617,43 @@ class Form3(Toplevel):
 
     def __on_Button1TestT1_ButRel_1(self,Event=None):
         print "Test Tone 1"
-        self.gVariables.fn_tone1Test()
+        GUIGTK_Class.overrideaction_testT1()
         pass
 
     def __on_Button2TestT2_ButRel_1(self,Event=None):
         print "Test Tone 2"
-        self.gVariables.fn_tone2Test()
+        GUIGTK_Class.overrideaction_testT2()
         pass
 
     def __on_Button3SHTracking_ButRel_1(self,Event=None):
         if ( self.__showTracking == 0):
             print "hiding tracking"
             self.__showTracking = 1
-            self.gVariables.fn_hideTrackingFeedback()
+            GUIGTK_Class.overrideaction_hidetracking()
         elif ( self.__showTracking == 1):
             print "showing tracking"
             self.__showTracking = 0
-            self.gVariables.fn_showTrackingFeedback()
+            GUIGTK_Class.overrideaction_showtracking()
         pass
 
     def __on_Button4SHFeedback_ButRel_1(self,Event=None):
         if ( self.__showFeedback == 0):
             print "hiding feedback"
             self.__showFeedback = 1
-            self.gVariables.fn_hideUserFeedback()
+            GUIGTK_Class.overrideaction_hidefeedback()
             
         elif ( self.__showFeedback == 1):
             print "showing feedback"
             self.__showFeedback = 0
-            self.gVariables.fn_showUserFeedback()
+            GUIGTK_Class.overrideaction_showfeedback()
         pass
 
     def __on_Button5_ButRel_1(self,Event=None):
         print "Apply Movement method"
         #self.__Listbox1.
         try:
-            num_selected = self.__Listbox1.curselection()[0] #this gets the element selected by the user.
-            self.gVariables.fn_setMovementMethod(num_selected)
+            self.var8_num_selected = self.__Listbox1.curselection()[0] #this gets the element selected by the user.
+            #This function shouldn't exist as the button was replaced / eliminated in the following versions.
         except:
             print "No movement method selected. Please click on the list and browse with arrow keys to select one."
             pass
@@ -666,9 +669,6 @@ class Form3(Toplevel):
         pass
 
     def __on_Form3_Dstry(self,Event=None):
-        if ( self.__alreadyExecuted == 0):
-            self.__alreadyExecuted = 1
-            print "Leaving Form3: Parameters"
         pass
     #
     #Start of non-Rapyd user code
@@ -688,21 +688,28 @@ class Form3(Toplevel):
         self.var4_MT = self.__Entry4MvntTime.get()
         self.var5_IT = self.__Entry5IdleTime.get()
         self.var6_ShowTracking = self.__showTracking
-        self.var7_ShowFeedback = self.__showFeedback
+        self.var7_ShowFeedback = self.__showFeedback 
+        self.var8_num_selected = -1
+        tempnum = -1
+        try:
+            tempnum = self.__Listbox1.curselection()[0]
+        except:
+            pass
+        if (tempnum != -1):
+            self.var8_num_selected = tempnum
 
 
+class Form5(Toplevel):
 #------------------------------------------------------------------------------#
 #                                                                              #
 #                                    Form5                                     #
 #                                                                              #
 #------------------------------------------------------------------------------#
-class Form5(Toplevel):
     def __init__(self,Master=None,**kw):
         kw['class_'] = 'Frame'
         #
         #Your code here
         #
-
         apply(Toplevel.__init__,(self,Master),kw)
         self.bind('<Destroy>',self.__on_Form5_Dstry)
         self.__lblComment = Label(self,text='Comment about this training:')
@@ -721,18 +728,16 @@ class Form5(Toplevel):
         self.__alreadyGone = 0
         self.__CommentString = ""
         print "Form5: Comment Frame loaded"
-        #
-    #
-    #Start of event handler methods
-    #
     
     
     def __on_ApplyBtn_ButRel_1(self,Event=None):
+        self.get_changes()
         GUIGTK_Class.App.hideForm5(True)
+        GUIGTK_Class.overrideaction_applyC()
         pass
 
     def __on_EntryComment_KeyRel(self,Event=None):
-        self.__CommentString = self.__EntryComment.get()
+        self.commentStr = self.__EntryComment.get()
         #print self.__CommentString
         pass
     
@@ -743,23 +748,22 @@ class Form5(Toplevel):
         self.__EntryComment.insert(0,tempstr)
         pass
     
+    def get_changes(self):
+        try:
+            self.commentStr = unicode(self.__EntryComment.get(), "utf-8")
+        except:
+            self.commentStr = self.__EntryComment.get()
     
     def __on_Form5_Dstry(self,Event=None):
-        if (self.__alreadyGone == 0):
-            print "leaving Form5"
-            self.gVariables.trial_comment =  self.__CommentString
-            self.__alreadyGone = 1
         pass
-    #
-    #Start of non-Rapyd user code
-    #
 
+
+class userInput(Frame):
 #------------------------------------------------------------------------------#
 #                                                                              #
 #                                  userInput                                   #
 #                                                                              #
 #------------------------------------------------------------------------------#
-class userInput(Frame):
     def __init__(self,Master=None,**kw):
         kw['takefocus'] = None
         #
@@ -890,7 +894,7 @@ class userInput(Frame):
         if (toHide == True):
             GUIGTK_Class.AppFrm1.withdraw()
             return;
-        GUIGTK_Class.AppFrm1.get_changes()
+        #GUIGTK_Class.AppFrm1.get_changes()
         
         print "Reading variables "
         a = GUIGTK_Class.AppFrm1.var1_TStart #tone duration
@@ -907,6 +911,13 @@ class userInput(Frame):
         print e
         print f
         print g
+        GUIGTK_Class.toneStart = a
+        GUIGTK_Class.toneEnd = b
+        GUIGTK_Class.movementWindowStart = c
+        GUIGTK_Class.movementWindowEnd = d
+        GUIGTK_Class.interTrialStart = e
+        GUIGTK_Class.interTrialEnd = f
+        GUIGTK_Class.probabilityToneOne = g
     
     
     @staticmethod
@@ -917,7 +928,7 @@ class userInput(Frame):
             GUIGTK_Class.AppFrm3.withdraw()
             return;
         
-        GUIGTK_Class.AppFrm3.get_changes()
+        #GUIGTK_Class.AppFrm3.get_changes()
         
         print "Reading variables "
         a = GUIGTK_Class.AppFrm3.var1_T1
@@ -927,6 +938,7 @@ class userInput(Frame):
         e = GUIGTK_Class.AppFrm3.var5_IT
         f = GUIGTK_Class.AppFrm3.var6_ShowTracking
         g = GUIGTK_Class.AppFrm3.var7_ShowFeedback
+        h = GUIGTK_Class.AppFrm3.var8_num_selected
         print a
         print b
         print c
@@ -934,22 +946,28 @@ class userInput(Frame):
         print e
         print f
         print g
-        GUIGTK_Class.fn_setFrequencyT1(a)
-        GUIGTK_Class.fn_setFrequencyT2(b)
-        GUIGTK_Class.fn_movementThresholdSet(c)
-        GUIGTK_Class.fn_movementTimeSet(d)
-        GUIGTK_Class.fn_idleTimeSet(e)
+        print h
+        GUIGTK_Class.frequencyTone1 = a
+        GUIGTK_Class.frequencyTone2 = b
+        GUIGTK_Class.movementAmount = c
+        GUIGTK_Class.movementMethod = h
+        GUIGTK_Class.movementTime = d
+        GUIGTK_Class.idleTime = e
+        
         if (toHide == True):
             GUIGTK_Class.AppFrm3.withdraw()
     
     @staticmethod
     def hideForm5(toHide = True):
-        print "Hide Form 3."
+        print "Hide Form 5."
+        GUIGTK_Class.comment = GUIGTK_Class.AppFrm5.commentStr
+        print GUIGTK_Class.comment
         if (toHide == True):
             GUIGTK_Class.AppFrm5.withdraw()
             #GUIGTK_Class.AppFrm5.apply_comment()
             #print "current comment: ", gVariables.trial_comment
             return;
+
         pass
     
     @staticmethod
@@ -989,7 +1007,7 @@ class userInput(Frame):
         pass
 
     def __on_Text1KeyInput_Key_K(self,Event=None):
-        print "Pressed K : ","Start Training"
+        print "Pressed K : ","Start / Stop Training"
         GUIGTK_Class.overrideaction_startTraining()
         pass
 
@@ -999,7 +1017,7 @@ class userInput(Frame):
         pass
 
     def __on_Text1KeyInput_Key_P(self,Event=None):
-        print "Pressed P : ", "Pause Training"
+        print "Pressed P : ", "Pause / Resume Training"
         GUIGTK_Class.overrideaction_pauseTraining()
         pass
 
@@ -1019,12 +1037,12 @@ class userInput(Frame):
         pass
 
     def __on_Text1KeyInput_Key_k(self,Event=None):
-        print "Pressed k : ","Start Training"
+        print "Pressed k : ","Start / Stop Training"
         GUIGTK_Class.overrideaction_startTraining()
         pass
 
     def __on_Text1KeyInput_Key_p(self,Event=None):
-        print "Pressed p : ", "Pause Training"
+        print "Pressed p : ", "Pause / Resume Training"
         GUIGTK_Class.overrideaction_pauseTraining()
         pass
 
@@ -1071,7 +1089,7 @@ class userInput(Frame):
 
     def __on_btnPause_ButRel_1(self,Event=None):
         #pressed Pause
-        print "Pause / Resume"
+        print "Pause / Resume Training"
         GUIGTK_Class.overrideaction_pauseTraining()
         pass
 
@@ -1083,7 +1101,7 @@ class userInput(Frame):
 
     def __on_btnStart_ButRel_1(self,Event=None):
         #pressed Start
-        print "Start Training"
+        print "Start / Stop Training"
         GUIGTK_Class.overrideaction_startTraining()
         pass
 
@@ -1094,12 +1112,8 @@ class userInput(Frame):
         pass
     
     def exitingUserInterface(self):
-        print "Exiting Program"
-#         try:
-#             s = self.__txtComment.get()
-#             print "Comment saved: ",s
-#         except:
-#             pass
+        print "Exiting userInterface_tk Program"
+        logging.info('Exiting userInterface_tk')
         os._exit(0)
     #
     #Start of non-Rapyd user code
