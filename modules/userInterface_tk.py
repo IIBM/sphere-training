@@ -680,14 +680,7 @@ class Form3(Toplevel):
         self.var5_IT = self.__Entry5IdleTime.get()
         self.var6_ShowTracking = self.__showTracking
         self.var7_ShowFeedback = self.__showFeedback 
-        self.var8_num_selected = -1
-        tempnum = -1
-        try:
-            tempnum = self.__Listbox1.curselection()[0]
-        except:
-            pass
-        if (tempnum != -1):
-            self.var8_num_selected = tempnum
+        self.var8_num_selected = self.__EntryMethodUsed.get()
 
 
 class Form5(Toplevel):
