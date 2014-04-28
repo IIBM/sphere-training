@@ -27,7 +27,7 @@ class userInterface_API:
         #self.launch_glade()
     
     def setInitialValues(self):
-        print "UIAPI: to set initial values."
+        print "User Interface API: sending variables to GUI, with the purpose of setting up initial values."
         self.currentGUI.toneStart = self.toneStart
         self.currentGUI.toneEnd = self.toneEnd
         self.currentGUI.movementWindowStart = self.movementWindowStart
