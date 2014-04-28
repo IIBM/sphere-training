@@ -70,7 +70,8 @@ class GUIGTK_Class:
         self.AppFrm1.configureData()
         self.AppFrm3.configureData()
         self.AppFrm5.configureData()
-        print "done with initial data to GUI"
+        print "    Done with configuration of initial data to GUI"
+        logging.info("    Done with configuration of initial data to GUI")
         
         pass
     

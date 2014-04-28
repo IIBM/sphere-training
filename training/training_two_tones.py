@@ -806,7 +806,7 @@ def userInputGUI(ns):
     currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
     currentGUI.movementTime = configs.movementTime
     currentGUI.idleTime = configs.idleTime
-    currentGUI.comment = ""
+    currentGUI.comment = configs.initialComment
     
     currentGUI.usingTK = configs.usingTK
     

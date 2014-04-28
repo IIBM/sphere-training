@@ -23,6 +23,7 @@ soundGenFrequency2 = 8000  # in Hz
 
 toneOneProbability = 0.5
 usingTK = 0 #0: using Glade GTk;   1: using TKinter
+initialComment = "" #Training comment initial value.
 
 #Duplicate Values from sphereVideoDetection; if needed, change both places:
 MOVEMENT_THRESHOLD_INITIAL_VALUE = 30 #initial movement threshold value (amount of difference in sum, to consider a movement valid)
