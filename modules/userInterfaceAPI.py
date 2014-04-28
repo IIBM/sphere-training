@@ -371,7 +371,12 @@ class userInterface_API:
     
     def action_applyC(self):
         self.comment = self.currentGUI.comment
-        tempstr = str(self.comment).decode(encoding='UTF-8',errors='ignore')
+        try:
+            tempstr = str(self.comment).decode(encoding='UTF-8',errors='ignore')
+        except:
+            print "Error in comment."
+            logger.info( "API: Apply Comments error - Couldn't code to UTF8. Will paste an empty string instead. " )
+            tempstr = ""
         logger.info( "API: Apply Comments: " + tempstr )
         try:
             self.overrideaction_applyC()
