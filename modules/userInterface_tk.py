@@ -83,7 +83,7 @@ class GUIGTK_Class:
         self.App = self.userInput(Root)
         self.App.pack(expand='yes',fill='both')
         self.App.reference = self
-        Root.geometry('640x480+10+10')
+        Root.geometry('480x240+10+10')
         Root.title('tk GUI Main Frame.')
         Root.mainloop()
         while True:
@@ -867,7 +867,7 @@ class GUIGTK_Class:
             
             
             self.__EntryMethodUsed.delete(0,10) #removes 10 characters.
-            movementMethod = float( self.reference.movementMethod )
+            movementMethod = int( self.reference.movementMethod )
             self.__EntryMethodUsed.insert(0, str(movementMethod))
             
             
