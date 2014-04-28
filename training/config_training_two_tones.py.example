@@ -22,3 +22,4 @@ soundGenFrequency1 = 1000.0  # in Hz
 soundGenFrequency2 = 8000.0  # in Hz
 
 toneOneProbability = 0.5
+usingTK = 1 #0: using Glade GTk;   1: using TKinter
