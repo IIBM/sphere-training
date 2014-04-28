@@ -18,8 +18,8 @@ maxIdleTime = 2.0
 
 soundGenDuration1 = 1.0 #tone 1 duration in seconds
 soundGenDuration2 = 1.0 #tone 2 duration in seconds
-soundGenFrequency1 = 1000.0  # in Hz
-soundGenFrequency2 = 8000.0  # in Hz
+soundGenFrequency1 = 1000  # in Hz
+soundGenFrequency2 = 8000  # in Hz
 
 toneOneProbability = 0.5
 usingTK = 1 #0: using Glade GTk;   1: using TKinter
