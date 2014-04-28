@@ -154,7 +154,6 @@ class GUIGTK_Class:
                 self.probabilityToneOne = 0
         
         def commitInitialData(self):
-            print "It is not allowed to change Glade GUI initial values yet."
             print self.toneStart
             print self.toneEnd
             print self.movementWindowStart
@@ -169,6 +168,21 @@ class GUIGTK_Class:
             print self.movementTime
             print self.idleTime
             print self.comment
+            self.glade.get_object("entryToneStart").set_text( str(self.toneStart) )
+            self.glade.get_object("entryToneEnd").set_text( str(self.toneEnd) )
+            self.glade.get_object("entryMvmntWinStart").set_text( str(self.movementWindowStart) )
+            self.glade.get_object("entryMvmntWinEnd").set_text( str(self.movementWindowEnd) )
+            self.glade.get_object("entryITStart").set_text( str(self.interTrialStart) )
+            self.glade.get_object("entryITEnd").set_text( str(self.interTrialEnd) )
+            self.glade.get_object("entryProbab1").set_text( str(self.probabilityToneOne) )
+            self.glade.get_object("entreTone1").set_text( str(self.frequencyTone1) )
+            self.glade.get_object("entryTone2").set_text( str(self.frequencyTone2) )
+            self.glade.get_object("entryMovementAmount").set_text( str(self.movementAmount) )
+            self.glade.get_object("entryMethod").set_text( str(self.movementMethod) )
+            self.glade.get_object("entryMovementTime").set_text( str(self.movementTime) )
+            self.glade.get_object("entryIdleTime").set_text( str(self.idleTime) )
+            
+            self.glade.get_object("entryCommentTr").set_text( str(self.comment) )
             pass
         
         
@@ -402,8 +416,7 @@ class GUIGTK_Class:
         def action_hideC(self, button, event):
             self.glade.get_object("commentWin").hide()
             return True;
-        
-        
+
 
 
 if __name__ == "__main__":
