@@ -38,7 +38,7 @@ class GUIGTK_Class:
                             
                         }
                 
-                self.prepare_variables()
+                self.customVariablesInit()
                 self.gladefile = "userInputv2.glade"
                 import sys
                 #sys.path.insert(0, "/home/aimc/workspace/track-bola_eclipse/sphere-training/modules")
@@ -133,11 +133,44 @@ class GUIGTK_Class:
             logging.info( "Default: Test T2" )
             return 0
         
-        def prepare_variables(self):
+        def customVariablesInit(self):
                 self.start = 0 #initially stopped.
                 self.pause = 0 #initially "not paused"
                 self.feedback = 0 #initially showing feedback graphics.
                 self.tracking = 0 #initially showing tracking lines
+                self.comment = ""
+                self.frequencyTone1 = 0
+                self.frequencyTone2 = 0
+                self.movementAmount = 0
+                self.movementMethod = 0
+                self.movementTime = 0
+                self.idleTime = 0
+                self.toneStart = 0
+                self.toneEnd = 0
+                self.movementWindowStart = 0
+                self.movementWindowEnd = 0
+                self.interTrialStart = 0
+                self.interTrialEnd = 0
+                self.probabilityToneOne = 0
+        
+        def commitInitialData(self):
+            print "It is not allowed to change Glade GUI initial values yet."
+            print self.toneStart
+            print self.toneEnd
+            print self.movementWindowStart
+            print self.movementWindowEnd
+            print self.interTrialStart
+            print self.interTrialEnd
+            print self.probabilityToneOne
+            print self.frequencyTone1
+            print self.frequencyTone2
+            print self.movementAmount
+            print self.movementMethod
+            print self.movementTime
+            print self.idleTime
+            print self.comment
+            pass
+        
         
         def action_keypress(self, widget, event):
             #print "keypress"
@@ -225,7 +258,6 @@ class GUIGTK_Class:
                 except:
                     logging.info( "Exit: No override for exit." )
                     self.__exitAll()
-                #self.__exitAll()
         
         def __exitAll(self):
                 print "Exit Training"
@@ -275,7 +307,6 @@ class GUIGTK_Class:
                     self.overrideaction_applyTE()
                 except:
                     logging.info( "ApplyTE: An error ocurred." )
-                
         
         def action_applyP(self, button):
                 logging.info( "Applying Parameters variables" )
@@ -308,8 +339,6 @@ class GUIGTK_Class:
                 except:
                     logging.info( "ApplyC: An error ocurred." )
         
-        
-        
         def action_shfeedback(self, button):
                 #print "Show / Hide Feedback"
                 if ( self.feedback == 0):
@@ -326,7 +355,6 @@ class GUIGTK_Class:
                     except:
                         logging.info( "shfeedback: An error ocurred." )
                     self.feedback = 0
-        
         
         def action_shtracking(self, button):
                 #print "Show / Hide Feedback"
