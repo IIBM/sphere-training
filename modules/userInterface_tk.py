@@ -1159,7 +1159,7 @@ class GUIGTK_Class:
             self.var4_MWE = self.__Entry4MvntWindowEnd.get()
             self.var5_ITStart = self.__Entry5ITStart.get()
             self.var6_ITEnd = self.__Entry6ITEnd.get()
-            self.var7_Probab1 = self.__Scale2.get()
+            self.var7_Probab1 = float (self.__Scale2.get()) / 100
             pass
     
     
