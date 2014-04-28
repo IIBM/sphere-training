@@ -878,6 +878,10 @@ class GUIGTK_Class:
 
         def __on_Button1TestT1_ButRel_1(self,Event=None):
             print "Test Tone 1"
+            self.var1_T1 = self.__Entry1Tone1.get()
+            self.var2_T2 = self.__Entry2Tone2.get()
+            self.reference.frequencyTone1 = self.var1_T1
+            self.reference.frequencyTone2 = self.var2_T2
             self.reference.overrideaction_testT1()
             pass
     
