@@ -371,7 +371,8 @@ class userInterface_API:
     
     def action_applyC(self):
         self.comment = self.currentGUI.comment
-        logger.info( "API: Apply Comments: " + str(self.comment) )
+        tempstr = str(self.comment).decode(encoding='UTF-8',errors='ignore')
+        logger.info( "API: Apply Comments: " + tempstr )
         try:
             self.overrideaction_applyC()
         except:
