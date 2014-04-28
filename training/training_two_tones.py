@@ -790,7 +790,30 @@ def userInputGUI(ns):
     import userInterfaceAPI
     currentGUI = userInterfaceAPI.userInterface_API(False)
     currentGUI.setNamespace(ns)
-    currentGUI.launch_glade()
+    import config_training_two_tones as configs
+    
+    currentGUI.toneStart = 0.0
+    currentGUI.toneEnd = configs.eventTime1_sound
+    currentGUI.movementWindowStart = configs.eventTime1_movement_start
+    currentGUI.movementWindowEnd = configs.eventTime2_movement
+    currentGUI.interTrialStart = configs.interTrialRandom1Time
+    currentGUI.interTrialEnd = configs.interTrialRandom2Time
+    currentGUI.probabilityToneOne = configs.toneOneProbability
+    currentGUI.frequencyTone1 = configs.soundGenFrequency1
+    currentGUI.frequencyTone2 = configs.soundGenFrequency2
+    currentGUI.movementAmount = 30 #in sphereVideoDetection... maybe should duplicate value in config file?
+    currentGUI.movementMethod = 2 #same as above
+    currentGUI.movementTime = configs.movementTime
+    currentGUI.idleTime = configs.idleTime
+    currentGUI.comment = ""
+    
+    currentGUI.usingTK = configs.usingTK
+    
+    time.sleep(1.0)
+    
+    currentGUI.launch_GUI()
+    
+    
 
 def exitTraining():
     # Finalize this training and exits.
