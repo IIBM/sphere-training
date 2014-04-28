@@ -549,7 +549,7 @@ def trialLoop():
                     gVariables.current_trial_stage = 2
                 elif (int(gVariables.current_trial_time) >= gVariables.eventTime3_trialEnd and
                       gVariables.current_trial_stage == 2):
-                    gVariables.logger.info('End trial:%d' % gVariables.trialCount)
+                    gVariables.logger.info('End trial:%d' % (gVariables.trialCount - 1 ) )
                     gVariables.logger.info('Trial type: ' + str(gVariables.current_trial_type_str))
                     # #
                     gVariables.videoDet.setMovementTimeWindow(gVariables.minIdleIntertrialTime)
