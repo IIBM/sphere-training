@@ -37,18 +37,13 @@ class GUIGTK_Class:
                             "mainwindow_keypress": self.action_keypress, 
                             
                         }
-                
+                logging.info( "Starting userInterface_glade variables and .glade file:")
                 self.customVariablesInit()
                 self.gladefile = "userInputv2.glade"
                 import sys
-                #sys.path.insert(0, "/home/aimc/workspace/track-bola_eclipse/sphere-training/modules")
-                #sys.path.append("../modules/")
-                #sys.path.append( "/home/aimc/workspace/track-bola_eclipse/sphere-training/modules")
-                #print sys.path[0]
+                #repair inconsistent path:
                 tempstr = sys.path[0]
                 tempstr = tempstr.replace("/training", "/modules")
-                #print tempstr
-                
                 self.gladefile = tempstr + "/userInputv2.glade"
                 logging.info( self.gladefile )
                 
@@ -154,20 +149,22 @@ class GUIGTK_Class:
                 self.probabilityToneOne = 0
         
         def commitInitialData(self):
-            print self.toneStart
-            print self.toneEnd
-            print self.movementWindowStart
-            print self.movementWindowEnd
-            print self.interTrialStart
-            print self.interTrialEnd
-            print self.probabilityToneOne
-            print self.frequencyTone1
-            print self.frequencyTone2
-            print self.movementAmount
-            print self.movementMethod
-            print self.movementTime
-            print self.idleTime
-            print self.comment
+            #Set graphic elements' data with the variables that has been passed from the upper class that is executing this module.
+            logging.info( "Setting userInterface_glade initial data.")
+            logging.info( str( self.toneStart ) )
+            logging.info( str( self.toneEnd ) )
+            logging.info( str( self.movementWindowStart ) )
+            logging.info( str( self.movementWindowEnd ) )
+            logging.info( str( self.interTrialStart ) )
+            logging.info( str( self.interTrialEnd ) )
+            logging.info( str( self.probabilityToneOne ) )
+            logging.info( str( self.frequencyTone1 ) )
+            logging.info( str( self.frequencyTone2 ) )
+            logging.info( str( self.movementAmount ) )
+            logging.info( str( self.movementMethod ) )
+            logging.info( str( self.movementTime ) )
+            logging.info( str( self.idleTime ) )
+            logging.info( str( self.comment ) )
             self.glade.get_object("entryToneStart").set_text( str(self.toneStart) )
             self.glade.get_object("entryToneEnd").set_text( str(self.toneEnd) )
             self.glade.get_object("entryMvmntWinStart").set_text( str(self.movementWindowStart) )
@@ -182,6 +179,7 @@ class GUIGTK_Class:
             self.glade.get_object("entryMovementTime").set_text( str(self.movementTime) )
             self.glade.get_object("entryIdleTime").set_text( str(self.idleTime) )
             self.glade.get_object("entryCommentTr").set_text( str(self.comment) )
+            logging.info( "   Done: Setting userInterface_glade initial data.")
             pass
         
         
