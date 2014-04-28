@@ -801,8 +801,9 @@ def userInputGUI(ns):
     currentGUI.probabilityToneOne = configs.toneOneProbability
     currentGUI.frequencyTone1 = configs.soundGenFrequency1
     currentGUI.frequencyTone2 = configs.soundGenFrequency2
-    currentGUI.movementAmount = 30 #in sphereVideoDetection... maybe should duplicate value in config file?
-    currentGUI.movementMethod = 2 #same as above
+    
+    currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but readed from training config file
+    currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
     currentGUI.movementTime = configs.movementTime
     currentGUI.idleTime = configs.idleTime
     currentGUI.comment = ""
