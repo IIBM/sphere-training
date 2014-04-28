@@ -17,14 +17,71 @@ logger = logging.getLogger('userInterface_tk')
 class GUIGTK_Class:
     
     
-    def startFrame0():
+    def __init__(self):
+            self.customVariablesInit()
+            import threading
+            print "Initializing GUI GTK class."
+            self.thread0 = threading.Thread(target=self.startFrame0 , name="Frame0")
+            self.thread0.start()
+            
+            self.thread1 = threading.Thread(target=self.startFrame1 , name="Frame1")
+            time.sleep(0.25)
+            self.thread1.start()
+            
+            self.thread3 = threading.Thread(target=self.startFrame3 , name="Frame3")
+            time.sleep(0.25)
+            self.thread3.start()
+            
+            self.thread5 = threading.Thread(target=self.startFrame5 , name="Frame5")
+            time.sleep(0.25) #i can swear without this delay it won't work properly
+            self.thread5.start()
+            print "GUI GTK class initialized."
+            #startFrame1()
+            pass
+    
+    def customVariablesInit(self):
+        self.toneStart = 0
+        self.toneEnd = 0
+        self.movementWindowStart = 0
+        self.movementWindowEnd = 0
+        self.interTrialStart = 0
+        self.interTrialEnd = 0
+        self.probabilityToneOne = 0
+        self.frequencyTone1 = 0
+        self.frequencyTone2 = 0
+        self.movementAmount = 0
+        self.movementMethod = 0
+        self.movementTime = 0
+        self.idleTime = 0
+        self.comment = ""
+        pass
+    
+    def start_everything(self):
+        self.thread0.start()
+        self.thread1.start()
+        self.thread3.start()
+        self.thread5.start()
+        while True:
+            time.sleep(0.5)
+    
+    def commitInitialData(self):
+        #some arguments have been passed as variables (with direct access)
+        #The Graphic Elements should change according to current state of the vars that we received.
+        self.AppFrm1.configureData()
+        self.AppFrm3.configureData()
+        self.AppFrm5.configureData()
+        print "done with initial data to GUI"
+        
+        pass
+    
+    def startFrame0(self):
         Root = Tk()
         import Tkinter
         #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
         del Tkinter
-        GUIGTK_Class.App = userInput(Root)
-        GUIGTK_Class.App.pack(expand='yes',fill='both')
-        
+        self.App = self.userInput(Root)
+        self.App.pack(expand='yes',fill='both')
+        self.App.reference = self
         Root.geometry('640x480+10+10')
         Root.title('tk GUI Main Frame.')
         Root.mainloop()
@@ -32,71 +89,76 @@ class GUIGTK_Class:
             time.sleep(1.0)
         pass
     
-    def startFrame1():
+    def startFrame1(self):
         import Tkinter
         Root2 = Tkinter.Tk()
         Root2.withdraw()
         #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
         del Tkinter
         
-        GUIGTK_Class.AppFrm1 = Form1(Root2)
+        self.AppFrm1 = self.Form1(Root2)
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
         #App.pack(expand='yes', fill='both')
         #App.gVariables = gVariables
-        GUIGTK_Class.AppFrm1.protocol('WM_DELETE_WINDOW', GUIGTK_Class.App.hideForm1)
-        
+        self.AppFrm1.protocol('WM_DELETE_WINDOW', self.App.hideForm1)
+        self.AppFrm1.reference = self
         #gVariables.AppFrm1.geometry('640x480+10+10')
-        GUIGTK_Class.AppFrm1.title('Trial Events.')
-        GUIGTK_Class.AppFrm1.withdraw()
-        GUIGTK_Class.AppFrm1.mainloop()
+        self.AppFrm1.title('Trial Events.')
+        self.AppFrm1.withdraw()
+        self.AppFrm1.mainloop()
         while True:
             time.sleep(1.0)
         pass
     
-    def startFrame3():
+    def startFrame3(self):
         import Tkinter
         Root = Tkinter.Tk()
         Root.withdraw()
         #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
         del Tkinter
         
-        GUIGTK_Class.AppFrm3 = Form3(Root)
+        self.AppFrm3 = self.Form3(Root)
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
         #App.pack(expand='yes', fill='both')
         #App.gVariables = gVariables
-        GUIGTK_Class.AppFrm3.protocol('WM_DELETE_WINDOW', GUIGTK_Class.App.hideForm3)
-        
+        self.AppFrm3.protocol('WM_DELETE_WINDOW', self.App.hideForm3)
+        self.AppFrm3.reference = self
         #gVariables.AppFrm1.geometry('640x480+10+10')
-        GUIGTK_Class.AppFrm3.title('Parameters.')
-        GUIGTK_Class.AppFrm3.withdraw()
-        GUIGTK_Class.AppFrm3.mainloop()
+        self.AppFrm3.title('Parameters.')
+        self.AppFrm3.withdraw()
+        self.AppFrm3.mainloop()
         while True:
             time.sleep(1.0)
         pass
     
-    def startFrame5():
+    def startFrame5(self):
         import Tkinter
         Root = Tkinter.Tk()
         Root.withdraw()
         #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
         del Tkinter
-        GUIGTK_Class.AppFrm5 = Form5(Root)
+        self.AppFrm5 = self.Form5(Root)
+        self.AppFrm5.reference = self
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
         #App.pack(expand='yes', fill='both')
         #App.gVariables = gVariables
-        GUIGTK_Class.AppFrm5.protocol('WM_DELETE_WINDOW', GUIGTK_Class.App.hideForm5)
+        self.AppFrm5.protocol('WM_DELETE_WINDOW', self.App.hideForm5)
         
         #gVariables.AppFrm1.geometry('640x480+10+10')
-        GUIGTK_Class.AppFrm5.title('Comment.')
-        GUIGTK_Class.AppFrm5.withdraw()
-        GUIGTK_Class.AppFrm5.mainloop()
+        self.AppFrm5.title('Comment.')
+        self.AppFrm5.withdraw()
+        self.AppFrm5.mainloop()
         while True:
             time.sleep(1.0)
         pass
     
+    def exit_all(self):
+        logging.info('Exiting userInterface_tk')
+        print "from GUITK"
+        os._exit(0)
     
     class userInput(Frame):
     #------------------------------------------------------------------------------#
@@ -227,23 +289,22 @@ class GUIGTK_Class:
             pass
         
         
-        @staticmethod
-        def hideForm1(toHide = True):
+        def hideForm1(self, toHide = True):
             print "Hide Form 1."
             #a = gVariables.AppFrm1.__Entry3MvmntWindowStart.get() 
             if (toHide == True):
-                GUIGTK_Class.AppFrm1.withdraw()
+                self.reference.AppFrm1.withdraw()
                 return;
             #GUIGTK_Class.AppFrm1.get_changes()
             
             print "Reading variables "
-            a = GUIGTK_Class.AppFrm1.var1_TStart #tone duration
-            b = GUIGTK_Class.AppFrm1.var2_TEnd
-            c = GUIGTK_Class.AppFrm1.var3_MWS
-            d = GUIGTK_Class.AppFrm1.var4_MWE
-            e = GUIGTK_Class.AppFrm1.var5_ITStart #changed to intertrial random1 time
-            f = GUIGTK_Class.AppFrm1.var6_ITEnd #changed to intertrial random2 time
-            g = GUIGTK_Class.AppFrm1.var7_Probab1
+            a = self.reference.AppFrm1.var1_TStart #tone duration
+            b = self.reference.AppFrm1.var2_TEnd
+            c = self.reference.AppFrm1.var3_MWS
+            d = self.reference.AppFrm1.var4_MWE
+            e = self.reference.AppFrm1.var5_ITStart #changed to intertrial random1 time
+            f = self.reference.AppFrm1.var6_ITEnd #changed to intertrial random2 time
+            g = self.reference.AppFrm1.var7_Probab1
             print a
             print b
             print c
@@ -251,34 +312,32 @@ class GUIGTK_Class:
             print e
             print f
             print g
-            GUIGTK_Class.toneStart = a
-            GUIGTK_Class.toneEnd = b
-            GUIGTK_Class.movementWindowStart = c
-            GUIGTK_Class.movementWindowEnd = d
-            GUIGTK_Class.interTrialStart = e
-            GUIGTK_Class.interTrialEnd = f
-            GUIGTK_Class.probabilityToneOne = g
+            self.reference.toneStart = a
+            self.reference.toneEnd = b
+            self.reference.movementWindowStart = c
+            self.reference.movementWindowEnd = d
+            self.reference.interTrialStart = e
+            self.reference.interTrialEnd = f
+            self.reference.probabilityToneOne = g
         
-        
-        @staticmethod
-        def hideForm3(toHide = True):
+        def hideForm3(self, toHide = True):
             print "Hide Form 3."
             
             if (toHide == True):
-                GUIGTK_Class.AppFrm3.withdraw()
+                self.reference.AppFrm3.withdraw()
                 return;
             
             #GUIGTK_Class.AppFrm3.get_changes()
             
             print "Reading variables "
-            a = GUIGTK_Class.AppFrm3.var1_T1
-            b = GUIGTK_Class.AppFrm3.var2_T2
-            c = GUIGTK_Class.AppFrm3.var3_MA
-            d = GUIGTK_Class.AppFrm3.var4_MT
-            e = GUIGTK_Class.AppFrm3.var5_IT
-            f = GUIGTK_Class.AppFrm3.var6_ShowTracking
-            g = GUIGTK_Class.AppFrm3.var7_ShowFeedback
-            h = GUIGTK_Class.AppFrm3.var8_num_selected
+            a = self.reference.AppFrm3.var1_T1
+            b = self.reference.AppFrm3.var2_T2
+            c = self.reference.AppFrm3.var3_MA
+            d = self.reference.AppFrm3.var4_MT
+            e = self.reference.AppFrm3.var5_IT
+            f = self.reference.AppFrm3.var6_ShowTracking
+            g = self.reference.AppFrm3.var7_ShowFeedback
+            h = self.reference.AppFrm3.var8_num_selected
             print a
             print b
             print c
@@ -287,43 +346,36 @@ class GUIGTK_Class:
             print f
             print g
             print h
-            GUIGTK_Class.frequencyTone1 = a
-            GUIGTK_Class.frequencyTone2 = b
-            GUIGTK_Class.movementAmount = c
-            GUIGTK_Class.movementMethod = h
-            GUIGTK_Class.movementTime = d
-            GUIGTK_Class.idleTime = e
+            self.reference.frequencyTone1 = a
+            self.reference.frequencyTone2 = b
+            self.reference.movementAmount = c
+            self.reference.movementMethod = h
+            self.reference.movementTime = d
+            self.reference.idleTime = e
             
             if (toHide == True):
-                GUIGTK_Class.AppFrm3.withdraw()
+                self.reference.AppFrm3.withdraw()
         
-        @staticmethod
-        def hideForm5(toHide = True):
+        def hideForm5(self, toHide = True):
             print "Hide Form 5."
-            GUIGTK_Class.comment = GUIGTK_Class.AppFrm5.commentStr
-            print GUIGTK_Class.comment
+            self.reference.comment = self.reference.AppFrm5.commentStr
+            print self.reference.comment
             if (toHide == True):
-                GUIGTK_Class.AppFrm5.withdraw()
-                #GUIGTK_Class.AppFrm5.apply_comment()
-                #print "current comment: ", gVariables.trial_comment
+                self.reference.AppFrm5.withdraw()
                 return;
-    
             pass
         
-        @staticmethod
-        def showFrame1():
+        def showFrame1(self):
             print "Showing Frame 1"
-            GUIGTK_Class.AppFrm1.deiconify()
+            self.reference.AppFrm1.deiconify()
             pass
         
-        @staticmethod
-        def showFrame3():
-            GUIGTK_Class.AppFrm3.deiconify()
+        def showFrame3(self):
+            self.reference.AppFrm3.deiconify()
             print "Showing Frame 3"
         
-        @staticmethod
-        def showFrame5():
-            GUIGTK_Class.AppFrm5.deiconify()
+        def showFrame5(self):
+            self.reference.AppFrm5.deiconify()
             print "Showing Frame 5"
         
     
@@ -333,68 +385,68 @@ class GUIGTK_Class:
     
         def __on_Text1KeyInput_KeyRel_o(self,Event=None):
             print "Pressed o : ","Open Valve"
-            GUIGTK_Class.overrideaction_open()
+            self.reference.overrideaction_open()
             pass
     
         def __on_Text1KeyInput_Key_C(self,Event=None):
             print "Pressed C : ", "Close Valve"
-            GUIGTK_Class.overrideaction_close()
+            self.reference.overrideaction_close()
             pass
     
         def __on_Text1KeyInput_Key_D(self,Event=None):
             print "Pressed D : ", "Drop"
-            GUIGTK_Class.overrideaction_drop()
+            self.reference.overrideaction_drop()
             pass
     
         def __on_Text1KeyInput_Key_K(self,Event=None):
             print "Pressed K : ","Start / Stop Training"
-            GUIGTK_Class.overrideaction_startTraining()
+            self.reference.overrideaction_startTraining()
             pass
     
         def __on_Text1KeyInput_Key_O(self,Event=None):
             print "Pressed O : ","Open Valve"
-            GUIGTK_Class.overrideaction_open()
+            self.reference.overrideaction_open()
             pass
     
         def __on_Text1KeyInput_Key_P(self,Event=None):
             print "Pressed P : ", "Pause / Resume Training"
-            GUIGTK_Class.overrideaction_pauseTraining()
+            self.reference.overrideaction_pauseTraining()
             pass
     
         def __on_Text1KeyInput_Key_R(self,Event=None):
             print "Pressed R : ","Reward"
-            GUIGTK_Class.overrideaction_reward()
+            self.reference.overrideaction_reward()
             pass
     
         def __on_Text1KeyInput_Key_c(self,Event=None):
             print "Pressed c : ", "Close Valve"
-            GUIGTK_Class.overrideaction_close()
+            self.reference.overrideaction_close()
             pass
     
         def __on_Text1KeyInput_Key_d(self,Event=None):
             print "Pressed d : ", "Drop"
-            GUIGTK_Class.overrideaction_drop()
+            self.reference.overrideaction_drop()
             pass
     
         def __on_Text1KeyInput_Key_k(self,Event=None):
             print "Pressed k : ","Start / Stop Training"
-            GUIGTK_Class.overrideaction_startTraining()
+            self.reference.overrideaction_startTraining()
             pass
     
         def __on_Text1KeyInput_Key_p(self,Event=None):
             print "Pressed p : ", "Pause / Resume Training"
-            GUIGTK_Class.overrideaction_pauseTraining()
+            self.reference.overrideaction_pauseTraining()
             pass
     
         def __on_Text1KeyInput_Key_r(self,Event=None):
             print "Pressed r : ","Reward"
-            GUIGTK_Class.overrideaction_reward()
+            self.reference.overrideaction_reward()
             pass
     
         def __on_btnClose_ButRel_1(self,Event=None):
             #pressed Close
             print "Close Valve"
-            GUIGTK_Class.overrideaction_close()
+            self.reference.overrideaction_close()
             pass
     
         def __on_btnComment_ButRel_1(self,Event=None):
@@ -404,13 +456,13 @@ class GUIGTK_Class:
             #pressed Drop
             print "Drop"
             #self.gVariables.fn_giveDrop()
-            GUIGTK_Class.overrideaction_drop()
+            self.reference.overrideaction_drop()
             pass
     
         def __on_btnExit_ButRel_1(self,Event=None):
             #Exiting program.
             #Frame.destroy(Frame)
-            GUIGTK_Class.App.exitingUserInterface()
+            self.exitingUserInterface()
             pass
     
         def __on_btnFrmEditParameters_ButRel_1(self,Event=None):
@@ -424,37 +476,40 @@ class GUIGTK_Class:
         def __on_btnOpen_ButRel_1(self,Event=None):
             #pressed open
             print "Open Valve"
-            GUIGTK_Class.overrideaction_open()
+            self.reference.overrideaction_open()
             pass
     
         def __on_btnPause_ButRel_1(self,Event=None):
             #pressed Pause
             print "Pause / Resume Training"
-            GUIGTK_Class.overrideaction_pauseTraining()
+            self.reference.overrideaction_pauseTraining()
             pass
     
         def __on_btnReward_ButRel_1(self,Event=None):
             #pressed Reward
             print "Reward"
-            GUIGTK_Class.overrideaction_reward()
+            self.reference.overrideaction_reward()
             pass
     
         def __on_btnStart_ButRel_1(self,Event=None):
             #pressed Start
             print "Start / Stop Training"
-            GUIGTK_Class.overrideaction_startTraining()
+            self.reference.overrideaction_startTraining()
             pass
     
     
         def __on_userInput_Dstry(self,Event=None):
             if ( self.__alive == 0):
-                GUIGTK_Class.App.exitingUserInterface()
+                self.reference.App.exitingUserInterface()
             pass
         
         def exitingUserInterface(self):
             print "Exiting userInterface_tk Program"
-            logging.info('Exiting userInterface_tk')
-            os._exit(0)
+            try:
+                    self.reference.overrideaction_exit()
+            except:
+                    logging.info( "Exit: No override for exit." )
+            self.reference.exit_all()
     
     
     
@@ -465,6 +520,8 @@ class GUIGTK_Class:
     #                                    Form5                                     #
     #                                                                              #
     #------------------------------------------------------------------------------#
+        commentStr = ""
+        
         def __init__(self,Master=None,**kw):
             kw['class_'] = 'Frame'
             #
@@ -487,13 +544,14 @@ class GUIGTK_Class:
             #Your code here
             self.__alreadyGone = 0
             self.__CommentString = ""
+            self.get_changes()
             print "Form5: Comment Frame loaded"
         
         
         def __on_ApplyBtn_ButRel_1(self,Event=None):
             self.get_changes()
-            GUIGTK_Class.App.hideForm5(True)
-            GUIGTK_Class.overrideaction_applyC()
+            self.reference.App.hideForm5(True)
+            self.reference.overrideaction_applyC()
             pass
     
         def __on_EntryComment_KeyRel(self,Event=None):
@@ -504,8 +562,7 @@ class GUIGTK_Class:
         def configureData(self):
             print "configuring initial data for Form5."
             self.__EntryComment.delete(0,30)
-            tempstr = self.gVariables.trial_comment
-            self.__EntryComment.insert(0,tempstr)
+            self.__EntryComment.insert(0,self.reference.comment)
             pass
         
         def get_changes(self):
@@ -770,78 +827,85 @@ class GUIGTK_Class:
             self.__EntryMethodUsed.insert(0, "3")
             self.__showTracking = 0
             self.__showFeedback = 0
+            self.get_changes()
             print "Form3: Parameters loaded"
-            #
-        #
-        #Start of event handler methods
-        #
     
         def __on_CloseBtn_ButRel_1(self,Event=None):
-            GUIGTK_Class.App.hideForm3(True)
+            self.reference.App.hideForm3(True)
             pass
     
         def __on_ApplyBtn_ButRel_1(self,Event=None):
             print "Test Apply Frm3"
             self.get_changes()
-            GUIGTK_Class.App.hideForm3(False)
-            GUIGTK_Class.overrideaction_applyP()
+            self.reference.App.hideForm3(False)
+            self.reference.overrideaction_applyP()
             pass
         
         def configureData(self):
             print "configuring initial data for Form3."
             self.__Entry1Tone1.delete(0,10) #removes 10 characters.
-            freq1 = int(self.gVariables.soundGenFrequency1)
+            freq1 = int( self.reference.frequencyTone1 )
             self.__Entry1Tone1.insert(0, str(freq1))
             
             self.__Entry2Tone2.delete(0,10) #removes 10 characters.
-            freq1 = int(self.gVariables.soundGenFrequency2)
-            self.__Entry2Tone2.insert(0, str(freq1))
+            freq2 = int( self.reference.frequencyTone2 )
+            self.__Entry2Tone2.insert(0, str(freq2))
             
             
             self.__Entry3MvntAm.delete(0,10) #removes 10 characters.
-            freq1 = int( self.gVariables.videoDet.getMovementThreshold() )
-            self.__Entry3MvntAm.insert(0, str(freq1))
+            mvmntam = int( self.reference.movementAmount )
+            self.__Entry3MvntAm.insert(0, str(mvmntam))
             
             self.__Entry4MvntTime.delete(0,10) #removes 10 characters.
-            freq1 = float( self.gVariables.movementTime )
-            self.__Entry4MvntTime.insert(0, str(freq1))
+            movementTime = float( self.reference.movementTime )
+            self.__Entry4MvntTime.insert(0, str(movementTime))
             
             self.__Entry5IdleTime.delete(0,10) #removes 10 characters.
-            freq1 = float( self.gVariables.idleTime )
-            self.__Entry5IdleTime.insert(0, str(freq1))
+            idleTime = float( self.reference.idleTime )
+            self.__Entry5IdleTime.insert(0, str(idleTime))
+            
+            
+            self.__EntryMethodUsed.delete(0,10) #removes 10 characters.
+            movementMethod = float( self.reference.movementMethod )
+            self.__EntryMethodUsed.insert(0, str(movementMethod))
+            
+            
+            self.reference.App.showFrame3()
+            self.reference.AppFrm3.withdraw()
+            
             pass
 
         def __on_Button1TestT1_ButRel_1(self,Event=None):
             print "Test Tone 1"
-            GUIGTK_Class.overrideaction_testT1()
+            self.reference.overrideaction_testT1()
             pass
     
         def __on_Button2TestT2_ButRel_1(self,Event=None):
             print "Test Tone 2"
-            GUIGTK_Class.overrideaction_testT2()
+            self.reference.overrideaction_testT2()
             pass
     
         def __on_Button3SHTracking_ButRel_1(self,Event=None):
             if ( self.__showTracking == 0):
                 print "hiding tracking"
                 self.__showTracking = 1
-                GUIGTK_Class.overrideaction_hidetracking()
+                self.reference.overrideaction_hidetracking()
             elif ( self.__showTracking == 1):
                 print "showing tracking"
                 self.__showTracking = 0
-                GUIGTK_Class.overrideaction_showtracking()
+                self.reference.overrideaction_showtracking()
             pass
     
         def __on_Button4SHFeedback_ButRel_1(self,Event=None):
             if ( self.__showFeedback == 0):
                 print "hiding feedback"
                 self.__showFeedback = 1
-                GUIGTK_Class.overrideaction_hidefeedback()
+                self.reference.overrideaction_hidefeedback()
                 
             elif ( self.__showFeedback == 1):
                 print "showing feedback"
                 self.__showFeedback = 0
-                GUIGTK_Class.overrideaction_showfeedback()
+                self.reference.overrideaction_showfeedback()
             pass
     
         def __on_Button5_ButRel_1(self,Event=None):
@@ -1006,21 +1070,19 @@ class GUIGTK_Class:
             self.__Entry5ITStart.insert(0,"0.0")
             self.__Entry6ITEnd.insert(0,"0.0")
             self.__Scale2.set(50)
+            
+            self.get_changes()
             print "Form1: Trial Events loaded"
-        #
-        #Start of event handler methods
-        #
-    
-    
+        
         def __on_ApplyBtn_ButRel_1(self,Event=None):
             print "Test Apply Frm1"
             self.get_changes()
-            GUIGTK_Class.App.hideForm1(False)
-            GUIGTK_Class.overrideaction_applyTE()
+            self.reference.App.hideForm1(False)
+            self.reference.overrideaction_applyTE()
             pass
         
         def __on_CloseBtn_ButRel_1(self,Event=None):
-            GUIGTK_Class.App.hideForm1(True)
+            self.reference.App.hideForm1(True)
             pass
         
         def __on_Form1_Dstry(self,Event=None):
@@ -1033,26 +1095,53 @@ class GUIGTK_Class:
         
         def configureData(self):
             print "configuring initial data for Form1."
-            prob = self.gVariables.toneOneProbability * 100
-            self.__Scale2.set(int(prob))
             
             self.__Entry1TStart.delete(0,10) #removes 10 characters.
-            self.__Entry1TStart.insert(0, self.gVariables.soundGenDuration1 )
+            self.__Entry1TStart.insert(0, self.reference.toneStart )
             
             self.__Entry2TEnd.delete(0,10) #removes 10 characters.
-            self.__Entry2TEnd.insert(0, self.gVariables.soundGenDuration2 )
+            self.__Entry2TEnd.insert(0, self.reference.toneEnd )
             
             self.__Entry3MvmntWindowStart.delete(0,10) #removes 10 characters.
-            self.__Entry3MvmntWindowStart.insert(0, self.gVariables.eventTime1_movement_start )
+            self.__Entry3MvmntWindowStart.insert(0, self.reference.movementWindowStart )
             
             self.__Entry4MvntWindowEnd.delete(0,10) #removes 10 characters.
-            self.__Entry4MvntWindowEnd.insert(0, self.gVariables.eventTime2_movement )
+            self.__Entry4MvntWindowEnd.insert(0, self.reference.movementWindowEnd )
             
             self.__Entry5ITStart.delete(0,10) #removes 10 characters.
-            self.__Entry5ITStart.insert(0, self.gVariables.interTrialRandom1Time )
+            self.__Entry5ITStart.insert(0, self.reference.interTrialStart )
             
             self.__Entry6ITEnd.delete(0,10) #removes 10 characters.
-            self.__Entry6ITEnd.insert(0, self.gVariables.interTrialRandom2Time )
+            self.__Entry6ITEnd.insert(0, self.reference.interTrialEnd )
+            
+            prob = self.reference.probabilityToneOne * 100
+            self.__Scale2.set(int(prob))
+            
+            self.reference.App.showFrame1()
+            self.reference.AppFrm1.withdraw()
+            ###
+            
+#             prob = self.gVariables.toneOneProbability * 100
+#             self.__Scale2.set(int(prob))
+#             
+#             self.__Entry1TStart.delete(0,10) #removes 10 characters.
+#             self.__Entry1TStart.insert(0, self.gVariables.soundGenDuration1 )
+#             
+#             self.__Entry2TEnd.delete(0,10) #removes 10 characters.
+#             self.__Entry2TEnd.insert(0, self.gVariables.soundGenDuration2 )
+#             
+#             self.__Entry3MvmntWindowStart.delete(0,10) #removes 10 characters.
+#             self.__Entry3MvmntWindowStart.insert(0, self.gVariables.eventTime1_movement_start )
+#             
+#             self.__Entry4MvntWindowEnd.delete(0,10) #removes 10 characters.
+#             self.__Entry4MvntWindowEnd.insert(0, self.gVariables.eventTime2_movement )
+#             
+#             self.__Entry5ITStart.delete(0,10) #removes 10 characters.
+#             self.__Entry5ITStart.insert(0, self.gVariables.interTrialRandom1Time )
+#             
+#             self.__Entry6ITEnd.delete(0,10) #removes 10 characters.
+#             self.__Entry6ITEnd.insert(0, self.gVariables.interTrialRandom2Time )
+            pass
         
         def get_changes(self):
             print "commiting changes to variables in Form 1.."
@@ -1073,126 +1162,94 @@ class GUIGTK_Class:
             pass
     
     
-    def __init__(self):
-            import threading
-            print "Initializing GUI GTK class."
-            self.thread0 = threading.Thread(target=startFrame0 , name="Frame0")
-            self.thread0.start()
-            
-            self.thread1 = threading.Thread(target=startFrame1 , name="Frame1")
-            time.sleep(0.5)
-            self.thread1.start()
-            
-            self.thread3 = threading.Thread(target=startFrame3 , name="Frame3")
-            time.sleep(0.5)
-            self.thread3.start()
-            
-            self.thread5 = threading.Thread(target=startFrame5 , name="Frame5")
-            time.sleep(0.5) #i can swear without this delay it won't work properly
-            self.thread5.start()
-            print "GUI GTK class initialized."
-            #startFrame1()
-            
-            pass
-    
-    def start_everything(self):
-        self.thread0.start()
-        self.thread1.start()
-        self.thread3.start()
-        self.thread5.start()
-        while True:
-            time.sleep(0.5)
-    
-    
-    @staticmethod
-    def overrideaction_drop():
+    def overrideaction_drop(self):
         print "DROP from UI_TK"
         logging.info( "Default: Drop" )
         return 0
     
-    @staticmethod
-    def overrideaction_reward():
+    
+    def overrideaction_reward(self):
         logging.info( "Default: Reward" )
         return 0
     
-    @staticmethod
-    def overrideaction_open():
+    
+    def overrideaction_open(self):
         logging.info( "Default: Open" )
         return 0
     
-    @staticmethod
-    def overrideaction_close():
+    
+    def overrideaction_close(self):
         logging.info( "Default: Close" )
         return 0
     
-    @staticmethod
-    def overrideaction_startTraining():
+    
+    def overrideaction_startTraining(self):
         #print "Start / Stop training"
         logging.info( "Default: Start / Stop Training" )
         return 0
     
-    @staticmethod
-    def overrideaction_stopTraining():
+    
+    def overrideaction_stopTraining(self):
         #NOT USED
         #print "Start / Stop training"
         logging.info( "Default: Stop Training" )
         return 0
     
-    @staticmethod
-    def overrideaction_pauseTraining():
+    
+    def overrideaction_pauseTraining(self):
         #print "Pause / Resume training"
         logging.info( "Default: Pause / Resume Training" )
         return 0
     
-    @staticmethod
-    def overrideaction_resumeTraining():
+    
+    def overrideaction_resumeTraining(self):
         #NOT USED
         #print "Pause / Resume training"
         logging.info( "Default: Resume Training" )
         return 0
     
-    @staticmethod
-    def overrideaction_applyTE():
+    
+    def overrideaction_applyTE(self):
         logging.info( "Default: Apply Trials Events" )
         return 0
     
-    @staticmethod
-    def overrideaction_applyP():
+    
+    def overrideaction_applyP(self):
         logging.info( "Default: Apply Parameters" )
         return 0
     
-    @staticmethod
-    def overrideaction_applyC():
+    
+    def overrideaction_applyC(self):
         logging.info( "Default: Apply Comments" )
         return 0
     
-    @staticmethod
-    def overrideaction_showfeedback():
+    
+    def overrideaction_showfeedback(self):
         logging.info( "Default: Show Feedback" )
         return 0
     
-    @staticmethod
-    def overrideaction_hidefeedback():
+    
+    def overrideaction_hidefeedback(self):
         logging.info( "Default: Hide Feedback" )
         return 0
     
-    @staticmethod
-    def overrideaction_showtracking():
+    
+    def overrideaction_showtracking(self):
         logging.info( "Default: Show Tracking" )
         return 0
     
-    @staticmethod
-    def overrideaction_hidetracking():
+    
+    def overrideaction_hidetracking(self):
         logging.info( "Default: Hide Tracking" )
         return 0
     
-    @staticmethod
-    def overrideaction_testT1():
+    
+    def overrideaction_testT1(self):
         logging.info( "Default: Test T1" )
         return 0
     
-    @staticmethod
-    def overrideaction_testT2():
+    
+    def overrideaction_testT2(self):
         logging.info( "Default: Test T2" )
         return 0
 
