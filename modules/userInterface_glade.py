@@ -175,13 +175,12 @@ class GUIGTK_Class:
             self.glade.get_object("entryITStart").set_text( str(self.interTrialStart) )
             self.glade.get_object("entryITEnd").set_text( str(self.interTrialEnd) )
             self.glade.get_object("entryProbab1").set_text( str(self.probabilityToneOne) )
-            self.glade.get_object("entreTone1").set_text( str(self.frequencyTone1) )
+            self.glade.get_object("entryTone1").set_text( str(self.frequencyTone1) )
             self.glade.get_object("entryTone2").set_text( str(self.frequencyTone2) )
             self.glade.get_object("entryMovementAmount").set_text( str(self.movementAmount) )
             self.glade.get_object("entryMethod").set_text( str(self.movementMethod) )
             self.glade.get_object("entryMovementTime").set_text( str(self.movementTime) )
             self.glade.get_object("entryIdleTime").set_text( str(self.idleTime) )
-            
             self.glade.get_object("entryCommentTr").set_text( str(self.comment) )
             pass
         
@@ -324,7 +323,7 @@ class GUIGTK_Class:
         
         def action_applyP(self, button):
                 logging.info( "Applying Parameters variables" )
-                self.frequencyTone1 = self.glade.get_object("entreTone1").get_text()
+                self.frequencyTone1 = self.glade.get_object("entryTone1").get_text()
                 self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
                 self.movementAmount = self.glade.get_object("entryMovementAmount").get_text()
                 self.movementMethod = self.glade.get_object("entryMethod").get_text()
@@ -389,7 +388,7 @@ class GUIGTK_Class:
         
         def action_testT1(self, button):
                 #print "Test T1"
-                self.frequencyTone1 = self.glade.get_object("entreTone1").get_text()
+                self.frequencyTone1 = self.glade.get_object("entryTone1").get_text()
                 self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
                 try:
                     self.overrideaction_testT1()
@@ -398,7 +397,7 @@ class GUIGTK_Class:
         
         def action_testT2(self, button):
                 #print "Test T2"
-                self.frequencyTone1 = self.glade.get_object("entreTone1").get_text()
+                self.frequencyTone1 = self.glade.get_object("entryTone1").get_text()
                 self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
                 try:
                     self.overrideaction_testT2()
