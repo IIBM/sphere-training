@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger('userInterfaceAPI')
 
 class userInterface_API:
-    usingTK = 0 #0: using GTk;   1: using TK
+    usingTK = 1 #0: using GTk;   1: using TK
     ns = 0 # message variable (namespace), that will be shared among processes.
     
     
@@ -14,16 +14,36 @@ class userInterface_API:
         #put initialization variables here.
         #self.launch_glade() # by design, won't initialize the gtk main loop from the init but from outside.
         self.training_started = False
+        print "initializing userInterfaceAPI"
         if (toStart == True):
-            #self.launch_glade()
-            self.launch_tkinter()
+            #
+            self.launch_GUI()
         logger.info( "userInterfaceAPI started." )
     
     def setNamespace(self, nuevons):
         global ns
         ns = nuevons
         logger.info( "Namespace set" )
-        self.launch_glade()
+        #self.launch_glade()
+    
+    def setInitialValues(self):
+        print "UIAPI: to set initial values."
+        self.currentGUI.toneStart = self.toneStart
+        self.currentGUI.toneEnd = self.toneEnd
+        self.currentGUI.movementWindowStart = self.movementWindowStart
+        self.currentGUI.movementWindowEnd = self.movementWindowEnd
+        self.currentGUI.interTrialStart = self.interTrialStart
+        self.currentGUI.interTrialEnd = self.interTrialEnd
+        self.currentGUI.probabilityToneOne = self.probabilityToneOne
+        self.currentGUI.frequencyTone1 = self.frequencyTone1
+        self.currentGUI.frequencyTone2 = self.frequencyTone2
+        self.currentGUI.movementAmount = self.movementAmount
+        self.currentGUI.movementMethod = self.movementMethod
+        self.currentGUI.movementTime = self.movementTime
+        self.currentGUI.idleTime = self.idleTime
+        self.currentGUI.comment = ""
+        self.currentGUI.commitInitialData()
+        pass
     
     def dummy_fn(self):
         print "Dummy Function"
@@ -231,11 +251,16 @@ class userInterface_API:
     
     def overrideaction_testT1(self):
         logger.info( "Default API: Test T1" )
+        print "Default API: Test T1"
         logger.info( "ns: " + ns.__str__() )
+        print "Default API: Test T1 ns:.. "
         print ns
+        print "Default API: Assigning variable fqt1.:.. "
         self.frequencyTone1 = self.currentGUI.frequencyTone1
+        print "Default API: Test T1 setting message 2.:.. "
         ns.message1 = 10
         ns.message2 = self.frequencyTone1
+        print "Default API: msg2 done"
         logger.info( "ns: " + ns.__str__() )
         print ns
         logger.info( "Default API: done." )
@@ -346,7 +371,7 @@ class userInterface_API:
     
     def action_applyC(self):
         self.comment = self.currentGUI.comment
-        logger.info( "API: Apply Comments: ", self.comment )
+        logger.info( "API: Apply Comments: " + str(self.comment) )
         try:
             self.overrideaction_applyC()
         except:
@@ -441,7 +466,16 @@ class userInterface_API:
                     gtk.main_quit()
         except:
                     pass
-        
+    
+    
+    
+    def launch_GUI(self):
+        if (self.usingTK == 0):
+            self.launch_glade()
+        elif (self.usingTK == 1):
+            self.launch_tkinter()
+        pass
+    
     
     def launch_glade(self):
         import userInterface_glade
@@ -471,20 +505,17 @@ class userInterface_API:
         #thread1.start()
         logger.info( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Glade Interface Started" )
+        self.setInitialValues()
         self.thread_function()
         
     
     def launch_tkinter(self):
         import userInterface_tk
-        print "..1"
         self.currentGUI = userInterface_tk.GUIGTK_Class()
-        time.sleep(5)
         print "Overriding functions:"
-        print self.currentGUI.overrideaction_drop
-        self.currentGUI.overrideaction_drop()
+        time.sleep(0.5)
+        time.sleep(0.5)
         self.currentGUI.overrideaction_drop = self.action_drop
-        self.currentGUI.overrideaction_drop()
-        print self.currentGUI.overrideaction_drop
         self.currentGUI.overrideaction_reward = self.action_reward
         self.currentGUI.overrideaction_open = self.action_open
         self.currentGUI.overrideaction_close = self.action_close
@@ -502,10 +533,10 @@ class userInterface_API:
         self.currentGUI.overrideaction_hidefeedback = self.action_hidefeedback
         self.currentGUI.overrideaction_hidetracking = self.action_hidetracking
         self.currentGUI.overrideaction_exit = self.action_exit
-        print "..2"
+        print "   Overriding functions: done."
         logger.info( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Tkinter Interface Started" )
-        print "..3"
+        self.setInitialValues()
         while True:
             time.sleep(1.0)
         
