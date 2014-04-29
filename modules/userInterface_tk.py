@@ -40,6 +40,7 @@ class GUIGTK_Class:
             pass
     
     def customVariablesInit(self):
+        self.previousVars = self.Empty_cl()
         self.toneStart = 0
         self.toneEnd = 0
         self.movementWindowStart = 0
@@ -160,6 +161,11 @@ class GUIGTK_Class:
         logging.info('Exiting userInterface_tk')
         print "from GUITK"
         os._exit(0)
+    
+    class Empty_cl():
+        #Used to save our variables' previous states.
+        def __init__(self):
+            pass
     
     class userInput(Frame):
     #------------------------------------------------------------------------------#
@@ -372,6 +378,8 @@ class GUIGTK_Class:
             pass
         
         def showFrame3(self):
+            logging.info( "Parameters frame" )
+            self.reference.AppFrm3.saveParametersPreviousState()
             self.reference.AppFrm3.deiconify()
             print "Showing Frame 3"
         
@@ -830,14 +838,19 @@ class GUIGTK_Class:
             self.__showFeedback = 0
             self.get_changes()
             print "Form3: Parameters loaded"
-    
+        
         def __on_CloseBtn_ButRel_1(self,Event=None):
             self.reference.App.hideForm3(True)
             pass
-    
+        
         def __on_ApplyBtn_ButRel_1(self,Event=None):
             print "Test Apply Frm3"
             self.get_changes()
+            
+            self.checkParametersVarsConsistency()
+            
+            self.saveParametersPreviousState()
+            
             self.reference.App.hideForm3(False)
             self.reference.overrideaction_applyP()
             pass
@@ -875,7 +888,7 @@ class GUIGTK_Class:
             self.reference.AppFrm3.withdraw()
             
             pass
-
+        
         def __on_Button1TestT1_ButRel_1(self,Event=None):
             print "Test Tone 1"
             self.var1_T1 = self.__Entry1Tone1.get()
@@ -884,12 +897,12 @@ class GUIGTK_Class:
             self.reference.frequencyTone2 = self.var2_T2
             self.reference.overrideaction_testT1()
             pass
-    
+        
         def __on_Button2TestT2_ButRel_1(self,Event=None):
             print "Test Tone 2"
             self.reference.overrideaction_testT2()
             pass
-    
+        
         def __on_Button3SHTracking_ButRel_1(self,Event=None):
             if ( self.__showTracking == 0):
                 print "hiding tracking"
@@ -900,7 +913,7 @@ class GUIGTK_Class:
                 self.__showTracking = 0
                 self.reference.overrideaction_showtracking()
             pass
-    
+        
         def __on_Button4SHFeedback_ButRel_1(self,Event=None):
             if ( self.__showFeedback == 0):
                 print "hiding feedback"
@@ -912,16 +925,90 @@ class GUIGTK_Class:
                 self.__showFeedback = 0
                 self.reference.overrideaction_showfeedback()
             pass
-    
+        
         def __on_Button5_ButRel_1(self,Event=None):
             pass
-    
+        
         def __on_Form3_Dstry(self,Event=None):
             pass
-        #
-        #Start of non-Rapyd user code
-        #
+        
+        def checkParametersVarsConsistency(self):
+            try:
+                a = float(self.var1_T1)
+            except:
+                self.var1_T1 = self.reference.previousVars.frequencyTone1
+                self.reference.frequencyTone1 = self.reference.previousVars.frequencyTone1
+                self.__Entry1Tone1.delete(0,10) #removes 10 characters.
+                freq1 = int ( self.reference.previousVars.frequencyTone1 )
+                self.__Entry1Tone1.insert(0, str(freq1))
+                
+                print "Bad input: frequencyTone1 to previous var."
+            try:
+                a = float(self.var2_T2)
+            except:
+                self.var2_T2 = self.reference.previousVars.frequencyTone2
+                self.reference.frequencyTone2 = self.reference.previousVars.frequencyTone2
+                self.__Entry2Tone2.delete(0,10) #removes 10 characters.
+                freq1 = int( self.reference.previousVars.frequencyTone2 )
+                self.__Entry2Tone2.insert(0, str(freq1))
+                
+                print "Bad input: frequencyTone2 to previous var."
+            try:
+                a = float(self.var3_MA)
+            except:
+                self.var3_MA = self.reference.previousVars.movementAmount
+                self.reference.movementAmount = self.reference.previousVars.movementAmount
+                self.__Entry3MvntAm.delete(0,10) #removes 10 characters.
+                freq1 = int( self.reference.previousVars.movementAmount )
+                self.__Entry3MvntAm.insert(0, str(freq1))
+                
+                print "Bad input: movementAmount to previous var."
+            try:
+                a = float(self.var4_MT)
+            except:
+                self.var4_MT = self.reference.previousVars.movementTime
+                self.reference.movementTime = self.reference.previousVars.movementTime
+                self.__Entry4MvntTime.delete(0,10) #removes 10 characters.
+                freq1 = float( self.reference.previousVars.movementTime )
+                self.__Entry4MvntTime.insert(0, str(freq1))
+                
+                print "Bad input: movementTime to previous var."
+            try:
+                a = float(self.var5_IT)
+            except:
+                self.var5_IT = self.reference.previousVars.idleTime
+                self.reference.idleTime = self.reference.previousVars.idleTime
+                self.__Entry5IdleTime.delete(0,10) #removes 10 characters.
+                freq1 = float( self.reference.previousVars.idleTime )
+                self.__Entry5IdleTime.insert(0, str(freq1))
+                
+                print "Bad input: idleTime to previous var."
+            try:
+                a = int(self.var8_num_selected)
+            except:
+                self.var8_num_selected = self.reference.previousVars.movementMethod
+                self.reference.movementMethod = self.reference.previousVars.movementMethod
+                self.__EntryMethodUsed.delete(0,10) #removes 10 characters.
+                freq1 = int( self.reference.previousVars.movementMethod )
+                self.__EntryMethodUsed.insert(0, str(freq1))
+                
+                print "Bad input: movementMethod to previous var."
+            pass
+        
+        def saveParametersPreviousState(self):
+            self.get_changes()
+            
+            self.reference.previousVars.frequencyTone1 = self.var1_T1
+            self.reference.previousVars.frequencyTone2 = self.var2_T2
+            self.reference.previousVars.movementAmount = self.var3_MA
+            self.reference.previousVars.movementMethod = self.var8_num_selected
+            self.reference.previousVars.movementTime = self.var4_MT
+            self.reference.previousVars.idleTime = self.var5_IT
+            print "Parameters: Previous states saved."
+            pass
+        
         def get_changes(self):
+            #Raw input data.
             print "commiting changes to variables in Form 3.."
     #         print self.__Entry1TStart.get()
     #         print self.__Entry2TEnd.get()
