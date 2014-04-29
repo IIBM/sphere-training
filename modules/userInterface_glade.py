@@ -9,6 +9,12 @@ import logging
 logger = logging.getLogger('userInterface_glade')
 
 class GUIGTK_Class:
+    
+        class Empty_cl():
+            #Used to save our variables' previous states.
+            def __init__(self):
+                pass
+        
         def __init__(self):
                 handlers = {
                             "onDeleteWindow": self.action_exit,
@@ -129,6 +135,7 @@ class GUIGTK_Class:
             return 0
         
         def customVariablesInit(self):
+                self.previousVars = self.Empty_cl()
                 self.start = 0 #initially stopped.
                 self.pause = 0 #initially "not paused"
                 self.feedback = 0 #initially showing feedback graphics.
@@ -280,6 +287,149 @@ class GUIGTK_Class:
                 except:
                     pass
         
+        def saveTrialEventsPreviousState(self):
+            self.__rawTEInput()
+            self.previousVars.toneStart = self.toneStart
+            self.previousVars.toneEnd = self.toneEnd
+            self.previousVars.movementWindowStart = self.movementWindowStart
+            self.previousVars.movementWindowEnd = self.movementWindowEnd
+            self.previousVars.interTrialStart = self.interTrialStart
+            self.previousVars.interTrialEnd = self.interTrialEnd
+            self.previousVars.probabilityToneOne = self.probabilityToneOne
+            print "Previous states saved."
+            pass
+        
+        def saveParametersPreviousState(self):
+            self.__rawPInput()
+            self.previousVars.frequencyTone1 = self.frequencyTone1
+            self.previousVars.frequencyTone2 = self.frequencyTone2
+            self.previousVars.movementAmount = self.movementAmount
+            self.previousVars.movementMethod = self.movementMethod
+            self.previousVars.movementTime = self.movementTime
+            self.previousVars.idleTime = self.idleTime
+            print "Previous states saved."
+            pass
+        
+        def checkTrialEventsVarsConsistency(self):
+            
+            try:
+                a = float(self.toneStart)
+            except:
+                #incorrect input. Returning to previous state.
+                self.toneStart = self.previousVars.toneStart
+                self.glade.get_object("entryToneStart").set_text( str( self.previousVars.toneStart ) )
+                print "Bad input: toneStart to previous var."
+            try:
+                a = float(self.toneEnd)
+            except:
+                #incorrect input. Returning to previous state.
+                self.toneEnd = self.previousVars.toneEnd
+                self.glade.get_object("entryToneEnd").set_text( str( self.previousVars.toneEnd ) )
+                print "Bad input: toneEnd to previous var."
+            try:
+                a = float(self.movementWindowStart)
+            except:
+                #incorrect input. Returning to previous state.
+                self.movementWindowStart = self.previousVars.movementWindowStart
+                self.glade.get_object("entryMvmntWinStart").set_text( str( self.previousVars.movementWindowStart ) )
+                print "Bad input: movementWindowStart to previous var."
+            try:
+                a = float(self.movementWindowEnd)
+            except:
+                #incorrect input. Returning to previous state.
+                self.movementWindowEnd = self.previousVars.movementWindowEnd
+                self.glade.get_object("entryMvmntWinEnd").set_text( str( self.previousVars.movementWindowEnd ) )
+                print "Bad input: movementWindowEnd to previous var."
+            try:
+                a = float(self.interTrialStart)
+            except:
+                #incorrect input. Returning to previous state.
+                self.interTrialStart = self.previousVars.interTrialStart
+                self.glade.get_object("entryITStart").set_text( str( self.previousVars.interTrialStart ) )
+                print "Bad input: interTrialStart to previous var."
+            try:
+                a = float(self.interTrialEnd)
+            except:
+                #incorrect input. Returning to previous state.
+                self.interTrialEnd = self.previousVars.interTrialEnd
+                self.glade.get_object("entryITEnd").set_text( str( self.previousVars.interTrialEnd ) )
+                print "Bad input: interTrialEnd to previous var."
+            try:
+                a = float(self.probabilityToneOne)
+            except:
+                #incorrect input. Returning to previous state.
+                self.probabilityToneOne = self.previousVars.probabilityToneOne
+                self.glade.get_object("entryProbab1").set_text( str( self.previousVars.probabilityToneOne ) )
+                print "Bad input: probabilityToneOne to previous var."
+            pass
+        
+        def __rawPInput(self):
+                self.frequencyTone1 = self.glade.get_object("entryTone1").get_text()
+                self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
+                self.movementAmount = self.glade.get_object("entryMovementAmount").get_text()
+                self.movementMethod = self.glade.get_object("entryMethod").get_text()
+                self.movementTime = self.glade.get_object("entryMovementTime").get_text()
+                self.idleTime = self.glade.get_object("entryIdleTime").get_text()
+                print "Raw P Input done."
+                pass
+        
+        def __rawTEInput(self):
+                self.toneStart = self.glade.get_object("entryToneStart").get_text()
+                self.toneEnd = self.glade.get_object("entryToneEnd").get_text()
+                self.movementWindowStart = self.glade.get_object("entryMvmntWinStart").get_text()
+                self.movementWindowEnd = self.glade.get_object("entryMvmntWinEnd").get_text()
+                self.interTrialStart = self.glade.get_object("entryITStart").get_text()
+                self.interTrialEnd = self.glade.get_object("entryITEnd").get_text()
+                self.probabilityToneOne = self.glade.get_object("entryProbab1").get_text()
+                print "Raw TE Input done."
+                pass
+        
+        def checkParametersVarsConsistency(self):
+            try:
+                a = float(self.frequencyTone1)
+            except:
+                #incorrect input. Returning to previous state.
+                self.frequencyTone1 = self.previousVars.frequencyTone1
+                self.glade.get_object("entryTone1").set_text( str( self.previousVars.frequencyTone1 ) )
+                print "Bad input: frequencyTone1 to previous var."
+            try:
+                a = float(self.frequencyTone2)
+            except:
+                #incorrect input. Returning to previous state.
+                self.frequencyTone2 = self.previousVars.frequencyTone2
+                self.glade.get_object("entryTone2").set_text( str( self.previousVars.frequencyTone2 ) )
+                print "Bad input: frequencyTone2 to previous var."
+            try:
+                a = float(self.movementAmount)
+            except:
+                #incorrect input. Returning to previous state.
+                self.movementAmount = self.previousVars.movementAmount
+                self.glade.get_object("entryMovementAmount").set_text( str( self.previousVars.movementAmount ) )
+                print "Bad input: movementAmount to previous var."
+            try:
+                a = float(self.movementMethod)
+            except:
+                #incorrect input. Returning to previous state.
+                self.movementMethod = self.previousVars.movementMethod
+                self.glade.get_object("entryMethod").set_text( str( self.previousVars.movementMethod ) )
+                print "Bad input: movementMethod to previous var."
+            try:
+                a = float(self.movementTime)
+            except:
+                #incorrect input. Returning to previous state.
+                self.movementTime = self.previousVars.movementTime
+                self.glade.get_object("entryMovementTime").set_text( str( self.previousVars.movementTime ) )
+                print "Bad input: movementTime to previous var."
+            try:
+                a = float(self.idleTime)
+            except:
+                #incorrect input. Returning to previous state.
+                self.idleTime = self.previousVars.idleTime
+                self.glade.get_object("entryIdleTime").set_text( str( self.previousVars.idleTime ) )
+                print "Bad input: idleTime to previous var."
+            
+            pass
+        
         def action_exitX(self, button, event):
                 #triggered from the "x" window button
                 self.action_exit(button)
@@ -292,21 +442,21 @@ class GUIGTK_Class:
         
         def action_trialEventsFr(self, button):
                 logging.info( "Trial Events frame" )
+                self.saveTrialEventsPreviousState()
                 self.glade.get_object("trialEventsWin").show_all()
         
         def action_parametersFr(self, button):
                 logging.info( "Parameters frame" )
+                self.saveParametersPreviousState()
                 self.glade.get_object("parametersWin").show_all()
         
         def action_applyTE(self, button):
                 logging.info( "Applying Trial Events variables" )
-                self.toneStart = self.glade.get_object("entryToneStart").get_text()
-                self.toneEnd = self.glade.get_object("entryToneEnd").get_text()
-                self.movementWindowStart = self.glade.get_object("entryMvmntWinStart").get_text()
-                self.movementWindowEnd = self.glade.get_object("entryMvmntWinEnd").get_text()
-                self.interTrialStart = self.glade.get_object("entryITStart").get_text()
-                self.interTrialEnd = self.glade.get_object("entryITEnd").get_text()
-                self.probabilityToneOne = self.glade.get_object("entryProbab1").get_text()
+                
+                self.__rawTEInput()
+                
+                self.checkTrialEventsVarsConsistency() #if bad input, return to previous state...
+                
                 logging.info( self.toneStart )
                 logging.info( self.toneEnd )
                 logging.info( self.movementWindowStart )
@@ -314,6 +464,8 @@ class GUIGTK_Class:
                 logging.info( self.interTrialStart )
                 logging.info( self.interTrialEnd )
                 logging.info( self.probabilityToneOne )
+                
+                self.saveTrialEventsPreviousState()
                 try:
                     self.overrideaction_applyTE()
                 except:
@@ -321,18 +473,19 @@ class GUIGTK_Class:
         
         def action_applyP(self, button):
                 logging.info( "Applying Parameters variables" )
-                self.frequencyTone1 = self.glade.get_object("entryTone1").get_text()
-                self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
-                self.movementAmount = self.glade.get_object("entryMovementAmount").get_text()
-                self.movementMethod = self.glade.get_object("entryMethod").get_text()
-                self.movementTime = self.glade.get_object("entryMovementTime").get_text()
-                self.idleTime = self.glade.get_object("entryIdleTime").get_text()
+                
+                self.__rawPInput()
+                
+                self.checkParametersVarsConsistency()
+                
                 logging.info( self.frequencyTone1 )
                 logging.info( self.frequencyTone2 )
                 logging.info( self.movementAmount )
                 logging.info( self.movementMethod )
                 logging.info( self.movementTime )
                 logging.info( self.idleTime )
+                
+                self.saveParametersPreviousState()
                 try:
                     self.overrideaction_applyP()
                 except:
