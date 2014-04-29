@@ -296,7 +296,7 @@ class GUIGTK_Class:
             self.previousVars.interTrialStart = self.interTrialStart
             self.previousVars.interTrialEnd = self.interTrialEnd
             self.previousVars.probabilityToneOne = self.probabilityToneOne
-            print "Previous states saved."
+            print "Trial Events: Previous states saved."
             pass
         
         def saveParametersPreviousState(self):
@@ -307,7 +307,7 @@ class GUIGTK_Class:
             self.previousVars.movementMethod = self.movementMethod
             self.previousVars.movementTime = self.movementTime
             self.previousVars.idleTime = self.idleTime
-            print "Previous states saved."
+            print "Parameters: Previous states saved."
             pass
         
         def checkTrialEventsVarsConsistency(self):
