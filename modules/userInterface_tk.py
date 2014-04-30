@@ -15,6 +15,10 @@ logger = logging.getLogger('userInterface_tk')
 
 class GUIGTK_Class:
     
+    class Empty_cl():
+        #Used to save our variables' previous states.
+        def __init__(self):
+            pass
     
     def __init__(self):
             self.customVariablesInit()
@@ -34,6 +38,7 @@ class GUIGTK_Class:
             self.thread5 = threading.Thread(target=self.startFrame5 , name="Frame5")
             time.sleep(0.25) #i can swear without this delay it won't work properly
             self.thread5.start()
+            
             print "GUI GTK class initialized."
             #startFrame1()
             pass
@@ -70,22 +75,29 @@ class GUIGTK_Class:
         self.AppFrm1.configureData()
         self.AppFrm3.configureData()
         self.AppFrm5.configureData()
+        self.App.pack() #was forgotten previously to avoid flickering of appfrm1-5
         print "    Done with configuration of initial data to GUI"
         logger.info("    Done with configuration of initial data to GUI")
-        
         pass
     
     def startFrame0(self):
-        Root = Tk()
+        self.previousVars.Root = Tk()
+        self.previousVars.Root.withdraw() #to prevent user from touching vars before initialization
         import Tkinter
         
         del Tkinter
-        self.App = self.userInput(Root)
+        self.App = self.userInput(self.previousVars.Root)
         self.App.pack(expand='yes',fill='both')
         self.App.reference = self
-        Root.geometry('480x240+10+10')
-        Root.title('tk GUI Main Frame.')
-        Root.mainloop()
+        
+        
+        
+        self.previousVars.Root.geometry('480x240+10+10')
+        self.previousVars.Root.title('tk GUI Main Frame.')
+        
+        time.sleep(1.6)
+        self.previousVars.Root.deiconify()
+        self.previousVars.Root.mainloop()
         while True:
             time.sleep(1.0)
         pass
@@ -161,10 +173,6 @@ class GUIGTK_Class:
         print "from GUITK"
         os._exit(0)
     
-    class Empty_cl():
-        #Used to save our variables' previous states.
-        def __init__(self):
-            pass
     
     class userInput(Frame):
     #------------------------------------------------------------------------------#

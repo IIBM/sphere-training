@@ -40,6 +40,7 @@ class userInterface_API:
         print "User Interface API: sending variables to GUI, with the purpose of setting up initial values."
         logger.info( "User Interface API: sending variables to GUI, with the purpose of setting up initial values." )
         
+        
         self.currentGUI.toneStart = self.toneStart
         self.currentGUI.toneEnd = self.toneEnd
         self.currentGUI.movementWindowStart = self.movementWindowStart
