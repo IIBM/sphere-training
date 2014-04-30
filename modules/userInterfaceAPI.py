@@ -71,6 +71,7 @@ class userInterface_API:
         pass
     
     def setNameSpaceMessage2(self,arg):
+        #it is preferable to first send message 2 (this) and then msg1. Else this message won't take effect.
         if (ns.message1 == 0):
             ns.message2 = arg
             logger.info( 'Msg2: Handled from here.' )
@@ -281,8 +282,8 @@ class userInterface_API:
         logger.info( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         self.frequencyTone1 = self.currentGUI.frequencyTone1
-        self.setNameSpaceMessage1(10)
         self.setNameSpaceMessage2(self.frequencyTone1)
+        self.setNameSpaceMessage1(10)
         logger.info( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         logger.info( "Default API: done." )
@@ -292,8 +293,8 @@ class userInterface_API:
         logger.info( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         self.frequencyTone2 = self.currentGUI.frequencyTone2
-        self.setNameSpaceMessage1(11)
         self.setNameSpaceMessage2(self.frequencyTone2)
+        self.setNameSpaceMessage1(11)
         logger.info( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         logger.info( "Default API: done." )
