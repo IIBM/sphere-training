@@ -893,6 +893,7 @@ class GUIGTK_Class:
             print "Test Tone 1"
             self.var1_T1 = self.__Entry1Tone1.get()
             self.var2_T2 = self.__Entry2Tone2.get()
+            self.checkParametersVarsConsistency()
             self.reference.frequencyTone1 = self.var1_T1
             self.reference.frequencyTone2 = self.var2_T2
             self.reference.overrideaction_testT1()
@@ -993,6 +994,7 @@ class GUIGTK_Class:
                 self.__EntryMethodUsed.insert(0, str(freq1))
                 
                 print "Bad input: movementMethod to previous var."
+            print "Parameters input checked."
             pass
         
         def saveParametersPreviousState(self):
@@ -1251,6 +1253,25 @@ class GUIGTK_Class:
             self.var5_ITStart = self.__Entry5ITStart.get()
             self.var6_ITEnd = self.__Entry6ITEnd.get()
             self.var7_Probab1 = float (self.__Scale2.get()) / 100
+            pass
+        
+        def saveTrialEventsPreviousState(self):
+            self.get_changes()
+            self.reference.previousVars.toneStart = a
+            self.reference.previousVars.toneEnd = b
+            self.reference.previousVars.movementWindowStart = c
+            self.reference.previousVars.movementWindowEnd = d
+            self.reference.previousVars.interTrialStart = e
+            self.reference.previousVars.interTrialEnd = f
+            self.reference.previousVars.probabilityToneOne = g
+            
+            self.reference.previousVars.frequencyTone1 = self.var1_T1
+            self.reference.previousVars.frequencyTone2 = self.var2_T2
+            self.reference.previousVars.movementAmount = self.var3_MA
+            self.reference.previousVars.movementMethod = self.var8_num_selected
+            self.reference.previousVars.movementTime = self.var4_MT
+            self.reference.previousVars.idleTime = self.var5_IT
+            print "Parameters: Previous states saved."
             pass
     
     
