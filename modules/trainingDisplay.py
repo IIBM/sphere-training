@@ -1,5 +1,8 @@
-import pygame, sys
+import pygame
+import sys
 import time
+import logging
+logger = logging.getLogger('trainingDisplay')
 
 class trainingDisplay() :
     #Class that renders relevant text added by the user, lets you update its information.
@@ -62,9 +65,9 @@ class trainingDisplay() :
     def askUserInput(self, texts):
         self.isUserWriting = True
         #print "Asking user input:"
-        import inputbox
-        s = inputbox.ask(self.windowSurface, "Comment on this training")
-        print s
+        #import inputbox #not used anymore.
+        #s = inputbox.ask(self.windowSurface, "Comment on this training")
+        s = ""
         self.isUserWriting = False
         return s
         
@@ -113,7 +116,14 @@ class trainingDisplay() :
         self.renderAgain()
 
 if __name__ == '__main__':
-    print "trainingDisplay module"
+    # create a logging format
+    formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    dateformat = '%Y/%m/%d %I:%M:%S %p'
+    
+    logging.basicConfig(filename='logs/trainingDisplay.log', filemode='w',
+            level=logging.DEBUG, format=formatter, datefmt = dateformat)
+    logging.info('Start trainingDisplay Test')
+    print "Start trainingDisplay Test"
     a = trainingDisplay()
     a.addImportantInfo(("Trials", 300))
     a.addImportantInfo(("Succesful Trials", 200))
@@ -127,5 +137,6 @@ if __name__ == '__main__':
         a.updateInfo("Other secondary information", var)
         var+=1
         print "loop: " , var
+        logging.info( str("loop: " + str(var) ) )
         for event in pygame.event.get():
                 if event.type == pygame.QUIT: sys.exit()

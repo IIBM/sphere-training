@@ -14,7 +14,8 @@
     
 """
 ######################################################><
-import os, sys
+import os
+import sys
 import modulespath
 import time
 import timeit
@@ -706,7 +707,6 @@ def GUICheck():
 def restartTraining():
         # Starts or restarts training.
         try:
-            import timeit
             gVariables.start_time = timeit.default_timer()
             gVariables.current_trial_start_time = timeit.default_timer()
         except:
@@ -829,9 +829,8 @@ def trainingInit():
     # logging:
     formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     dateformat = '%Y/%m/%d %I:%M:%S %p'
-    import logging
-    logging.basicConfig(filename='logs/%s_%s.log' % (gVariables.trainingName, time.strftime("%Y-%m-%d")), filemode='a',
-    level=logging.DEBUG, format=formatter, datefmt=dateformat)
+    logging.basicConfig(filename='logs/%s_%s.log' % (gVariables.trainingName, time.strftime("%Y-%m-%d")),
+                         filemode='a', level=logging.DEBUG, format=formatter, datefmt=dateformat)
     gVariables.logger = logging.getLogger('main')
     gVariables.logger.info('===============================================')
     gVariables.logger.info('Start %s' % gVariables.trainingName)

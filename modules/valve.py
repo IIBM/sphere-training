@@ -1,6 +1,5 @@
 import time
 import logging
-
 logger = logging.getLogger('valve')
 
 ValvePinMask = 0x04
