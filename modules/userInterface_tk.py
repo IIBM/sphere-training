@@ -373,15 +373,17 @@ class GUIGTK_Class:
             pass
         
         def showFrame1(self):
-            print "Showing Frame 1"
+            logging.info( "Trial Events frame shown." )
+            self.reference.AppFrm1.saveTrialEventsPreviousState()
             self.reference.AppFrm1.deiconify()
+            print "Showing Frame 1: Trial Events"
             pass
         
         def showFrame3(self):
-            logging.info( "Parameters frame" )
+            logging.info( "Parameters frame shown." )
             self.reference.AppFrm3.saveParametersPreviousState()
             self.reference.AppFrm3.deiconify()
-            print "Showing Frame 3"
+            print "Showing Frame 3: Parameters"
         
         def showFrame5(self):
             self.reference.AppFrm5.deiconify()
@@ -1171,6 +1173,12 @@ class GUIGTK_Class:
         def __on_ApplyBtn_ButRel_1(self,Event=None):
             print "Test Apply Frm1"
             self.get_changes()
+            
+            self.checkTrialEventsVarsConsistency()
+            
+            self.saveTrialEventsPreviousState()
+            
+            
             self.reference.App.hideForm1(False)
             self.reference.overrideaction_applyTE()
             pass
@@ -1256,22 +1264,89 @@ class GUIGTK_Class:
             pass
         
         def saveTrialEventsPreviousState(self):
-            self.get_changes()
-            self.reference.previousVars.toneStart = a
-            self.reference.previousVars.toneEnd = b
-            self.reference.previousVars.movementWindowStart = c
-            self.reference.previousVars.movementWindowEnd = d
-            self.reference.previousVars.interTrialStart = e
-            self.reference.previousVars.interTrialEnd = f
-            self.reference.previousVars.probabilityToneOne = g
+            self.get_changes() #because maybe changes weren't successfull
+            self.reference.previousVars.toneStart = self.var1_TStart
+            self.reference.previousVars.toneEnd = self.var2_TEnd
+            self.reference.previousVars.movementWindowStart = self.var3_MWS
+            self.reference.previousVars.movementWindowEnd = self.var4_MWE
+            self.reference.previousVars.interTrialStart = self.var5_ITStart
+            self.reference.previousVars.interTrialEnd = self.var6_ITEnd
+            self.reference.previousVars.probabilityToneOne = self.var7_Probab1
             
-            self.reference.previousVars.frequencyTone1 = self.var1_T1
-            self.reference.previousVars.frequencyTone2 = self.var2_T2
-            self.reference.previousVars.movementAmount = self.var3_MA
-            self.reference.previousVars.movementMethod = self.var8_num_selected
-            self.reference.previousVars.movementTime = self.var4_MT
-            self.reference.previousVars.idleTime = self.var5_IT
-            print "Parameters: Previous states saved."
+            print "Trial Events: Previous states saved."
+            pass
+        
+        def checkTrialEventsVarsConsistency(self):
+            try:
+                self.reference.toneStart = float(self.var1_TStart)
+            except:
+                self.var1_TStart = self.reference.previousVars.toneStart
+                self.reference.toneStart = self.reference.previousVars.toneStart
+                self.__Entry1TStart.delete(0,10) #removes 10 characters.
+                freq1 = float ( self.reference.previousVars.toneStart )
+                self.__Entry1TStart.insert(0, str(freq1))
+                
+                print "Bad input: ToneStart to previous var."
+            try:
+                self.reference.toneEnd = float(self.var2_TEnd)
+            except:
+                self.var2_TEnd = self.reference.previousVars.toneEnd
+                self.reference.toneEnd = self.reference.previousVars.toneEnd
+                self.__Entry2TEnd.delete(0,10) #removes 10 characters.
+                freq1 = float ( self.reference.previousVars.toneEnd )
+                self.__Entry2TEnd.insert(0, str(freq1))
+                
+                print "Bad input: toneEnd to previous var."
+            try:
+                self.reference.movementWindowStart = float(self.var3_MWS)
+            except:
+                self.var3_MWS = self.reference.previousVars.movementWindowStart
+                self.reference.movementWindowStart = self.reference.previousVars.movementWindowStart
+                self.__Entry3MvmntWindowStart.delete(0,10) #removes 10 characters.
+                freq1 = float ( self.reference.previousVars.movementWindowStart )
+                self.__Entry3MvmntWindowStart.insert(0, str(freq1))
+                
+                print "Bad input: movementWindowStart to previous var."
+            try:
+                self.reference.movementWindowEnd = float(self.var4_MWE)
+            except:
+                self.var4_MWE = self.reference.previousVars.movementWindowEnd
+                self.reference.movementWindowEnd = self.reference.previousVars.movementWindowEnd
+                self.__Entry4MvntWindowEnd.delete(0,10) #removes 10 characters.
+                freq1 = float ( self.reference.previousVars.movementWindowEnd )
+                self.__Entry4MvntWindowEnd.insert(0, str(freq1))
+                
+                print "Bad input: movementWindowEnd to previous var."
+            try:
+                self.reference.interTrialStart = float(self.var5_ITStart)
+            except:
+                self.var5_ITStart = self.reference.previousVars.interTrialStart
+                self.reference.interTrialStart = self.reference.previousVars.interTrialStart
+                self.__Entry5ITStart.delete(0,10) #removes 10 characters.
+                freq1 = float ( self.reference.previousVars.interTrialStart )
+                self.__Entry5ITStart.insert(0, str(freq1))
+                
+                print "Bad input: interTrialStart to previous var."
+            try:
+                self.reference.interTrialEnd = float(self.var6_ITEnd)
+            except:
+                self.var6_ITEnd = self.reference.previousVars.interTrialEnd
+                self.reference.interTrialEnd = self.reference.previousVars.interTrialEnd
+                self.__Entry6ITEnd.delete(0,10) #removes 10 characters.
+                freq1 = float ( self.reference.previousVars.interTrialEnd )
+                self.__Entry6ITEnd.insert(0, str(freq1))
+                
+                print "Bad input: interTrialEnd to previous var."
+            try:
+                self.reference.probabilityToneOne = float(self.var7_Probab1)
+            except:
+                #very improbable since the probability is set with a sliding bar..
+                self.var7_Probab1 = self.reference.previousVars.probabilityToneOne
+                self.reference.probabilityToneOne = self.reference.previousVars.probabilityToneOne
+                freq1 = float ( self.reference.previousVars.probabilityToneOne )
+                self.__Scale2.set(int (freq1 * 100) )
+                
+                print "Bad input: probabilityToneOne to previous var."
             pass
     
     
