@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-import rpErrorHandler
 from Tkinter import *
 import time
 import sys
@@ -79,7 +78,7 @@ class GUIGTK_Class:
     def startFrame0(self):
         Root = Tk()
         import Tkinter
-        #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
+        
         del Tkinter
         self.App = self.userInput(Root)
         self.App.pack(expand='yes',fill='both')
@@ -95,7 +94,7 @@ class GUIGTK_Class:
         import Tkinter
         Root2 = Tkinter.Tk()
         Root2.withdraw()
-        #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
+        
         del Tkinter
         
         self.AppFrm1 = self.Form1(Root2)
@@ -117,7 +116,7 @@ class GUIGTK_Class:
         import Tkinter
         Root = Tkinter.Tk()
         Root.withdraw()
-        #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
+        
         del Tkinter
         
         self.AppFrm3 = self.Form3(Root)
@@ -139,7 +138,7 @@ class GUIGTK_Class:
         import Tkinter
         Root = Tkinter.Tk()
         Root.withdraw()
-        #Tkinter.CallWrapper = rpErrorHandler.CallWrapper
+        
         del Tkinter
         self.AppFrm5 = self.Form5(Root)
         self.AppFrm5.reference = self
