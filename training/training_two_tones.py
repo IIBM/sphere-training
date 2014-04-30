@@ -814,8 +814,6 @@ def userInputGUI(ns):
     
     currentGUI.launch_GUI()
     
-    
-
 def exitTraining():
     # Finalize this training and exits.
     print "Exiting."
