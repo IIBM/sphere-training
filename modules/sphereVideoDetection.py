@@ -8,11 +8,12 @@
      
 '''
 
-import logging
+
 import timeit
 import cv as cv
 import cv2
-
+import logging
+logger = logging.getLogger('sphereVideoDetection')
 
 
 
