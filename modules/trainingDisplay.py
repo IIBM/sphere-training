@@ -122,7 +122,7 @@ if __name__ == '__main__':
     
     logging.basicConfig(filename='logs/trainingDisplay.log', filemode='w',
             level=logging.DEBUG, format=formatter, datefmt = dateformat)
-    logging.info('Start trainingDisplay Test')
+    logger.info('Start trainingDisplay Test')
     print "Start trainingDisplay Test"
     a = trainingDisplay()
     a.addImportantInfo(("Trials", 300))
@@ -137,6 +137,6 @@ if __name__ == '__main__':
         a.updateInfo("Other secondary information", var)
         var+=1
         print "loop: " , var
-        logging.info( str("loop: " + str(var) ) )
+        logger.info( str("loop: " + str(var) ) )
         for event in pygame.event.get():
                 if event.type == pygame.QUIT: sys.exit()

@@ -569,10 +569,10 @@ if __name__ == '__main__':
     dateformat = '%Y/%m/%d %I:%M:%S %p'
     logging.basicConfig(filename='logs/userInterfaceAPI.log', filemode='w',
             level=logging.DEBUG, format=formatter, datefmt = dateformat)
-    logging.info('Start userInterfaceAPI Test')
+    logger.info('Start userInterfaceAPI Test')
     import multiprocessing
     import time
     print "init.."
     p = multiprocessing.Process(target=userInterface_API(True))
     p.start()
-    logging.info('End userInterfaceAPI Test')
+    logger.info('End userInterfaceAPI Test')

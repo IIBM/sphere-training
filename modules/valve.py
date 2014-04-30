@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(filename='logs/valve.log', filemode='w',
         level=logging.DEBUG, format=formatter, datefmt = dateformat)
-    logging.info('Start Valve Test')
+    logger.info('Start Valve Test')
     v1 = Valve()
     v1.open()
     time.sleep(2)
@@ -113,4 +113,4 @@ if __name__ == '__main__':
     v2.close()
     print v2
     
-    logging.info('End Valve Test')
+    logger.info('End Valve Test')

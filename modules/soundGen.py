@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(filename='logs/sound.log', filemode='w',
         level=logging.DEBUG, format=formatter, datefmt = dateformat)
-    logging.info('Start Sound Test')
+    logger.info('Start Sound Test')
     s1 = soundGen()
     duration = 3.0 # in seconds
     freq1 = 440
@@ -85,4 +85,4 @@ if __name__ == '__main__':
 
     s2 = soundGen(3*freq1,2*duration)
     time.sleep(2*duration)
-    logging.info('End Sound Test')
+    logger.info('End Sound Test')

@@ -71,7 +71,7 @@ class GUIGTK_Class:
         self.AppFrm3.configureData()
         self.AppFrm5.configureData()
         print "    Done with configuration of initial data to GUI"
-        logging.info("    Done with configuration of initial data to GUI")
+        logger.info("    Done with configuration of initial data to GUI")
         
         pass
     
@@ -157,7 +157,7 @@ class GUIGTK_Class:
         pass
     
     def exit_all(self):
-        logging.info('Exiting userInterface_tk')
+        logger.info('Exiting userInterface_tk')
         print "from GUITK"
         os._exit(0)
     
@@ -372,14 +372,14 @@ class GUIGTK_Class:
             pass
         
         def showFrame1(self):
-            logging.info( "Trial Events frame shown." )
+            logger.info( "Trial Events frame shown." )
             self.reference.AppFrm1.saveTrialEventsPreviousState()
             self.reference.AppFrm1.deiconify()
             print "Showing Frame 1: Trial Events"
             pass
         
         def showFrame3(self):
-            logging.info( "Parameters frame shown." )
+            logger.info( "Parameters frame shown." )
             self.reference.AppFrm3.saveParametersPreviousState()
             self.reference.AppFrm3.deiconify()
             print "Showing Frame 3: Parameters"
@@ -518,7 +518,7 @@ class GUIGTK_Class:
             try:
                     self.reference.overrideaction_exit()
             except:
-                    logging.info( "Exit: No override for exit." )
+                    logger.info( "Exit: No override for exit." )
             self.reference.exit_all()
     
     
@@ -1351,93 +1351,93 @@ class GUIGTK_Class:
     
     def overrideaction_drop(self):
         print "DROP from UI_TK"
-        logging.info( "Default: Drop" )
+        logger.info( "Default: Drop" )
         return 0
     
     
     def overrideaction_reward(self):
-        logging.info( "Default: Reward" )
+        logger.info( "Default: Reward" )
         return 0
     
     
     def overrideaction_open(self):
-        logging.info( "Default: Open" )
+        logger.info( "Default: Open" )
         return 0
     
     
     def overrideaction_close(self):
-        logging.info( "Default: Close" )
+        logger.info( "Default: Close" )
         return 0
     
     
     def overrideaction_startTraining(self):
         #print "Start / Stop training"
-        logging.info( "Default: Start / Stop Training" )
+        logger.info( "Default: Start / Stop Training" )
         return 0
     
     
     def overrideaction_stopTraining(self):
         #NOT USED
         #print "Start / Stop training"
-        logging.info( "Default: Stop Training" )
+        logger.info( "Default: Stop Training" )
         return 0
     
     
     def overrideaction_pauseTraining(self):
         #print "Pause / Resume training"
-        logging.info( "Default: Pause / Resume Training" )
+        logger.info( "Default: Pause / Resume Training" )
         return 0
     
     
     def overrideaction_resumeTraining(self):
         #NOT USED
         #print "Pause / Resume training"
-        logging.info( "Default: Resume Training" )
+        logger.info( "Default: Resume Training" )
         return 0
     
     
     def overrideaction_applyTE(self):
-        logging.info( "Default: Apply Trials Events" )
+        logger.info( "Default: Apply Trials Events" )
         return 0
     
     
     def overrideaction_applyP(self):
-        logging.info( "Default: Apply Parameters" )
+        logger.info( "Default: Apply Parameters" )
         return 0
     
     
     def overrideaction_applyC(self):
-        logging.info( "Default: Apply Comments" )
+        logger.info( "Default: Apply Comments" )
         return 0
     
     
     def overrideaction_showfeedback(self):
-        logging.info( "Default: Show Feedback" )
+        logger.info( "Default: Show Feedback" )
         return 0
     
     
     def overrideaction_hidefeedback(self):
-        logging.info( "Default: Hide Feedback" )
+        logger.info( "Default: Hide Feedback" )
         return 0
     
     
     def overrideaction_showtracking(self):
-        logging.info( "Default: Show Tracking" )
+        logger.info( "Default: Show Tracking" )
         return 0
     
     
     def overrideaction_hidetracking(self):
-        logging.info( "Default: Hide Tracking" )
+        logger.info( "Default: Hide Tracking" )
         return 0
     
     
     def overrideaction_testT1(self):
-        logging.info( "Default: Test T1" )
+        logger.info( "Default: Test T1" )
         return 0
     
     
     def overrideaction_testT2(self):
-        logging.info( "Default: Test T2" )
+        logger.info( "Default: Test T2" )
         return 0
 
 
@@ -1450,5 +1450,5 @@ if __name__ == '__main__':
     
     logging.basicConfig(filename='logs/userInterface_tk.log', filemode='w',
         level=logging.DEBUG, format=formatter, datefmt = dateformat)
-    logging.info('Start userInterface_tk Test')
+    logger.info('Start userInterface_tk Test')
     a = GUIGTK_Class()

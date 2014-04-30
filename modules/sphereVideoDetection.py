@@ -22,18 +22,19 @@ class sphereVideoDetection():
     def __init__ (self, videosource, width=640, height=480) :
         import track_bola_utils
         import os
+        logger.info( "Initializing sphereVideoDetection" )
         try:
             import configSphereVideoDetection
         except ImportError:
             print "File configSphereVideoDetection.py not found. Generating a new copy..."
-            logging.info( "File configSphereVideoDetection.py not found. Generating a new copy..." )
+            logger.info( "File configSphereVideoDetection.py not found. Generating a new copy..." )
             a = os.getcwd() + "/"
             print a
             import shutil
             shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
             import configSphereVideoDetection
             print "configSphereVideoDetection.py copied and imported successfully."
-            logging.info( "configSphereVideoDetection.py copied and imported successfully." )
+            logger.info( "configSphereVideoDetection.py copied and imported successfully." )
         except:
             print "Error importing configSphereVideoDetection."
             os._exit(1)
@@ -43,17 +44,17 @@ class sphereVideoDetection():
             import configCamera
         except ImportError:
             print "File configCamera.py not found. Generating a new copy..."
-            logging.info( "File configCamera.py not found. Generating a new copy..." )
+            logger.info( "File configCamera.py not found. Generating a new copy..." )
             a = os.getcwd() + "/"
             print a
             import shutil
             shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
             import configCamera
             print "configCamera.py copied and imported successfully."
-            logging.info( "configCamera.py copied and imported successfully." )
+            logger.info( "configCamera.py copied and imported successfully." )
         except:
             print "Error importing configCamera."
-            logging.info( "Error importing configCamera." )
+            logger.info( "Error importing configCamera." )
             os._exit(1)
         #import configCamera
         
@@ -301,7 +302,7 @@ class sphereVideoDetection():
         #Seconds that will be detected for movement.
         if (wind > 0.0):
             self.movementTimeWindow = wind;
-            logging.debug("videoDetection: Movement time window changed to %f seconds."%self.movementTimeWindow)
+            logger.debug("videoDetection: Movement time window changed to %f seconds."%self.movementTimeWindow)
     
     def Method_MovementVectorBinary(self):
         
@@ -337,7 +338,7 @@ class sphereVideoDetection():
         
         average_delay /= self.movementDelayVectorLength
         
-        #logging.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
+        #logger.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
         
         self.last_saved_time_movement = timeit.default_timer()
         
@@ -352,7 +353,7 @@ class sphereVideoDetection():
         self.movementVector[0:-1] = self.movementVector[1:]
         movementAmount = (abs(self.getInstantX() * self.getInstantX()) +
                            abs(self.getInstantY() * self.getInstantY()))
-        #logging.debug( "Amount of movement: %d" % movementAmount)
+        #logger.debug( "Amount of movement: %d" % movementAmount)
         #if it surpasses threshold OR if it lost tracking (so it is moving quite fast..)
         if (movementAmount >= self.movementThreshold or self.isTracking == False):
                     self.movementVector[self.movementVectorLength - 1] = 1
@@ -398,8 +399,8 @@ class sphereVideoDetection():
             self.isMoving = False
             self.isIdle = False
         #print "MVB end."
-        logging.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) + ("   Elements to check: %d" %numElementsToCheck) )
-        logging.debug ( "       isMoving: %r      isTracking: %r" %( self.isMoving , self.isTracking) )
+        logger.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) + ("   Elements to check: %d" %numElementsToCheck) )
+        logger.debug ( "       isMoving: %r      isTracking: %r" %( self.isMoving , self.isTracking) )
         return
     
     
@@ -440,7 +441,7 @@ class sphereVideoDetection():
         
         average_delay /= self.movementDelayVectorLength
         
-        #logging.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
+        #logger.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
         
         self.last_saved_time_movement = timeit.default_timer()
         
@@ -450,7 +451,7 @@ class sphereVideoDetection():
         
         self.movementVector[0:-1] = self.movementVector[1:]
         movementAmount = (abs(self.getInstantX() * self.getInstantX()) + abs(self.getInstantY() * self.getInstantY()))
-        logging.debug( "Amount of movement: %d" % movementAmount)
+        logger.debug( "Amount of movement: %d" % movementAmount)
         if (movementAmount >= self.movementThreshold or self.isTracking == False):
                     self.movementVector[self.movementVectorLength - 1] = 1
         else:
@@ -532,9 +533,9 @@ class sphereVideoDetection():
                 current_state_change = 3
                 self.continuousIdleTime += (timeDif )
         
-        logging.debug( self.movementVector )
-        logging.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) )
-        #logging.debug ( "       isMoving: %r" % self.isMoving)
+        logger.debug( self.movementVector )
+        logger.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) )
+        #logger.debug ( "       isMoving: %r" % self.isMoving)
         
         #=======================================================================
         # # Save history of movements and idle
@@ -556,7 +557,7 @@ class sphereVideoDetection():
         
         if (self.internalMovementCounter >self.movement_loopNumberSpan):
             self.internalMovementCounter = 0
-            logging.debug("   ----" + 
+            logger.debug("   ----" + 
                             str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
                 abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)) )
             if ( (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
@@ -597,7 +598,7 @@ class sphereVideoDetection():
                     self.vectorInstantaneo.x = 0
                     self.vectorInstantaneo.y = 0
             #history of movement mejoraría la performance de este método.
-            logging.debug("Continuous: "+ str(self.continuousMovementTime) +"  ...  Idle: " + str(self.continuousIdleTime) )
+            logger.debug("Continuous: "+ str(self.continuousMovementTime) +"  ...  Idle: " + str(self.continuousIdleTime) )
     
     def continuousMovementAnalysis(self):
         if (self.movementMethod == 0):
@@ -667,7 +668,7 @@ class sphereVideoDetection():
         #Inicio de programa: se declara como se captura video.
         print "Video Source: ", (self.VIDEOSOURCE)
         strtmp = "Video Source: "+ str(self.VIDEOSOURCE)
-        logging.info(strtmp)
+        logger.info(strtmp)
         cam = cv2.VideoCapture(self.VIDEOSOURCE)
         
         #Opciones de ejecuciOn: 640x480 => 60 fps.
@@ -683,22 +684,22 @@ class sphereVideoDetection():
         cam.set(self.CAM_GAIN_VAR,self.CAM_GAIN_VALUE)
         cam.set(self.CAM_EXPOSURE_VAR,self.CAM_EXPOSURE_VALUE)
         print "camera: Width %r" % cam.get(3)
-        logging.info(str( "camera: Width %r" % cam.get(3) ))
+        logger.info(str( "camera: Width %r" % cam.get(3) ))
         print "camera: Height %r" % cam.get(4)
-        logging.info(str( "camera: Height %r" % cam.get(4) ))
+        logger.info(str( "camera: Height %r" % cam.get(4) ))
         #print "camera: FPS %r" % cam.get(5) #prints error for most cameras.
         print "camera: Brightness %r" % cam.get(self.CAM_BRIGHTNESS_VAR)
-        logging.info(str( "camera: Brightness %r" % cam.get(self.CAM_BRIGHTNESS_VAR) ))
+        logger.info(str( "camera: Brightness %r" % cam.get(self.CAM_BRIGHTNESS_VAR) ))
         print "camera: Contrast %r" % cam.get(self.CAM_CONTRAST_VAR)
-        logging.info(str( "camera: Contrast %r" % cam.get(self.CAM_CONTRAST_VAR) ))
+        logger.info(str( "camera: Contrast %r" % cam.get(self.CAM_CONTRAST_VAR) ))
         print "camera: Saturation %r" % cam.get(self.CAM_SATURATION_VAR)
-        logging.info(str( "camera: Saturation %r" % cam.get(self.CAM_SATURATION_VAR) ))
+        logger.info(str( "camera: Saturation %r" % cam.get(self.CAM_SATURATION_VAR) ))
         print "camera: Hue %r" % cam.get(self.CAM_HUE_VAR)
-        logging.info(str( "camera: Hue %r" % cam.get(self.CAM_HUE_VAR) ))
+        logger.info(str( "camera: Hue %r" % cam.get(self.CAM_HUE_VAR) ))
         print "camera: Gain %r" % cam.get(self.CAM_GAIN_VAR)
-        logging.info(str( "camera: Gain %r" % cam.get(self.CAM_GAIN_VAR) ))
+        logger.info(str( "camera: Gain %r" % cam.get(self.CAM_GAIN_VAR) ))
         print "camera: Exposure %r" % cam.get(self.CAM_EXPOSURE_VAR)
-        logging.info(str( "camera: Exposure %r" % cam.get(self.CAM_EXPOSURE_VAR) ))
+        logger.info(str( "camera: Exposure %r" % cam.get(self.CAM_EXPOSURE_VAR) ))
         
         
         time.sleep(0.2)
@@ -955,16 +956,16 @@ if __name__ == '__main__':
     
     logging.basicConfig(filename='logs/sphereVideoDetection.log', filemode='w',
             level=logging.DEBUG, format=formatter, datefmt = dateformat)
-    logging.info('Start sphereVideoDetection Test')
+    logger.info('Start sphereVideoDetection Test')
     #Crea un objeto de captura de video, imprime tiempo de movimiento continuo o tiempo que permanece quieto.
     try:
         from configvideo import *
     except ImportError:
         print "File configvideo.py doesn't exist"
-        logging.info("File configvideo.py doesn't exist")
+        logger.info("File configvideo.py doesn't exist")
     except:
         print "Error with configVideo"
-        logging.info("Error with configVideo")
+        logger.info("Error with configVideo")
     
     videoDet = sphereVideoDetection(VIDEOSOURCE,CAM_WIDTH, CAM_HEIGHT)
     videoDet.setNoiseFiltering(True)
@@ -979,7 +980,7 @@ if __name__ == '__main__':
         #print "Continuous movement time: %r    Idle movement time: %r   IsMoving: %r"  % (videoDet.getMovementTime() , videoDet.getIdleTime(), videoDet.getMovementStatus())
         a = str("Continuous movement time: %r    Idle movement time: %r   IsMoving: %r"  %
                  (videoDet.getMovementTime() , videoDet.getIdleTime(), videoDet.getMovementStatus()))
-        logging.info(a)
+        logger.info(a)
         print videoDet.movementVector
         time.sleep(0.3)
 

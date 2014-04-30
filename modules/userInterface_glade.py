@@ -43,7 +43,7 @@ class GUIGTK_Class:
                             "mainwindow_keypress": self.action_keypress, 
                             
                         }
-                logging.info( "Starting userInterface_glade variables and .glade file:")
+                logger.info( "Starting userInterface_glade variables and .glade file:")
                 self.customVariablesInit()
                 self.gladefile = "userInputv2.glade"
                 import sys
@@ -51,7 +51,7 @@ class GUIGTK_Class:
                 tempstr = sys.path[0]
                 tempstr = tempstr.replace("/training", "/modules")
                 self.gladefile = tempstr + "/userInputv2.glade"
-                logging.info( self.gladefile )
+                logger.info( self.gladefile )
                 
                 self.glade = gtk.Builder()
                 
@@ -63,75 +63,75 @@ class GUIGTK_Class:
                 gtk.main_quit()
         
         def overrideaction_drop(self):
-            logging.info( "Default: Drop" )
+            logger.info( "Default: Drop" )
             return 0
         
         def overrideaction_reward(self):
-            logging.info( "Default: Reward" )
+            logger.info( "Default: Reward" )
             return 0
         
         def overrideaction_open(self):
-            logging.info( "Default: Open" )
+            logger.info( "Default: Open" )
             return 0
         
         def overrideaction_close(self):
-            logging.info( "Default: Close" )
+            logger.info( "Default: Close" )
             return 0
         
         def overrideaction_startTraining(self):
                 #print "Start / Stop training"
-                logging.info( "Default: Start Training" )
+                logger.info( "Default: Start Training" )
                 return 0
         
         def overrideaction_stopTraining(self):
                 #print "Start / Stop training"
-                logging.info( "Default: Stop Training" )
+                logger.info( "Default: Stop Training" )
                 return 0
         
         def overrideaction_pauseTraining(self):
                 #print "Pause / Resume training"
-                logging.info( "Default: Pause Training" )
+                logger.info( "Default: Pause Training" )
                 return 0
         
         def overrideaction_resumeTraining(self):
                 #print "Pause / Resume training"
-                logging.info( "Default: Resume Training" )
+                logger.info( "Default: Resume Training" )
                 return 0
         
         def overrideaction_applyTE(self):
-            logging.info( "Default: Apply Trials Events" )
+            logger.info( "Default: Apply Trials Events" )
             return 0
         
         def overrideaction_applyP(self):
-            logging.info( "Default: Parameters" )
+            logger.info( "Default: Parameters" )
             return 0
         
         def overrideaction_applyC(self):
-            logging.info( "Default: Comments" )
+            logger.info( "Default: Comments" )
             return 0
         
         def overrideaction_showfeedback(self):
-            logging.info( "Default: Show Feedback" )
+            logger.info( "Default: Show Feedback" )
             return 0
         
         def overrideaction_hidefeedback(self):
-            logging.info( "Default: Hide Feedback" )
+            logger.info( "Default: Hide Feedback" )
             return 0
         
         def overrideaction_showtracking(self):
-            logging.info( "Default: Show Tracking" )
+            logger.info( "Default: Show Tracking" )
             return 0
         
         def overrideaction_hidetracking(self):
-            logging.info( "Default: Hide Tracking" )
+            logger.info( "Default: Hide Tracking" )
             return 0
         
         def overrideaction_testT1(self):
-            logging.info( "Default: Test T1" )
+            logger.info( "Default: Test T1" )
             return 0
         
         def overrideaction_testT2(self):
-            logging.info( "Default: Test T2" )
+            logger.info( "Default: Test T2" )
             return 0
         
         def customVariablesInit(self):
@@ -157,21 +157,21 @@ class GUIGTK_Class:
         
         def commitInitialData(self):
             #Set graphic elements' data with the variables that has been passed from the upper class that is executing this module.
-            logging.info( "Setting userInterface_glade initial data.")
-            logging.info( str( self.toneStart ) )
-            logging.info( str( self.toneEnd ) )
-            logging.info( str( self.movementWindowStart ) )
-            logging.info( str( self.movementWindowEnd ) )
-            logging.info( str( self.interTrialStart ) )
-            logging.info( str( self.interTrialEnd ) )
-            logging.info( str( self.probabilityToneOne ) )
-            logging.info( str( self.frequencyTone1 ) )
-            logging.info( str( self.frequencyTone2 ) )
-            logging.info( str( self.movementAmount ) )
-            logging.info( str( self.movementMethod ) )
-            logging.info( str( self.movementTime ) )
-            logging.info( str( self.idleTime ) )
-            logging.info( str( self.comment ) )
+            logger.info( "Setting userInterface_glade initial data.")
+            logger.info( str( self.toneStart ) )
+            logger.info( str( self.toneEnd ) )
+            logger.info( str( self.movementWindowStart ) )
+            logger.info( str( self.movementWindowEnd ) )
+            logger.info( str( self.interTrialStart ) )
+            logger.info( str( self.interTrialEnd ) )
+            logger.info( str( self.probabilityToneOne ) )
+            logger.info( str( self.frequencyTone1 ) )
+            logger.info( str( self.frequencyTone2 ) )
+            logger.info( str( self.movementAmount ) )
+            logger.info( str( self.movementMethod ) )
+            logger.info( str( self.movementTime ) )
+            logger.info( str( self.idleTime ) )
+            logger.info( str( self.comment ) )
             self.glade.get_object("entryToneStart").set_text( str(self.toneStart) )
             self.glade.get_object("entryToneEnd").set_text( str(self.toneEnd) )
             self.glade.get_object("entryMvmntWinStart").set_text( str(self.movementWindowStart) )
@@ -186,14 +186,14 @@ class GUIGTK_Class:
             self.glade.get_object("entryMovementTime").set_text( str(self.movementTime) )
             self.glade.get_object("entryIdleTime").set_text( str(self.idleTime) )
             self.glade.get_object("entryCommentTr").set_text( str(self.comment) )
-            logging.info( "   Done: Setting userInterface_glade initial data.")
+            logger.info( "   Done: Setting userInterface_glade initial data.")
             pass
         
         
         def action_keypress(self, widget, event):
             #print "keypress"
             keyname = gtk.gdk.keyval_name(event.keyval)
-            logging.info( str( keyname ) )
+            logger.info( str( keyname ) )
             #print keyname
             if (keyname == 'd' or keyname == 'D'):
                 self.action_drop(0)
@@ -209,32 +209,32 @@ class GUIGTK_Class:
                 self.action_pauseTr(0)
         
         def action_dummy(button, args):
-                logging.info( "Dummy fn" )
+                logger.info( "Dummy fn" )
 
         def action_drop(self, button):
                 #print "Drop"
                 try:
                     self.overrideaction_drop()
                 except:
-                    logging.info( "Drop: An error ocurred." )
+                    logger.info( "Drop: An error ocurred." )
         
         def action_reward(self, button):
                 try:
                     self.overrideaction_reward()
                 except:
-                    logging.info( "Reward: An error ocurred." )
+                    logger.info( "Reward: An error ocurred." )
         
         def action_open(self, button):
                 try:
                     self.overrideaction_open()
                 except:
-                    logging.info( "Open: An error ocurred." )
+                    logger.info( "Open: An error ocurred." )
         
         def action_close(self, button):
             try:
                 self.overrideaction_close()
             except:
-                logging.info( "Close: An error ocurred." )
+                logger.info( "Close: An error ocurred." )
         
         def action_startTr(self, button):
                 if ( self.start == 0):
@@ -242,14 +242,14 @@ class GUIGTK_Class:
                     try:
                         self.overrideaction_startTraining()
                     except:
-                        logging.info( "StartTr: An error ocurred." )
+                        logger.info( "StartTr: An error ocurred." )
                     self.start = 1
                 else:
                     #print "Default: Stop Training"
                     try:
                         self.overrideaction_stopTraining()
                     except:
-                        logging.info( "StartTr: An error ocurred." )
+                        logger.info( "StartTr: An error ocurred." )
                     self.start = 0
         
         def action_pauseTr(self, button):
@@ -258,14 +258,14 @@ class GUIGTK_Class:
                     try:
                         self.overrideaction_pauseTraining()
                     except:
-                        logging.info( "PauseTr: An error ocurred." )
+                        logger.info( "PauseTr: An error ocurred." )
                     self.pause = 1
             else:
                     #print "Default: Resume Training"
                     try:
                         self.overrideaction_resumeTraining()
                     except:
-                        logging.info( "PauseTr: An error ocurred." )
+                        logger.info( "PauseTr: An error ocurred." )
                     self.pause = 0
             return 0
         
@@ -274,12 +274,12 @@ class GUIGTK_Class:
                 try:
                     self.overrideaction_exit()
                 except:
-                    logging.info( "Exit: No override for exit." )
+                    logger.info( "Exit: No override for exit." )
                     self.__exitAll()
         
         def __exitAll(self):
                 print "Exit Training"
-                logging.info( "Exit Training" )
+                logger.info( "Exit Training" )
                 try:
                     import os
                     os._exit(0)
@@ -433,75 +433,75 @@ class GUIGTK_Class:
         def action_exitX(self, button, event):
                 #triggered from the "x" window button
                 self.action_exit(button)
-                logging.info( "Pressed X Close button; exiting." )
+                logger.info( "Pressed X Close button; exiting." )
                 #self.__exitAll()
         
         def action_commentFr(self, button):
-                logging.info( "Comment about this training" )
+                logger.info( "Comment about this training" )
                 self.glade.get_object("commentWin").show_all()
         
         def action_trialEventsFr(self, button):
-                logging.info( "Trial Events frame" )
+                logger.info( "Trial Events frame" )
                 self.saveTrialEventsPreviousState()
                 self.glade.get_object("trialEventsWin").show_all()
         
         def action_parametersFr(self, button):
-                logging.info( "Parameters frame" )
+                logger.info( "Parameters frame" )
                 self.saveParametersPreviousState()
                 self.glade.get_object("parametersWin").show_all()
         
         def action_applyTE(self, button):
-                logging.info( "Applying Trial Events variables" )
+                logger.info( "Applying Trial Events variables" )
                 
                 self.__rawTEInput()
                 
                 self.checkTrialEventsVarsConsistency() #if bad input, return to previous state...
                 
-                logging.info( self.toneStart )
-                logging.info( self.toneEnd )
-                logging.info( self.movementWindowStart )
-                logging.info( self.movementWindowEnd )
-                logging.info( self.interTrialStart )
-                logging.info( self.interTrialEnd )
-                logging.info( self.probabilityToneOne )
+                logger.info( self.toneStart )
+                logger.info( self.toneEnd )
+                logger.info( self.movementWindowStart )
+                logger.info( self.movementWindowEnd )
+                logger.info( self.interTrialStart )
+                logger.info( self.interTrialEnd )
+                logger.info( self.probabilityToneOne )
                 
                 self.saveTrialEventsPreviousState()
                 try:
                     self.overrideaction_applyTE()
                 except:
-                    logging.info( "ApplyTE: An error ocurred." )
+                    logger.info( "ApplyTE: An error ocurred." )
         
         def action_applyP(self, button):
-                logging.info( "Applying Parameters variables" )
+                logger.info( "Applying Parameters variables" )
                 
                 self.__rawPInput()
                 
                 self.checkParametersVarsConsistency()
                 
-                logging.info( self.frequencyTone1 )
-                logging.info( self.frequencyTone2 )
-                logging.info( self.movementAmount )
-                logging.info( self.movementMethod )
-                logging.info( self.movementTime )
-                logging.info( self.idleTime )
+                logger.info( self.frequencyTone1 )
+                logger.info( self.frequencyTone2 )
+                logger.info( self.movementAmount )
+                logger.info( self.movementMethod )
+                logger.info( self.movementTime )
+                logger.info( self.idleTime )
                 
                 self.saveParametersPreviousState()
                 try:
                     self.overrideaction_applyP()
                 except:
-                    logging.info( "ApplyP: An error ocurred." )
+                    logger.info( "ApplyP: An error ocurred." )
         
         def action_applyC(self, button):
-                logging.info( "Applying Comment" )
+                logger.info( "Applying Comment" )
                 #print self.glade.get_object("entryCommentTr").get_text()
                 #print self.glade.get_object("entryCommentTr").set_text("test")
                 #self.comment = self.glade.get_object("entryCommentTr").get_text()
                 self.comment = unicode(self.glade.get_object("entryCommentTr").get_text() , "utf-8")
-                logging.info( self.comment )
+                logger.info( self.comment )
                 try:
                     self.overrideaction_applyC()
                 except:
-                    logging.info( "ApplyC: An error ocurred." )
+                    logger.info( "ApplyC: An error ocurred." )
         
         def action_shfeedback(self, button):
                 #print "Show / Hide Feedback"
@@ -510,14 +510,14 @@ class GUIGTK_Class:
                     try:
                         self.overrideaction_hidefeedback()
                     except:
-                        logging.info( "shfeedback: An error ocurred." )
+                        logger.info( "shfeedback: An error ocurred." )
                     self.feedback = 1
                 else:
                     #print "Show Feedback"
                     try:
                         self.overrideaction_showfeedback()
                     except:
-                        logging.info( "shfeedback: An error ocurred." )
+                        logger.info( "shfeedback: An error ocurred." )
                     self.feedback = 0
         
         def action_shtracking(self, button):
@@ -527,14 +527,14 @@ class GUIGTK_Class:
                     try:
                         self.overrideaction_hidetracking()
                     except:
-                        logging.info( "shtracking: An error ocurred." )
+                        logger.info( "shtracking: An error ocurred." )
                     self.tracking = 1
                 else:
                     #print "Show Tracking"
                     try:
                         self.overrideaction_showtracking()
                     except:
-                        logging.info( "shtracking: An error ocurred." )
+                        logger.info( "shtracking: An error ocurred." )
                     self.tracking = 0
         
         def action_testT1(self, button):
@@ -544,7 +544,7 @@ class GUIGTK_Class:
                 try:
                     self.overrideaction_testT1()
                 except:
-                    logging.info( "TestT1: An error ocurred." )
+                    logger.info( "TestT1: An error ocurred." )
         
         def action_testT2(self, button):
                 #print "Test T2"
@@ -553,7 +553,7 @@ class GUIGTK_Class:
                 try:
                     self.overrideaction_testT2()
                 except:
-                    logging.info( "TestT2: An error ocurred." )
+                    logger.info( "TestT2: An error ocurred." )
         
         def action_hideTE(self, button, event):
             self.glade.get_object("trialEventsWin").hide()
@@ -576,10 +576,10 @@ if __name__ == "__main__":
     
         logging.basicConfig(filename='logs/userInterface_glade.log', filemode='w',
             level=logging.DEBUG, format=formatter, datefmt = dateformat)
-        logging.info('Start userInterface_glade Test')
+        logger.info('Start userInterface_glade Test')
         try:
                 a = GUIGTK_Class()
                 gtk.main()
         except KeyboardInterrupt:
                 pass
-        logging.info('End userInterface_glade Test')
+        logger.info('End userInterface_glade Test')
