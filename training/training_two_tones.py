@@ -430,9 +430,8 @@ class Training():
     def __init__(self):
         self.trainingInit()
         pass
-        
-    @staticmethod
-    def initDisplay():
+    
+    def initDisplay(self):
         import trainingDisplay  # display for showing different variables of interest
         Training.gVariables.display = trainingDisplay.trainingDisplay()
         Training.gVariables.display.addImportantInfo(("Trials", 0))
@@ -445,8 +444,7 @@ class Training():
         Training.gVariables.display.addSecondaryInfo(("Trial status", ""))
         Training.gVariables.display.renderAgain()
     
-    @staticmethod
-    def updateDisplayInfo():
+    def updateDisplayInfo(self):
         if (Training.gVariables.trialExecuting == True):
                         now = timeit.default_timer()
                         b = Training.gVariables.getFormattedTime(int(now - Training.gVariables.start_time))
@@ -576,8 +574,7 @@ class Training():
                 else:
                     Training.gVariables.successIdleTrialCount += 1
     
-    @staticmethod
-    def exitTraining():
+    def exitTraining(self):
         # Finalize this training and exits.
         print "Exiting."
         Training.gVariables.logger.info('Exit signal.')
@@ -587,8 +584,7 @@ class Training():
         Training.gVariables.videoDet.exit()
         sys.exit(0)
     
-    @staticmethod
-    def trainingInit():
+    def trainingInit(self):
         print Training.gVariables.trainingName
         # logging:
         formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -614,7 +610,7 @@ class Training():
         Training.gVariables.ns = manager.Namespace()
         Training.gVariables.ns.message1 = 0
         Training.gVariables.ns.message2 = 0
-        Training.gVariables.GUIProcess = multiprocessing.Process(target=Training.initUserInputGUI, args=(Training.gVariables.ns,))
+        Training.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(Training.gVariables.ns,))
         Training.gVariables.GUIProcess.start()
         Training.gVariables.logger.info('GUI Process started.')
         #Sphere Video Detection:
@@ -624,15 +620,14 @@ class Training():
         Training.gVariables.videoMovementMethod =  Training.gVariables.videoDet.getMovementMethod()
         Training.gVariables.logger.info('sphereVideoDetection started.')
         #Display:
-        Training.initDisplay()
+        self.initDisplay()
         #main Program Loop
         import threading
-        Training.gVariables.fred1 = threading.Thread(target=Training.mainLoopFunction)
+        Training.gVariables.fred1 = threading.Thread(target=self.mainLoopFunction)
         Training.gVariables.fred1.start()
         Training.gVariables.logger.info('Training loop function started..')
     
-    @staticmethod
-    def initUserInputGUI(ns):
+    def initUserInputGUI(self,ns):
         #initialize user input GUI and associated variables.
         #this function uses trainingAPI to handle graphical user interfaces
         #ns = is the NameSpace associated with multiprocessing , contains the shared variables (message1 and 2)
@@ -661,8 +656,7 @@ class Training():
         
         currentGUI.launch_GUI()
     
-    @staticmethod
-    def trialLoop():
+    def trialLoop(self):
             # This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
             
             #===================================================================
@@ -788,8 +782,7 @@ class Training():
                 #trial not executing or tr.stage not 1, so it is unnecessary to check if should give reward..
                 pass
     
-    @staticmethod
-    def GUICheck():
+    def GUICheck(self):
             #GUICheck: this function is called once in every thread loop, and checks if
             #    the shared variables between training_ and GUI Process contain new info.
             #    If it does, checks which message type was sent, and it's argument (if any)
@@ -835,7 +828,7 @@ class Training():
                 elif (index == 9):
                     print "GUICheck: 'Exit Training' message"
                     Training.gVariables.logger.info( "GUICheck: 'Exit Training' message" )
-                    Training.exitTraining()
+                    self.exitTraining()
                 elif (index == 10):
                     print "GUICheck: 'Tone 1 Test' message"
                     Training.gVariables.logger.info( "GUICheck: 'Tone 1 Test' message" )
@@ -956,13 +949,12 @@ class Training():
                 print "GUICheck: done."
                 Training.gVariables.logger.info( "GUICheck: done." )
     
-    @staticmethod
-    def mainLoopFunction():
+    def mainLoopFunction(self):
         while(True):
                     time.sleep(Training.gVariables.LOOP_FUNCTION_SLEEP_TIME)
-                    Training.GUICheck() #check if any GUI input was received
-                    Training.trialLoop()  #
-                    Training.updateDisplayInfo()
+                    self.GUICheck() #check if any GUI input was received
+                    self.trialLoop()  #
+                    self.updateDisplayInfo()
 
 
 if __name__ == '__main__':
