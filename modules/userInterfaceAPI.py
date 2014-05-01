@@ -10,7 +10,7 @@ class userInterface_API:
     
     def __init__(self, toStart = False):
         logger.info( "initializing userInterfaceAPI" )
-        #Variables: setting up to 0
+        #Variables: setting up to 0 before assigning any values.
         self.toneStart = 0
         self.toneEnd = 0
         self.movementWindowStart = 0
@@ -64,7 +64,7 @@ class userInterface_API:
         pass
     
     def setNameSpaceMessage1(self, num):
-        if (ns.message1 == 0):
+        if ( self.isNameSpaceEnabled()):
             ns.message1 = num
             logger.info( 'Msg1: Handled from here.' )
         else:
@@ -73,12 +73,18 @@ class userInterface_API:
     
     def setNameSpaceMessage2(self,arg):
         #it is preferable to first send message 2 (this) and then msg1. Else this message won't take effect.
-        if (ns.message1 == 0):
+        if ( self.isNameSpaceEnabled() ):
             ns.message2 = arg
             logger.info( 'Msg2: Handled from here.' )
         else:
             logger.info( 'Msg2: Not ready to send message.' )
         pass
+    
+    def isNameSpaceEnabled(self):
+        if (ns.message1 == 0):
+            return True
+        else:
+            return False
     
     def overrideaction_drop(self):
         logger.info ( "Default API: Drop" )
@@ -173,7 +179,7 @@ class userInterface_API:
         logger.info ( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         while True:
-            if (ns.message1 == 0):
+            if ( self.isNameSpaceEnabled() ):
                 #carry on doing things.
                 self.setNameSpaceMessage2(self.currentGUI.frequencyTone2)
                 self.setNameSpaceMessage1(18)
@@ -181,25 +187,25 @@ class userInterface_API:
                 print "API Namespace:", ns
                 #return; #it is better to keep on nesting while true if code to exhaust all variables.
                 while True:
-                    if (ns.message1 == 0):
+                    if (self.isNameSpaceEnabled()):
                         self.setNameSpaceMessage2(self.currentGUI.movementAmount)
                         self.setNameSpaceMessage1(19)
                         logger.info ( "ns: " + ns.__str__() )
                         print "API Namespace:", ns
                         while True:
-                            if (ns.message1 == 0):
+                            if (self.isNameSpaceEnabled()):
                                 self.setNameSpaceMessage2(self.currentGUI.movementMethod)
                                 self.setNameSpaceMessage1(20)
                                 logger.info ( "ns: " + ns.__str__() )
                                 print "API Namespace:", ns
                                 while True:
-                                    if (ns.message1 == 0):
+                                    if (self.isNameSpaceEnabled()):
                                         self.setNameSpaceMessage2(self.currentGUI.movementTime)
                                         self.setNameSpaceMessage1(21)
                                         logger.info ( "ns: " + ns.__str__() )
                                         print "API Namespace:", ns
                                         while True:
-                                            if (ns.message1 == 0):
+                                            if (self.isNameSpaceEnabled()):
                                                 self.setNameSpaceMessage2(self.currentGUI.idleTime)
                                                 self.setNameSpaceMessage1(22)
                                                 logger.info ( "ns: " + ns.__str__() )
@@ -225,7 +231,7 @@ class userInterface_API:
         print "API Namespace:", ns
         logger.info ( "ns: " + ns.__str__() )
         while True:
-            if (ns.message1 == 0):
+            if (self.isNameSpaceEnabled()):
                 #carry on doing things.
                 self.setNameSpaceMessage2(self.currentGUI.toneEnd)
                 self.setNameSpaceMessage1(24)
@@ -233,31 +239,31 @@ class userInterface_API:
                 logger.info ( "ns: " + ns.__str__() )
                 #return; #it is better to keep on nesting while true if code to exhaust all variables.
                 while True:
-                    if (ns.message1 == 0):
+                    if (self.isNameSpaceEnabled()):
                         self.setNameSpaceMessage2(self.currentGUI.movementWindowStart)
                         self.setNameSpaceMessage1(25)
                         print "API Namespace:", ns
                         logger.info ( "ns: " + ns.__str__() )
                         while True:
-                            if (ns.message1 == 0):
+                            if (self.isNameSpaceEnabled()):
                                 self.setNameSpaceMessage2(self.currentGUI.movementWindowEnd)
                                 self.setNameSpaceMessage1(26)
                                 print "API Namespace:", ns
                                 logger.info ( "ns: " + ns.__str__() )
                                 while True:
-                                    if (ns.message1 == 0):
+                                    if (self.isNameSpaceEnabled()):
                                         self.setNameSpaceMessage2(self.currentGUI.interTrialStart)
                                         self.setNameSpaceMessage1(27)
                                         print "API Namespace:", ns
                                         logger.info ( "ns: " + ns.__str__() )
                                         while True:
-                                            if (ns.message1 == 0):
+                                            if (self.isNameSpaceEnabled()):
                                                 self.setNameSpaceMessage2(self.currentGUI.interTrialEnd)
                                                 self.setNameSpaceMessage1(28)
                                                 print "API Namespace:", ns
                                                 logger.info ( "ns: " + ns.__str__() )
                                                 while True:
-                                                    if (ns.message1 == 0):
+                                                    if (self.isNameSpaceEnabled()):
                                                         self.setNameSpaceMessage2(self.currentGUI.probabilityToneOne)
                                                         self.setNameSpaceMessage1(29)
                                                         print "API Namespace:", ns
@@ -562,8 +568,6 @@ class userInterface_API:
         self.setInitialValues()
         while True:
             time.sleep(1.0)
-    
-    
 
 if __name__ == '__main__':
     # create a logging format
