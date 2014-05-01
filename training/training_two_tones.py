@@ -20,6 +20,7 @@ import modulespath
 import time
 import timeit
 import logging
+import threading
 
 class Training():
     
@@ -405,6 +406,9 @@ class Training():
         
         LOOP_FUNCTION_SLEEP_TIME = 0.05  # sleep time for the trial loop function (how frequently it asks videodet)
         
+        #GUI Type:
+        GUIType = cfgtwotones.usingTK
+        
         # video Detection:
         videoDet = 0  # video Detection object. initialized in the main.
         
@@ -424,6 +428,8 @@ class Training():
         
         trial_comment = "" #comment about this training session.
         ns = 0
+        
+        
         #fin Training.gVariables.
         pass
     
@@ -577,55 +583,61 @@ class Training():
     def exitTraining(self):
         # Finalize this training and exits.
         print "Exiting."
-        Training.gVariables.logger.info('Exit signal.')
-        Training.gVariables.logger.info('Comment about this training: %s', Training.gVariables.trial_comment)
-        Training.gVariables.GUIProcess.terminate()
-        Training.gVariables.display.exitDisplay()
-        Training.gVariables.videoDet.exit()
+        self.gVariables.logger.info('Exit signal.')
+        self.gVariables.logger.info('Comment about this training: %s', Training.gVariables.trial_comment)
+        if (self.gVariables.GUIType != 2) :
+            self.gVariables.GUIProcess.terminate()
+        self.gVariables.videoDet.exit()
+        self.gVariables.display.exitDisplay()
+        
         sys.exit(0)
     
     def trainingInit(self):
-        print Training.gVariables.trainingName
+        print self.gVariables.trainingName
         # logging:
         formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         dateformat = '%Y/%m/%d %I:%M:%S %p'
-        logging.basicConfig(filename='logs/%s_%s.log' % (Training.gVariables.trainingName, time.strftime("%Y-%m-%d")),
+        logging.basicConfig(filename='logs/%s_%s.log' % (self.gVariables.trainingName, time.strftime("%Y-%m-%d")),
                              filemode='a', level=logging.DEBUG, format=formatter, datefmt=dateformat)
-        Training.gVariables.logger = logging.getLogger( Training.gVariables.trainingName )
-        Training.gVariables.logger.info('===============================================')
-        Training.gVariables.logger.info('Start %s' % Training.gVariables.trainingName)
+        self.gVariables.logger = logging.getLogger( self.gVariables.trainingName )
+        self.gVariables.logger.info('===============================================')
+        self.gVariables.logger.info('Start %s' % self.gVariables.trainingName)
         # valve:
         import valve
-        Training.gVariables.valve1 = valve.Valve()
-        Training.gVariables.logger.info('Valve created.')
+        self.gVariables.valve1 = valve.Valve()
+        self.gVariables.logger.info('Valve created.')
         # soundGen:
         import soundGen
-        Training.gVariables.s1 = soundGen.soundGen(Training.gVariables.soundGenFrequency1, Training.gVariables.soundGenDuration1)
-        Training.gVariables.s2 = soundGen.soundGen(Training.gVariables.soundGenFrequency2, Training.gVariables.soundGenDuration2)
-        Training.gVariables.trialExecuting = False  # boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
-        Training.gVariables.logger.info('Soundgen init started..')
+        self.gVariables.s1 = soundGen.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
+        self.gVariables.s2 = soundGen.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
+        self.gVariables.trialExecuting = False  # boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
+        self.gVariables.logger.info('Soundgen init started..')
         #GUI:
         import multiprocessing
         manager = multiprocessing.Manager()
-        Training.gVariables.ns = manager.Namespace()
-        Training.gVariables.ns.message1 = 0
-        Training.gVariables.ns.message2 = 0
-        Training.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(Training.gVariables.ns,))
-        Training.gVariables.GUIProcess.start()
-        Training.gVariables.logger.info('GUI Process started.')
+        self.gVariables.ns = manager.Namespace()
+        self.gVariables.ns.message1 = 0
+        self.gVariables.ns.message2 = 0
+        if (self.gVariables.GUIType != 2):
+            self.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(self.gVariables.ns,))
+            self.gVariables.GUIProcess.start()
+            self.gVariables.logger.info('GUI Process started.')
+        else:
+            self.gVariables.fredInput = threading.Thread(target=self.noGUIInputLoop)
+            self.gVariables.fredInput.start()
+            pass
         #Sphere Video Detection:
         import sphereVideoDetection
-        Training.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
-        Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.movementTime)  # seconds that should be moving.
-        Training.gVariables.videoMovementMethod =  Training.gVariables.videoDet.getMovementMethod()
-        Training.gVariables.logger.info('sphereVideoDetection started.')
+        self.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
+        self.gVariables.videoDet.setMovementTimeWindow(self.gVariables.movementTime)  # seconds that should be moving.
+        self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
+        self.gVariables.logger.info('sphereVideoDetection started.')
         #Display:
         self.initDisplay()
         #main Program Loop
-        import threading
-        Training.gVariables.fred1 = threading.Thread(target=self.mainLoopFunction)
-        Training.gVariables.fred1.start()
-        Training.gVariables.logger.info('Training loop function started..')
+        self.gVariables.fred1 = threading.Thread(target=self.mainLoopFunction)
+        self.gVariables.fred1.start()
+        self.gVariables.logger.info('Training loop function started..')
     
     def initUserInputGUI(self,ns):
         #initialize user input GUI and associated variables.
@@ -948,6 +960,74 @@ class Training():
                 Training.gVariables.logger.info( str( "GUICheck: Namespace set: "+ str(Training.gVariables.ns) ) )
                 print "GUICheck: done."
                 Training.gVariables.logger.info( "GUICheck: done." )
+    
+    def noGUIInputLoop(self):
+        def printInstructions():
+            print "--------------------------------------------------------"
+            print "Command keys:"
+            print "--------------------------------------------------------"
+            print "Key d : Drop of water"
+            print "Key r : Reward (drop + count trial as successfull)"
+            print "Key o : Open Valve"
+            print "Key c : Close Valve"
+            print "Key k : Start / Stop Training"
+            print "Key p : Pause / Resume Training"
+            print "Key q : Exit Training"
+            print "--------------------------------------------------------"
+        #Starts capturing user Input from command-line console.
+        time.sleep(1.0)
+        print "No GUI mode: Initializing..."
+        self.gVariables.logger.info( "No GUI mode: Initializing..." )
+        import termios, fcntl, sys, os
+        fd = sys.stdin.fileno()
+        try:
+            oldterm = termios.tcgetattr(fd)
+            newattr = termios.tcgetattr(fd)
+            newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+            termios.tcsetattr(fd, termios.TCSANOW, newattr)
+        
+            oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
+            fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+        except:
+            print "Error capturing input."
+        time.sleep(1.0)
+        printInstructions()
+        while True:
+            try:
+                key = sys.stdin.read(1)#cv2.waitKey(100) #in miliseconds
+                if (key == 'd' or key == 'D'):
+                    printInstructions()
+                    print "d : Drop"
+                    self.gVariables.fn_giveDrop()
+                if (key == 'r' or key == 'R'):
+                    
+                    printInstructions()
+                    print "r : Reward"
+                    self.gVariables.fn_giveReward()
+                if (key == 'o' or key == 'O'):
+                    printInstructions()
+                    print "o : Open"
+                    self.gVariables.fn_openValve()
+                if (key == 'c' or key == 'C'):
+                    printInstructions()
+                    print "c : Close"
+                    self.gVariables.fn_closeValve()
+                if (key == 'k' or key == 'K'):
+                    printInstructions()
+                    print "k : Start / Stop Training"
+                    self.gVariables.fn_startStopTraining(0)
+                if (key == 'p' or key == 'P'):
+                    printInstructions()
+                    print "p : Pause / Resume Training"
+                    self.gVariables.fn_pauseResumeTraining(0)
+                if (key == 'q' or key == 'Q'):
+                    printInstructions()
+                    print "q : Quit Training"
+                    termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
+                    fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
+                    self.exitTraining()
+            except:
+                pass
     
     def mainLoopFunction(self):
         while(True):

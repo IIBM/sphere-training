@@ -10,15 +10,22 @@
 
 
 import timeit
+import math
+import threading
+import time
+import os
+import signal
 import cv as cv
 import cv2
 import logging
+import sys
 logger = logging.getLogger('sphereVideoDetection')
 
 
 
 class sphereVideoDetection():
-    mustquit = 0
+
+    
     def __init__ (self, videosource, width=640, height=480) :
         import track_bola_utils
         import os
@@ -60,7 +67,8 @@ class sphereVideoDetection():
         
         self.winName = configSphereVideoDetection.WINDOW_TITLE
         # declare self variables to use.
-        
+        self.mustquit = 0
+        self.available = True
         self.vectorInstantaneo = track_bola_utils.vectorSimple()  # vector acumulado
         self.vectorAcumulado = track_bola_utils.vectorSimple()  # vector acumulado
         self.startCalibration = True  # if True, a calibration will be performed
@@ -143,8 +151,8 @@ class sphereVideoDetection():
         
         import threading
         # Create one non-blocking thread for capturing video Stream
-        fred1 = threading.Thread(target=self.mainVideoDetection, name="VideoDetection")
-        fred1.start()
+        self.fred1 = threading.Thread(target=self.mainVideoDetection, name="VideoDetection")
+        self.fred1.start()
             
     def getAccumulatedVector(self):
         return [self.vectorAcumulado.x, self.vectorAcumulado.y]
@@ -175,11 +183,9 @@ class sphereVideoDetection():
         self.startCalibration = True
     
     def exit(self):
-        #print "Exiting sphereVideoDetection"
-        #import os
         #os._exit(0)
-        #self.exit()
         self.mustquit = 1
+        self.available = False
     
     def setNoiseFiltering(self, bool):
         #Set Noise FIltering: False if you DON'T want noise filtering , because you consider that your input video has no noise.
@@ -634,14 +640,6 @@ class sphereVideoDetection():
         return self.movementMethod
     
     def mainVideoDetection(self):
-
-        import math
-        import threading
-        import socket
-        import time
-        import sys
-        import os
-        import signal
     
         """
             Programa de detección de movimiento:
@@ -741,7 +739,7 @@ class sphereVideoDetection():
 
         self.startCalibration = True
         Lnew = []
-        while True:
+        while (self.available  == True ):
                 #===============================================================
                 # #calibrate if necessary
                 #===============================================================
@@ -937,10 +935,13 @@ class sphereVideoDetection():
                 key = cv2.waitKey(self.sleepTime)
                 if (key == 27 or key==1048603 or self.mustquit==1  ): #escape pressed
                     #end Program.
-                    cam.release()
+                    #cam.release()
                     cv2.destroyWindow(self.winName)
+                    #cv.DestroyWindow(self.winName)
+                    logger.info( "Exiting sphereVideoDetection")
                     #os.kill(os.getpid(), signal.SIGINT)
-                    sys.exit()
+                    os._exit(0)
+                    return
 
 
 ""

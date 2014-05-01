@@ -12,6 +12,7 @@ class trainingDisplay() :
     #This class is a WIP.><
 
     def __init__(self):
+        self.available = True
         self.displayText1 = [] #important text to display in a relatively big font
         self.displayText2 = [] #less important text to display in a smaller font
         pygame.init()
@@ -32,34 +33,35 @@ class trainingDisplay() :
 
     def renderAgain(self):
         #render things in pygame again.
-        try:
-            if ( (len(self.displayText1) <= 0) and  (len(self.displayText2) <= 0) ):
+        if (self.available == True):
+            try:
+                if ( (len(self.displayText1) <= 0) and  (len(self.displayText2) <= 0) ):
+                    return;
+            except:
                 return;
-        except:
-            return;
-        
-        if (self.isUserWriting == False):
-            # draw the white background onto the surface
-            self.windowSurface.fill((55,55,55))
-            #
-            for i in range(0, len(self.displayText1)):
-                text1 = self.basicFont.render('%s: %r' % (self.displayText1[i][0],self.displayText1[i][1]), True, (255,255,255))
-                textRect1 = text1.get_rect()
-                textRect1.centerx = self.windowSurface.get_rect().centerx
-                textRect1.centery = self.INITIAL_SEPARATION+ i*self.TEXT1_FONT_SIZE
-                self.windowSurface.blit(text1, textRect1)
             
-            for i in range(0, len(self.displayText2)):
-                text1 = self.secondaryFont.render('%s: %r' % (self.displayText2[i][0],self.displayText2[i][1]), True, (255,255,255))
-                textRect1 = text1.get_rect()
-                textRect1.centerx = self.windowSurface.get_rect().centerx
-                textRect1.centery = (self.INITIAL_SEPARATION + self.TEXT_1_2_SEPARATION + len(self.displayText1) * self.TEXT1_FONT_SIZE +
-                                      i*self.TEXT2_FONT_SIZE)
-                self.windowSurface.blit(text1, textRect1)
-            # draw the window onto the screen
-            pygame.display.update()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT: sys.exit()
+            if (self.isUserWriting == False):
+                # draw the white background onto the surface
+                self.windowSurface.fill((55,55,55))
+                #
+                for i in range(0, len(self.displayText1)):
+                    text1 = self.basicFont.render('%s: %r' % (self.displayText1[i][0],self.displayText1[i][1]), True, (255,255,255))
+                    textRect1 = text1.get_rect()
+                    textRect1.centerx = self.windowSurface.get_rect().centerx
+                    textRect1.centery = self.INITIAL_SEPARATION+ i*self.TEXT1_FONT_SIZE
+                    self.windowSurface.blit(text1, textRect1)
+                
+                for i in range(0, len(self.displayText2)):
+                    text1 = self.secondaryFont.render('%s: %r' % (self.displayText2[i][0],self.displayText2[i][1]), True, (255,255,255))
+                    textRect1 = text1.get_rect()
+                    textRect1.centerx = self.windowSurface.get_rect().centerx
+                    textRect1.centery = (self.INITIAL_SEPARATION + self.TEXT_1_2_SEPARATION + len(self.displayText1) * self.TEXT1_FONT_SIZE +
+                                          i*self.TEXT2_FONT_SIZE)
+                    self.windowSurface.blit(text1, textRect1)
+                # draw the window onto the screen
+                pygame.display.update()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT: sys.exit()
 
     
     def askUserInput(self, texts):
@@ -86,7 +88,9 @@ class trainingDisplay() :
     
     def exitDisplay(self):
         #print "exiting Display."
+        self.available = False
         pygame.quit()
+        sys.exit()
     
     def updateInfo(self, text, newValue):
         #sets from the class lists. the one that has "text", and updates it with newValue
