@@ -95,7 +95,7 @@ class GUIGTK_Class:
         self.previousVars.Root.geometry('480x240+10+10')
         self.previousVars.Root.title('tk GUI Main Frame.')
         
-        time.sleep(1.6)
+        time.sleep(2.0) #to prevent user from touching GUI before the other frames are well-displayed.
         self.previousVars.Root.deiconify()
         self.previousVars.Root.mainloop()
         while True:
