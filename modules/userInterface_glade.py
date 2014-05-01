@@ -8,14 +8,14 @@ from argparse import Action
 import logging
 logger = logging.getLogger('userInterface_glade')
 
-class GUIGTK_Class:
+class GUIGTK_Class():
     
         class Empty_cl():
             #Used to save our variables' previous states.
             def __init__(self):
                 pass
         
-        def __init__(self):
+        def __init__(self, startEv = False):
                 handlers = {
                             "onDeleteWindow": self.action_exit,
                             "destroy": self.action_exit,
@@ -58,6 +58,9 @@ class GUIGTK_Class:
                 self.glade.add_from_file(self.gladefile)
                 self.glade.connect_signals(handlers)
                 self.glade.get_object("mainWindow").show_all()
+                
+                if (startEv == True):
+                    gtk.main()
 
         def on_mainWindow_delete_event(self, widget, event):
                 gtk.main_quit()
@@ -187,6 +190,7 @@ class GUIGTK_Class:
             self.glade.get_object("entryIdleTime").set_text( str(self.idleTime) )
             self.glade.get_object("entryCommentTr").set_text( str(self.comment) )
             logger.info( "   Done: Setting userInterface_glade initial data.")
+            gtk.main() #probably not launched before. Launching gtk.main
             pass
         
         
@@ -578,8 +582,7 @@ if __name__ == "__main__":
             level=logging.DEBUG, format=formatter, datefmt = dateformat)
         logger.info('Start userInterface_glade Test')
         try:
-                a = GUIGTK_Class()
-                gtk.main()
+                a = GUIGTK_Class(True)
         except KeyboardInterrupt:
                 pass
         logger.info('End userInterface_glade Test')

@@ -533,8 +533,8 @@ class userInterface_API:
         logger.info( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Glade Interface Started" )
         self.setInitialValues()
-        userInterface_glade.gtk.main()
-        logger.info( str(self) +  "  Glade Interface Finished." )
+        while True:
+            time.sleep(1.0)
         pass
     
     
@@ -562,12 +562,12 @@ class userInterface_API:
         self.currentGUI.overrideaction_hidefeedback = self.action_hidefeedback
         self.currentGUI.overrideaction_hidetracking = self.action_hidetracking
         self.currentGUI.overrideaction_exit = self.action_exit
-        print "   Overriding functions: done."
         logger.info( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Tkinter Interface Started" )
         self.setInitialValues()
         while True:
             time.sleep(1.0)
+        pass
 
 if __name__ == '__main__':
     # create a logging format
