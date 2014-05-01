@@ -331,6 +331,29 @@ class gVariables():
             #training init: check for modules and dependencies. Copy from '*.py.example' if needed
             ####
     
+    @staticmethod
+    def getFormattedTime(a):
+        #returns h m s correctly given the time in seconds, as argument
+        try:
+            hours = int (int(a) / 3600)  # hours
+            minutes = int((int(a) - hours * 3600) / 60)  # minutes
+            seconds = int(int(a) - hours * 3600 - minutes * 60)
+            if hours > 0:
+                hours = str(hours) + " h   "
+                minutes = str(minutes) + " m   "
+            else:
+                hours = ""
+                if (int(minutes) > 0):
+                    
+                    minutes = str(minutes) + " m   "
+                else:
+                    minutes = ''  
+            
+            seconds = str(int(seconds)) + " s   " 
+            return ( str(hours) + str(minutes) + str(seconds) )
+        except:
+            return str(a) + ' s   '
+    
     pass
     __checkModules()
     
@@ -417,7 +440,7 @@ def initDisplay():
 def updateDisplayInfo():
     if (gVariables.trialExecuting == True):
                     now = timeit.default_timer()
-                    b = getFormattedTime(int(now - gVariables.start_time))
+                    b = gVariables.getFormattedTime(int(now - gVariables.start_time))
                     gVariables.display.updateInfo("Time", b)
                     if (gVariables.current_trial_type == 1):
                         sttrial = "move"
@@ -839,29 +862,7 @@ def giveReward():
             else:
                 gVariables.successIdleTrialCount += 1
 
-def getFormattedTime(a):
-    #returns h m s correctly given the time in seconds, as argument
-    try:
-        hours = int (int(a) / 3600)  # hours
-        minutes = int((int(a) - hours * 3600) / 60)  # minutes
-        seconds = int(int(a) - hours * 3600 - minutes * 60)
-        if hours > 0:
-            hours = str(hours) + " h   "
-            minutes = str(minutes) + " m   "
-        else:
-            hours = ""
-            if (int(minutes) > 0):
-                
-                minutes = str(minutes) + " m   "
-            else:
-                minutes = ''  
-        
-        seconds = str(int(seconds)) + " s   " 
-        return ( str(hours) + str(minutes) + str(seconds) )
-    except:
-        return str(a) + ' s   '
-
-def userInputGUI(ns):
+def initUserInputGUI(ns):
     #initialize user input GUI and associated variables.
     #this function uses trainingAPI to handle graphical user interfaces
     #ns = is the NameSpace associated with multiprocessing , contains the shared variables (message1 and 2)
@@ -887,8 +888,6 @@ def userInputGUI(ns):
     currentGUI.comment = configs.initialComment
     
     currentGUI.usingTK = configs.usingTK
-    
-    time.sleep(1.0)
     
     currentGUI.launch_GUI()
     
@@ -928,7 +927,7 @@ def trainingInit():
     gVariables.ns = manager.Namespace()
     gVariables.ns.message1 = 0
     gVariables.ns.message2 = 0
-    gVariables.GUIProcess = multiprocessing.Process(target=userInputGUI, args=(gVariables.ns,))
+    gVariables.GUIProcess = multiprocessing.Process(target=initUserInputGUI, args=(gVariables.ns,))
     gVariables.GUIProcess.start()
     gVariables.logger.info('GUI Process started.')
     #Sphere Video Detection:
