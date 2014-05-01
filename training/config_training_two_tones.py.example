@@ -22,7 +22,7 @@ soundGenFrequency1 = 1000  # in Hz
 soundGenFrequency2 = 8000  # in Hz
 
 toneOneProbability = 0.5
-usingTK = 0 #0: using Glade GTk;   1: using TKinter
+usingTK = 0 #0: using Glade GTk;   1: using TKinter   2: non-GUI mode
 initialComment = "" #Training comment initial value.
 
 #Duplicate Values from sphereVideoDetection; if needed, change both places:
