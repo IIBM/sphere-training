@@ -24,7 +24,7 @@ class GUIGTK_Class:
     def __init__(self):
             self.customVariablesInit()
             import threading
-            print "Initializing GUI GTK class."
+            #print "Initializing GUI GTK class."
             self.thread0 = threading.Thread(target=self.startFrame0 , name="Frame0")
             self.thread0.start()
             
@@ -41,8 +41,7 @@ class GUIGTK_Class:
             self.thread5.start()
             
             
-            print "GUI GTK class initialized."
-            #startFrame1()
+            #print "GUI GTK class initialized."
             pass
     
     def customVariablesInit(self):
@@ -81,7 +80,7 @@ class GUIGTK_Class:
         self.AppFrm5.configureData()
         time.sleep(0.5)
         self.App.pack() #was forgotten previously to avoid flickering of appfrm1-5
-        print "    Done with configuration of initial data to GUI"
+        #print "    Done with configuration of initial data to GUI"
         logger.info("    Done with configuration of initial data to GUI")
         pass
     
@@ -293,7 +292,8 @@ class GUIGTK_Class:
             #
             self.__alive = 0
             self.__Text1KeyInput.focus_set()
-            print "Main User Input Form loaded"
+            #print "Main User Input Form loaded"
+            logger.info("Main User Input Form loaded")
             pass
         
         
@@ -377,18 +377,18 @@ class GUIGTK_Class:
             logger.info( "Trial Events frame shown." )
             self.reference.AppFrm1.saveTrialEventsPreviousState()
             self.reference.AppFrm1.deiconify()
-            print "Showing Frame 1: Trial Events"
+            #print "Showing Frame 1: Trial Events"
             pass
         
         def showFrame3(self):
             logger.info( "Parameters frame shown." )
             self.reference.AppFrm3.saveParametersPreviousState()
             self.reference.AppFrm3.deiconify()
-            print "Showing Frame 3: Parameters"
+            #print "Showing Frame 3: Parameters"
         
         def showFrame5(self):
             self.reference.AppFrm5.deiconify()
-            print "Showing Frame 5"
+            #print "Showing Frame 5"
         
     
         def __on_Text1KeyInput_Key(self,Event=None):
@@ -557,7 +557,8 @@ class GUIGTK_Class:
             self.__alreadyGone = 0
             self.__CommentString = ""
             self.get_changes()
-            print "Form5: Comment Frame loaded"
+            #print "Form5: Comment Frame loaded"
+            logger.info("Form5: Comment Frame loaded")
         
         
         def __on_ApplyBtn_ButRel_1(self,Event=None):
@@ -572,7 +573,8 @@ class GUIGTK_Class:
             pass
         
         def configureData(self):
-            print "configuring initial data for Form5."
+            #print "configuring initial data for Form5."
+            logging.info("configuring initial data for Form5.")
             self.__EntryComment.delete(0,30)
             self.__EntryComment.insert(0,self.reference.comment)
             pass
@@ -840,7 +842,8 @@ class GUIGTK_Class:
             self.__showTracking = 0
             self.__showFeedback = 0
             self.get_changes()
-            print "Form3: Parameters loaded"
+            #print "Form3: Parameters loaded"
+            logger.info("Form3: Parameters loaded")
         
         def __on_CloseBtn_ButRel_1(self,Event=None):
             self.reference.App.hideForm3(True)
@@ -859,7 +862,8 @@ class GUIGTK_Class:
             pass
         
         def configureData(self):
-            print "configuring initial data for Form3."
+            #print "configuring initial data for Form3."
+            logging.info("configuring initial data for Form3.")
             self.__Entry1Tone1.delete(0,10) #removes 10 characters.
             freq1 = int( self.reference.frequencyTone1 )
             self.__Entry1Tone1.insert(0, str(freq1))
@@ -1009,12 +1013,13 @@ class GUIGTK_Class:
             self.reference.previousVars.movementMethod = self.var8_num_selected
             self.reference.previousVars.movementTime = self.var4_MT
             self.reference.previousVars.idleTime = self.var5_IT
-            print "Parameters: Previous states saved."
+            #print "Parameters: Previous states saved."
             pass
         
         def get_changes(self):
             #Raw input data.
-            print "commiting changes to variables in Form 3.."
+            #print "commiting changes to variables in Form 3.."
+            logger.info("commiting changes to variables in Form 3..")
     #         print self.__Entry1TStart.get()
     #         print self.__Entry2TEnd.get()
     #         print self.__Entry3MvmntWindowStart.get()
@@ -1169,7 +1174,8 @@ class GUIGTK_Class:
             self.__Scale2.set(50)
             
             self.get_changes()
-            print "Form1: Trial Events loaded"
+            #print "Form1: Trial Events loaded"
+            logger.info( "Form1: Trial Events loaded" )
         
         def __on_ApplyBtn_ButRel_1(self,Event=None):
             print "Test Apply Frm1"
@@ -1197,7 +1203,8 @@ class GUIGTK_Class:
             pass
         
         def configureData(self):
-            print "configuring initial data for Form1."
+            #print "configuring initial data for Form1."
+            logging.info("configuring initial data for Form1.")
             
             self.__Entry1TStart.delete(0,10) #removes 10 characters.
             self.__Entry1TStart.insert(0, self.reference.toneStart )
@@ -1247,7 +1254,8 @@ class GUIGTK_Class:
             pass
         
         def get_changes(self):
-            print "commiting changes to variables in Form 1.."
+            #print "commiting changes to variables in Form 1.."
+            logger.info("commiting changes to variables in Form 1..")
     #         print self.__Entry1TStart.get()
     #         print self.__Entry2TEnd.get()
     #         print self.__Entry3MvmntWindowStart.get()
@@ -1274,7 +1282,7 @@ class GUIGTK_Class:
             self.reference.previousVars.interTrialEnd = self.var6_ITEnd
             self.reference.previousVars.probabilityToneOne = self.var7_Probab1
             
-            print "Trial Events: Previous states saved."
+            #print "Trial Events: Previous states saved."
             pass
         
         def checkTrialEventsVarsConsistency(self):
