@@ -341,6 +341,16 @@ class userInterface_API:
         logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
     
+    def overrideaction_recalibratec(self):
+        logger.info( "Default API: Recalibrate Camera" )
+        logger.info( "ns: "+ ns.__str__() )
+        print "API Namespace:", ns
+        self.setNameSpaceMessage1(30)
+        print "API Namespace:", ns
+        logger.info( "ns: "+ ns.__str__() )
+        logger.info( "Default API: done." )
+        pass
+    
     def action_drop(self):
         logger.info( "API: Drop" )
         try:
@@ -480,6 +490,13 @@ class userInterface_API:
         except:
             logger.info( "API Hide Tracking: OverrideAction Error" )
     
+    def action_recalibratec(self):
+        logger.info( "API: Recalibrate Camera" )
+        try:
+            self.overrideaction_recalibratec()
+        except:
+            logger.info( "API Recalibrate Camera: OverrideAction Error" )
+    
     def action_exit(self):
         logger.info( "Default API: Exiting GUI from API." )
         #logger.info( "ns: ", str(ns) )
@@ -525,6 +542,7 @@ class userInterface_API:
         self.currentGUI.overrideaction_showtracking = self.action_showtracking
         self.currentGUI.overrideaction_hidefeedback = self.action_hidefeedback
         self.currentGUI.overrideaction_hidetracking = self.action_hidetracking
+        self.currentGUI.overrideaction_recalibratec = self.action_recalibratec
         #self.comment = ""
         #self.thread_function(
         #thread1 = threading.Thread(target=self.thread_function, name="glade_GUI")
@@ -562,6 +580,7 @@ class userInterface_API:
         self.currentGUI.overrideaction_showtracking = self.action_showtracking
         self.currentGUI.overrideaction_hidefeedback = self.action_hidefeedback
         self.currentGUI.overrideaction_hidetracking = self.action_hidetracking
+        self.currentGUI.overrideaction_recalibratec = self.action_recalibratec
         self.currentGUI.overrideaction_exit = self.action_exit
         logger.info( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Tkinter Interface Started" )

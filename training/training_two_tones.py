@@ -1013,6 +1013,11 @@ class Training():
                     Training.gVariables.fn_toneOneProbabilitySet( float(Training.gVariables.ns.message2) )
                     print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
                     Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                elif (index == 30):
+                    print "GUICheck: 'Recalibrate Camera' message"
+                    Training.gVariables.logger.info( "GUICheck: 'Recalibrate Camera' message" )
+                    Training.gVariables.videoDet.calibrate()
+                    pass
                 
                 print "GUICheck: Reestablishing previous namespace: ", Training.gVariables.ns
                 Training.gVariables.logger.info( str("GUICheck: Reestablishing previous namespace: "+ str(Training.gVariables.ns)) )

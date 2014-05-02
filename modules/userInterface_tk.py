@@ -527,11 +527,12 @@ class GUIGTK_Class:
     
     
     class Form5(Toplevel):
-    #------------------------------------------------------------------------------#
-    #                                                                              #
-    #                                    Form5                                     #
-    #                                                                              #
-    #------------------------------------------------------------------------------#
+        #comment.
+        #------------------------------------------------------------------------------#
+        #                                                                              #
+        #                                    Form5                                     #
+        #                                                                              #
+        #------------------------------------------------------------------------------#
         commentStr = ""
         
         def __init__(self,Master=None,**kw):
@@ -591,11 +592,12 @@ class GUIGTK_Class:
     
     
     class Form3(Toplevel):
-    #------------------------------------------------------------------------------#
-    #                                                                              #
-    #                                    Form3                                     #
-    #                                                                              #
-    #------------------------------------------------------------------------------#
+        #parameters
+        #------------------------------------------------------------------------------#
+        #                                                                              #
+        #                                    Form3                                     #
+        #                                                                              #
+        #------------------------------------------------------------------------------#
         def __init__(self,Master=None,**kw):
             kw['class_'] = 'Frame'
             #
@@ -760,6 +762,13 @@ class GUIGTK_Class:
             self.__Button4SHFeedback.pack(side='top')
             self.__Button4SHFeedback.bind('<ButtonRelease-1>' \
                 ,self.__on_Button4SHFeedback_ButRel_1)
+            #
+            self.__Button4_5recalibrate = Button(self.__Frame65
+                ,text='Recalibrate Camera')
+            self.__Button4_5recalibrate.pack(side='top')
+            self.__Button4_5recalibrate.bind('<ButtonRelease-1>' \
+                ,self.__on_Button4_5recalibrate_ButRel_1)
+            #
             self.__Frame64 = Frame(self.__Frame30,width=39)
             self.__Frame64.pack(side='left')
             self.__Frame38 = Frame(self.__Frame36)
@@ -894,6 +903,10 @@ class GUIGTK_Class:
             self.reference.App.showFrame3()
             self.reference.AppFrm3.withdraw()
             
+            pass
+        
+        def __on_Button4_5recalibrate_ButRel_1(self, Event = None):
+            self.reference.overrideaction_recalibratec()
             pass
         
         def __on_Button1TestT1_ButRel_1(self,Event=None):
@@ -1039,6 +1052,7 @@ class GUIGTK_Class:
     
     
     class Form1(Toplevel):
+        #Trial Events.
         def __init__(self,Master=None,**kw):
             kw['class_'] = 'Frame'
             #
@@ -1440,6 +1454,9 @@ class GUIGTK_Class:
         logger.info( "Default: Hide Tracking" )
         return 0
     
+    def overrideaction_recalibratec(self):
+            logger.info( "Default: recalibrate camera" )
+            pass
     
     def overrideaction_testT1(self):
         logger.info( "Default: Test T1" )
