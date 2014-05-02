@@ -349,6 +349,52 @@ class Training():
                 #training init: check for modules and dependencies. Copy from '*.py.example' if needed
                 ####
         
+        
+        def __checkModules():
+            def __checkOneModule(arg):
+                #checks if one module passed as arg , exists in the system.
+                import imp
+                try:
+                    imp.find_module( str(arg) )
+                    found = True
+                except ImportError:
+                    found = False
+                if (found == False):
+                    print "Module %r not found" % (str(arg))
+                return found
+            
+            print "Checking modules."
+            if (__checkOneModule("cv") == False):
+                print "Exiting because of missing import: "+ "cv"
+                sys.exit(1)
+                pass
+            if (__checkOneModule("cv2")  == False):
+                print "Exiting because of missing import: "+ "cv2"
+                sys.exit(1)
+                pass
+            if (__checkOneModule("timeit")  == False):
+                print "Exiting because of missing import: "+ "timeit"
+                sys.exit(1)
+                pass
+            if (__checkOneModule("numpy")  == False):
+                print "Exiting because of missing import: "+ "numpy"
+                sys.exit(1)
+                pass
+            if (__checkOneModule("pygame")  == False):
+                print "Exiting because of missing import: "+ "pygame"
+                sys.exit(1)
+                pass
+            if (__checkOneModule("parallel")  == False):
+                print "Missing import: " + "parallel"
+                pass
+            if (__checkOneModule("Tkinter")  == False):
+                print "Missing import: " + "Tkinter"
+                pass
+            if (__checkOneModule("gtk")  == False):
+                print "Missing import: " + "gtk"
+                pass
+            pass
+        
         @staticmethod
         def getFormattedTime(a):
             #returns h m s correctly, given the time in seconds as the argument
@@ -373,7 +419,9 @@ class Training():
                 return str(a) + ' s   '
         
         pass
+        __checkModules()
         __checkConfigFiles()
+        
         
         import config_training_two_tones as cfgtwotones
         trainingName = cfgtwotones.trainingName
