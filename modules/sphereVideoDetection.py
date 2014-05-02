@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#sphereVideoDetection.py
+# sphereVideoDetection.py
 '''
     Programa que detecta movimiento de un flujo de video (webcam o video) configurado en un archivo de configuración:
     En base al video, establece un vector que corresponde a la dirección del movimiento detectado.
@@ -24,46 +24,46 @@ logger = logging.getLogger('sphereVideoDetection')
 
 
 class sphereVideoDetection():
-
     
     def __init__ (self, videosource, width=640, height=480) :
         import track_bola_utils
         import os
-        logger.info( "Initializing sphereVideoDetection" )
+        logger.info("Initializing sphereVideoDetection")
         try:
             import configSphereVideoDetection
         except ImportError:
             print "File configSphereVideoDetection.py not found. Generating a new copy..."
-            logger.info( "File configSphereVideoDetection.py not found. Generating a new copy..." )
+            logger.info("File configSphereVideoDetection.py not found. Generating a new copy...")
             a = os.getcwd() + "/"
             print a
             import shutil
-            shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
+            shutil.copyfile(a + "configSphereVideoDetection.py.example", a + "configSphereVideoDetection.py")
             import configSphereVideoDetection
             print "configSphereVideoDetection.py copied and imported successfully."
-            logger.info( "configSphereVideoDetection.py copied and imported successfully." )
+            logger.info("configSphereVideoDetection.py copied and imported successfully.")
         except:
             print "Error importing configSphereVideoDetection."
+            logger.error("Error importing configSphereVideoDetection.")
             os._exit(1)
-        #import configSphereVideoDetection
+        # import configSphereVideoDetection
         
         try:
             import configCamera
         except ImportError:
             print "File configCamera.py not found. Generating a new copy..."
-            logger.info( "File configCamera.py not found. Generating a new copy..." )
+            logger.info("File configCamera.py not found. Generating a new copy...")
             a = os.getcwd() + "/"
             print a
             import shutil
-            shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
+            shutil.copyfile(a + "configCamera.py.example", a + "configCamera.py")
             import configCamera
             print "configCamera.py copied and imported successfully."
-            logger.info( "configCamera.py copied and imported successfully." )
+            logger.info("configCamera.py copied and imported successfully.")
         except:
             print "Error importing configCamera."
-            logger.info( "Error importing configCamera." )
+            logger.info("Error importing configCamera.")
             os._exit(1)
-        #import configCamera
+        # import configCamera
         
         self.winName = configSphereVideoDetection.WINDOW_TITLE
         # declare self variables to use.
@@ -102,8 +102,8 @@ class sphereVideoDetection():
         self.isTracking = True  # True: is tracking correctly. False: could not keep up with the circles movement
         self.trackingVector = [True, True, True, True, True, True, True, True, True, True]
         
-        self.showTrackingFeedback = True #circles, dots and lines for the user
-        self.showUserFeedback = True #show or hide video window.
+        self.showTrackingFeedback = True  # circles, dots and lines for the user
+        self.showUserFeedback = True  # show or hide video window.
         
         self.movementVector = []  # binary vector, each loop adds 1 if moving, 0 otherwise
         
@@ -153,7 +153,7 @@ class sphereVideoDetection():
         # Create one non-blocking thread for capturing video Stream
         self.fred1 = threading.Thread(target=self.mainVideoDetection, name="VideoDetection")
         self.fred1.start()
-            
+    
     def getAccumulatedVector(self):
         return [self.vectorAcumulado.x, self.vectorAcumulado.y]
     
@@ -183,132 +183,139 @@ class sphereVideoDetection():
         self.startCalibration = True
     
     def exit(self):
-        #os._exit(0)
+        # os._exit(0)
         self.mustquit = 1
         self.available = False
     
     def setNoiseFiltering(self, bool):
-        #Set Noise FIltering: False if you DON'T want noise filtering , because you consider that your input video has no noise.
+        # Set Noise FIltering: False if you DON'T want noise filtering , because you consider that your input video has no noise.
         self.noiseFiltering = bool
 
     def getMovementTime(self):
-        #return the time in seconds that continuous movement was detected:
-        #if it is moving, current time it is moving until now.
-        #if it has stopped, amount of time it was moving before stopping.
+        # return the time in seconds that continuous movement was detected:
+        # if it is moving, current time it is moving until now.
+        # if it has stopped, amount of time it was moving before stopping.
         return self.continuousMovementTime
     
     def getIdleTime(self):
-        #return the time in seconds that no movement was detected:
-        #if it is moving, amount of time it was not moving before starting to move.
-        #if it is not moving now, amount of time it is idle until now.
+        # return the time in seconds that no movement was detected:
+        # if it is moving, amount of time it was not moving before starting to move.
+        # if it is not moving now, amount of time it is idle until now.
         return self.continuousIdleTime
     
     def manageCalibrationVariables(self, flag):
-        #this method loads calibration variables from file, if the file exists.
-        #else: it will create a file where the calibration will be saved.
+        # this method loads calibration variables from file, if the file exists.
+        # else: it will create a file where the calibration will be saved.
         
         if (self.firstCalibration == True):
-            #A first calibration was executed. So the user is asking for a re-calibration, which means
-            #that the calibration file shouldn' be used.
+            # A first calibration was executed. So the user is asking for a re-calibration, which means
+            # that the calibration file shouldn' be used.
             if (flag == 0):
                 return False
         
         self.firstCalibration = True
         
         if (flag == 0):
-            #Flag 0: Check whether calibration file exists or not.
+            # Flag 0: Check whether calibration file exists or not.
             try:
                 import calibrationCamera
                 self.MIN_CIRCLE_MOVEMENT = calibrationCamera.MIN_CIRCLE_MOVEMENT
                 self.MAX_CIRCLE_MOVEMENT = calibrationCamera.MAX_CIRCLE_MOVEMENT
                 self.WORKING_MIN_CONTOUR_AREA = calibrationCamera.WORKING_MIN_CONTOUR_AREA
                 self.WORKING_MAX_CONTOUR_AREA = calibrationCamera.WORKING_MAX_CONTOUR_AREA
-                return True #True, calibration file was there.
+                return True  # True, calibration file was there.
             except:
-                #probably: file doesn't exist.
-                return False #False, calibration file was not there. A new one will be created AFTER calib. variables are determined"
+                # probably: file doesn't exist.
+                return False  # False, calibration file was not there. A new one will be created AFTER calib. variables are determined"
 
         if (flag == 1):
-            #flag 1: A new calibration file should be created. It will have the calibrated variables just determined.
+            # flag 1: A new calibration file should be created. It will have the calibrated variables just determined.
             try:
                 import os
                 os.remove("../modules/calibrationCamera.py")
                 os.remove("../modules/calibrationCamera.pyc")
                 print "Previous calibrationCamera file exists. File erased."
+                logger.info("Previous calibrationCamera file exists. File erased.")
             except:
                 print "Error creating / erasing previous calibration file. Probably file does not exist."
+                logger.error("Error creating / erasing previous calibration file. Probably file does not exist.")
                 
             with open("../modules/calibrationCamera.py", "w") as text_file:
                     text_file.write("#This file has calibration variables for the camera \n")
                     text_file.write("#if this file exists, these values will be used in execution. Else, a new file \n")
                     text_file.write("#with calibration variables will be created and used. \n")
                     
-                    text_file.write("MAX_CIRCLE_MOVEMENT = %d \n"%int(self.MAX_CIRCLE_MOVEMENT) )
-                    text_file.write("MIN_CIRCLE_MOVEMENT = %d \n"%int(self.MIN_CIRCLE_MOVEMENT)  )
-                    text_file.write("WORKING_MIN_CONTOUR_AREA = %d \n"%int(self.WORKING_MIN_CONTOUR_AREA)  )
-                    text_file.write("WORKING_MAX_CONTOUR_AREA = %d \n"%int(self.WORKING_MAX_CONTOUR_AREA)  )
+                    text_file.write("MAX_CIRCLE_MOVEMENT = %d \n" % int(self.MAX_CIRCLE_MOVEMENT))
+                    text_file.write("MIN_CIRCLE_MOVEMENT = %d \n" % int(self.MIN_CIRCLE_MOVEMENT))
+                    text_file.write("WORKING_MIN_CONTOUR_AREA = %d \n" % int(self.WORKING_MIN_CONTOUR_AREA))
+                    text_file.write("WORKING_MAX_CONTOUR_AREA = %d \n" % int(self.WORKING_MAX_CONTOUR_AREA))
                     
                     print self.MAX_CIRCLE_MOVEMENT
+                    logger.info(str(self.MAX_CIRCLE_MOVEMENT))
                     print self.MIN_CIRCLE_MOVEMENT
+                    logger.info(str(self.MIN_CIRCLE_MOVEMENT))
                     print self.WORKING_MIN_CONTOUR_AREA
+                    logger.info(str(self.WORKING_MIN_CONTOUR_AREA))
                     print self.WORKING_MAX_CONTOUR_AREA
-                    
+                    logger.info(str(self.WORKING_MAX_CONTOUR_AREA))
                     
                     print "calibration file overwritten."
-                    return True #True, file was written OK
-            return False #False, file couldn't be written (or it was written and it's status is unknown)
+                    logger.info("calibration file overwritten.")
+                    
+                    return True  # True, file was written OK
+            return False  # False, file couldn't be written (or it was written and it's status is unknown)
     
     
     def resetMovementTime(self):
         self.continuousMovementTime = 0.0
         self.last_saved_time_movement = timeit.default_timer()
         for i in range(0, len(self.movementVector)):
-            self.movementVector[i]=0
+            self.movementVector[i] = 0
         
         
     def resetIdleTime(self):
         self.continuousIdleTime = 0.0
         self.last_saved_time_idle = timeit.default_timer()
         for i in range(0, len(self.movementVector)):
-            self.movementVector[i]=1
+            self.movementVector[i] = 1
     
     def setMovementThreshold(self, thres):
-        #Movement threshold: how much "movement" between two frames should be considered as "movement"
-        #Be careful changing this value, it is extremely sensitive.
+        # Movement threshold: how much "movement" between two frames should be considered as "movement"
+        # Be careful changing this value, it is extremely sensitive.
         self.movementThreshold = int(thres)
     
     def getMovementThreshold(self):
         return int(self.movementThreshold)
     
     def getMovementStatus(self):
-        return self.isMoving #true if right now it is moving, false otherwise.
+        return self.isMoving  # true if right now it is moving, false otherwise.
     
     def getIdleStatus(self):
-        return self.isIdle #true if right now it is idle, false otherwise.
+        return self.isIdle  # true if right now it is idle, false otherwise.
     
-    def setTrackingFeedback(self,trc):
+    def setTrackingFeedback(self, trc):
         self.showTrackingFeedback = trc
     
     def setUserFeedback(self, fdb):
         self.showUserFeedback = fdb
         if (fdb == False):
             import cv2
-            #cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
+            # cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
             cv2.destroyWindow(self.winName)
     
     def getTrackingStatus(self):
-        return self.isTracking #true if it is tracking, false if it lost tracking.
+        return self.isTracking  # true if it is tracking, false if it lost tracking.
     
     def getMovementTimeWindow(self):
         return self.movementTimeWindow
     
     def setMovementTimeWindow(self, wind):
-        #This method sets the time window.
-        #Especially useful with the movement analysis method: Method_MovementVectorBinary
-        #Seconds that will be detected for movement.
+        # This method sets the time window.
+        # Especially useful with the movement analysis method: Method_MovementVectorBinary
+        # Seconds that will be detected for movement.
         if (wind > 0.0):
             self.movementTimeWindow = wind;
-            logger.debug("videoDetection: Movement time window changed to %f seconds."%self.movementTimeWindow)
+            logger.debug("videoDetection: Movement time window changed to %f seconds." % self.movementTimeWindow)
     
     def Method_MovementVectorBinary(self):
         
@@ -324,49 +331,49 @@ class sphereVideoDetection():
         #=======================================================================
         # # Keep track of the time it takes to process the whole loop
         #=======================================================================
-        #work in seconds.
+        # work in seconds.
         
-        #print "MVB Start."
+        # print "MVB Start."
         self.continuousMovementTime = 0.0
         self.continuousIdleTime = 0.0
         timeDif = (timeit.default_timer() - self.last_saved_time_gp)
         self.last_saved_time_gp = timeit.default_timer()
-        #sttemp = "Current Loop time (ms): %d" %  int(timeDif * 1000)
-        #sttemp += "            "
+        # sttemp = "Current Loop time (ms): %d" %  int(timeDif * 1000)
+        # sttemp += "            "
         
-        #DELAY VECTOR: for keeping track of FPS and delay.
+        # DELAY VECTOR: for keeping track of FPS and delay.
         self.movementDelayVector[0:-1] = self.movementDelayVector[1:]
         self.movementDelayVector[self.movementDelayVectorLength - 1] = int(timeDif * 1000)
-        #keeping track of delay and estimated FPS:
-        average_delay=0
+        # keeping track of delay and estimated FPS:
+        average_delay = 0
         for i in range(0, self.movementDelayVectorLength):
-            average_delay+= self.movementDelayVector[i]
+            average_delay += self.movementDelayVector[i]
         
         average_delay /= self.movementDelayVectorLength
         
-        #logger.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
+        # logger.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
         
         self.last_saved_time_movement = timeit.default_timer()
         
-        #Time window is the amount of time that it is asked to the subject to perform continuous movement
+        # Time window is the amount of time that it is asked to the subject to perform continuous movement
         # For example, timewindow = 0.5 s , so each loop this method will determine if continuous movement
-        #is detected for that amount of time, and will return 0.5 if it was detected or 0 if there is not enough 1's.
+        # is detected for that amount of time, and will return 0.5 if it was detected or 0 if there is not enough 1's.
         
         #=======================================================================
-        #process last loop. Appends a 1 or 0 to the movement vector if the amount was above threshold.
+        # process last loop. Appends a 1 or 0 to the movement vector if the amount was above threshold.
         #=======================================================================
         
         self.movementVector[0:-1] = self.movementVector[1:]
-        movementAmount = (abs(self.getInstantX() * self.getInstantX()) +
+        movementAmount = (abs(self.getInstantX() * self.getInstantX()) + 
                            abs(self.getInstantY() * self.getInstantY()))
-        #logger.debug( "Amount of movement: %d" % movementAmount)
-        #if it surpasses threshold OR if it lost tracking (so it is moving quite fast..)
+        # logger.debug( "Amount of movement: %d" % movementAmount)
+        # if it surpasses threshold OR if it lost tracking (so it is moving quite fast..)
         if (movementAmount >= self.movementThreshold or self.isTracking == False):
                     self.movementVector[self.movementVectorLength - 1] = 1
-                    #print "1 appended   ", movementAmount ,"    Thres: ", self.movementThreshold
+                    # print "1 appended   ", movementAmount ,"    Thres: ", self.movementThreshold
         else:
                     self.movementVector[self.movementVectorLength - 1] = 0
-                    #print "0 appended   ", movementAmount ,"    Thres: ", self.movementThreshold
+                    # print "0 appended   ", movementAmount ,"    Thres: ", self.movementThreshold
         
         self.vectorInstantaneo.x = 0
         self.vectorInstantaneo.y = 0
@@ -375,8 +382,8 @@ class sphereVideoDetection():
         # # Determines if there are enough 1's in the time window (which was already set)
         #=======================================================================
         
-        #Calculate the amount of elements that should be checked back, to cover the time window set.
-        numElementsToCheck =  int((self.movementTimeWindow * 1000) / average_delay) + 1
+        # Calculate the amount of elements that should be checked back, to cover the time window set.
+        numElementsToCheck = int((self.movementTimeWindow * 1000) / average_delay) + 1
         ones_count = 0
         ceros_count = 0
         for i in range(0, numElementsToCheck):
@@ -384,11 +391,11 @@ class sphereVideoDetection():
                 ones_count += 1
             else:
                 ceros_count += 1
-        #print "1's: ", ones_count
-        #print "0's: ", ceros_count
+        # print "1's: ", ones_count
+        # print "0's: ", ceros_count
         if (ones_count * (100.0 / numElementsToCheck) >= self.VECTOR_COUNT_PERCENTAGE_MOVEMENT):
-            #More ones than the percentage. This is considered movement along the given time window.
-            #return OK
+            # More ones than the percentage. This is considered movement along the given time window.
+            # return OK
             self.continuousMovementTime = self.movementTimeWindow
             self.continuousIdleTime = 0.0
             self.isMoving = True
@@ -399,26 +406,26 @@ class sphereVideoDetection():
             self.isMoving = False
             self.isIdle = True
         else:
-            #it is not moving nor staying idle
+            # it is not moving nor staying idle
             self.continuousMovementTime = 0.0
             self.continuousIdleTime = 0.0
             self.isMoving = False
             self.isIdle = False
-        #print "MVB end."
-        logger.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) + ("   Elements to check: %d" %numElementsToCheck) )
-        logger.debug ( "       isMoving: %r      isTracking: %r" %( self.isMoving , self.isTracking) )
+        # print "MVB end."
+        logger.debug(("Idle Time: %r" % self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) + ("   Elements to check: %d" % numElementsToCheck))
+        logger.debug ("       isMoving: %r      isTracking: %r" % (self.isMoving , self.isTracking))
         return
     
     
     
     
     def Method_MovementVector(self):
-        #Movement Vector method:
-        #Each cycle, an element is added to movement vector.
-        #If there are N past 1's in the vector, then it was moving and currently is. (includes certain 0's tolerance)
-        #Else: it is idle.
-        #This method returns the estimated movement time (how much time it was moving) or idle time.
-        #This method does not considers anything different than moving or idle (there is no extra state).
+        # Movement Vector method:
+        # Each cycle, an element is added to movement vector.
+        # If there are N past 1's in the vector, then it was moving and currently is. (includes certain 0's tolerance)
+        # Else: it is idle.
+        # This method returns the estimated movement time (how much time it was moving) or idle time.
+        # This method does not considers anything different than moving or idle (there is no extra state).
         
         
         
@@ -426,38 +433,38 @@ class sphereVideoDetection():
         # # Variables for recognizing changes in state.
         #=======================================================================
         
-        current_state_change = 0 #0: invalid, 1: changed from idle to moving, 2: changed from moving to idle, 3: stays idle, 4: stays moving
+        current_state_change = 0  # 0: invalid, 1: changed from idle to moving, 2: changed from moving to idle, 3: stays idle, 4: stays moving
         
         #=======================================================================
         # # Keep track of the time it takes to process the whole loop
         #=======================================================================
         
-        #work in ms, at the end it passes to s again
+        # work in ms, at the end it passes to s again
         
         timeDif = (timeit.default_timer() - self.last_saved_time_gp)
         self.last_saved_time_gp = timeit.default_timer()
-        #sttemp = "Current Loop time (ms): %d" %  int(timeDif * 1000)
-        #sttemp += "            "
+        # sttemp = "Current Loop time (ms): %d" %  int(timeDif * 1000)
+        # sttemp += "            "
         
         self.movementDelayVector[0:-1] = self.movementDelayVector[1:]
         self.movementDelayVector[self.movementDelayVectorLength - 1] = int(timeDif * 1000)
-        average_delay=0
+        average_delay = 0
         for i in range(0, self.movementDelayVectorLength):
-            average_delay+= self.movementDelayVector[i]
+            average_delay += self.movementDelayVector[i]
         
         average_delay /= self.movementDelayVectorLength
         
-        #logger.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
+        # logger.debug ( sttemp + ("Average Loop time (ms): %d" % average_delay) )
         
         self.last_saved_time_movement = timeit.default_timer()
         
         #=======================================================================
-        #process new vector entry, appends a 1 or 0 to the movement vector.
+        # process new vector entry, appends a 1 or 0 to the movement vector.
         #=======================================================================
         
         self.movementVector[0:-1] = self.movementVector[1:]
         movementAmount = (abs(self.getInstantX() * self.getInstantX()) + abs(self.getInstantY() * self.getInstantY()))
-        logger.debug( "Amount of movement: %d" % movementAmount)
+        logger.debug("Amount of movement: %d" % movementAmount)
         if (movementAmount >= self.movementThreshold or self.isTracking == False):
                     self.movementVector[self.movementVectorLength - 1] = 1
         else:
@@ -466,59 +473,59 @@ class sphereVideoDetection():
         #=======================================================================
         # # Check whether this element mantains the previous state or modifies it
         #=======================================================================
-        if (self.movementVector[self.movementVectorLength - 1] == 1 and self.isMoving == True ):
-            #new 1 detected, and it was moving, so it is still moving. Add 1 LOOP TIME to the total movement time.
-            self.continuousMovementTime += (timeDif )
+        if (self.movementVector[self.movementVectorLength - 1] == 1 and self.isMoving == True):
+            # new 1 detected, and it was moving, so it is still moving. Add 1 LOOP TIME to the total movement time.
+            self.continuousMovementTime += (timeDif)
             current_state_change = 4
         
-        elif (self.movementVector[self.movementVectorLength - 1] == 0 and self.isIdle == True ):
-            #new 0 detected, and it was idle, so it is still idle. Add 1 LOOP TIME to the total idle time.
-            self.continuousIdleTime += (timeDif )
+        elif (self.movementVector[self.movementVectorLength - 1] == 0 and self.isIdle == True):
+            # new 0 detected, and it was idle, so it is still idle. Add 1 LOOP TIME to the total idle time.
+            self.continuousIdleTime += (timeDif)
             current_state_change = 3
         
-        elif (self.movementVector[self.movementVectorLength - 1] == 0 and self.isMoving == True ):
-            #cero detected, and was previously moving.
-            #It should be checked whether this 0 nullifies the continuous mvmnt. or not
-            number_of_elements_to_check = int (int(self.continuousMovementTime*1000) / average_delay)
+        elif (self.movementVector[self.movementVectorLength - 1] == 0 and self.isMoving == True):
+            # cero detected, and was previously moving.
+            # It should be checked whether this 0 nullifies the continuous mvmnt. or not
+            number_of_elements_to_check = int (int(self.continuousMovementTime * 1000) / average_delay)
             if (number_of_elements_to_check >= self.movementVectorLength):
-                #the number of elements to check is too large, better check all the vector
+                # the number of elements to check is too large, better check all the vector
                 number_of_elements_to_check = self.movementVectorLength
             else:
-                number_of_elements_to_check += 1 #we check all the previous ones + 1 addition.
+                number_of_elements_to_check += 1  # we check all the previous ones + 1 addition.
             
-            #a comparisson is made between the last N elements, to see if this new 0 alters the balance
+            # a comparisson is made between the last N elements, to see if this new 0 alters the balance
             ones_count = 0
             ceros_count = 0
-            for i in range(int(self.movementVectorLength - number_of_elements_to_check) , int (self.movementVectorLength)  ):
+            for i in range(int(self.movementVectorLength - number_of_elements_to_check) , int (self.movementVectorLength)):
                 if (self.movementVector[i] == 1):
                     ones_count += 1
                 else:
                     ceros_count += 1
             if ((ones_count * (100 / number_of_elements_to_check)) >= self.VECTOR_COUNT_PERCENTAGE):
-                #the ones and ceros were counted, and it is still moving because the 1's are greater than the percentage.
+                # the ones and ceros were counted, and it is still moving because the 1's are greater than the percentage.
                 self.isMoving = True
                 self.isIdle = False
                 current_state_change = 4
-                self.continuousMovementTime += (timeDif )
+                self.continuousMovementTime += (timeDif)
             else:
-                #now that a 0 was found, there are not enough 1's. So it changed from moving to currently idle.
+                # now that a 0 was found, there are not enough 1's. So it changed from moving to currently idle.
                 self.isMoving = False
                 self.isIdle = True
                 current_state_change = 2
-                self.continuousIdleTime = (timeDif )
+                self.continuousIdleTime = (timeDif)
         
         
-        elif (self.movementVector[self.movementVectorLength - 1] == 1 and self.isIdle == True ):
-            #one detected, and was previously idle.
-            #It should be checked whether this 1 nullifies the idle state or not
-            number_of_elements_to_check = int(self.continuousMovementTime*1000) / average_delay
+        elif (self.movementVector[self.movementVectorLength - 1] == 1 and self.isIdle == True):
+            # one detected, and was previously idle.
+            # It should be checked whether this 1 nullifies the idle state or not
+            number_of_elements_to_check = int(self.continuousMovementTime * 1000) / average_delay
             if (number_of_elements_to_check >= self.movementVectorLength):
-                #the number of elements to check is too large, better check all the vector
+                # the number of elements to check is too large, better check all the vector
                 number_of_elements_to_check = self.movementVectorLength
             else:
-                number_of_elements_to_check += 1 #we check all the previous ones + 1 addition.
+                number_of_elements_to_check += 1  # we check all the previous ones + 1 addition.
             
-            #a comparisson is made between the last N elements, to see if this new 1 alters the balance
+            # a comparisson is made between the last N elements, to see if this new 1 alters the balance
             ones_count = 0
             ceros_count = 0
             for i in range(int(self.movementVectorLength - number_of_elements_to_check) , int(self.movementVectorLength)):
@@ -527,29 +534,29 @@ class sphereVideoDetection():
                 else:
                     ceros_count += 1
             if ((ones_count * (100 / number_of_elements_to_check)) >= self.VECTOR_COUNT_PERCENTAGE):
-                #the ones and ceros were counted, and it changed, it is now moving because the 1's are greater than the percentage.
+                # the ones and ceros were counted, and it changed, it is now moving because the 1's are greater than the percentage.
                 self.isMoving = True
                 self.isIdle = False
                 current_state_change = 1
-                self.continuousMovementTime = (timeDif )
+                self.continuousMovementTime = (timeDif)
             else:
-                #the 1 found does not alter the idle state
+                # the 1 found does not alter the idle state
                 self.isMoving = False
                 self.isIdle = True
                 current_state_change = 3
-                self.continuousIdleTime += (timeDif )
+                self.continuousIdleTime += (timeDif)
         
-        logger.debug( self.movementVector )
-        logger.debug( ("Idle Time: %r"%self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime) )
-        #logger.debug ( "       isMoving: %r" % self.isMoving)
+        logger.debug(self.movementVector)
+        logger.debug(("Idle Time: %r" % self.continuousIdleTime) + ("     Movement Time: %r" % self.continuousMovementTime))
+        # logger.debug ( "       isMoving: %r" % self.isMoving)
         
         #=======================================================================
         # # Save history of movements and idle
         #=======================================================================
-        #CONTINUAR
+        # CONTINUAR
         # DEBEN HABER 3 ESTADOS. SE MOVIÓ HACE 0.5 SEGUNDOS, IDLE HACE 0.5 SEGUNDOS, ESTADO INVÁLIDO.
         # Historia de movimiento para saber cuánto suman los movimientos interrumpidos.
-        #EJ: [ 0.3 0.5 1.0 0.0 0.1 0.0 ]  suma bastante movimiento en total. Es mejor que preguntar instantáneamente cuanto se está moviendo.
+        # EJ: [ 0.3 0.5 1.0 0.0 0.1 0.0 ]  suma bastante movimiento en total. Es mejor que preguntar instantáneamente cuanto se está moviendo.
         
         
         self.vectorInstantaneo.x = 0
@@ -557,54 +564,54 @@ class sphereVideoDetection():
     
     
     def Method_AccumulateTime(self):
-        #this function analyzes continuous movement. If detected, saves the amount of seconds of the movement so far.
-        #if idle is detected, it saves how much time the subject is idle.
-        self.internalMovementCounter+=1
+        # this function analyzes continuous movement. If detected, saves the amount of seconds of the movement so far.
+        # if idle is detected, it saves how much time the subject is idle.
+        self.internalMovementCounter += 1
         
-        if (self.internalMovementCounter >self.movement_loopNumberSpan):
+        if (self.internalMovementCounter > self.movement_loopNumberSpan):
             self.internalMovementCounter = 0
             logger.debug("   ----" + 
-                            str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
-                abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)) )
-            if ( (abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) +
-                    abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)  >= self.movementThreshold)
+                            str(abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) + 
+                abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y)))
+            if ((abs(self.vectorInstantaneo.x * self.vectorInstantaneo.x) + 
+                    abs(self.vectorInstantaneo.y * self.vectorInstantaneo.y) >= self.movementThreshold)
                 or self.isTracking == False):
-                    #print "It is currently moving"
+                    # print "It is currently moving"
                     if (self.isIdle == True):
-                        #was idle, now started to move. We erase time movement counter and start from 0 now
+                        # was idle, now started to move. We erase time movement counter and start from 0 now
                         self.continuousMovementTime = 0
                         self.isMoving = True
                         self.isIdle = False
-                        #CHECK SOLUTION FOR THE NEXT LINE.
-                        self.last_saved_time_movement = timeit.default_timer() #this substracts the first loop movement
+                        # CHECK SOLUTION FOR THE NEXT LINE.
+                        self.last_saved_time_movement = timeit.default_timer()  # this substracts the first loop movement
                     
                     
                     now = timeit.default_timer()
                     timeDif = (now - self.last_saved_time_movement)
-                    if (timeDif < 0.001): #prevent from saving extremely low values (exp-10 etc..)
+                    if (timeDif < 0.001):  # prevent from saving extremely low values (exp-10 etc..)
                         timeDif = 0
                     self.continuousMovementTime = timeDif
-                    #self.last_saved_time_movement = timeit.default_timer()
+                    # self.last_saved_time_movement = timeit.default_timer()
                     self.vectorInstantaneo.x = 0
                     self.vectorInstantaneo.y = 0
             else:
-                    #print "not moving"
+                    # print "not moving"
                     if (self.isMoving == True):
-                        #was moving and now it is not. We erase the old idle time counter, and we start counting idle time from 0
+                        # was moving and now it is not. We erase the old idle time counter, and we start counting idle time from 0
                         self.isMoving = False
                         self.isIdle = True
                         self.continuousIdleTime = 0
                         self.last_saved_time_idle = timeit.default_timer()
                     now = timeit.default_timer()
                     timeDif = (now - self.last_saved_time_idle)
-                    if (timeDif < 0.001): #prevent from saving extremely low values
+                    if (timeDif < 0.001):  # prevent from saving extremely low values
                         timeDif = 0
                     self.continuousIdleTime = timeDif
-                    #self.last_saved_time_idle = timeit.default_timer()
+                    # self.last_saved_time_idle = timeit.default_timer()
                     self.vectorInstantaneo.x = 0
                     self.vectorInstantaneo.y = 0
-            #history of movement mejoraría la performance de este método.
-            logger.debug("Continuous: "+ str(self.continuousMovementTime) +"  ...  Idle: " + str(self.continuousIdleTime) )
+            # history of movement mejoraría la performance de este método.
+            logger.debug("Continuous: " + str(self.continuousMovementTime) + "  ...  Idle: " + str(self.continuousIdleTime))
     
     def continuousMovementAnalysis(self):
         if (self.movementMethod == 0):
@@ -649,55 +656,55 @@ class sphereVideoDetection():
                 si son iguales por el hecho de que hay colisión en el espacio 2D-tiempo)
                 entonces añadir valor en el vector en el que este círculo se movió.
     """    
-        CAM_NUMBER = 0 #cam number, 0 for integrated webcam, 1 for the next detected camera.
+        CAM_NUMBER = 0  # cam number, 0 for integrated webcam, 1 for the next detected camera.
         
-        #TCP_IP = 'localhost' #ip a donde conecto a socket
-        #TCP_PORT = 50007 #puerto del socket
-        #variables "de movimiento":
-        #CAM_WIDTH = 640
-        #CAM_HEIGHT = 480
-        MIN_CONTOUR_AREA = 60 #min contour area to be valid, used in calibration
-        MAX_CONTOUR_AREA = 2600 #max contour area to be valid , used in calibration
-        self.WORKING_MIN_CONTOUR_AREA = 9999 #min contour area to be valid, used in every main loop
-        self.WORKING_MAX_CONTOUR_AREA = 0 #max contour area to be valid, used in every main loop
-        self.MIN_CIRCLE_MOVEMENT = 3 #mínima diferencia en movimiento del círculo para considerarlo como movimiento
-        self.MAX_CIRCLE_MOVEMENT = 35 #máx diferencia en movimiento del círculo para considerarlo como movimiento
+        # TCP_IP = 'localhost' #ip a donde conecto a socket
+        # TCP_PORT = 50007 #puerto del socket
+        # variables "de movimiento":
+        # CAM_WIDTH = 640
+        # CAM_HEIGHT = 480
+        MIN_CONTOUR_AREA = 60  # min contour area to be valid, used in calibration
+        MAX_CONTOUR_AREA = 2600  # max contour area to be valid , used in calibration
+        self.WORKING_MIN_CONTOUR_AREA = 9999  # min contour area to be valid, used in every main loop
+        self.WORKING_MAX_CONTOUR_AREA = 0  # max contour area to be valid, used in every main loop
+        self.MIN_CIRCLE_MOVEMENT = 3  # mínima diferencia en movimiento del círculo para considerarlo como movimiento
+        self.MAX_CIRCLE_MOVEMENT = 35  # máx diferencia en movimiento del círculo para considerarlo como movimiento
         
-        #Inicio de programa: se declara como se captura video.
-        print "Video Source: ", (self.VIDEOSOURCE)
-        strtmp = "Video Source: "+ str(self.VIDEOSOURCE)
+        # Inicio de programa: se declara como se captura video.
+        strtmp = "Video Source: " + str(self.VIDEOSOURCE)
+        print strtmp
         logger.info(strtmp)
         cam = cv2.VideoCapture(self.VIDEOSOURCE)
         
-        #Opciones de ejecuciOn: 640x480 => 60 fps.
-        cam.set(3,self.CAM_WIDTH)
-        cam.set(4,self.CAM_HEIGHT)
+        # Opciones de ejecuciOn: 640x480 => 60 fps.
+        cam.set(3, self.CAM_WIDTH)
+        cam.set(4, self.CAM_HEIGHT)
         
-        #set camera properties: this configuration is very dependent on the type and model of camera.
+        # set camera properties: this configuration is very dependent on the type and model of camera.
         
-        cam.set(self.CAM_BRIGHTNESS_VAR,self.CAM_BRIGHTNESS_VALUE)
-        cam.set(self.CAM_CONTRAST_VAR,self.CAM_CONTRAST_VALUE)
-        cam.set(self.CAM_SATURATION_VAR,self.CAM_SATURATION_VALUE)
-        cam.set(self.CAM_HUE_VAR,self.CAM_HUE_VALUE)
-        cam.set(self.CAM_GAIN_VAR,self.CAM_GAIN_VALUE)
-        cam.set(self.CAM_EXPOSURE_VAR,self.CAM_EXPOSURE_VALUE)
+        cam.set(self.CAM_BRIGHTNESS_VAR, self.CAM_BRIGHTNESS_VALUE)
+        cam.set(self.CAM_CONTRAST_VAR, self.CAM_CONTRAST_VALUE)
+        cam.set(self.CAM_SATURATION_VAR, self.CAM_SATURATION_VALUE)
+        cam.set(self.CAM_HUE_VAR, self.CAM_HUE_VALUE)
+        cam.set(self.CAM_GAIN_VAR, self.CAM_GAIN_VALUE)
+        cam.set(self.CAM_EXPOSURE_VAR, self.CAM_EXPOSURE_VALUE)
         print "camera: Width %r" % cam.get(3)
-        logger.info(str( "camera: Width %r" % cam.get(3) ))
+        logger.info(str("camera: Width %r" % cam.get(3)))
         print "camera: Height %r" % cam.get(4)
-        logger.info(str( "camera: Height %r" % cam.get(4) ))
-        #print "camera: FPS %r" % cam.get(5) #prints error for most cameras.
+        logger.info(str("camera: Height %r" % cam.get(4)))
+        # print "camera: FPS %r" % cam.get(5) #prints error for most cameras.
         print "camera: Brightness %r" % cam.get(self.CAM_BRIGHTNESS_VAR)
-        logger.info(str( "camera: Brightness %r" % cam.get(self.CAM_BRIGHTNESS_VAR) ))
+        logger.info(str("camera: Brightness %r" % cam.get(self.CAM_BRIGHTNESS_VAR)))
         print "camera: Contrast %r" % cam.get(self.CAM_CONTRAST_VAR)
-        logger.info(str( "camera: Contrast %r" % cam.get(self.CAM_CONTRAST_VAR) ))
+        logger.info(str("camera: Contrast %r" % cam.get(self.CAM_CONTRAST_VAR)))
         print "camera: Saturation %r" % cam.get(self.CAM_SATURATION_VAR)
-        logger.info(str( "camera: Saturation %r" % cam.get(self.CAM_SATURATION_VAR) ))
+        logger.info(str("camera: Saturation %r" % cam.get(self.CAM_SATURATION_VAR)))
         print "camera: Hue %r" % cam.get(self.CAM_HUE_VAR)
-        logger.info(str( "camera: Hue %r" % cam.get(self.CAM_HUE_VAR) ))
+        logger.info(str("camera: Hue %r" % cam.get(self.CAM_HUE_VAR)))
         print "camera: Gain %r" % cam.get(self.CAM_GAIN_VAR)
-        logger.info(str( "camera: Gain %r" % cam.get(self.CAM_GAIN_VAR) ))
+        logger.info(str("camera: Gain %r" % cam.get(self.CAM_GAIN_VAR)))
         print "camera: Exposure %r" % cam.get(self.CAM_EXPOSURE_VAR)
-        logger.info(str( "camera: Exposure %r" % cam.get(self.CAM_EXPOSURE_VAR) ))
+        logger.info(str("camera: Exposure %r" % cam.get(self.CAM_EXPOSURE_VAR)))
         
         
         time.sleep(0.2)
@@ -725,6 +732,7 @@ class sphereVideoDetection():
         
         if not cam:
             print "Error opening capture device"
+            logger.error("Error opening capture device")
             sys.exit(1)
         
         
@@ -739,61 +747,62 @@ class sphereVideoDetection():
 
         self.startCalibration = True
         Lnew = []
-        while (self.available  == True ):
+        while (self.available == True):
                 #===============================================================
                 # #calibrate if necessary
                 #===============================================================
                 if (self.startCalibration == True):
                     if (self.manageCalibrationVariables(0) == False):
                         print "Calibration file missing. A new calibration file will be created.."
-                        print "Recalibrating:"
+                        logger.info("Calibration file missing. A new calibration file will be created..")
                         t_calib = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)
                         cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
-                        ret,thresh = cv2.threshold(t_calib,self.CV2THRESHOLD,255,cv2.THRESH_BINARY)
-                        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-                        #recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
+                        ret, thresh = cv2.threshold(t_calib, self.CV2THRESHOLD, 255, cv2.THRESH_BINARY)
+                        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                        # recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
                         circleCenters = []
                         circleRadius = []
                         for cnt in contours:
-                            (x,y),radius = cv2.minEnclosingCircle(cnt)
-                            center = (int(x),int(y))
+                            (x, y), radius = cv2.minEnclosingCircle(cnt)
+                            center = (int(x), int(y))
                             radius = int(radius)
                             if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
-                                #áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
-                                cv2.circle(capturedImage,center,radius,(0,255,0),2)
+                                # áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
+                                cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)
                                 circleCenters.append(center)
                                 circleRadius.append(radius)
                         expectedValue = 0
                         minRadius = 9999
                         maxRadius = 0
-                        for i in range (0,10):
-                            cv2.imshow( self.winName , capturedImage )
+                        for i in range (0, 10):
+                            cv2.imshow(self.winName , capturedImage)
                             time.sleep(0.01)
                             key = cv2.waitKey(10)
                         for i in range(0, len(circleRadius)):
-                            expectedValue +=  circleRadius[i]
+                            expectedValue += circleRadius[i]
                         
                         if len(circleCenters) > 0:
                           expectedValue /= len(circleCenters)
                         else:
                           expectedValue = 1
-    
+                        
                         for i in range (0, len(circleCenters)):
-                            if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2 ):
+                            if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue) < expectedValue / 2):
                                 maxRadius = circleRadius[i]
-                            if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue)< expectedValue/2):
+                            if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue) < expectedValue / 2):
                                 minRadius = circleRadius[i]
-    
+                        
                         if (self.noiseFiltering == False):
                             print "No noise filtering set."
-                            self.MAX_CIRCLE_MOVEMENT = expectedValue*2
-                            self.MIN_CIRCLE_MOVEMENT = expectedValue/8
+                            logger.info("No noise filtering set.")
+                            self.MAX_CIRCLE_MOVEMENT = expectedValue * 2
+                            self.MIN_CIRCLE_MOVEMENT = expectedValue / 8
                             minRadius = 1
                             if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
                                 self.MIN_CIRCLE_MOVEMENT = 2
                         else:
-                             self.MAX_CIRCLE_MOVEMENT = expectedValue*1.5
-                             self.MIN_CIRCLE_MOVEMENT = expectedValue/5
+                             self.MAX_CIRCLE_MOVEMENT = expectedValue * 1.5
+                             self.MIN_CIRCLE_MOVEMENT = expectedValue / 5
                              if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
                                  self.MIN_CIRCLE_MOVEMENT = 2
 
@@ -801,41 +810,56 @@ class sphereVideoDetection():
                         self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
                         
                         print "Number of samples: %d" % len(circleCenters)
+                        logger.info(str("Number of samples: %d" % len(circleCenters)))
                         print "Radius expected value: %d" % expectedValue
+                        logger.info(str("Radius expected value: %d" % expectedValue))
                         print "Minor Radius: %d" % minRadius
+                        logger.info(str("Minor Radius: %d" % minRadius))
                         print "Major Radius: %d" % maxRadius
+                        logger.info(str("Major Radius: %d" % maxRadius))
                         print "Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)
+                        logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
                         print "Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)
+                        logger.info(str("Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)))
                         print "Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)
+                        logger.info(str("Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)))
                         print "Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)
+                        logger.info(str("Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)))
                         
                         if (self.manageCalibrationVariables(1) == False):
-                            print "Error writting calibration file."
+                            print "Error writing and saving calibration file."
+                            logger.info("Error writing and saving calibration file.")
                         else:
                             print "Calibration file saved."
+                            logger.info("Calibration file saved.")
                         self.startCalibration = False
                     else:
-                        #Calibration file exists, there is no need to calibrate.
-                        print " - Calibration file exists. Using calibration file. - "
-                        print "Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)
-                        print "Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)
-                        print "Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)
-                        print "Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)
+                        # Calibration file exists, there is no need to calibrate.
+                        # print " - Calibration file exists. Using calibration file. - "
+                        logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
+                        # print "Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)
+                        logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
+                        # print "Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)
+                        logger.info(str("Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)))
+                        # print "Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)
+                        logger.info(str("Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)))
+                        # print "Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)
+                        logger.info(str("Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)))
                         self.startCalibration = False
                         pass
                 
                 #===============================================================
                 # # Preparo las imgs antigûa, actual y futura<>
                 #===============================================================
-                #capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
+                # capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
                 capturedImage = cam.read()[1]
-                #t_before es el del anterior ciclo, t_now es el recién capturado (procesándolo 1ero..),
+                # t_before es el del anterior ciclo, t_now es el recién capturado (procesándolo 1ero..),
                 
-                #t_before = t_now #saves old matrix; unnecessary since what is important from old matrix is the circle and point matrix
-                t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY) #current matrix
+                # t_before = t_now #saves old matrix; unnecessary since what is important from old matrix is the circle and point matrix
+                t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
                 
                 cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
-                #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_GAUSSIAN, 3, 0);
+                # cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_GAUSSIAN, 3, 0);
                 #===============================================================
                 # Se guarda la matriz utilizada en el ciclo anterior.
                 #===============================================================
@@ -848,7 +872,7 @@ class sphereVideoDetection():
                 #===============================================================
                 # #Recorrido de frame actual:
                 #===============================================================
-                #recorro los contornos para el frame actual, capturando centros.
+                # recorro los contornos para el frame actual, capturando centros.
                 Lnew = []
                 for cnt in contours:
                     (x, y), radius = cv2.minEnclosingCircle(cnt)
@@ -858,13 +882,13 @@ class sphereVideoDetection():
                     if (cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and
                          cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA):
                         if (self.showTrackingFeedback):
-                            cv2.circle(capturedImage, center, radius, (0, 255, 0), 2) #visual feedback to user.
+                            cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)  # visual feedback to user.
                         Lnew.append(center)
                 #===============================================================
                 # #analizo si hay colisiones en el espacio 2D-tiempo
                 #===============================================================
-                #Si las hubiera, voy sumando contribuciones para ver hacia donde apunta el movimiento medio.
-                #Se analizan ambos versores del vector en el plano bidireccional:
+                # Si las hubiera, voy sumando contribuciones para ver hacia donde apunta el movimiento medio.
+                # Se analizan ambos versores del vector en el plano bidireccional:
                 self.movEjeX = 0
                 self.movEjeY = 0
                 number_of_moving_vectors = 0
@@ -874,39 +898,39 @@ class sphereVideoDetection():
                     for jndex in range(index, len(Lbefore)):
                         movement_difference = (Lnew[index][0] - Lbefore[jndex][0]) ** 2 + (Lnew[index][1] - Lbefore[jndex][1]) ** 2
                         if (math.sqrt(movement_difference) >= self.MIN_CIRCLE_MOVEMENT):
-                             if ( math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
-                                #print "Hay colisión: %d %d" % (index,jndex)
-                                #cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
+                             if (math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
+                                # print "Hay colisión: %d %d" % (index,jndex)
+                                # cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
                                 if (self.showTrackingFeedback):
-                                    cv2.line(capturedImage, (Lnew[index][0], Lnew[index][1]),(Lbefore[jndex][0], Lbefore[jndex][1]), (255,0,0), 5) #user feedback
-                                #se suma a todos los desplazamientos (en x, en y).
-                                self.movEjeX+= Lnew[index][0] - Lbefore[jndex][0]
-                                self.movEjeY+=Lnew[index][1] - Lbefore[jndex][1]
-                                number_of_moving_vectors+=1
+                                    cv2.line(capturedImage, (Lnew[index][0], Lnew[index][1]), (Lbefore[jndex][0], Lbefore[jndex][1]), (255, 0, 0), 5)  # user feedback
+                                # se suma a todos los desplazamientos (en x, en y).
+                                self.movEjeX += Lnew[index][0] - Lbefore[jndex][0]
+                                self.movEjeY += Lnew[index][1] - Lbefore[jndex][1]
+                                number_of_moving_vectors += 1
                         else:
-                            #están muy cerca, son probablemente el mismo.
-                            number_of_standing_vectors +=1
+                            # están muy cerca, son probablemente el mismo.
+                            number_of_standing_vectors += 1
                 self.isTrackingTemp = True
-                if (number_of_standing_vectors < len(Lnew)/3 and number_of_moving_vectors < len(Lnew)/3): #see docs.
-                    if (len(Lnew) > 2): #else too few circles to deatermine loss of tracking
+                if (number_of_standing_vectors < len(Lnew) / 3 and number_of_moving_vectors < len(Lnew) / 3):  # see docs.
+                    if (len(Lnew) > 2):  # else too few circles to deatermine loss of tracking
                         self.isTrackingTemp = False
                 
                 self.trackingVector[0:-1] = self.trackingVector[1:]
                 self.trackingVector[-1] = self.isTrackingTemp
                 cant_tracking = 0
                 self.isTracking = True
-                for i in range(0, len(self.trackingVector) ):
+                for i in range(0, len(self.trackingVector)):
                     if self.trackingVector[i] == True:
-                        cant_tracking +=1
+                        cant_tracking += 1
                 if (cant_tracking < 8):
                     self.isTracking = False
-                #print "Standing vectors ", number_of_standing_vectors
-                #print "Moving vectors ", number_of_moving_vectors
-                #print "circles " , len(Lnew)
-                #print "Tracking : " , self.isTracking
-                #print "----"
+                # print "Standing vectors ", number_of_standing_vectors
+                # print "Moving vectors ", number_of_moving_vectors
+                # print "circles " , len(Lnew)
+                # print "Tracking : " , self.isTracking
+                # print "----"
                 
-                #we divide each instant vector components by N, to obtain average instant vector.
+                # we divide each instant vector components by N, to obtain average instant vector.
                 if (number_of_moving_vectors == 0):
                     number_of_moving_vectors = 1
                 
@@ -926,20 +950,20 @@ class sphereVideoDetection():
                 # se "muestra" el resultado al usuario (feedback)
                 #===============================================================
                 if (self.showUserFeedback):
-                    cv2.imshow( self.winName , capturedImage ) #obs.: NO es estrictamente necesario mostrar la ventana para que funcione
-                #(imshow se puede sacar si el CPU es un problema.)
+                    cv2.imshow(self.winName , capturedImage)  # obs.: NO es estrictamente necesario mostrar la ventana para que funcione
+                # (imshow se puede sacar si el CPU es un problema.)
                 
                 #===============================================================
                 # #para finalizar programa, usuario presiona "Escape":
                 #===============================================================
                 key = cv2.waitKey(self.sleepTime)
-                if (key == 27 or key==1048603 or self.mustquit==1  ): #escape pressed
-                    #end Program.
-                    #cam.release()
+                if (key == 27 or key == 1048603 or self.mustquit == 1):  # escape pressed
+                    # end Program.
+                    # cam.release()
                     cv2.destroyWindow(self.winName)
-                    #cv.DestroyWindow(self.winName)
-                    logger.info( "Exiting sphereVideoDetection")
-                    #os.kill(os.getpid(), signal.SIGINT)
+                    # cv.DestroyWindow(self.winName)
+                    logger.info("Exiting sphereVideoDetection")
+                    # os.kill(os.getpid(), signal.SIGINT)
                     os._exit(0)
                     return
 
@@ -956,9 +980,9 @@ if __name__ == '__main__':
     dateformat = '%Y/%m/%d %I:%M:%S %p'
     
     logging.basicConfig(filename='logs/sphereVideoDetection.log', filemode='w',
-            level=logging.DEBUG, format=formatter, datefmt = dateformat)
+            level=logging.DEBUG, format=formatter, datefmt=dateformat)
     logger.info('Start sphereVideoDetection Test')
-    #Crea un objeto de captura de video, imprime tiempo de movimiento continuo o tiempo que permanece quieto.
+    # Crea un objeto de captura de video, imprime tiempo de movimiento continuo o tiempo que permanece quieto.
     try:
         from configvideo import *
     except ImportError:
@@ -968,18 +992,18 @@ if __name__ == '__main__':
         print "Error with configVideo"
         logger.info("Error with configVideo")
     
-    videoDet = sphereVideoDetection(VIDEOSOURCE,CAM_WIDTH, CAM_HEIGHT)
+    videoDet = sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
     videoDet.setNoiseFiltering(True)
     import time
-    #time.sleep(2)
-    #videoDet.setNoiseFiltering(False)
-    #videoDet.calibrate()
+    # time.sleep(2)
+    # videoDet.setNoiseFiltering(False)
+    # videoDet.calibrate()
     
     while(True):
-        #print "x:  "+str(videoDet.getAccumX())
-        #print "y:  "+str(videoDet.getAccumY()) #<>
-        #print "Continuous movement time: %r    Idle movement time: %r   IsMoving: %r"  % (videoDet.getMovementTime() , videoDet.getIdleTime(), videoDet.getMovementStatus())
-        a = str("Continuous movement time: %r    Idle movement time: %r   IsMoving: %r"  %
+        # print "x:  "+str(videoDet.getAccumX())
+        # print "y:  "+str(videoDet.getAccumY()) #<>
+        # print "Continuous movement time: %r    Idle movement time: %r   IsMoving: %r"  % (videoDet.getMovementTime() , videoDet.getIdleTime(), videoDet.getMovementStatus())
+        a = str("Continuous movement time: %r    Idle movement time: %r   IsMoving: %r" % 
                  (videoDet.getMovementTime() , videoDet.getIdleTime(), videoDet.getMovementStatus()))
         logger.info(a)
         print videoDet.movementVector

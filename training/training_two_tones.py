@@ -271,7 +271,8 @@ class Training():
             Training.gVariables.videoDet.setUserFeedback(False)
             pass
         
-        def __checkModules():
+        def __checkConfigFiles():
+                #checks if the config files needed for training_ exist. If not, generates them.
                 import os
                 
                 try:
@@ -287,6 +288,9 @@ class Training():
                     print "Error importing configvideo."
                     os._exit(1)
                 
+                if 'configvideo' in sys.modules:  
+                    del(sys.modules["configvideo"]) 
+                
                 
                 try:
                     import configSphereVideoDetection
@@ -301,6 +305,9 @@ class Training():
                     print "Error importing configSphereVideoDetection."
                     os._exit(1)
                 
+                if 'configSphereVideoDetection' in sys.modules:  
+                    del(sys.modules["configSphereVideoDetection"]) 
+                
                 try:
                     import configCamera
                 except ImportError:
@@ -313,6 +320,9 @@ class Training():
                 except:
                     print "Error importing configCamera."
                     os._exit(1)
+                
+                if 'configCamera' in sys.modules:  
+                    del(sys.modules["configCamera"]) 
                 
                 try:
                     import config_training_two_tones as cfgtwotones
@@ -327,6 +337,10 @@ class Training():
                 except:
                     print "Error importing config_training_two_tones."
                     os._exit(1)
+                
+                if 'config_training_two_tones' in sys.modules:  
+                    del(sys.modules["config_training_two_tones"]) 
+                
                 ####
                 # End of checking existance of config files.
                 
@@ -337,7 +351,7 @@ class Training():
         
         @staticmethod
         def getFormattedTime(a):
-            #returns h m s correctly given the time in seconds, as argument
+            #returns h m s correctly, given the time in seconds as the argument
             try:
                 hours = int (int(a) / 3600)  # hours
                 minutes = int((int(a) - hours * 3600) / 60)  # minutes
@@ -359,7 +373,7 @@ class Training():
                 return str(a) + ' s   '
         
         pass
-        __checkModules()
+        __checkConfigFiles()
         
         import config_training_two_tones as cfgtwotones
         trainingName = cfgtwotones.trainingName
