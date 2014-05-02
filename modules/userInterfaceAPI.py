@@ -37,9 +37,8 @@ class userInterface_API:
         logger.info( "Namespace set" )
     
     def setInitialValues(self):
-        print "User Interface API: sending variables to GUI, with the purpose of setting up initial values."
+        #print "User Interface API: sending variables to GUI, with the purpose of setting up initial values."
         logger.info( "User Interface API: sending variables to GUI, with the purpose of setting up initial values." )
-        
         
         self.currentGUI.toneStart = self.toneStart
         self.currentGUI.toneEnd = self.toneEnd
@@ -506,7 +505,7 @@ class userInterface_API:
     
     def launch_glade(self):
         import userInterface_glade
-        print "Launching Glade interface."
+        logger.info( str(self) +  "  Glade Interface : launching" )
         self.currentGUI = userInterface_glade.GUIGTK_Class()
         self.currentGUI.overrideaction_exit = self.action_exit
         self.currentGUI.overrideaction_drop = self.action_drop
@@ -532,6 +531,7 @@ class userInterface_API:
         #thread1.start()
         logger.info( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Glade Interface Started" )
+        print "Glade interface started."
         self.setInitialValues()
         while True:
             time.sleep(1.0)
@@ -541,9 +541,10 @@ class userInterface_API:
     def launch_tkinter(self):
         import userInterface_tk
         self.currentGUI = userInterface_tk.GUIGTK_Class()
-        print "Overriding functions:"
+        #print "Overriding functions:"
         time.sleep(0.5)
         time.sleep(0.5)
+        logger.info( str(self) +  "Launching Tkinter Interface" )
         self.currentGUI.overrideaction_drop = self.action_drop
         self.currentGUI.overrideaction_reward = self.action_reward
         self.currentGUI.overrideaction_open = self.action_open
@@ -564,6 +565,7 @@ class userInterface_API:
         self.currentGUI.overrideaction_exit = self.action_exit
         logger.info( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Tkinter Interface Started" )
+        print "Tkinter Interface Started"
         self.setInitialValues()
         while True:
             time.sleep(1.0)
