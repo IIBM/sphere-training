@@ -58,6 +58,11 @@ class GUIGTK_Class():
                 self.glade.add_from_file(self.gladefile)
                 self.glade.connect_signals(handlers)
                 self.glade.get_object("mainWindow").show_all()
+                self.glade.get_object("mainWindow").set_title("Main Form (Glade)")
+                self.glade.get_object("commentWin").set_title("Comment.")
+                self.glade.get_object("parametersWin").set_title("Parameters.")
+                self.glade.get_object("trialEventsWin").set_title("Trial Events.")
+                
                 
                 if (startEv == True):
                     gtk.main()
