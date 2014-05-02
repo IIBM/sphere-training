@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from Tkinter import *
+import Tkinter
 import time
 import sys
 import os
@@ -39,6 +40,7 @@ class GUIGTK_Class:
             time.sleep(0.25) #i can swear without this delay it won't work properly
             self.thread5.start()
             
+            
             print "GUI GTK class initialized."
             #startFrame1()
             pass
@@ -61,6 +63,7 @@ class GUIGTK_Class:
         self.comment = ""
         pass
     
+    
     def start_everything(self):
         self.thread0.start()
         self.thread1.start()
@@ -72,42 +75,36 @@ class GUIGTK_Class:
     def commitInitialData(self):
         #some arguments have been passed as variables (with direct access)
         #The Graphic Elements should change according to current state of the vars that we received.
+        #time.sleep(0.2)
         self.AppFrm1.configureData()
         self.AppFrm3.configureData()
         self.AppFrm5.configureData()
+        time.sleep(0.5)
         self.App.pack() #was forgotten previously to avoid flickering of appfrm1-5
         print "    Done with configuration of initial data to GUI"
         logger.info("    Done with configuration of initial data to GUI")
         pass
     
     def startFrame0(self):
-        self.previousVars.Root = Tk()
-        self.previousVars.Root.withdraw() #to prevent user from touching vars before initialization
-        import Tkinter
-        
-        del Tkinter
-        self.App = self.userInput(self.previousVars.Root)
+        Rootn = Tk()
+        Rootn.withdraw() #to prevent user from touching vars before initialization
+        self.App = self.userInput(Rootn)
         self.App.pack(expand='yes',fill='both')
         self.App.reference = self
         
+        Rootn.geometry('480x240+10+10')
+        Rootn.title('Main Form (TK)')
         
-        
-        self.previousVars.Root.geometry('480x240+10+10')
-        self.previousVars.Root.title('tk GUI Main Frame.')
-        
-        time.sleep(2.0) #to prevent user from touching GUI before the other frames are well-displayed.
-        self.previousVars.Root.deiconify()
-        self.previousVars.Root.mainloop()
+        time.sleep(2.5) #to prevent user from touching GUI before the other frames are well-displayed.
+        Rootn.deiconify()
+        Rootn.mainloop()
         while True:
             time.sleep(1.0)
         pass
     
     def startFrame1(self):
-        import Tkinter
         Root2 = Tkinter.Tk()
         Root2.withdraw()
-        
-        del Tkinter
         
         self.AppFrm1 = self.Form1(Root2)
         #AppFrm1.gVariables = gVariables
@@ -125,11 +122,8 @@ class GUIGTK_Class:
         pass
     
     def startFrame3(self):
-        import Tkinter
         Root = Tkinter.Tk()
         Root.withdraw()
-        
-        del Tkinter
         
         self.AppFrm3 = self.Form3(Root)
         #AppFrm1.gVariables = gVariables
