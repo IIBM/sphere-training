@@ -180,9 +180,22 @@ class GUIGTK_Class:
             #
             apply(Frame.__init__,(self,Master),kw)
             self.bind('<Destroy>',self.__on_userInput_Dstry)
-            self.__Frame2 = Frame(self)
+            self.__Frame25 = Frame(self)
+            self.__Frame25.pack(side='top')
+            self.__Frame26 = Frame(self)
+            self.__Frame26.pack(side='top')
+            self.__Frame28 = Frame(self.__Frame25,width=320)
+            self.__Frame28.pack(side='left')
+            self.__Frame27 = Frame(self.__Frame25)
+            self.__Frame27.pack(side='left')
+            self.__btnHelp = Button(self.__Frame27,anchor='w',justify='right'
+                ,text='Help')
+            self.__btnHelp.bind('<ButtonRelease-1>' \
+                ,self.__btnHelp_pressed)
+            self.__btnHelp.pack(side='left')
+            self.__Frame2 = Frame(self.__Frame26)
             self.__Frame2.pack(side='left')
-            self.__Frame1 = Frame(self)
+            self.__Frame1 = Frame(self.__Frame26)
             self.__Frame1.pack(side='left')
             self.__Frame5 = Frame(self.__Frame2)
             self.__Frame5.pack(side='top')
@@ -459,6 +472,10 @@ class GUIGTK_Class:
             #pressed Close
             print "Close Valve"
             self.reference.overrideaction_close()
+            pass
+        
+        def __btnHelp_pressed(self, Event = None):
+            print "Help button."
             pass
     
         def __on_btnComment_ButRel_1(self,Event=None):
