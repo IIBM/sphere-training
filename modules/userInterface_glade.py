@@ -26,6 +26,7 @@ class GUIGTK_Class():
                             "clicked_start": self.action_startTr,
                             "clicked_pause": self.action_pauseTr,
                             "clicked_exit": self.action_exit,
+                            "clicked_help": self.action_help,
                             "clicked_comment": self.action_commentFr,
                             "clicked_trialevents": self.action_trialEventsFr,
                             "clicked_parameters": self.action_parametersFr,
@@ -291,6 +292,10 @@ class GUIGTK_Class():
                 except:
                     logger.info( "Exit: No override for exit." )
                     self.__exitAll()
+        
+        def action_help(self, button):
+                #triggered from "Exit" button
+                print "Help button."
         
         def __exitAll(self):
                 print "Exit Training"

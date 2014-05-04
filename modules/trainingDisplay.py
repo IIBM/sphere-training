@@ -9,7 +9,7 @@ class trainingDisplay() :
     #Created because the need of showing Trials and Successful trials to the user on a regular training.
     #This class should be able to display two different types of information (important, in a bigger font, and 
     # less important information in a regular font) and adjust the graphical window according to the amount of information.
-    #This class is a WIP.><
+    #This class is a WIP.>< 
 
     def __init__(self):
         self.available = True
