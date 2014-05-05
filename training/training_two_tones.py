@@ -962,13 +962,13 @@ class Training():
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Movement Time' message" )
                     Training.gVariables.fn_movementTimeSet(Training.gVariables.ns.message2)
                     print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str("GUICheck: Argument value read from ns: " + Training.gVariables.ns.message2) )
+                    Training.gVariables.logger.info( str("GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2)) )
                 elif (index == 22):
                     print "GUICheck: 'Variable to change: Idle Time' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Idle Time' message" )
                     Training.gVariables.fn_idleTimeSet(Training.gVariables.ns.message2)
                     print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str("GUICheck: Argument value read from ns: " + Training.gVariables.ns.message2) )
+                    Training.gVariables.logger.info( str("GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2)) )
                 elif (index == 23):
                     print "GUICheck: 'Variable to change: Tone Start' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Tone Start' message" )
