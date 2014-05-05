@@ -74,7 +74,9 @@ class userInterface_API:
         #it is preferable to first send message 2 (this) and then msg1. Else this message won't take effect.
         if ( self.isNameSpaceEnabled() ):
             ns.message2 = arg
+            
             logger.info( 'Msg2: Handled from here.' )
+            ns.message1 = 0
         else:
             logger.info( 'Msg2: Not ready to send message.' )
         pass
