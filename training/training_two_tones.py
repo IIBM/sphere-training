@@ -680,11 +680,13 @@ class Training():
         self.gVariables.ns = manager.Namespace()
         self.gVariables.ns.message1 = 0
         self.gVariables.ns.message2 = 0
-        self.gVariables.ns.jobList = []
+        self.gVariables.jobList = multiprocessing.Queue()
+        self.gVariables.jobList.put('b')
+        print self.gVariables.jobList.get()
         
         
         if (self.gVariables.GUIType != 2):
-            self.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(self.gVariables.ns,))
+            self.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(self.gVariables.ns,self.gVariables.jobList,))
             self.gVariables.GUIProcess.start()
             self.gVariables.logger.info('GUI Process started.')
         else:
@@ -704,7 +706,7 @@ class Training():
         self.gVariables.fred1.start()
         self.gVariables.logger.info('Training loop function started..')
     
-    def initUserInputGUI(self,ns):
+    def initUserInputGUI(self,ns,jobList):
         #initialize user input GUI and associated variables.
         #this function uses trainingAPI to handle graphical user interfaces
         #ns = is the NameSpace associated with multiprocessing , contains the shared variables (message1 and 2)

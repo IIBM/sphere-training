@@ -67,8 +67,7 @@ class userInterface_API:
         print arg1
         print arg2
         if ( self.isNameSpaceEnabled()):
-            ns.message1 = arg1
-            ns.message2 = arg2
+            ns.message1, ns.message2 = arg1,arg2
     
     def setNameSpaceMessage1(self, num):
         if ( self.isNameSpaceEnabled()):
@@ -100,6 +99,11 @@ class userInterface_API:
         print "API Namespace:", ns
         logger.info ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage1(1)
+        print "ACA"
+        print self.jobList.get()
+        self.jobList.put('a')
+        print self.jobList.get()
+        print "ACA2"
         logger.info ( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         logger.info ( "Default API: done." )
