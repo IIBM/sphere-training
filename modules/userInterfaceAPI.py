@@ -62,6 +62,14 @@ class userInterface_API:
         logger.info ( "Dummy function." )
         pass
     
+    def setNameSpaceMessage(self, arg1, arg2):
+        print "setNameSpaceMessage"
+        print arg1
+        print arg2
+        if ( self.isNameSpaceEnabled()):
+            ns.message1 = arg1
+            ns.message2 = arg2
+    
     def setNameSpaceMessage1(self, num):
         if ( self.isNameSpaceEnabled()):
             ns.message1 = num
@@ -163,8 +171,7 @@ class userInterface_API:
         logger.info ( "Default API: Apply Comment" )
         print "API Namespace:", ns
         logger.info ( "ns: " + ns.__str__() )
-        self.setNameSpaceMessage2(self.comment)
-        self.setNameSpaceMessage1(16)
+        self.setNameSpaceMessage(16, self.comment)
         logger.info ( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         logger.info ( "Default API: done." )
@@ -175,40 +182,34 @@ class userInterface_API:
         logger.info ( "ns: " + ns.__str__() )
         #this actually is composed of a list of messages sent to thread.
         #we will wait till every message has been send to finish the function.
-        self.setNameSpaceMessage2(self.currentGUI.frequencyTone1)
-        self.setNameSpaceMessage1(17)
+        self.setNameSpaceMessage(17, self.currentGUI.frequencyTone1 )
         logger.info ( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         while True:
             if ( self.isNameSpaceEnabled() ):
                 #carry on doing things.
-                self.setNameSpaceMessage2(self.currentGUI.frequencyTone2)
-                self.setNameSpaceMessage1(18)
+                self.setNameSpaceMessage(18, self.currentGUI.frequencyTone2 )
                 logger.info ( "ns: " + ns.__str__() )
                 print "API Namespace:", ns
                 #return; #it is better to keep on nesting while true if code to exhaust all variables.
                 while True:
                     if (self.isNameSpaceEnabled()):
-                        self.setNameSpaceMessage2(self.currentGUI.movementAmount)
-                        self.setNameSpaceMessage1(19)
+                        self.setNameSpaceMessage(19, self.currentGUI.movementAmount )
                         logger.info ( "ns: " + ns.__str__() )
                         print "API Namespace:", ns
                         while True:
                             if (self.isNameSpaceEnabled()):
-                                self.setNameSpaceMessage2(self.currentGUI.movementMethod)
-                                self.setNameSpaceMessage1(20)
+                                self.setNameSpaceMessage1(20, self.currentGUI.movementMethod )
                                 logger.info ( "ns: " + ns.__str__() )
                                 print "API Namespace:", ns
                                 while True:
                                     if (self.isNameSpaceEnabled()):
-                                        self.setNameSpaceMessage2(self.currentGUI.movementTime)
-                                        self.setNameSpaceMessage1(21)
+                                        self.setNameSpaceMessage(21, self.currentGUI.movementTime )
                                         logger.info ( "ns: " + ns.__str__() )
                                         print "API Namespace:", ns
                                         while True:
                                             if (self.isNameSpaceEnabled()):
-                                                self.setNameSpaceMessage2(self.currentGUI.idleTime)
-                                                self.setNameSpaceMessage1(22)
+                                                self.setNameSpaceMessage(22, self.currentGUI.idleTime )
                                                 logger.info ( "ns: " + ns.__str__() )
                                                 print "API Namespace:", ns
                                                 logger.info ( "Default API: done." )
@@ -227,46 +228,39 @@ class userInterface_API:
     
     def overrideaction_applyTE(self):
         logger.info ( "Default API: Apply Trial Events" )
-        self.setNameSpaceMessage2(self.currentGUI.toneStart)
-        self.setNameSpaceMessage1(23)
+        self.setNameSpaceMessage(23, self.currentGUI.toneStart )
         print "API Namespace:", ns
         logger.info ( "ns: " + ns.__str__() )
         while True:
             if (self.isNameSpaceEnabled()):
                 #carry on doing things.
-                self.setNameSpaceMessage2(self.currentGUI.toneEnd)
-                self.setNameSpaceMessage1(24)
+                self.setNameSpaceMessage(24, self.currentGUI.toneEnd )
                 print "API Namespace:", ns
                 logger.info ( "ns: " + ns.__str__() )
                 #return; #it is better to keep on nesting while true if code to exhaust all variables.
                 while True:
                     if (self.isNameSpaceEnabled()):
-                        self.setNameSpaceMessage2(self.currentGUI.movementWindowStart)
-                        self.setNameSpaceMessage1(25)
+                        self.setNameSpaceMessage(25, self.currentGUI.movementWindowStart )
                         print "API Namespace:", ns
                         logger.info ( "ns: " + ns.__str__() )
                         while True:
                             if (self.isNameSpaceEnabled()):
-                                self.setNameSpaceMessage2(self.currentGUI.movementWindowEnd)
-                                self.setNameSpaceMessage1(26)
+                                self.setNameSpaceMessage(26, self.currentGUI.movementWindowEnd )
                                 print "API Namespace:", ns
                                 logger.info ( "ns: " + ns.__str__() )
                                 while True:
                                     if (self.isNameSpaceEnabled()):
-                                        self.setNameSpaceMessage2(self.currentGUI.interTrialStart)
-                                        self.setNameSpaceMessage1(27)
+                                        self.setNameSpaceMessage(27, self.currentGUI.interTrialStart )
                                         print "API Namespace:", ns
                                         logger.info ( "ns: " + ns.__str__() )
                                         while True:
                                             if (self.isNameSpaceEnabled()):
-                                                self.setNameSpaceMessage2(self.currentGUI.interTrialEnd)
-                                                self.setNameSpaceMessage1(28)
+                                                self.setNameSpaceMessage(28, self.currentGUI.interTrialEnd )
                                                 print "API Namespace:", ns
                                                 logger.info ( "ns: " + ns.__str__() )
                                                 while True:
                                                     if (self.isNameSpaceEnabled()):
-                                                        self.setNameSpaceMessage2(self.currentGUI.probabilityToneOne)
-                                                        self.setNameSpaceMessage1(29)
+                                                        self.setNameSpaceMessage(29, self.currentGUI.probabilityToneOne )
                                                         print "API Namespace:", ns
                                                         logger.info ( "ns: " + ns.__str__() )
                                                         logger.info ( "Default API: done." )
@@ -290,8 +284,7 @@ class userInterface_API:
         logger.info( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         self.frequencyTone1 = self.currentGUI.frequencyTone1
-        self.setNameSpaceMessage2(self.frequencyTone1)
-        self.setNameSpaceMessage1(10)
+        self.setNameSpaceMessage(10, self.frequencyTone1 )
         logger.info( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         logger.info( "Default API: done." )
@@ -301,8 +294,7 @@ class userInterface_API:
         logger.info( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         self.frequencyTone2 = self.currentGUI.frequencyTone2
-        self.setNameSpaceMessage2(self.frequencyTone2)
-        self.setNameSpaceMessage1(11)
+        self.setNameSpaceMessage(11, self.frequencyTone2 )
         logger.info( "ns: " + ns.__str__() )
         print "API Namespace:", ns
         logger.info( "Default API: done." )

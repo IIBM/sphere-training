@@ -680,6 +680,9 @@ class Training():
         self.gVariables.ns = manager.Namespace()
         self.gVariables.ns.message1 = 0
         self.gVariables.ns.message2 = 0
+        self.gVariables.ns.jobList = []
+        
+        
         if (self.gVariables.GUIType != 2):
             self.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(self.gVariables.ns,))
             self.gVariables.GUIProcess.start()
@@ -861,6 +864,8 @@ class Training():
             #    the shared variables between training_ and GUI Process contain new info.
             #    If it does, checks which message type was sent, and it's argument (if any)
             #    and executes the corresponding routine for that type of message.
+            
+            
             if (Training.gVariables.ns.message1 != 0 ):
                 print "GUICheck: Got a Message:", Training.gVariables.ns.message1
                 Training.gVariables.logger.info( str("GUICheck: Got a Message:" + str(Training.gVariables.ns.message1)) )
