@@ -244,47 +244,27 @@ class userInterface_API:
     
     def overrideaction_showfeedback(self):
         logger.info( "Default API: Show Feedback" )
-        logger.info( "ns: "+ ns.__str__() )
-        #print "API Namespace:", ns
         self.setNameSpaceMessage(12)
-        #print "API Namespace:", ns
-        logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
     
     def overrideaction_hidefeedback(self):
         logger.info( "Default API: Hide Feedback" )
-        logger.info( "ns: "+ ns.__str__() )
-        #print "API Namespace:", ns
         self.setNameSpaceMessage(13)
-        #print "API Namespace:", ns
-        logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
     
     def overrideaction_showtracking(self):
         logger.info( "Default API: Show Tracking" )
-        logger.info( "ns: "+ ns.__str__() )
-        #print "API Namespace:", ns
         self.setNameSpaceMessage(14)
-        #print "API Namespace:", ns
-        logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
     
     def overrideaction_hidetracking(self):
         logger.info( "Default API: Hide Tracking" )
-        logger.info( "ns: "+ ns.__str__() )
-        #print "API Namespace:", ns
         self.setNameSpaceMessage(15)
-        #print "API Namespace:", ns
-        logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
     
     def overrideaction_recalibratec(self):
         logger.info( "Default API: Recalibrate Camera" )
-        logger.info( "ns: "+ ns.__str__() )
-        #print "API Namespace:", ns
         self.setNameSpaceMessage(30)
-        #print "API Namespace:", ns
-        logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
         pass
     

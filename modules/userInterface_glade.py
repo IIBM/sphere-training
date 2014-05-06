@@ -567,6 +567,8 @@ class GUIGTK_Class():
                 #print "Test T1"
                 self.frequencyTone1 = self.glade.get_object("entryTone1").get_text()
                 self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
+                self.checkParametersVarsConsistency()
+                self.saveParametersPreviousState()
                 try:
                     self.overrideaction_testT1()
                 except:
@@ -576,6 +578,8 @@ class GUIGTK_Class():
                 #print "Test T2"
                 self.frequencyTone1 = self.glade.get_object("entryTone1").get_text()
                 self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
+                self.checkParametersVarsConsistency()
+                self.saveParametersPreviousState()
                 try:
                     self.overrideaction_testT2()
                 except:
