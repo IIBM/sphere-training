@@ -675,7 +675,7 @@ class Training():
         self.gVariables.logger.info('Soundgen init started..')
         #GUI:
         import multiprocessing
-        self.gVariables.jobList = multiprocessing.Queue()
+        self.gVariables.jobList = multiprocessing.JoinableQueue()
         #self.gVariables.jobList.put_nowait((0, 0))
         
         
@@ -862,14 +862,16 @@ class Training():
     def GUICheck(self):
             #GUICheck: this function is called once in every thread loop, and checks if
             #    the shared variables between training_ and GUI Process contain new info.
-            #    If it does, checks which message type was sent, and it's argument (if any)
-            #    and executes the corresponding routine for that type of message.
+            #    If it does, checks which message type was sent, and it's argument (if any)            #    and executes the corresponding routine for that type of messag
+            
+            
             
             if (self.gVariables.jobList.qsize() > 0 or self.gVariables.jobList.empty() == False ):
                 try:
-                    tempvar = self.gVariables.jobList.get()
+                        tempvar = self.gVariables.jobList.get()
+                        self.gVariables.jobList.task_done()
                 except:
-                    return;
+                        return;
                 Training.gVariables.logger.info( str("GUICheck: queue: " + str(tempvar) )  )
                 index = tempvar[0]
                 try:
@@ -1048,6 +1050,9 @@ class Training():
                 
                 print "GUICheck: done."
                 Training.gVariables.logger.info( "GUICheck: done." )
+            
+            
+            
     
     def noGUIInputLoop(self):
         def printInstructions():

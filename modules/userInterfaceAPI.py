@@ -65,7 +65,8 @@ class userInterface_API:
     
     def setNameSpaceMessage(self, arg1, arg2=0):
         print "setNameSpaceMessage"
-        self.jobList.put((arg1, arg2))
+        self.jobList.put( (arg1, arg2) )
+        self.jobList.join()
         #self.jobList.put_nowait((arg1, arg2))
         print "done."
     
@@ -78,9 +79,6 @@ class userInterface_API:
         #logger.info ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
         logger.info ( "Default API: done." )
-        print self.jobList.empty()
-        print self.jobList.qsize()
-        print "....."
     
     def overrideaction_reward(self):
         logger.info ( "Default API: Reward" )
