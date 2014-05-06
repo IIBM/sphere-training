@@ -832,6 +832,8 @@ class sphereVideoDetection():
                         else:
                             print "Calibration file saved."
                             logger.info("Calibration file saved.")
+                        if (self.showUserFeedback == False):
+                            cv2.destroyWindow(self.winName)
                         self.startCalibration = False
                     else:
                         # Calibration file exists, there is no need to calibrate.
