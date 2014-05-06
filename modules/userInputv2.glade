@@ -917,6 +917,7 @@
                     <child>
                       <object class="GtkEntry" id="entryToneStart">
                         <property name="visible">True</property>
+                        <property name="editable">False</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">●</property>
                         <property name="text" translatable="yes">0.0</property>

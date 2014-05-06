@@ -1144,6 +1144,9 @@ class GUIGTK_Class:
             self.__Frame25.pack(side='left')
             self.__Entry1TStart = Entry(self.__Frame25,width=5)
             self.__Entry1TStart.pack(side='top')
+            
+            
+            
             self.__Frame27 = Frame(self.__Frame13)
             self.__Frame27.pack(side='left')
             self.__Label2 = Label(self.__Frame27,text='Tone End:')
@@ -1203,6 +1206,8 @@ class GUIGTK_Class:
             self.__Entry5ITStart.insert(0,"0.0")
             self.__Entry6ITEnd.insert(0,"0.0")
             self.__Scale2.set(50)
+            
+            self.__Entry1TStart.config(state = "readonly")
             
             self.get_changes()
             #print "Form1: Trial Events loaded"
