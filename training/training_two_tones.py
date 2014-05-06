@@ -489,7 +489,6 @@ class Training():
         current_trial_type_str = ""  # same as type but with string format.
         
         trial_comment = "" #comment about this training session.
-        ns = 0
         
         
         #fin Training.gVariables.
@@ -676,17 +675,12 @@ class Training():
         self.gVariables.logger.info('Soundgen init started..')
         #GUI:
         import multiprocessing
-        manager = multiprocessing.Manager()
-        self.gVariables.ns = manager.Namespace()
-        self.gVariables.ns.message1 = 0
-        self.gVariables.ns.message2 = 0
         self.gVariables.jobList = multiprocessing.Queue()
-        self.gVariables.jobList.put('b')
-        print self.gVariables.jobList.get()
+        #self.gVariables.jobList.put_nowait((0, 0))
         
         
         if (self.gVariables.GUIType != 2):
-            self.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(self.gVariables.ns,self.gVariables.jobList,))
+            self.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(self.gVariables.jobList,))
             self.gVariables.GUIProcess.start()
             self.gVariables.logger.info('GUI Process started.')
         else:
@@ -706,15 +700,19 @@ class Training():
         self.gVariables.fred1.start()
         self.gVariables.logger.info('Training loop function started..')
     
-    def initUserInputGUI(self,ns,jobList):
+    def initUserInputGUI(self,jobList):
         #initialize user input GUI and associated variables.
         #this function uses trainingAPI to handle graphical user interfaces
         #ns = is the NameSpace associated with multiprocessing , contains the shared variables (message1 and 2)
         import userInterfaceAPI
         currentGUI = userInterfaceAPI.userInterface_API(False)
-        currentGUI.setNamespace(ns)
+        currentGUI.setQueue(jobList)
         import config_training_two_tones as configs
         
+        
+        #currentGUI.jobList = jobList
+        print currentGUI.jobList
+        print ".."
         currentGUI.toneStart = 0.0
         currentGUI.toneEnd = configs.eventTime1_sound
         currentGUI.movementWindowStart = configs.eventTime1_movement_start
@@ -867,13 +865,31 @@ class Training():
             #    If it does, checks which message type was sent, and it's argument (if any)
             #    and executes the corresponding routine for that type of message.
             
-            
-            if (Training.gVariables.ns.message1 != 0 ):
-                print "GUICheck: Got a Message:", Training.gVariables.ns.message1
-                Training.gVariables.logger.info( str("GUICheck: Got a Message:" + str(Training.gVariables.ns.message1)) )
-                print "GUICheck: Message's argument:", Training.gVariables.ns.message2
-                Training.gVariables.logger.info( str("GUICheck: Message's argument:" + str(Training.gVariables.ns.message2) ) )
-                index = Training.gVariables.ns.message1
+            if (self.gVariables.jobList.qsize() > 0 or self.gVariables.jobList.empty() == False ):
+                try:
+                    tempvar = self.gVariables.jobList.get()
+                except:
+                    return;
+                Training.gVariables.logger.info( str("GUICheck: queue: " + str(tempvar) )  )
+                index = tempvar[0]
+                try:
+                    argument = tempvar[1]
+                except:
+                    argument = ""
+                    pass
+                
+                print "GUICheck: Got a Message:", index
+                Training.gVariables.logger.info( str("GUICheck: Got a Message:" + str(index)) )
+                print "GUICheck: Message's argument:", argument
+                try:
+                    a = str(argument)
+                    Training.gVariables.logger.info( str("GUICheck: Message's argument:" + a ) )
+                except:
+                    Training.gVariables.logger.info( str("GUICheck: Message's argument cannot be parsed to str" ) )
+                    pass
+                
+                if (index == 0):
+                    return;
                 if (index == 1):
                     print "GUICheck: 'Drop' message."
                     Training.gVariables.logger.info( "GUICheck: 'Drop' message." )
@@ -913,11 +929,11 @@ class Training():
                 elif (index == 10):
                     print "GUICheck: 'Tone 1 Test' message"
                     Training.gVariables.logger.info( "GUICheck: 'Tone 1 Test' message" )
-                    Training.gVariables.fn_tone1Test(Training.gVariables.ns.message2)
+                    Training.gVariables.fn_tone1Test( argument )
                 elif (index == 11):
                     print "GUICheck: 'Tone 2 Test' message"
                     Training.gVariables.logger.info( "GUICheck: 'Tone 2 Test' message" )
-                    Training.gVariables.fn_tone2Test(Training.gVariables.ns.message2)
+                    Training.gVariables.fn_tone2Test( argument )
                 elif (index == 12):
                     print "GUICheck: 'Show Feedback' message"
                     Training.gVariables.logger.info( "GUICheck: 'Show Feedback' message" )
@@ -937,101 +953,99 @@ class Training():
                 elif (index == 16):
                     print "GUICheck: 'Set Comment' message"
                     Training.gVariables.logger.info( "GUICheck: 'Set Comment' message" )
-                    Training.gVariables.trial_comment = Training.gVariables.ns.message2
-                    print "GUICheck: comment read from ns: ", Training.gVariables.trial_comment
-                    Training.gVariables.logger.info( str( "GUICheck: comment read from ns: "+ str(Training.gVariables.trial_comment )) )
+                    try:
+                        tempstring = str(argument)
+                    except:
+                        tempstring = ""
+                    Training.gVariables.trial_comment = tempstring
+                    print "GUICheck: comment read from Queue: ", tempstring
+                    Training.gVariables.logger.info( str( "GUICheck: comment read from Queue: "+ tempstring ) )
                 elif (index == 17):
                     print "GUICheck: 'Variable to change: Tone1 Frequency' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Tone1 Frequency' message" )
-                    Training.gVariables.fn_setFrequencyT1( Training.gVariables.ns.message2 )
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    Training.gVariables.fn_setFrequencyT1( argument )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 18):
                     print "GUICheck: 'Variable to change: Tone2 Frequency' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Tone2 Frequency' message" )
-                    Training.gVariables.fn_setFrequencyT2( Training.gVariables.ns.message2 )
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    Training.gVariables.fn_setFrequencyT2( argument )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 19):
                     print "GUICheck: 'Variable to change: Movement Amount' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Movement Amount' message" )
-                    Training.gVariables.fn_movementThresholdSet(Training.gVariables.ns.message2)
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    Training.gVariables.fn_movementThresholdSet(argument)
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 20):
                     print "GUICheck: 'Variable to change: Method Type to be used' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Method Type to be used' message" )
-                    Training.gVariables.fn_setMovementMethod(Training.gVariables.ns.message2)
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    Training.gVariables.fn_setMovementMethod(argument)
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(argument) ) )
                 elif (index == 21):
                     print "GUICheck: 'Variable to change: Movement Time' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Movement Time' message" )
-                    Training.gVariables.fn_movementTimeSet(Training.gVariables.ns.message2)
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str("GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2)) )
+                    Training.gVariables.fn_movementTimeSet(argument)
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str("GUICheck: Argument value read from Queue: " + str(argument)) )
                 elif (index == 22):
                     print "GUICheck: 'Variable to change: Idle Time' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Idle Time' message" )
-                    Training.gVariables.fn_idleTimeSet(Training.gVariables.ns.message2)
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str("GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2)) )
+                    Training.gVariables.fn_idleTimeSet(argument)
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str("GUICheck: Argument value read from Queue: " + str(argument)) )
                 elif (index == 23):
                     print "GUICheck: 'Variable to change: Tone Start' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Tone Start' message" )
                     print "Tone Start variable is not meant to change. Add intertrial delay instead."
                     Training.gVariables.logger.info( "Tone Start variable is not meant to change. Add intertrial delay instead." )
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 24):
                     print "GUICheck: 'Variable to change: Tone End' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Tone End' message" )
-                    Training.gVariables.fn_setTone1Duration(float(Training.gVariables.ns.message2))
-                    Training.gVariables.fn_setTone2Duration(float(Training.gVariables.ns.message2))
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    Training.gVariables.fn_setTone1Duration(float(argument))
+                    Training.gVariables.fn_setTone2Duration(float(argument))
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 25):
                     print "GUICheck: 'Variable to change: Movement Window Start' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Movement Window Start' message" )
-                    Training.gVariables.fn_setMovementWindowStart( float(Training.gVariables.ns.message2) )
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    Training.gVariables.fn_setMovementWindowStart( float(argument) )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 26):
                     print "GUICheck: 'Variable to change: Movement Window End' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Movement Window End' message" )
-                    Training.gVariables.fn_setMovementWindowEnd( float(Training.gVariables.ns.message2) )
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    Training.gVariables.fn_setMovementWindowEnd( float(argument) )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 27):
                     print "GUICheck: 'Variable to change: Inter Trial Start' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Inter Trial Start' message" )
-                    Training.gVariables.fn_setITRandom1( float(Training.gVariables.ns.message2) )
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    Training.gVariables.fn_setITRandom1( float(argument) )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 28):
                     print "GUICheck: 'Variable to change: Inter Trial End' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Inter Trial End' message" )
-                    Training.gVariables.fn_setITRandom2( float(Training.gVariables.ns.message2) )
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    Training.gVariables.fn_setITRandom2( float(argument) )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 29):
                     print "GUICheck: 'Variable to change: Probability Tone One' message"
                     Training.gVariables.logger.info( "GUICheck: 'Variable to change: Probability Tone One' message" )
-                    Training.gVariables.fn_toneOneProbabilitySet( float(Training.gVariables.ns.message2) )
-                    print "GUICheck: Argument value read from ns: ", Training.gVariables.ns.message2
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(Training.gVariables.ns.message2) ) )
+                    Training.gVariables.fn_toneOneProbabilitySet( float(argument) )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 30):
                     print "GUICheck: 'Recalibrate Camera' message"
                     Training.gVariables.logger.info( "GUICheck: 'Recalibrate Camera' message" )
                     Training.gVariables.videoDet.calibrate()
                     pass
                 
-                print "GUICheck: Reestablishing previous namespace: ", Training.gVariables.ns
-                Training.gVariables.logger.info( str("GUICheck: Reestablishing previous namespace: "+ str(Training.gVariables.ns)) )
-                Training.gVariables.ns.message1 = 0
-                Training.gVariables.ns.message2 = 0
-                print "GUICheck: Namespace set: ", Training.gVariables.ns
-                Training.gVariables.logger.info( str( "GUICheck: Namespace set: "+ str(Training.gVariables.ns) ) )
                 print "GUICheck: done."
                 Training.gVariables.logger.info( "GUICheck: done." )
     
