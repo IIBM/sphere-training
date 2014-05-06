@@ -6,7 +6,8 @@ logger = logging.getLogger('userInterfaceAPI')
 
 class userInterface_API:
     usingTK = 0 #0: using GTk;   1: using TK
-    ns = 0 # message variable (namespace), that will be shared among processes.
+    jobList = 0 # message Job Queue between processes.
+    ns = 0
     
     def __init__(self, toStart = False):
         logger.info( "initializing userInterfaceAPI" )
@@ -30,11 +31,11 @@ class userInterface_API:
             self.launch_GUI()
         logger.info( "userInterfaceAPI started." )
     
-    def setNamespace(self, nuevons):
+    def setQueue(self, nuevoqueue):
         #Set the namespace of this class, to interoperate with the master process.
-        global ns
-        ns = nuevons
-        logger.info( "Namespace set" )
+        self.jobList = nuevoqueue
+        print "Queue set."
+        logger.info( "Queue set" )
     
     def setInitialValues(self):
         #print "User Interface API: sending variables to GUI, with the purpose of setting up initial values."
@@ -62,289 +63,229 @@ class userInterface_API:
         logger.info ( "Dummy function." )
         pass
     
-    def setNameSpaceMessage(self, arg1, arg2):
+    def setNameSpaceMessage(self, arg1, arg2=0):
         print "setNameSpaceMessage"
-        print arg1
-        print arg2
-        if ( self.isNameSpaceEnabled()):
-            ns.message1, ns.message2 = arg1,arg2
+        self.jobList.put((arg1, arg2))
+        #self.jobList.put_nowait((arg1, arg2))
+        print "done."
     
-    def setNameSpaceMessage1(self, num):
-        if ( self.isNameSpaceEnabled()):
-            ns.message1 = num
-            logger.info( 'Msg1: Handled from here.' )
-        else:
-            logger.info( 'Msg1: Not ready to send message.' )
-        pass
-    
-    def setNameSpaceMessage2(self,arg):
-        #it is preferable to first send message 2 (this) and then msg1. Else this message won't take effect.
-        if ( self.isNameSpaceEnabled() ):
-            ns.message2 = arg
-            
-            logger.info( 'Msg2: Handled from here.' )
-            ns.message1 = 0
-        else:
-            logger.info( 'Msg2: Not ready to send message.' )
-        pass
-    
-    def isNameSpaceEnabled(self):
-        if (ns.message1 == 0):
-            return True
-        else:
-            return False
     
     def overrideaction_drop(self):
         logger.info ( "Default API: Drop" )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
-        self.setNameSpaceMessage1(1)
-        print "ACA"
-        print self.jobList.get()
-        self.jobList.put('a')
-        print self.jobList.get()
-        print "ACA2"
-        logger.info ( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        self.setNameSpaceMessage(1,0)
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info ( "Default API: done." )
+        print self.jobList.empty()
+        print self.jobList.qsize()
+        print "....."
     
     def overrideaction_reward(self):
         logger.info ( "Default API: Reward" )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
-        self.setNameSpaceMessage1(2)
-        logger.info ( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        self.setNameSpaceMessage(2,0)
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info ( "Default API: done." )
     
     def overrideaction_open(self):
         logger.info ( "Default API: Open" )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
-        self.setNameSpaceMessage1(3)
-        logger.info ( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        self.setNameSpaceMessage(3)
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info ( "Default API: done." )
     
     def overrideaction_close(self):
         logger.info ( "Default API: Close" )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
-        self.setNameSpaceMessage1(4)
-        logger.info ( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        self.setNameSpaceMessage(4)
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info ( "Default API: done." )
     
     def overrideaction_startTraining(self):
         logger.info ( "Default API: Start Training" )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
-        self.setNameSpaceMessage1(5)
-        logger.info ( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        self.setNameSpaceMessage(5)
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info ( "Default API: done." )
     
     def overrideaction_stopTraining(self):
         logger.info ( "Default API: Stop Training" )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
-        self.setNameSpaceMessage1(6)
-        logger.info ( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        self.setNameSpaceMessage(6)
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info ( "Default API: done." )
     
     def overrideaction_pauseTraining(self):
         logger.info ( "Default API: Pause / Resume Training" )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
-        self.setNameSpaceMessage1(7)
-        logger.info ( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        self.setNameSpaceMessage(7)
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info ( "Default API: done." )
     
     def overrideaction_resumeTraining(self):
         logger.info ( "Default API: Pause / Resume Training" )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
-        self.setNameSpaceMessage1(8)
-        logger.info ( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        self.setNameSpaceMessage(8)
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info ( "Default API: done." )
     
     def overrideaction_applyC(self):
         logger.info ( "Default API: Apply Comment" )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(16, self.comment)
-        logger.info ( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info ( "Default API: done." )
     
     def overrideaction_applyP(self):
         logger.info ( "Default API: Apply Parameters" )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
         #this actually is composed of a list of messages sent to thread.
         #we will wait till every message has been send to finish the function.
         self.setNameSpaceMessage(17, self.currentGUI.frequencyTone1 )
-        logger.info ( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
-        while True:
-            if ( self.isNameSpaceEnabled() ):
-                #carry on doing things.
-                self.setNameSpaceMessage(18, self.currentGUI.frequencyTone2 )
-                logger.info ( "ns: " + ns.__str__() )
-                print "API Namespace:", ns
-                #return; #it is better to keep on nesting while true if code to exhaust all variables.
-                while True:
-                    if (self.isNameSpaceEnabled()):
-                        self.setNameSpaceMessage(19, self.currentGUI.movementAmount )
-                        logger.info ( "ns: " + ns.__str__() )
-                        print "API Namespace:", ns
-                        while True:
-                            if (self.isNameSpaceEnabled()):
-                                self.setNameSpaceMessage1(20, self.currentGUI.movementMethod )
-                                logger.info ( "ns: " + ns.__str__() )
-                                print "API Namespace:", ns
-                                while True:
-                                    if (self.isNameSpaceEnabled()):
-                                        self.setNameSpaceMessage(21, self.currentGUI.movementTime )
-                                        logger.info ( "ns: " + ns.__str__() )
-                                        print "API Namespace:", ns
-                                        while True:
-                                            if (self.isNameSpaceEnabled()):
-                                                self.setNameSpaceMessage(22, self.currentGUI.idleTime )
-                                                logger.info ( "ns: " + ns.__str__() )
-                                                print "API Namespace:", ns
-                                                logger.info ( "Default API: done." )
-                                                return; #last variable was idle Time.
-                                            else:
-                                                time.sleep(0.01)
-                                    else:
-                                        time.sleep(0.01)
-                            else:
-                                time.sleep(0.01)
-                    else:
-                        time.sleep(0.01)
-            else:
-                #print "waiting."
-                time.sleep(0.01)
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
+        
+        
+        self.setNameSpaceMessage(18, self.currentGUI.frequencyTone2 )
+        #logger.info ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
+        
+        
+        self.setNameSpaceMessage(19, self.currentGUI.movementAmount )
+        #logger.info ( "ns: " + ns.__str__() )
+        
+        self.setNameSpaceMessage(20, self.currentGUI.movementMethod )
+        #logger.info ( "ns: " + ns.__str__() )
+        
+        self.setNameSpaceMessage(21, self.currentGUI.movementTime )
+        #logger.info ( "ns: " + ns.__str__() )
+        
+        self.setNameSpaceMessage(22, self.currentGUI.idleTime )
+        #logger.info ( "ns: " + ns.__str__() )
+    
+    
     
     def overrideaction_applyTE(self):
         logger.info ( "Default API: Apply Trial Events" )
         self.setNameSpaceMessage(23, self.currentGUI.toneStart )
-        print "API Namespace:", ns
-        logger.info ( "ns: " + ns.__str__() )
-        while True:
-            if (self.isNameSpaceEnabled()):
-                #carry on doing things.
-                self.setNameSpaceMessage(24, self.currentGUI.toneEnd )
-                print "API Namespace:", ns
-                logger.info ( "ns: " + ns.__str__() )
-                #return; #it is better to keep on nesting while true if code to exhaust all variables.
-                while True:
-                    if (self.isNameSpaceEnabled()):
-                        self.setNameSpaceMessage(25, self.currentGUI.movementWindowStart )
-                        print "API Namespace:", ns
-                        logger.info ( "ns: " + ns.__str__() )
-                        while True:
-                            if (self.isNameSpaceEnabled()):
-                                self.setNameSpaceMessage(26, self.currentGUI.movementWindowEnd )
-                                print "API Namespace:", ns
-                                logger.info ( "ns: " + ns.__str__() )
-                                while True:
-                                    if (self.isNameSpaceEnabled()):
-                                        self.setNameSpaceMessage(27, self.currentGUI.interTrialStart )
-                                        print "API Namespace:", ns
-                                        logger.info ( "ns: " + ns.__str__() )
-                                        while True:
-                                            if (self.isNameSpaceEnabled()):
-                                                self.setNameSpaceMessage(28, self.currentGUI.interTrialEnd )
-                                                print "API Namespace:", ns
-                                                logger.info ( "ns: " + ns.__str__() )
-                                                while True:
-                                                    if (self.isNameSpaceEnabled()):
-                                                        self.setNameSpaceMessage(29, self.currentGUI.probabilityToneOne )
-                                                        print "API Namespace:", ns
-                                                        logger.info ( "ns: " + ns.__str__() )
-                                                        logger.info ( "Default API: done." )
-                                                        return; #last variable was probabilityToneOne
-                                                    else:
-                                                        time.sleep(0.01)
-                                            else:
-                                                time.sleep(0.01)
-                                    else:
-                                        time.sleep(0.01)
-                            else:
-                                time.sleep(0.01)
-                    else:
-                        time.sleep(0.01)
-            else:
-                #print "waiting."
-                time.sleep(0.01)
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        
+        self.setNameSpaceMessage(24, self.currentGUI.toneEnd )
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        
+        
+        self.setNameSpaceMessage(25, self.currentGUI.movementWindowStart )
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        
+        
+        self.setNameSpaceMessage(26, self.currentGUI.movementWindowEnd )
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        
+        
+        self.setNameSpaceMessage(27, self.currentGUI.interTrialStart )
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        
+        
+        
+        self.setNameSpaceMessage(28, self.currentGUI.interTrialEnd )
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        
+        
+        self.setNameSpaceMessage(29, self.currentGUI.probabilityToneOne )
+        #print "API Namespace:", ns
+        #logger.info ( "ns: " + ns.__str__() )
+        logger.info ( "Default API: done." )
+        
+        
+        
     
     def overrideaction_testT1(self):
         logger.info( "Default API: Test T1" )
-        logger.info( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #logger.info( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         self.frequencyTone1 = self.currentGUI.frequencyTone1
         self.setNameSpaceMessage(10, self.frequencyTone1 )
-        logger.info( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #logger.info( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info( "Default API: done." )
     
     def overrideaction_testT2(self):
         logger.info( "Default API: Test T2" )
-        logger.info( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #logger.info( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         self.frequencyTone2 = self.currentGUI.frequencyTone2
         self.setNameSpaceMessage(11, self.frequencyTone2 )
-        logger.info( "ns: " + ns.__str__() )
-        print "API Namespace:", ns
+        #logger.info( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         logger.info( "Default API: done." )
     
     def overrideaction_showfeedback(self):
         logger.info( "Default API: Show Feedback" )
         logger.info( "ns: "+ ns.__str__() )
-        print "API Namespace:", ns
-        self.setNameSpaceMessage1(12)
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        self.setNameSpaceMessage(12)
+        #print "API Namespace:", ns
         logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
     
     def overrideaction_hidefeedback(self):
         logger.info( "Default API: Hide Feedback" )
         logger.info( "ns: "+ ns.__str__() )
-        print "API Namespace:", ns
-        self.setNameSpaceMessage1(13)
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        self.setNameSpaceMessage(13)
+        #print "API Namespace:", ns
         logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
     
     def overrideaction_showtracking(self):
         logger.info( "Default API: Show Tracking" )
         logger.info( "ns: "+ ns.__str__() )
-        print "API Namespace:", ns
-        self.setNameSpaceMessage1(14)
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        self.setNameSpaceMessage(14)
+        #print "API Namespace:", ns
         logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
     
     def overrideaction_hidetracking(self):
         logger.info( "Default API: Hide Tracking" )
         logger.info( "ns: "+ ns.__str__() )
-        print "API Namespace:", ns
-        self.setNameSpaceMessage1(15)
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        self.setNameSpaceMessage(15)
+        #print "API Namespace:", ns
         logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
     
     def overrideaction_recalibratec(self):
         logger.info( "Default API: Recalibrate Camera" )
         logger.info( "ns: "+ ns.__str__() )
-        print "API Namespace:", ns
-        self.setNameSpaceMessage1(30)
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        self.setNameSpaceMessage(30)
+        #print "API Namespace:", ns
         logger.info( "ns: "+ ns.__str__() )
         logger.info( "Default API: done." )
         pass
@@ -498,9 +439,9 @@ class userInterface_API:
     def action_exit(self):
         logger.info( "Default API: Exiting GUI from API." )
         #logger.info( "ns: ", str(ns) )
-        print "API Namespace:", ns
-        self.setNameSpaceMessage1(9)
-        print "API Namespace:", ns
+        #print "API Namespace:", ns
+        self.setNameSpaceMessage(9)
+        #print "API Namespace:", ns
         #logger.info( "ns: ", str(ns) )
         logger.info( "Default API: done." )
         try:
