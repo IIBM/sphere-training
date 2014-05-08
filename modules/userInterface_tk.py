@@ -21,6 +21,8 @@ class GUIGTK_Class:
         def __init__(self):
             pass
     
+    
+    
     def __init__(self):
             self.customVariablesInit()
             import threading
@@ -167,6 +169,122 @@ class GUIGTK_Class:
         os._exit(0)
     
     
+    class ToolTip:
+        def __init__(self, master, text='Your text here', delay=1500, **opts):
+            self.master = master
+            self._opts = {'anchor':'center', 'bd':1, 'bg':'lightyellow', 'delay':delay, 'fg':'black',\
+                          'follow_mouse':0, 'font':None, 'justify':'left', 'padx':4, 'pady':2,\
+                          'relief':'solid', 'state':'normal', 'text':text, 'textvariable':None,\
+                          'width':0, 'wraplength':150}
+            self.configure(**opts)
+            self._tipwindow = None
+            self._id = None
+            self._id1 = self.master.bind("<Enter>", self.enter, '+')
+            self._id2 = self.master.bind("<Leave>", self.leave, '+')
+            self._id3 = self.master.bind("<ButtonPress>", self.leave, '+')
+            self._follow_mouse = 0
+            if self._opts['follow_mouse']:
+                self._id4 = self.master.bind("<Motion>", self.motion, '+')
+                self._follow_mouse = 1
+        
+        def configure(self, **opts):
+            for key in opts:
+                if self._opts.has_key(key):
+                    self._opts[key] = opts[key]
+                else:
+                    KeyError = 'KeyError: Unknown option: "%s"' %key
+                    raise KeyError
+        
+        ##----these methods handle the callbacks on "<Enter>", "<Leave>" and "<Motion>"---------------##
+        ##----events on the parent widget; override them if you want to change the widget's behavior--##
+        
+        def enter(self, event=None):
+            self._schedule()
+            
+        def leave(self, event=None):
+            self._unschedule()
+            self._hide()
+        
+        def motion(self, event=None):
+            if self._tipwindow and self._follow_mouse:
+                x, y = self.coords()
+                self._tipwindow.wm_geometry("+%d+%d" % (x, y))
+        
+        ##------the methods that do the work:---------------------------------------------------------##
+        
+        def _schedule(self):
+            self._unschedule()
+            if self._opts['state'] == 'disabled':
+                return
+            self._id = self.master.after(self._opts['delay'], self._show)
+    
+        def _unschedule(self):
+            id = self._id
+            self._id = None
+            if id:
+                self.master.after_cancel(id)
+    
+        def _show(self):
+            if self._opts['state'] == 'disabled':
+                self._unschedule()
+                return
+            if not self._tipwindow:
+                self._tipwindow = tw = Tkinter.Toplevel(self.master)
+                # hide the window until we know the geometry
+                tw.withdraw()
+                tw.wm_overrideredirect(1)
+    
+                if tw.tk.call("tk", "windowingsystem") == 'aqua':
+                    tw.tk.call("::tk::unsupported::MacWindowStyle", "style", tw._w, "help", "none")
+    
+                self.create_contents()
+                tw.update_idletasks()
+                x, y = self.coords()
+                tw.wm_geometry("+%d+%d" % (x, y))
+                tw.deiconify()
+        
+        def _hide(self):
+            tw = self._tipwindow
+            self._tipwindow = None
+            if tw:
+                tw.destroy()
+                    
+        ##----these methods might be overridden in derived classes:----------------------------------##
+        
+        def coords(self):
+            # The tip window must be completely outside the master widget;
+            # otherwise when the mouse enters the tip window we get
+            # a leave event and it disappears, and then we get an enter
+            # event and it reappears, and so on forever :-(
+            # or we take care that the mouse pointer is always outside the tipwindow :-)
+            tw = self._tipwindow
+            twx, twy = tw.winfo_reqwidth(), tw.winfo_reqheight()
+            w, h = tw.winfo_screenwidth(), tw.winfo_screenheight()
+            # calculate the y coordinate:
+            if self._follow_mouse:
+                y = tw.winfo_pointery() + 20
+                # make sure the tipwindow is never outside the screen:
+                if y + twy > h:
+                    y = y - twy - 30
+            else:
+                y = self.master.winfo_rooty() + self.master.winfo_height() + 3
+                if y + twy > h:
+                    y = self.master.winfo_rooty() - twy - 3
+            # we can use the same x coord in both cases:
+            x = tw.winfo_pointerx() - twx / 2
+            if x < 0:
+                x = 0
+            elif x + twx > w:
+                x = w - twx
+            return x, y
+    
+        def create_contents(self):
+            opts = self._opts.copy()
+            for opt in ('delay', 'follow_mouse', 'state'):
+                del opts[opt]
+            label = Tkinter.Label(self._tipwindow, **opts)
+            label.pack()
+    
     class userInput(Frame):
     #------------------------------------------------------------------------------#
     #                                                                              #
@@ -192,6 +310,12 @@ class GUIGTK_Class:
                 ,text='Help')
             self.__btnHelp.bind('<ButtonRelease-1>' \
                 ,self.__btnHelp_pressed)
+            
+            self.__tooltip11_Help = GUIGTK_Class.ToolTip(self.__btnHelp, text=
+                                    "Help:"+"\n"+
+                                     "Displays a frame with help topics.")
+            
+            
             self.__btnHelp.pack(side='left')
             self.__Frame2 = Frame(self.__Frame26)
             self.__Frame2.pack(side='left')
@@ -212,6 +336,11 @@ class GUIGTK_Class:
             self.__btnFrmTrialEvents.pack(side='top')
             self.__btnFrmTrialEvents.bind('<ButtonRelease-1>' \
                 ,self.__on_btnFrmTrialEvents_ButRel_1)
+            
+            self.__tooltip10_TrialEvents = GUIGTK_Class.ToolTip(self.__btnFrmTrialEvents, text=
+                                    "Edit Trial Events:"+"\n"+
+                                     "Displays a frame to edit the training trial events.")
+            
             self.__Frame9 = Frame(self.__Frame1,height=15,width=15)
             self.__Frame9.pack(side='top')
             self.__Frame16 = Frame(self.__Frame1)
@@ -221,6 +350,12 @@ class GUIGTK_Class:
             self.__btnFrmEditParameters.pack(side='top')
             self.__btnFrmEditParameters.bind('<ButtonRelease-1>' \
                 ,self.__on_btnFrmEditParameters_ButRel_1)
+            
+            self.__tooltip9_Parameters = GUIGTK_Class.ToolTip(self.__btnFrmEditParameters, text=
+                                    "Edit Parameters:"+"\n"+
+                                     "Displays a frame to edit parameters of the training modules.")
+            
+            
             self.__Frame15 = Frame(self.__Frame1,height=5)
             self.__Frame15.pack(side='top')
             self.__Frame14 = Frame(self.__Frame1)
@@ -253,6 +388,11 @@ class GUIGTK_Class:
             self.__btnComment.pack(side='top')
             self.__btnComment.bind('<ButtonRelease-1>' \
                 ,self.__on_btnComment_ButRel_1)
+            
+            self.__tooltip8_Comment = GUIGTK_Class.ToolTip(self.__btnComment, text=
+                                    "Comment about this training:"+"\n"+
+                                     "Displays an input box for writing a comment about this training session.")
+            
             self.__Frame24 = Frame(self.__Frame8,width=10)
             self.__Frame24.pack(side='left')
             self.__Frame10 = Frame(self.__Frame3)
@@ -260,31 +400,60 @@ class GUIGTK_Class:
             self.__btnDrop = Button(self.__Frame10,text='Drop')
             self.__btnDrop.pack(side='top')
             self.__btnDrop.bind('<ButtonRelease-1>',self.__on_btnDrop_ButRel_1)
+            
+            self.__tooltip1_Drop = GUIGTK_Class.ToolTip(self.__btnDrop, text=
+                                    'Drop: Gives a drop of water.')
+            
+            
             self.__Frame20 = Frame(self.__Frame3)
             self.__Frame20.pack(side='top')
             self.__btnReward = Button(self.__Frame20,text='Reward')
             self.__btnReward.pack(side='top')
             self.__btnReward.bind('<ButtonRelease-1>',self.__on_btnReward_ButRel_1)
+            
+            self.__tooltip2_Reward = GUIGTK_Class.ToolTip(self.__btnReward, text=
+                                    'Reward: Gives a drop of water and counts the trial as successful.')
+            
             self.__Frame12 = Frame(self.__Frame3)
             self.__Frame12.pack(side='top')
             self.__btnOpen = Button(self.__Frame12,text='Open Valve')
             self.__btnOpen.pack(side='top')
             self.__btnOpen.bind('<ButtonRelease-1>',self.__on_btnOpen_ButRel_1)
+            
+            self.__tooltip3_Open = GUIGTK_Class.ToolTip(self.__btnOpen, text=
+                                    'Open: Opens the valve.')
+            
             self.__Frame17 = Frame(self.__Frame3)
             self.__Frame17.pack(side='top')
             self.__btnClose = Button(self.__Frame17,text='Close Valve')
             self.__btnClose.pack(side='top')
             self.__btnClose.bind('<ButtonRelease-1>',self.__on_btnClose_ButRel_1)
+            
+            self.__tooltip4_Close = GUIGTK_Class.ToolTip(self.__btnClose, text=
+                                    'Close: Closes the valve.')
+            
             self.__Frame11 = Frame(self.__Frame3)
             self.__Frame11.pack(side='top')
             self.__btnStart = Button(self.__Frame11,text='Start / Stop Training')
             self.__btnStart.pack(side='top')
             self.__btnStart.bind('<ButtonRelease-1>',self.__on_btnStart_ButRel_1)
+            
+            self.__tooltip5_Start = GUIGTK_Class.ToolTip(self.__btnStart, text=
+                                    "Start / Stop Training:"+
+                                    "\n" +"Starts the training if it hasn't started before."+"\n"
+                                    +"Else stops the training.")
+            
             self.__Frame21 = Frame(self.__Frame3)
             self.__Frame21.pack(side='top')
             self.__btnPause = Button(self.__Frame21,text='Pause / Resume Training')
             self.__btnPause.pack(side='top')
             self.__btnPause.bind('<ButtonRelease-1>',self.__on_btnPause_ButRel_1)
+            
+            self.__tooltip6_Pause = GUIGTK_Class.ToolTip(self.__btnPause, text=
+                                    "Pause / Resume Training:"+"\n"+
+                                     "Pauses the training if it is currently running."+"\n"
+                                    +"Else resumes the paused training.")
+            
             self.__Frame19 = Frame(self.__Frame3)
             self.__Frame19.pack(side='top')
     #         self.__btnResume = Button(self.__Frame19,text='Resume Training')
@@ -300,9 +469,12 @@ class GUIGTK_Class:
             self.__btnExit = Button(self.__Frame18,text='Exit')
             self.__btnExit.pack(side='top')
             self.__btnExit.bind('<ButtonRelease-1>',self.__on_btnExit_ButRel_1)
-            #
-            #Your code here
-            #
+            
+            self.__tooltip7_Exit = GUIGTK_Class.ToolTip(self.__btnExit, text=
+                                    "Exit Training:"+"\n"+
+                                     "Exits the training and all its modules.")
+            
+            
             self.__alive = 0
             self.__Text1KeyInput.focus_set()
             #print "Main User Input Form loaded"
@@ -1124,9 +1296,19 @@ class GUIGTK_Class:
             self.__ApplyBtn = Button(self.__Frame38,text='Apply')
             self.__ApplyBtn.pack(side='top')
             self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
+            
+            self.__tooltipTE1_Apply = GUIGTK_Class.ToolTip(self.__ApplyBtn, text=
+                                    "Apply:"+"\n"+
+                                     "Applies and saves all changes made to the trial events.")
+            
             self.__CloseBtn = Button(self.__Frame38,text='Close')
             self.__CloseBtn.pack(side='top')
             self.__CloseBtn.bind('<ButtonRelease-1>',self.__on_CloseBtn_ButRel_1)
+            
+            self.__tooltipTE2_Close = GUIGTK_Class.ToolTip(self.__CloseBtn, text=
+                                    "Close:"+"\n"+
+                                     "Closes this window without saving changes.")
+            
             self.__Frame37 = Frame(self.__Frame7)
             self.__Frame37.pack(side='top')
             self.__Frame11 = Frame(self.__Frame10,width=80)
@@ -1145,6 +1327,10 @@ class GUIGTK_Class:
             self.__Entry1TStart = Entry(self.__Frame25,width=5)
             self.__Entry1TStart.pack(side='top')
             
+            self.__tooltipTE3_TS = GUIGTK_Class.ToolTip(self.__Entry1TStart, text=
+                                    "Tone Start:"+"\n"+
+                                     "Instant of time when tone starts."+
+                                     " It is defined as always 0 and cannot be changed")
             
             
             self.__Frame27 = Frame(self.__Frame13)
@@ -1155,6 +1341,11 @@ class GUIGTK_Class:
             self.__Frame26.pack(side='left')
             self.__Entry2TEnd = Entry(self.__Frame26,width=5)
             self.__Entry2TEnd.pack(side='top')
+            
+            self.__tooltipTE4_TE = GUIGTK_Class.ToolTip(self.__Entry2TEnd, text=
+                                    "Tone End:"+"\n"+
+                                     "Instant of time when tone stops.")
+            
             self.__Frame28 = Frame(self.__Frame20)
             self.__Frame28.pack(side='left')
             self.__Label3 = Label(self.__Frame28,text='Movement Window Start:')
@@ -1396,7 +1587,6 @@ class GUIGTK_Class:
     
     
     def overrideaction_drop(self):
-        print "DROP from UI_TK"
         logger.info( "Default: Drop" )
         return 0
     
