@@ -402,7 +402,7 @@ class GUIGTK_Class:
             self.__btnDrop.bind('<ButtonRelease-1>',self.__on_btnDrop_ButRel_1)
             
             self.__tooltip1_Drop = GUIGTK_Class.ToolTip(self.__btnDrop, text=
-                                    'Drop: Gives a drop of water.')
+                                    'Drop: '+ "\n" + '(shortcut: D) Gives a drop of water.')
             
             
             self.__Frame20 = Frame(self.__Frame3)
@@ -412,7 +412,7 @@ class GUIGTK_Class:
             self.__btnReward.bind('<ButtonRelease-1>',self.__on_btnReward_ButRel_1)
             
             self.__tooltip2_Reward = GUIGTK_Class.ToolTip(self.__btnReward, text=
-                                    'Reward: Gives a drop of water and counts the trial as successful.')
+                                    'Reward '+ "\n" + '(shortcut: R) Gives a drop of water and counts the trial as successful.')
             
             self.__Frame12 = Frame(self.__Frame3)
             self.__Frame12.pack(side='top')
@@ -421,7 +421,7 @@ class GUIGTK_Class:
             self.__btnOpen.bind('<ButtonRelease-1>',self.__on_btnOpen_ButRel_1)
             
             self.__tooltip3_Open = GUIGTK_Class.ToolTip(self.__btnOpen, text=
-                                    'Open: Opens the valve.')
+                                    'Open: '+ "\n" + '(shortcut: O) Opens the valve.')
             
             self.__Frame17 = Frame(self.__Frame3)
             self.__Frame17.pack(side='top')
@@ -430,7 +430,7 @@ class GUIGTK_Class:
             self.__btnClose.bind('<ButtonRelease-1>',self.__on_btnClose_ButRel_1)
             
             self.__tooltip4_Close = GUIGTK_Class.ToolTip(self.__btnClose, text=
-                                    'Close: Closes the valve.')
+                                    'Close: '+ "\n" + '(shortcut: C) Closes the valve.')
             
             self.__Frame11 = Frame(self.__Frame3)
             self.__Frame11.pack(side='top')
@@ -440,7 +440,7 @@ class GUIGTK_Class:
             
             self.__tooltip5_Start = GUIGTK_Class.ToolTip(self.__btnStart, text=
                                     "Start / Stop Training:"+
-                                    "\n" +"Starts the training if it hasn't started before."+"\n"
+                                    "\n" +"(shortcut: K) Starts the training if it hasn't started before."+"\n"
                                     +"Else stops the training.")
             
             self.__Frame21 = Frame(self.__Frame3)
@@ -450,8 +450,8 @@ class GUIGTK_Class:
             self.__btnPause.bind('<ButtonRelease-1>',self.__on_btnPause_ButRel_1)
             
             self.__tooltip6_Pause = GUIGTK_Class.ToolTip(self.__btnPause, text=
-                                    "Pause / Resume Training:"+"\n"+
-                                     "Pauses the training if it is currently running."+"\n"
+                                    "Pause/Resume Training:"+"\n"+
+                                     "(shortcut: P) Pauses the training if it is currently running."+"\n"
                                     +"Else resumes the paused training.")
             
             self.__Frame19 = Frame(self.__Frame3)
@@ -733,6 +733,13 @@ class GUIGTK_Class:
             self.bind('<Destroy>',self.__on_Form5_Dstry)
             self.__lblComment = Label(self,text='Comment about this training:')
             self.__lblComment.pack(side='top')
+            
+            
+            self.__tooltipTE2_Com = GUIGTK_Class.ToolTip(self.__lblComment, text=
+                                    "Comment about this training:"+"\n"+
+                                     "Sets a comment line (max: 100 chars) about this training session.")
+            
+            
             self.__EntryComment = Entry(self)
             self.__EntryComment.pack(side='top')
             self.__EntryComment.bind('<KeyRelease>',self.__on_EntryComment_KeyRel)
@@ -742,6 +749,10 @@ class GUIGTK_Class:
             self.__ApplyBtn = Button(self.__Frame62,text='Apply')
             self.__ApplyBtn.pack(side='top')
             self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
+            
+            self.__tooltipTE1_Apply = GUIGTK_Class.ToolTip(self.__ApplyBtn, text=
+                                    "Apply:"+"\n"+
+                                     "Applies the Comment and closes this window.")
             #
             #Your code here
             self.__alreadyGone = 0
@@ -822,9 +833,23 @@ class GUIGTK_Class:
             self.__ApplyBtn = Button(self.__Frame62,text='Apply')
             self.__ApplyBtn.pack(side='top')
             self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
+            
+            
+            self.__tooltipTE1_Apply = GUIGTK_Class.ToolTip(self.__ApplyBtn, text=
+                                    "Apply:"+"\n"+
+                                     "Applies and saves all changes made to the Parameters.")
+            
+            
             self.__CloseBtn = Button(self.__Frame62,text='Close')
             self.__CloseBtn.pack(side='top')
             self.__CloseBtn.bind('<ButtonRelease-1>',self.__on_CloseBtn_ButRel_1)
+            
+            
+            self.__tooltipTE2_Close = GUIGTK_Class.ToolTip(self.__CloseBtn, text=
+                                    "Close:"+"\n"+
+                                     "Closes this window without saving changes.")
+            
+            
             self.__Frame4 = Frame(self.__Frame70,height=30)
             self.__Frame4.pack(side='left')
             self.__Label1 = Label(self.__Frame4,text='Parameters')
@@ -1299,7 +1324,7 @@ class GUIGTK_Class:
             
             self.__tooltipTE1_Apply = GUIGTK_Class.ToolTip(self.__ApplyBtn, text=
                                     "Apply:"+"\n"+
-                                     "Applies and saves all changes made to the trial events.")
+                                     "Applies and saves all changes made to the Trial Events.")
             
             self.__CloseBtn = Button(self.__Frame38,text='Close')
             self.__CloseBtn.pack(side='top')
@@ -1327,7 +1352,7 @@ class GUIGTK_Class:
             self.__Entry1TStart = Entry(self.__Frame25,width=5)
             self.__Entry1TStart.pack(side='top')
             
-            self.__tooltipTE3_TS = GUIGTK_Class.ToolTip(self.__Entry1TStart, text=
+            self.__tooltipTE3_TS = GUIGTK_Class.ToolTip(self.__Label1, text=
                                     "Tone Start:"+"\n"+
                                      "Instant of time when tone starts."+
                                      " It is defined as always 0 and cannot be changed")
@@ -1342,7 +1367,7 @@ class GUIGTK_Class:
             self.__Entry2TEnd = Entry(self.__Frame26,width=5)
             self.__Entry2TEnd.pack(side='top')
             
-            self.__tooltipTE4_TE = GUIGTK_Class.ToolTip(self.__Entry2TEnd, text=
+            self.__tooltipTE4_TE = GUIGTK_Class.ToolTip(self.__Label2, text=
                                     "Tone End:"+"\n"+
                                      "Instant of time when tone stops.")
             
@@ -1354,6 +1379,12 @@ class GUIGTK_Class:
             self.__Frame29.pack(side='left')
             self.__Entry3MvmntWindowStart = Entry(self.__Frame29,width=5)
             self.__Entry3MvmntWindowStart.pack(side='top')
+            
+            self.__tooltipTE5_MWS = GUIGTK_Class.ToolTip(self.__Label3, text=
+                                    "Movement Window Start:"+"\n"+
+                                     "Instant of time when movement starts to be considered.")
+            
+            
             self.__Frame30 = Frame(self.__Frame17)
             self.__Frame30.pack(side='left')
             self.__Label4 = Label(self.__Frame30,text='Movement Window End:')
@@ -1362,6 +1393,11 @@ class GUIGTK_Class:
             self.__Frame31.pack(side='left')
             self.__Entry4MvntWindowEnd = Entry(self.__Frame31,width=5)
             self.__Entry4MvntWindowEnd.pack(side='top')
+            
+            self.__tooltipTE6_MWE = GUIGTK_Class.ToolTip(self.__Label4, text=
+                                    "Movement Window End:"+"\n"+
+                                     "Instant of time when movement stops being detected.")
+            
             self.__Frame33 = Frame(self.__Frame16)
             self.__Frame33.pack(side='left')
             self.__Label5 = Label(self.__Frame33,text='InterTrial Start:')
@@ -1370,6 +1406,15 @@ class GUIGTK_Class:
             self.__Frame32.pack(side='left')
             self.__Entry5ITStart = Entry(self.__Frame32,width=5)
             self.__Entry5ITStart.pack(side='top')
+            
+            self.__tooltipTE7_ITS = GUIGTK_Class.ToolTip(self.__Label5, text=
+                                    "InterTrial Start:"+"\n"+
+                                     "An intertrial stage runs between this value and ends in the 'InterTrial End' value."
+                                     +"\n"+
+                                     "The intertrial stage duration is random between these two values."
+                                     )
+            
+            
             self.__Frame35 = Frame(self.__Frame19)
             self.__Frame35.pack(side='left')
             self.__Label6 = Label(self.__Frame35,text='InterTrial End:')
@@ -1378,6 +1423,16 @@ class GUIGTK_Class:
             self.__Frame34.pack(side='left')
             self.__Entry6ITEnd = Entry(self.__Frame34,width=5)
             self.__Entry6ITEnd.pack(side='top')
+            
+            
+            self.__tooltipTE8_ITE = GUIGTK_Class.ToolTip(self.__Label6, text=
+                                    "InterTrial End:"+"\n"+
+                                     "An intertrial stage runs between 'InterTrial Start' and ends in this value."
+                                     +"\n"+
+                                     "The intertrial stage duration is random between these two values."
+                                     )
+            
+            
             self.__Frame22 = Frame(self.__Frame36)
             self.__Frame22.pack(side='left')
             self.__Label7 = Label(self.__Frame22,text='Probability Tone1:')
@@ -1386,8 +1441,15 @@ class GUIGTK_Class:
             self.__Frame23.pack(side='left')
             self.__Scale2 = Scale(self.__Frame23,orient='horizontal')
             self.__Scale2.pack(side='top')
-            #
-            #Your code here
+            
+            
+            self.__tooltipTE9_PT1 = GUIGTK_Class.ToolTip(self.__Label7, text=
+                                    "Probability Tone1:"+"\n"+
+                                     "Sets the probability that the Tone 1 plays."
+                                     + "\n" +
+                                     "The remaining probability is that of the Tone 2 playing."
+                                     )
+            
             
             self.__alreadyExecuted = 0
             self.__Entry1TStart.insert(0,"0.0")
