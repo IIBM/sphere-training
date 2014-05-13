@@ -908,6 +908,13 @@ class GUIGTK_Class:
             self.__Frame11.pack(side='left')
             self.__Entry1Tone1 = Entry(self.__Frame11,width=8)
             self.__Entry1Tone1.pack(side='top')
+            
+            
+            self.__tooltipTE3_T1 = GUIGTK_Class.ToolTip(self.__Label3, text=
+                                    "Tone 1:"+"\n"+
+                                     "Sets the frequency of the Tone 1.")
+            
+            
             self.__Frame13 = Frame(self.__Frame15)
             self.__Frame13.pack(side='left')
             self.__Label4 = Label(self.__Frame13,text='Hz')
@@ -918,6 +925,13 @@ class GUIGTK_Class:
             self.__Button1TestT1.pack(side='top')
             self.__Button1TestT1.bind('<ButtonRelease-1>' \
                 ,self.__on_Button1TestT1_ButRel_1)
+            
+            
+            self.__tooltipTE3_1_T1 = GUIGTK_Class.ToolTip(self.__Button1TestT1, text=
+                                    "Test Tone 1:"+"\n"+
+                                     "Saves frequency changes and plays Tone 1.")
+            
+            
             self.__Frame23 = Frame(self.__Frame10)
             self.__Frame23.pack(side='left')
             self.__Label6 = Label(self.__Frame23,text='Tone2:')
@@ -928,6 +942,13 @@ class GUIGTK_Class:
             self.__Frame19.pack(side='left')
             self.__Entry2Tone2 = Entry(self.__Frame19,width=8)
             self.__Entry2Tone2.pack(side='top')
+            
+            
+            self.__tooltipTE4_T2 = GUIGTK_Class.ToolTip(self.__Label6, text=
+                                    "Tone 2:"+"\n"+
+                                     "Sets the frequency of the Tone 2.")
+            
+            
             self.__Frame20 = Frame(self.__Frame22)
             self.__Frame20.pack(side='left')
             self.__Label5 = Label(self.__Frame20,text='Hz')
@@ -938,6 +959,13 @@ class GUIGTK_Class:
             self.__Button2TestT2.pack(side='top')
             self.__Button2TestT2.bind('<ButtonRelease-1>' \
                 ,self.__on_Button2TestT2_ButRel_1)
+            
+            
+            self.__tooltipTE4_2_T2 = GUIGTK_Class.ToolTip(self.__Button2TestT2, text=
+                                    "Test Tone 2:"+"\n"+
+                                     "Saves frequency changes and plays Tone 2.")
+            
+            
             self.__Frame32 = Frame(self.__Frame28)
             self.__Frame32.pack(side='left')
             self.__Frame31 = Frame(self.__Frame28,width=100)
@@ -963,10 +991,17 @@ class GUIGTK_Class:
             self.__Frame67 = Frame(self.__Frame33)
             self.__Frame67.pack(side='left')
             self.__Button3SHTracking = Button(self.__Frame67
-                ,text='Show / HideTracking')
+                ,text='Show / Hide Tracking')
             self.__Button3SHTracking.pack(side='top')
             self.__Button3SHTracking.bind('<ButtonRelease-1>' \
                 ,self.__on_Button3SHTracking_ButRel_1)
+            
+            
+            self.__tooltipTE5_SHT = GUIGTK_Class.ToolTip(self.__Button3SHTracking, text=
+                                    "Show / Hide Tracking:"+"\n"+
+                                     "Shows / hides computer-generated tracking lines and circles on the display.")
+            
+            
             self.__Frame66 = Frame(self.__Frame33,width=39)
             self.__Frame66.pack(side='left')
             self.__Frame65 = Frame(self.__Frame30)
@@ -976,13 +1011,30 @@ class GUIGTK_Class:
             self.__Button4SHFeedback.pack(side='top')
             self.__Button4SHFeedback.bind('<ButtonRelease-1>' \
                 ,self.__on_Button4SHFeedback_ButRel_1)
-            #
+            
+            
+            self.__tooltipTE6_SHF = GUIGTK_Class.ToolTip(self.__Button4SHFeedback, text=
+                                    "Show / Hide Feedback:"+"\n"+
+                                     "Shows / hides the feedback window."
+                                     +"\n"+"Note that hiding the feedback will not affect the movement detection modules."
+                                     )
+            
+            
             self.__Button4_5recalibrate = Button(self.__Frame65
                 ,text='Recalibrate Camera')
             self.__Button4_5recalibrate.pack(side='top')
             self.__Button4_5recalibrate.bind('<ButtonRelease-1>' \
                 ,self.__on_Button4_5recalibrate_ButRel_1)
             #
+            
+            
+            self.__tooltipTE6_REC = GUIGTK_Class.ToolTip(self.__Button4_5recalibrate, text=
+                                    "Recalibrate Camera:"+"\n"+
+                                     "Generates a new calibration file for the movement detection,"+
+                                     " talking as samples the current video output.")
+            
+            
+            
             self.__Frame64 = Frame(self.__Frame30,width=39)
             self.__Frame64.pack(side='left')
             self.__Frame38 = Frame(self.__Frame36)
