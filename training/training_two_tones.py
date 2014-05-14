@@ -26,42 +26,50 @@ class Training():
     
     class gVariables():
         #Global variables to be used within the Training class.
-        #Contains global variables AND some internal training functions.
+        #Contains global variables AND some training functions (internal to the Training class).
         
         @staticmethod
         def dummy_fn():
+            #does nothing, used before as a testing function.
             print "testing"
         
         @staticmethod
         def fn_giveDrop():
-                #print "_dando drop"
+                #print "giving drop"
                 Training.gVariables.logger.info('valve drop')
                 Training.gVariables.valve1.drop()
                 if (Training.gVariables.trialExecuting == True):
-                    Training.gVariables.logger.info('Drop given manually.')
+                    Training.gVariables.logger.info('Drop given manually - training started.')
                     Training.gVariables.dropsAmountGivenManually += 1
+                else:
+                    Training.gVariables.logger.info('Drop given manually - training not started.')
         
         @staticmethod
         def fn_giveReward():
+                #gives a drop of water and counts the trial as successful.
                 Training.giveReward();
                 if (Training.gVariables.trialExecuting == True):
-                                Training.gVariables.logger.info('Reward given manually.')
-                                Training.gVariables.dropsAmountGivenManually += 1
+                    Training.gVariables.logger.info('Reward given manually.')
+                    Training.gVariables.dropsAmountGivenManually += 1
+                else:
+                    Training.gVariables.logger.info('Reward not given because training is not in execution.')
         
         @staticmethod
         def fn_closeValve():
+                #Calls the valve object to close if opened.
                 Training.gVariables.logger.info('valve close')
                 Training.gVariables.valve1.close()
         
         @staticmethod
         def fn_openValve():
+            #Calls the valve object to open if closed.
             Training.gVariables.logger.info('valve open')
             Training.gVariables.valve1.open()
         
         @staticmethod
         def fn_tone1Test(newfreq):
             #Tests the tone n°1
-            #the argument is the new frequency (if it changed). FIrst updates freq then plays.
+            #the argument is the new frequency (if it changed). FIrst updates freq variable then plays.
             beforefreq = Training.gVariables.soundGenFrequency1
             Training.gVariables.fn_setFrequencyT1(newfreq)
             Training.gVariables.logger.info('Changed Tone 1 Frequency to: %d Hz  (before was %d Hz)' % (Training.gVariables.soundGenFrequency1, beforefreq ) )
@@ -1050,9 +1058,9 @@ class Training():
                 
                 print "GUICheck: done."
                 Training.gVariables.logger.info( "GUICheck: done." )
-            
-            
-            
+    
+    
+    
     
     def noGUIInputLoop(self):
         def printInstructions():
