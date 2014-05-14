@@ -1041,6 +1041,14 @@ class GUIGTK_Class:
             self.__Frame38.pack(side='left')
             self.__Label8 = Label(self.__Frame38,text='Movement Amount:')
             self.__Label8.pack(side='top')
+            
+            
+            self.__tooltipTE7_MA = GUIGTK_Class.ToolTip(self.__Label8, text=
+                                    "Movement Amount:"+"\n"+
+                                     "Sets the movement threshold to consider a given frame as 'moving'."+
+                                     "\n"+"(see sphereVideoDetection docs)")
+            
+            
             self.__Frame37 = Frame(self.__Frame36)
             self.__Frame37.pack(side='left')
             self.__Entry3MvntAm = Entry(self.__Frame37,width=6)
@@ -1051,6 +1059,18 @@ class GUIGTK_Class:
             self.__Frame39.pack(side='left')
             self.__Label9 = Label(self.__Frame39,text='Method Used:')
             self.__Label9.pack(side='top')
+            
+            
+            self.__tooltipTE8_MU = GUIGTK_Class.ToolTip(self.__Label9, text=
+                                    "Method Used:"+"\n"+
+                                     "Establishes the method to use for the movement detection."+
+                                     "\n"+"(see sphereVideoDetection docs)"+"\n"+
+                                     "Valid current methods are:"+
+                                     "\n"+"0 : Accumulate Time"+"\n"+
+                                     "\n"+"1 : Movement Vector"+"\n"+
+                                     "\n"+"2 : Movement Vector - Binary (default)"+"\n")
+            
+            
             self.__Frame41 = Frame(self.__Frame34)
             self.__Frame41.pack(side='left')
             #self.__Listbox1 = Listbox(self.__Frame41,height=1,width=19)
@@ -1071,6 +1091,14 @@ class GUIGTK_Class:
             self.__Frame53.pack(side='left')
             self.__Label11 = Label(self.__Frame53,text='Movement Time:')
             self.__Label11.pack(side='top')
+            
+            
+            self.__tooltipTE9_MT = GUIGTK_Class.ToolTip(self.__Label11, text=
+                                    "Movement Time:"+"\n"+
+                                    "(for Tone1 trials)"+"\n"+
+                                     "Amount of 'continuous movement' time that should be detected to consider the trial as successful.")
+            
+            
             self.__Frame54 = Frame(self.__Frame52)
             self.__Frame54.pack(side='left')
             self.__Entry4MvntTime = Entry(self.__Frame54,width=10)
@@ -1085,6 +1113,14 @@ class GUIGTK_Class:
             self.__Frame57.pack(side='left')
             self.__Label13 = Label(self.__Frame57,text='Idle Time:')
             self.__Label13.pack(side='top')
+            
+            
+            self.__tooltipTE10_IT = GUIGTK_Class.ToolTip(self.__Label13, text=
+                                    "Idle Time:"+"\n"+
+                                    "(for Tone2 trials)"+"\n"+
+                                     "Amount of 'continuous non-movement' time that should be detected to consider the trial as successful.")
+            
+            
             self.__Frame61 = Frame(self.__Frame51,width=40)
             self.__Frame61.pack(side='left')
             self.__Frame60 = Frame(self.__Frame51)
