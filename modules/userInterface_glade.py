@@ -42,6 +42,7 @@ class GUIGTK_Class():
                             "trialeventswindow_destroy": self.action_hideTE,
                             "parameterswindow_destroy": self.action_hideP,
                             "commentswindow_destroy": self.action_hideC,
+                            "helpWindow_destroy": self.action_hideHelp,
                             "mainwindow_keypress": self.action_keypress, 
                             
                         }
@@ -64,6 +65,9 @@ class GUIGTK_Class():
                 self.glade.get_object("commentWin").set_title("Comment.")
                 self.glade.get_object("parametersWin").set_title("Parameters.")
                 self.glade.get_object("trialEventsWin").set_title("Trial Events.")
+                self.glade.get_object("helpWindow").set_title("Help Window.")
+                #self.glade.get_object("helpWindow").show_all()
+                
                 
                 
                 if (startEv == True):
@@ -295,6 +299,7 @@ class GUIGTK_Class():
         
         def action_help(self, button):
                 #triggered from "Exit" button
+                self.glade.get_object("helpWindow").show_all()
                 print "Help button."
         
         def __exitAll(self):
@@ -596,7 +601,11 @@ class GUIGTK_Class():
         def action_hideC(self, button, event):
             self.glade.get_object("commentWin").hide()
             return True;
-
+        
+        def action_hideHelp(self, button, event):
+            print "hidehelp"
+            self.glade.get_object("helpWindow").hide()
+            return True;
 
 
 if __name__ == "__main__":
