@@ -68,7 +68,11 @@ class GUIGTK_Class():
                 self.glade.get_object("helpWindow").set_title("Help Window.")
                 #self.glade.get_object("helpWindow").show_all()
                 
-                
+                #gray color on one entry:
+                #clr = gtk.gdk.Color(red = 200, green = 200, blue = 200);
+                clr = gtk.gdk.Color('#ddd') #gray color, so users know that it isn't editable
+                #self.glade.get_object("entryToneStart").modify_text(0, clr);
+                self.glade.get_object("entryToneStart").modify_base(0, clr);
                 
                 if (startEv == True):
                     gtk.main()
@@ -109,7 +113,7 @@ class GUIGTK_Class():
         
         def overrideaction_resumeTraining(self):
                 #print "Pause / Resume training"
-                logger.info( "Default: Resume Training" )
+                logger.info( "Default: Resume Training"  )
                 return 0
         
         def overrideaction_applyTE(self):
