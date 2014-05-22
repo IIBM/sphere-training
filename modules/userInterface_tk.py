@@ -62,6 +62,8 @@ class GUIGTK_Class:
         self.movementTime = 0
         self.idleTime = 0
         self.comment = ""
+        
+        self.helpNumber = 0;
         pass
     
     
@@ -648,6 +650,18 @@ class GUIGTK_Class:
         
         def __btnHelp_pressed(self, Event = None):
             print "Help button."
+            if (self.reference.helpNumber != 0):
+                return;
+            import Tkinter as tk
+            rootNW=tk.Tk()
+            self.helpfrm = self.reference.Example(rootNW)
+            print self.reference
+            self.helpfrm.reference = self.reference
+            self.reference.helpNumber = 1;
+            print "ref"
+            print self.helpfrm.reference 
+            self.helpfrm.pack(side="top", fill="both", expand=True)
+            #rootNW.mainloop()
             pass
     
         def __on_btnComment_ButRel_1(self,Event=None):
@@ -1734,6 +1748,306 @@ class GUIGTK_Class:
                 
                 print "Bad input: probabilityToneOne to previous var."
             pass
+    
+    
+    class Example(Frame):
+        def __init__(self, root):
+    
+            Frame.__init__(self, root)
+            self.canvas = Canvas(root, borderwidth=0, background="#ffffff")
+            self.frame = Frame(self.canvas, background="#ffffff")
+            self.vsb = Scrollbar(root, orient="vertical", command=self.canvas.yview)
+            self.canvas.configure(yscrollcommand=self.vsb.set)
+    
+            self.vsb.pack(side="right", fill="y")
+            self.canvas.pack(side="left", fill="both", expand=True)
+            self.canvas.create_window((4,4), window=self.frame, anchor="nw", 
+                                      tags="self.frame")
+            
+            self.bind('<Destroy>',self.dummy_fn)
+            self.frame.bind("<Configure>", self.OnFrameConfigure)
+            
+            self.populate()
+        
+        def change_page(self):
+            print "changing."
+        
+        def populate(self):
+            '''populate frame.'''
+            
+            button = Tkinter.Button(self.frame, text = 'Next Page', command = self.change_page).grid(row=0, column=0)
+            #button.pack()
+            
+            rowcount = 1
+            Label(self.frame, text="Drop", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Drop: </b>Gives a drop of water, by opening the parallel port valve for 100 ms.
+    The count of successful trials is not being affected by this function."""
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 1
+            Label(self.frame, text="Reward", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Reward: </b>Gives a drop of water, by opening the parallel port valve for 100 ms.
+    The count of successful trials is increased by a value of one."""
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 1
+            Label(self.frame, text="Open", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Open: </b>Opens the parallel port valve (indefinitely until it is closed manually)."""
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 1
+            Label(self.frame, text="Close", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """Closes the parallel port valve."""
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 1
+            Label(self.frame, text="Start / Stop Training:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Start / Stop Training: </b>If the training hasn't started or has been stopped, starts the training session.
+    Else, this function will stop the training session."""
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 1
+            Label(self.frame, text="Pause / Resume Training:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Pause / Resume Training: </b>If the training has started and is currently running, pauses the training session.
+    Else if the training session has been paused, resumes the training in the same state as it was paused."""
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 1
+            Label(self.frame, text="Exit:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Exit: </b>Exits the training program, and all its submodules, previously saving and closing all logging files."""
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 1
+            Label(self.frame, text="Comment about this training:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b> Comment about this training: </b>Opens a form to write a comment about this training session.
+    The comment written will be logged for this session."""
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 1
+            Label(self.frame, text="Trial Events:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b> Trial Events: </b> Opens a form to configure Trial Events.
+    This includes the duration of tone, the length of the detection window, among other variables."""
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 1
+            Label(self.frame, text="Parameters:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b> Parameters: </b> Opens a form to configure Parameters
+    This includes tone frequencies, video options and movement detection variables."""
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #for row in range(100):
+            #    Label(self.frame, text="%s" % row, width=3, borderwidth="1", 
+            #             relief="solid").grid(row=row, column=0)
+            #    t="this is the second colum for row %s" %row
+            #    Label(self.frame, text=t).grid(row=row, column=1)
+    
+        def dummy_fn(self, arg):
+            print "test fn."
+            print self.reference.helpNumber
+            self.reference.helpNumber = 0;
+            print self.reference.helpNumber
+    
+        def populate2(self):
+            '''populate frame.'''
+            Label(self.frame, text=" . ", borderwidth="1", 
+                         relief="solid").grid(row=0, column=0)
+            TEXTO = """A 'trial' is defined as the time between two successive tones.
+      
+      Thus, the start of the tone defines the beginning of the trial.
+      It has a certain duration (determined by the 'Tone End' variable).
+      
+      After the tone has finished, a Movement Window follows, during which movement
+      is detected. Its limits are determined by two variables.
+      
+      The reward is given at the end of the Movement Window, if the trial was successful.
+      
+      After the movement window ends, there is an 'Intertrial' gap, during
+      which no tone or drop is given (unless given manually).
+      This gap's duration is controlled by two variables, and is random between these 2 values."""
+            Label(self.frame, text=TEXTO).grid(row=0, column=1)
+            #----
+            Label(self.frame, text="Tone Start:", borderwidth="1", 
+                         relief="solid").grid(row=1, column=0)
+            TEXTO = """<b>Tone Start: </b> Instant of the trial time when the tone starts playing.
+    By the definition of a trial, it is always 0 and cannot be changed."""
+            Label(self.frame, text=TEXTO).grid(row=1, column=1)
+            #----
+            Label(self.frame, text="Tone End:", borderwidth="1", 
+                         relief="solid").grid(row=2, column=0)
+            TEXTO = """<b>Tone End: </b> Instant of the trial time when the tone ends.
+    This variable defines the duration of the Tone, and should be less than Intertrial End."""
+            Label(self.frame, text=TEXTO).grid(row=2, column=1)
+            #----
+            Label(self.frame, text="Movement Window Start:", borderwidth="1", 
+                         relief="solid").grid(row=3, column=0)
+            TEXTO = """<b>Movement Window Start: </b> Instant of the trial time when the movement starts being detected.
+    This value should be greater than 0 and less than Intertrial Start"""
+            Label(self.frame, text=TEXTO).grid(row=3, column=1)
+            #----
+            Label(self.frame, text="Movement Window End:", borderwidth="1", 
+                         relief="solid").grid(row=4, column=0)
+            TEXTO = """<b>Movement Window End: </b> Instant of the trial time when the movement stops being detected.
+    This value should be greater than Movement Window Start, and less than Intertrial Start.
+    When the trial time passes this value, the system will check if the trial was successful or not."""
+            Label(self.frame, text=TEXTO).grid(row=4, column=1)
+            #----
+            Label(self.frame, text="Intertrial Start:", borderwidth="1", 
+                         relief="solid").grid(row=5, column=0)
+            TEXTO = """<b>Intertrial Start: </b> Instant of time when Intertrial Starts.
+    The drop (if trial was successfull) will be given in this instant of the trial time."""
+            Label(self.frame, text=TEXTO).grid(row=5, column=1)
+            #----
+            Label(self.frame, text="Intertrial End:", borderwidth="1", 
+                         relief="solid").grid(row=6, column=0)
+            TEXTO = """<b>Intertrial End: </b> Maximum instant of time when Intertrial ends.
+    The 'Intertrial Duration' is a random value between Intertrial Start and Intertrial End."""
+            Label(self.frame, text=TEXTO).grid(row=6, column=1)
+            #----
+            Label(self.frame, text="Probability Tone 1:", borderwidth="1", 
+                         relief="solid").grid(row=7, column=0)
+            TEXTO = """<b>Probability Tone 1: </b> This value sets the probability of the Tone 1 being played
+    in each trial.
+    By default, a given trial will play Tone 1 or Tone 2, so this variable sets the Tone 2
+    probability.
+    Note that all trials will always play at least one of the two tones."""
+            Label(self.frame, text=TEXTO).grid(row=7, column=1)
+            #----
+            #for row in range(100):
+            #    Label(self.frame, text="%s" % row, width=3, borderwidth="1", 
+            #             relief="solid").grid(row=row, column=0)
+            #    t="this is the second colum for row %s" %row
+            #    Label(self.frame, text=t).grid(row=row, column=1)
+    
+    
+    
+        def populate3(self):
+            '''populate frame.'''
+            Label(self.frame, text=" . ", borderwidth="1", 
+                         relief="solid").grid(row=0, column=0)
+            TEXTO = """This form sets some general parameters used by the training session.
+      Audio:
+        Tone 1: It is a tone played during a trial where movement will be detected.
+        Tone 1: It is a tone played during a trial where idle (or 'no-movement') will be detected.
+        
+        Two Entry boxes are provided for setting the frequency of Tone 1, and Tone 2.
+        Both are integer values, and in 'Hertz'.
+        
+        Test buttons are provided to play the tone independently of the current trial status.
+        
+      Video:
+        Feedback and camera settings.
+        The Video variables include some movement detection parameters, like Threshold amount and
+        method to use for movement detection.
+        
+        There are three methods currently available:
+          0=Accumulate time:
+              This Method analyzes continuous movement. If detected, saves the amount of seconds
+              of the movement so far.
+              If idle is detected, it saves how much time the subject is idle.
+          1= movementVector:
+              Each cycle, an element is added to movement vector.
+              If there are N past 1's in the vector, then it was moving and currently is. (includes certain 0's tolerance)
+              Else: it is idle.
+              This method returns the estimated movement time (how much time it was moving) or idle time.
+              This method does not considers anything different than moving or idle (there is no extra state).
+          2= movementVectorBinary:
+              This method will set the movement time in a preset value, and no more or less, only if that much time
+              is detected. For example:
+              If it was moving for 1 second, and the time window in the training
+              files set this module to detect at least 0.5 s, this method will detect movingTIme to 0.5 s
+              If this method does not detect 0.5 s , it will set movingTime to 0 and idle time to 0
+      Trial:
+        Variables associated with trial movement detection, like the amount of time needed to consider
+        a trial's sample as a valid 'movement'."""
+            Label(self.frame, text=TEXTO).grid(row=0, column=1)
+            #----
+            Label(self.frame, text="Tone 1:", borderwidth="1", 
+                         relief="solid").grid(row=1, column=0)
+            TEXTO = """<b>Tone 1: </b> This Entry sets the Tone 1 Frequency in Hertz."""
+            Label(self.frame, text=TEXTO).grid(row=1, column=1)
+            #----
+            Label(self.frame, text="Tone 2:", borderwidth="1", 
+                         relief="solid").grid(row=2, column=0)
+            TEXTO = """<b>Tone 2: </b> This Entry sets the Tone 2 Frequency in Hertz."""
+            Label(self.frame, text=TEXTO).grid(row=2, column=1)
+            #----
+            Label(self.frame, text="Test:", borderwidth="1", 
+                         relief="solid").grid(row=3, column=0)
+            TEXTO = """<b>Test: </b> Saves Frequency changes in the corresponding Tone and tests it."""
+            Label(self.frame, text=TEXTO).grid(row=3, column=1)
+            #----
+            Label(self.frame, text="Show / Hide Tracking:", borderwidth="1", 
+                         relief="solid").grid(row=4, column=0)
+            TEXTO = """<b>Show / Hide Tracking: </b> Shows or Hides tracking lines, circles, and other
+    shapes that helps visually in the movement detection interpretation.
+    Note that hiding the Tracking lines won't affect movement detection functionality."""
+            Label(self.frame, text=TEXTO).grid(row=4, column=1)
+            #----
+            Label(self.frame, text="Show / Hide Feedback:", borderwidth="1", 
+                         relief="solid").grid(row=5, column=0)
+            TEXTO = """<b>Show / Hide Feedback: </b> Shows or Hides the Feedback Window (camera or video window).
+    Note that hiding the Feedback window won't affect movement detection functionality."""
+            Label(self.frame, text=TEXTO).grid(row=5, column=1)
+            #----
+            Label(self.frame, text="Recalibrate Camera:", borderwidth="1", 
+                         relief="solid").grid(row=6, column=0)
+            TEXTO = """<b>Recalibrate Camera: </b> Grabs current video sample and uses it to adjust maximum and minimum
+    values for the tracking function according to this new sample.
+    This will also overwrite previous calibration file with the new values."""
+            Label(self.frame, text=TEXTO).grid(row=6, column=1)
+            #----
+            Label(self.frame, text="Movement Amount:", borderwidth="1", 
+                         relief="solid").grid(row=7, column=0)
+            TEXTO = """<b>Movement Amount: </b> Sets the amount of 'movement' needed in a given frame of the movement detection
+    module to consider this sample a valid 'movement' (or idle according to type of trial).
+    This value is dependent on the camera, the processing capabilities,and the method used for detection."""
+            Label(self.frame, text=TEXTO).grid(row=7, column=1)
+            #----
+            Label(self.frame, text="Method Used:", borderwidth="1", 
+                         relief="solid").grid(row=8, column=0)
+            TEXTO = """<b>Method Used: </b> Sets the method used for movement and idle detection.
+    Currently 3 methods are available (read docs above)."""
+            Label(self.frame, text=TEXTO).grid(row=8, column=1)
+            #----
+            Label(self.frame, text="Movement Time:", borderwidth="1", 
+                         relief="solid").grid(row=9, column=0)
+            TEXTO = """<b>Movement Time: </b> Sets the movement time needed for a 'movement type' trial to be successful."""
+            Label(self.frame, text=TEXTO).grid(row=9, column=1)
+            #----
+            Label(self.frame, text="Idle Time:", borderwidth="1", 
+                         relief="solid").grid(row=10, column=0)
+            TEXTO = """<b>Idle Time: </b> Sets the idle time needed for a 'idle type' trial to be successful."""
+            Label(self.frame, text=TEXTO).grid(row=10, column=1)
+            #----
+            Label(self.frame, text="Apply:", borderwidth="1", 
+                         relief="solid").grid(row=11, column=0)
+            TEXTO = """<b>Apply: </b> This button applies all changes made to the variables."""
+            Label(self.frame, text=TEXTO).grid(row=11, column=1)
+            #for row in range(100):
+            #    Label(self.frame, text="%s" % row, width=3, borderwidth="1", 
+            #             relief="solid").grid(row=row, column=0)
+            #    t="this is the second colum for row %s" %row
+            #    Label(self.frame, text=t).grid(row=row, column=1)
+    
+    
+        def OnFrameConfigure(self, event):
+            '''Reset the scroll region to encompass the inner frame'''
+            self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    #     if __name__ == "__main__":
+    #         root=Tk()
+    #         Example(root).pack(side="top", fill="both", expand=True)
+    #         root.mainloop()
+    
     
     
     def overrideaction_drop(self):
