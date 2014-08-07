@@ -3,3 +3,4 @@ class vectorSimple:
     y=0;
     intensidad=0;
     angulo=0;
+
