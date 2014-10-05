@@ -654,7 +654,7 @@ class GUIGTK_Class:
                 return;
             import Tkinter as tk
             rootNW=tk.Tk()
-            self.helpfrm = self.reference.Example(rootNW)
+            self.helpfrm = self.reference.Form_help(rootNW)
             print self.reference
             self.helpfrm.reference = self.reference
             self.reference.helpNumber = 1;
@@ -1750,16 +1750,19 @@ class GUIGTK_Class:
             pass
     
     
-    class Example(Frame):
+    class Form_help(Frame):
         def __init__(self, root):
     
             Frame.__init__(self, root)
             self.canvas = Canvas(root, borderwidth=0, background="#ffffff")
+            self.DefClr = self.canvas.cget("bg")
             self.frame = Frame(self.canvas, background="#ffffff")
             self.vsb = Scrollbar(root, orient="vertical", command=self.canvas.yview)
-            self.canvas.configure(yscrollcommand=self.vsb.set)
+            self.hsb = Scrollbar(root, orient="horizontal", command=self.canvas.xview)
+            self.canvas.configure(yscrollcommand=self.vsb.set, xscrollcommand=self.hsb.set )
     
             self.vsb.pack(side="right", fill="y")
+            self.hsb.pack(side="bottom", fill="x")
             self.canvas.pack(side="left", fill="both", expand=True)
             self.canvas.create_window((4,4), window=self.frame, anchor="nw", 
                                       tags="self.frame")
@@ -1767,90 +1770,108 @@ class GUIGTK_Class:
             self.bind('<Destroy>',self.dummy_fn)
             self.frame.bind("<Configure>", self.OnFrameConfigure)
             
-            self.populate()
+            self.populate_pg1()
         
         def change_page(self):
-            print "changing."
+            print "Help form: changing page"
             for child in self.frame.winfo_children():
                 child.destroy()
             if self.current_help_page == 1:
-                self.populate2()
+                self.populate_pg2()
             elif self.current_help_page == 2:
-                self.populate3()
+                self.populate_pg3()
             elif self.current_help_page == 3:
-                self.populate()
+                self.populate_pg1()
             print "Current page: ",self.current_help_page
         
-        def populate(self):
+        def populate_pg1(self):
             '''populate frame.'''
             self.current_help_page = 1
-            button = Tkinter.Button(self.frame, text = 'Next Page', command = self.change_page).grid(row=0, column=0)
-            #button.pack()
+            button = Tkinter.Button(self.frame,
+                                     text = 'Next Page', command = self.change_page).grid(row=0, column=0)
             
-            rowcount = 1
+            rowcount = 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Drop", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Drop: </b>Gives a drop of water, by opening the parallel port valve for 100 ms.
     The count of successful trials is not being affected by this function."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             
-            
-            
             #----
-            rowcount += 1
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Reward", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Reward: </b>Gives a drop of water, by opening the parallel port valve for 100 ms.
     The count of successful trials is increased by a value of one."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
-            rowcount += 1
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Open", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Open: </b>Opens the parallel port valve (indefinitely until it is closed manually)."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
-            rowcount += 1
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Close", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """Closes the parallel port valve."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
-            rowcount += 1
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Start / Stop Training:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Start / Stop Training: </b>If the training hasn't started or has been stopped, starts the training session.
     Else, this function will stop the training session."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
-            rowcount += 1
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Pause / Resume Training:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Pause / Resume Training: </b>If the training has started and is currently running, pauses the training session.
     Else if the training session has been paused, resumes the training in the same state as it was paused."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
-            rowcount += 1
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Exit:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Exit: </b>Exits the training program, and all its submodules, previously saving and closing all logging files."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
-            rowcount += 1
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Comment about this training:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b> Comment about this training: </b>Opens a form to write a comment about this training session.
     The comment written will be logged for this session."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
-            rowcount += 1
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Trial Events:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b> Trial Events: </b> Opens a form to configure Trial Events.
     This includes the duration of tone, the length of the detection window, among other variables."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
-            rowcount += 1
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Parameters:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b> Parameters: </b> Opens a form to configure Parameters
@@ -1861,6 +1882,7 @@ class GUIGTK_Class:
             #             relief="solid").grid(row=row, column=0)
             #    t="this is the second colum for row %s" %row
             #    Label(self.frame, text=t).grid(row=row, column=1)
+            pass
     
         def dummy_fn(self, arg):
             print "test fn."
@@ -1868,7 +1890,7 @@ class GUIGTK_Class:
             self.reference.helpNumber = 0;
             print self.reference.helpNumber
     
-        def populate2(self):
+        def populate_pg2(self):
             '''populate frame.'''
             self.current_help_page = 2
             button = Tkinter.Button(self.frame, text = 'Next Page', command = self.change_page).grid(row=0, column=0)
@@ -1943,7 +1965,7 @@ class GUIGTK_Class:
     
     
     
-        def populate3(self):
+        def populate_pg3(self):
             '''populate frame.'''
             self.current_help_page = 3
             button = Tkinter.Button(self.frame, text = 'Next Page', command = self.change_page).grid(row=0, column=0)
@@ -2057,12 +2079,17 @@ class GUIGTK_Class:
     
         def OnFrameConfigure(self, event):
             '''Reset the scroll region to encompass the inner frame'''
+            #for child in self.frame.winfo_children():
+            #    child.destroy()
             self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-
-    #     if __name__ == "__main__":
-    #         root=Tk()
-    #         Example(root).pack(side="top", fill="both", expand=True)
-    #         root.mainloop()
+            print "onframeconfigure done."
+    
+        def oldfunction(self):
+            #     if __name__ == "__main__":
+            #         root=Tk()
+            #         Form_help(root).pack(side="top", fill="both", expand=True)
+            #         root.mainloop()
+            pass
     
     
     
