@@ -1771,10 +1771,19 @@ class GUIGTK_Class:
         
         def change_page(self):
             print "changing."
+            for child in self.frame.winfo_children():
+                child.destroy()
+            if self.current_help_page == 1:
+                self.populate2()
+            elif self.current_help_page == 2:
+                self.populate3()
+            elif self.current_help_page == 3:
+                self.populate()
+            print "Current page: ",self.current_help_page
         
         def populate(self):
             '''populate frame.'''
-            
+            self.current_help_page = 1
             button = Tkinter.Button(self.frame, text = 'Next Page', command = self.change_page).grid(row=0, column=0)
             #button.pack()
             
@@ -1784,6 +1793,9 @@ class GUIGTK_Class:
             TEXTO = """<b>Drop: </b>Gives a drop of water, by opening the parallel port valve for 100 ms.
     The count of successful trials is not being affected by this function."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            
+            
+            
             #----
             rowcount += 1
             Label(self.frame, text="Reward", borderwidth="1", 
@@ -1858,8 +1870,10 @@ class GUIGTK_Class:
     
         def populate2(self):
             '''populate frame.'''
-            Label(self.frame, text=" . ", borderwidth="1", 
-                         relief="solid").grid(row=0, column=0)
+            self.current_help_page = 2
+            button = Tkinter.Button(self.frame, text = 'Next Page', command = self.change_page).grid(row=0, column=0)
+            #Label(self.frame, text=" . ", borderwidth="1", 
+            #             relief="solid").grid(row=0, column=0)
             TEXTO = """A 'trial' is defined as the time between two successive tones.
       
       Thus, the start of the tone defines the beginning of the trial.
@@ -1931,8 +1945,10 @@ class GUIGTK_Class:
     
         def populate3(self):
             '''populate frame.'''
-            Label(self.frame, text=" . ", borderwidth="1", 
-                         relief="solid").grid(row=0, column=0)
+            self.current_help_page = 3
+            button = Tkinter.Button(self.frame, text = 'Next Page', command = self.change_page).grid(row=0, column=0)
+            #Label(self.frame, text=" . ", borderwidth="1", 
+            #             relief="solid").grid(row=0, column=0)
             TEXTO = """This form sets some general parameters used by the training session.
       Audio:
         Tone 1: It is a tone played during a trial where movement will be detected.
