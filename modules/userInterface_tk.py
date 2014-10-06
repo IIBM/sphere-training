@@ -1754,6 +1754,7 @@ class GUIGTK_Class:
         def __init__(self, root):
     
             Frame.__init__(self, root)
+            self.root = root
             self.canvas = Canvas(root, borderwidth=0, background="#ffffff")
             self.DefClr = self.canvas.cget("bg")
             self.frame = Frame(self.canvas, background="#ffffff")
@@ -1769,11 +1770,12 @@ class GUIGTK_Class:
             
             self.bind('<Destroy>',self.dummy_fn)
             self.frame.bind("<Configure>", self.OnFrameConfigure)
-            
-            self.populate_pg1()
+            self.current_help_page = 3
+            self.change_page()
         
         def change_page(self):
             print "Help form: changing page"
+            self.calculateBestSize()
             for child in self.frame.winfo_children():
                 child.destroy()
             if self.current_help_page == 1:
@@ -1783,7 +1785,14 @@ class GUIGTK_Class:
             elif self.current_help_page == 3:
                 self.populate_pg1()
             print "Current page: ",self.current_help_page
-        
+
+        def dummy_fn(self, arg):
+            print "test fn."
+            print self.reference.helpNumber
+            self.reference.helpNumber = 0;
+            print self.reference.helpNumber
+    
+    
         def populate_pg1(self):
             '''populate frame.'''
             self.current_help_page = 1
@@ -1791,7 +1800,7 @@ class GUIGTK_Class:
                                      text = 'Next Page', command = self.change_page).grid(row=0, column=0)
             
             rowcount = 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
             Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Drop", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
@@ -1801,7 +1810,7 @@ class GUIGTK_Class:
             
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
             Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Reward", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
@@ -1810,7 +1819,7 @@ class GUIGTK_Class:
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
             Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Open", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
@@ -1818,7 +1827,7 @@ class GUIGTK_Class:
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
             Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Close", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
@@ -1826,7 +1835,7 @@ class GUIGTK_Class:
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
             Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Start / Stop Training:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
@@ -1835,7 +1844,7 @@ class GUIGTK_Class:
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
             Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Pause / Resume Training:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
@@ -1844,7 +1853,7 @@ class GUIGTK_Class:
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
             Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Exit:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
@@ -1852,7 +1861,7 @@ class GUIGTK_Class:
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
             Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Comment about this training:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
@@ -1861,7 +1870,7 @@ class GUIGTK_Class:
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
             Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Trial Events:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
@@ -1870,13 +1879,17 @@ class GUIGTK_Class:
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 1
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
             Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Parameters:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b> Parameters: </b> Opens a form to configure Parameters
     This includes tone frequencies, video options and movement detection variables."""
             Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             #for row in range(100):
             #    Label(self.frame, text="%s" % row, width=3, borderwidth="1", 
             #             relief="solid").grid(row=row, column=0)
@@ -1884,16 +1897,13 @@ class GUIGTK_Class:
             #    Label(self.frame, text=t).grid(row=row, column=1)
             pass
     
-        def dummy_fn(self, arg):
-            print "test fn."
-            print self.reference.helpNumber
-            self.reference.helpNumber = 0;
-            print self.reference.helpNumber
     
         def populate_pg2(self):
             '''populate frame.'''
             self.current_help_page = 2
-            button = Tkinter.Button(self.frame, text = 'Next Page', command = self.change_page).grid(row=0, column=0)
+            rowcount = 0
+            button = Tkinter.Button(self.frame, text = 'Next Page',
+                                     command = self.change_page).grid(row=rowcount, column=0)
             #Label(self.frame, text=" . ", borderwidth="1", 
             #             relief="solid").grid(row=0, column=0)
             TEXTO = """A 'trial' is defined as the time between two successive tones.
@@ -1909,66 +1919,91 @@ class GUIGTK_Class:
       After the movement window ends, there is an 'Intertrial' gap, during
       which no tone or drop is given (unless given manually).
       This gap's duration is controlled by two variables, and is random between these 2 values."""
-            Label(self.frame, text=TEXTO).grid(row=0, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Tone Start:", borderwidth="1", 
-                         relief="solid").grid(row=1, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Tone Start: </b> Instant of the trial time when the tone starts playing.
     By the definition of a trial, it is always 0 and cannot be changed."""
-            Label(self.frame, text=TEXTO).grid(row=1, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Tone End:", borderwidth="1", 
-                         relief="solid").grid(row=2, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Tone End: </b> Instant of the trial time when the tone ends.
     This variable defines the duration of the Tone, and should be less than Intertrial End."""
-            Label(self.frame, text=TEXTO).grid(row=2, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Movement Window Start:", borderwidth="1", 
-                         relief="solid").grid(row=3, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Movement Window Start: </b> Instant of the trial time when the movement starts being detected.
     This value should be greater than 0 and less than Intertrial Start"""
-            Label(self.frame, text=TEXTO).grid(row=3, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Movement Window End:", borderwidth="1", 
-                         relief="solid").grid(row=4, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Movement Window End: </b> Instant of the trial time when the movement stops being detected.
     This value should be greater than Movement Window Start, and less than Intertrial Start.
     When the trial time passes this value, the system will check if the trial was successful or not."""
-            Label(self.frame, text=TEXTO).grid(row=4, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Intertrial Start:", borderwidth="1", 
-                         relief="solid").grid(row=5, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Intertrial Start: </b> Instant of time when Intertrial Starts.
     The drop (if trial was successfull) will be given in this instant of the trial time."""
-            Label(self.frame, text=TEXTO).grid(row=5, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Intertrial End:", borderwidth="1", 
-                         relief="solid").grid(row=6, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Intertrial End: </b> Maximum instant of time when Intertrial ends.
     The 'Intertrial Duration' is a random value between Intertrial Start and Intertrial End."""
-            Label(self.frame, text=TEXTO).grid(row=6, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Probability Tone 1:", borderwidth="1", 
-                         relief="solid").grid(row=7, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Probability Tone 1: </b> This value sets the probability of the Tone 1 being played
     in each trial.
     By default, a given trial will play Tone 1 or Tone 2, so this variable sets the Tone 2
     probability.
     Note that all trials will always play at least one of the two tones."""
-            Label(self.frame, text=TEXTO).grid(row=7, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             #for row in range(100):
             #    Label(self.frame, text="%s" % row, width=3, borderwidth="1", 
             #             relief="solid").grid(row=row, column=0)
             #    t="this is the second colum for row %s" %row
             #    Label(self.frame, text=t).grid(row=row, column=1)
-    
+            pass
     
     
         def populate_pg3(self):
             '''populate frame.'''
             self.current_help_page = 3
-            button = Tkinter.Button(self.frame, text = 'Next Page', command = self.change_page).grid(row=0, column=0)
+            rowcount = 0;
+            button = Tkinter.Button(self.frame, text = 'Next Page', command = self.change_page).grid(row=rowcount, column=0)
             #Label(self.frame, text=" . ", borderwidth="1", 
             #             relief="solid").grid(row=0, column=0)
             TEXTO = """This form sets some general parameters used by the training session.
@@ -2006,83 +2041,157 @@ class GUIGTK_Class:
       Trial:
         Variables associated with trial movement detection, like the amount of time needed to consider
         a trial's sample as a valid 'movement'."""
-            Label(self.frame, text=TEXTO).grid(row=0, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Tone 1:", borderwidth="1", 
-                         relief="solid").grid(row=1, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Tone 1: </b> This Entry sets the Tone 1 Frequency in Hertz."""
-            Label(self.frame, text=TEXTO).grid(row=1, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Tone 2:", borderwidth="1", 
-                         relief="solid").grid(row=2, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Tone 2: </b> This Entry sets the Tone 2 Frequency in Hertz."""
-            Label(self.frame, text=TEXTO).grid(row=2, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Test:", borderwidth="1", 
-                         relief="solid").grid(row=3, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Test: </b> Saves Frequency changes in the corresponding Tone and tests it."""
-            Label(self.frame, text=TEXTO).grid(row=3, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Show / Hide Tracking:", borderwidth="1", 
-                         relief="solid").grid(row=4, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Show / Hide Tracking: </b> Shows or Hides tracking lines, circles, and other
     shapes that helps visually in the movement detection interpretation.
     Note that hiding the Tracking lines won't affect movement detection functionality."""
-            Label(self.frame, text=TEXTO).grid(row=4, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Show / Hide Feedback:", borderwidth="1", 
-                         relief="solid").grid(row=5, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Show / Hide Feedback: </b> Shows or Hides the Feedback Window (camera or video window).
     Note that hiding the Feedback window won't affect movement detection functionality."""
-            Label(self.frame, text=TEXTO).grid(row=5, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Recalibrate Camera:", borderwidth="1", 
-                         relief="solid").grid(row=6, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Recalibrate Camera: </b> Grabs current video sample and uses it to adjust maximum and minimum
     values for the tracking function according to this new sample.
     This will also overwrite previous calibration file with the new values."""
-            Label(self.frame, text=TEXTO).grid(row=6, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Movement Amount:", borderwidth="1", 
-                         relief="solid").grid(row=7, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Movement Amount: </b> Sets the amount of 'movement' needed in a given frame of the movement detection
     module to consider this sample a valid 'movement' (or idle according to type of trial).
     This value is dependent on the camera, the processing capabilities,and the method used for detection."""
-            Label(self.frame, text=TEXTO).grid(row=7, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Method Used:", borderwidth="1", 
-                         relief="solid").grid(row=8, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Method Used: </b> Sets the method used for movement and idle detection.
     Currently 3 methods are available (read docs above)."""
-            Label(self.frame, text=TEXTO).grid(row=8, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Movement Time:", borderwidth="1", 
-                         relief="solid").grid(row=9, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Movement Time: </b> Sets the movement time needed for a 'movement type' trial to be successful."""
-            Label(self.frame, text=TEXTO).grid(row=9, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Idle Time:", borderwidth="1", 
-                         relief="solid").grid(row=10, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Idle Time: </b> Sets the idle time needed for a 'idle type' trial to be successful."""
-            Label(self.frame, text=TEXTO).grid(row=10, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             Label(self.frame, text="Apply:", borderwidth="1", 
-                         relief="solid").grid(row=11, column=0)
+                         relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Apply: </b> This button applies all changes made to the variables."""
-            Label(self.frame, text=TEXTO).grid(row=11, column=1)
+            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 2
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             #for row in range(100):
             #    Label(self.frame, text="%s" % row, width=3, borderwidth="1", 
             #             relief="solid").grid(row=row, column=0)
             #    t="this is the second colum for row %s" %row
             #    Label(self.frame, text=t).grid(row=row, column=1)
+            pass
     
+        def calculateBestSize(self):
+            screen_width = self.frame.winfo_screenwidth()
+            screen_height = self.frame.winfo_screenheight()
+            
+            print screen_width
+            print screen_height
+            
+            print ".."
+            bestWidth = 0
+            
+            if (screen_width < 800):
+                bestWidth = 500
+                
+            if (screen_width > 800):
+                bestWidth = 800
+            
+            if (screen_width > 1000):
+                bestWidth = 950
+            
+            bestHeight = 0
+            
+            if (screen_height < 550):
+                bestHeight = 350
+                
+            if (screen_height > 550):
+                bestHeight = 550
+            
+            if (screen_height > 700):
+                bestHeight = 764
+            print self.root.winfo_width()
+            print self.root.winfo_height()
+            
+            print self.frame.winfo_reqwidth()
+            print self.frame.winfo_reqheight()
+            pass
     
         def OnFrameConfigure(self, event):
             '''Reset the scroll region to encompass the inner frame'''
             #for child in self.frame.winfo_children():
             #    child.destroy()
             self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-            print "onframeconfigure done."
+            #print "onframeconfigure done."
+            pass
     
         def oldfunction(self):
             #     if __name__ == "__main__":
