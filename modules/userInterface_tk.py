@@ -1772,10 +1772,11 @@ class GUIGTK_Class:
             self.frame.bind("<Configure>", self.OnFrameConfigure)
             self.current_help_page = 3
             self.change_page()
+            self.calculateBestSize()
         
         def change_page(self):
             print "Help form: changing page"
-            self.calculateBestSize()
+            #self.calculateBestSize()
             for child in self.frame.winfo_children():
                 child.destroy()
             if self.current_help_page == 1:
@@ -2166,7 +2167,7 @@ class GUIGTK_Class:
                 bestWidth = 800
             
             if (screen_width > 1000):
-                bestWidth = 950
+                bestWidth = 900
             
             bestHeight = 0
             
@@ -2176,13 +2177,14 @@ class GUIGTK_Class:
             if (screen_height > 550):
                 bestHeight = 550
             
-            if (screen_height > 700):
-                bestHeight = 764
+            if (screen_height > 650):
+                bestHeight = 680
             print self.root.winfo_width()
             print self.root.winfo_height()
             
             print self.frame.winfo_reqwidth()
             print self.frame.winfo_reqheight()
+            self.root.geometry("%dx%d" % (bestWidth,bestHeight) )
             pass
     
         def OnFrameConfigure(self, event):
