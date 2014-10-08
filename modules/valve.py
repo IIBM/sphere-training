@@ -1,9 +1,22 @@
 import time
 import logging
 logger = logging.getLogger('valve')
+import datetime as dt
 
 ValvePinMask = 0x04
 DropTime = .1
+
+
+class MyFormatter(logging.Formatter):
+    converter=dt.datetime.fromtimestamp
+    def formatTime(self, record, datefmt=None):
+        ct = self.converter(record.created)
+        if datefmt:
+            s = ct.strftime(datefmt)
+        else:
+            t = ct.strftime("%Y-%m-%d %H:%M:%S")
+            s = "%s,%03d" % (t, record.msecs)
+        return s
 
 class dummypp () :
     def __init__(self) :
@@ -93,12 +106,25 @@ class Valve(object):
 
 if __name__ == '__main__':
     # create a logging format
-    formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    dateformat = '%Y/%m/%d %I:%M:%S %p'
-
+    formatter_str = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    #dateformat = '%Y/%m/%d %I:%M:%S.%f %p'
+    dateformat = '%Y-%m-%d,%H:%M:%S '
+    #logging.Formatter(fmt='%(asctime)s.%(msecs)d',datefmt='%Y-%m-%d,%H:%M:%S')
     logging.basicConfig(filename='logs/valve.log', filemode='w',
-        level=logging.DEBUG, format=formatter, datefmt = dateformat)
-    logger.info('Start Valve Test')
+        level=logging.DEBUG, format=formatter_str, datefmt = dateformat)
+    
+    console = logging.StreamHandler()
+    logger.addHandler(console)
+    
+    formatter = MyFormatter(fmt=formatter_str,datefmt='%Y-%m-%d,%H:%M:%S.%f')
+    console.setFormatter(formatter)
+    
+    
+    #logging.Formatter(fmt='%(asctime)s.%(msecs)d',datefmt='%Y-%m-%d,%H:%M:%S')
+    logger.info('Start Valve Test1')
+    logger.info('Start Valve Test2')
+    time.sleep(0.3)
+    logger.info('Start Valve Test3')
     v1 = Valve()
     v1.open()
     time.sleep(2)
