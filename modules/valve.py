@@ -7,7 +7,7 @@ ValvePinMask = 0x04
 DropTime = .1
 
 
-class MyFormatter(logging.Formatter):
+class formatterWithMillis(logging.Formatter):
     converter=dt.datetime.fromtimestamp
     def formatTime(self, record, datefmt=None):
         ct = self.converter(record.created)
@@ -106,21 +106,31 @@ class Valve(object):
 
 if __name__ == '__main__':
     # create a logging format
-    formatter_str = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    #dateformat = '%Y/%m/%d %I:%M:%S.%f %p'
-    dateformat = '%Y-%m-%d,%H:%M:%S '
-    #logging.Formatter(fmt='%(asctime)s.%(msecs)d',datefmt='%Y-%m-%d,%H:%M:%S')
-    logging.basicConfig(filename='logs/valve.log', filemode='w',
-        level=logging.DEBUG, format=formatter_str, datefmt = dateformat)
+    dateformat = '%Y/%m/%d %H:%M:%S'
+    formatter_str = '%(asctime)s.%(msecs)d - %(name)s - %(levelname)s - %(message)s'
+    filename_to_log='logs/valve.log'
     
+    #old formatter:
+    #formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    #dateformat = '%Y/%m/%d %I:%M:%S %p'
+    #logging.basicConfig(filename=filename_to_log, filemode='w',
+    #    level=logging.DEBUG, format=formatter, datefmt = dateformat)
+    #end old formatter.
+    
+    logging.basicConfig(filename=filename_to_log, filemode='w',
+        level=logging.DEBUG, format=formatter_str,
+        datefmt=dateformat)
+    
+    #===========================================================================
+    #the following lines are only to ALSO log to stdout, are not strictly necessary
+    #===========================================================================
     console = logging.StreamHandler()
-    logger.addHandler(console)
-    
-    formatter = MyFormatter(fmt=formatter_str,datefmt='%Y-%m-%d,%H:%M:%S.%f')
+    console.setLevel(logging.WARNING)
+    formatter = formatterWithMillis(fmt=formatter_str,datefmt=dateformat)
     console.setFormatter(formatter)
+    logger.addHandler(console)
+    #===========================================================================
     
-    
-    #logging.Formatter(fmt='%(asctime)s.%(msecs)d',datefmt='%Y-%m-%d,%H:%M:%S')
     logger.info('Start Valve Test1')
     logger.info('Start Valve Test2')
     time.sleep(0.3)
