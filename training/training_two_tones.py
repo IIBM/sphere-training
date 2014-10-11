@@ -3,17 +3,18 @@
 ######################################################
 # Training two tones:
 """
-    This training creates two tone of different frequency.
+    This training creates two tones of different frequency.
     Each tone has one second of duration (adjustable). After the tone, there is a two second
     interval (also adjustable) where the subject must move (first tone) or stand still (second
     tone).
     If the subject succeds in the task, gets a reward (drop of water).
-    There is a certain propabilty of ocurrance for each tone. If one tone appears three
+    There is a certain probabilty of ocurrence for each tone. If one tone appears three
     time in a row, the other tone is fixed in the next trial. 
-    The inter trial delay is random between 3 to 6 seconds (can be modified.).><
+    The inter trial delay is random between 3 to 6 seconds (can be modified.) ><
     
 """
 ######################################################><
+
 import os
 import sys
 import modulespath
@@ -21,6 +22,8 @@ import time
 import timeit
 import logging
 import threading
+from configvideo import *
+import track_bola_utils
 
 class Training():
     
@@ -663,12 +666,53 @@ class Training():
     
     def trainingInit(self):
         print self.gVariables.trainingName
+        # logging: first determine the subject (or test if not applicable)
+        import Tkinter
+        import tkMessageBox
+        
+        top = Tkinter.Tk()
+        e1 = Tkinter.Entry(top, width=35)
+        e1.delete(0, Tkinter.END)
+        e1.insert(0, "Subject")
+        print e1.get()
+        
+        def finalizeIntroMessage():
+            try:
+                subj_name = str(e1.get() )
+            except:
+                subj_name = ""
+            print "Subject's name: %s" % subj_name
+            top.destroy()
+            pass
+        
+        B = Tkinter.Button(top, text="OK", command=finalizeIntroMessage, height=5, width=35)
+        e1.pack()
+        B.pack()
+        top.mainloop()
+        
         # logging:
-        formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        dateformat = '%Y/%m/%d %I:%M:%S %p'
-        logging.basicConfig(filename='logs/%s_%s.log' % (self.gVariables.trainingName, time.strftime("%Y-%m-%d")),
-                             filemode='a', level=logging.DEBUG, format=formatter, datefmt=dateformat)
         self.gVariables.logger = logging.getLogger( self.gVariables.trainingName )
+        # create a logging format
+        dateformat = '%Y/%m/%d %H:%M:%S'
+        formatter_str = '%(asctime)s.%(msecs)d - %(name)s - %(levelname)s - %(message)s'
+        filename_to_log='logs/%s_%s.log' % (self.gVariables.trainingName, time.strftime("%Y-%m-%d") )
+        
+        
+        logging.basicConfig(filename=filename_to_log, filemode='w+',
+            level=logging.DEBUG, format=formatter_str,
+            datefmt=dateformat)
+        
+        #===========================================================================
+        #the following lines are only to ALSO log to stdout, are not strictly necessary
+        #===========================================================================
+        console = logging.StreamHandler()
+        console.setLevel(logging.WARNING)
+        formatter = track_bola_utils.formatterWithMillis(fmt=formatter_str,datefmt=dateformat)
+        console.setFormatter(formatter)
+        self.gVariables.logger.addHandler(console)
+        #===========================================================================
+        
+        
         self.gVariables.logger.info('===============================================')
         self.gVariables.logger.info('Start %s' % self.gVariables.trainingName)
         # valve:
@@ -1139,6 +1183,5 @@ class Training():
 
 
 if __name__ == '__main__':
-    from configvideo import *
     ###############
     a = Training()
