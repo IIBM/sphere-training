@@ -1,22 +1,10 @@
 import time
+import track_bola_utils
 import logging
 logger = logging.getLogger('valve')
-import datetime as dt
 
 ValvePinMask = 0x04
 DropTime = .1
-
-
-class formatterWithMillis(logging.Formatter):
-    converter=dt.datetime.fromtimestamp
-    def formatTime(self, record, datefmt=None):
-        ct = self.converter(record.created)
-        if datefmt:
-            s = ct.strftime(datefmt)
-        else:
-            t = ct.strftime("%Y-%m-%d %H:%M:%S")
-            s = "%s,%03d" % (t, record.msecs)
-        return s
 
 class dummypp () :
     def __init__(self) :
@@ -110,14 +98,8 @@ if __name__ == '__main__':
     formatter_str = '%(asctime)s.%(msecs)d - %(name)s - %(levelname)s - %(message)s'
     filename_to_log='logs/valve.log'
     
-    #old formatter:
-    #formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    #dateformat = '%Y/%m/%d %I:%M:%S %p'
-    #logging.basicConfig(filename=filename_to_log, filemode='w',
-    #    level=logging.DEBUG, format=formatter, datefmt = dateformat)
-    #end old formatter.
     
-    logging.basicConfig(filename=filename_to_log, filemode='w',
+    logging.basicConfig(filename=filename_to_log, filemode='w+',
         level=logging.DEBUG, format=formatter_str,
         datefmt=dateformat)
     
@@ -126,7 +108,7 @@ if __name__ == '__main__':
     #===========================================================================
     console = logging.StreamHandler()
     console.setLevel(logging.WARNING)
-    formatter = formatterWithMillis(fmt=formatter_str,datefmt=dateformat)
+    formatter = track_bola_utils.formatterWithMillis(fmt=formatter_str,datefmt=dateformat)
     console.setFormatter(formatter)
     logger.addHandler(console)
     #===========================================================================

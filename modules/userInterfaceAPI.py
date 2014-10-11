@@ -3,6 +3,7 @@ import sys
 import time
 import logging
 logger = logging.getLogger('userInterfaceAPI')
+import track_bola_utils
 
 class userInterface_API:
     usingTK = 0 #0: using GTk;   1: using TK
@@ -509,10 +510,25 @@ class userInterface_API:
 
 if __name__ == '__main__':
     # create a logging format
-    formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    dateformat = '%Y/%m/%d %I:%M:%S %p'
-    logging.basicConfig(filename='logs/userInterfaceAPI.log', filemode='w',
-            level=logging.DEBUG, format=formatter, datefmt = dateformat)
+    dateformat = '%Y/%m/%d %H:%M:%S'
+    formatter_str = '%(asctime)s.%(msecs)d - %(name)s - %(levelname)s - %(message)s'
+    filename_to_log='logs/userInterfaceAPI.log'
+    
+    
+    logging.basicConfig(filename=filename_to_log, filemode='w+',
+        level=logging.DEBUG, format=formatter_str,
+        datefmt=dateformat)
+    
+    #===========================================================================
+    #the following lines are only to ALSO log to stdout, are not strictly necessary
+    #===========================================================================
+    console = logging.StreamHandler()
+    console.setLevel(logging.WARNING)
+    formatter = track_bola_utils.formatterWithMillis(fmt=formatter_str,datefmt=dateformat)
+    console.setFormatter(formatter)
+    logger.addHandler(console)
+    #===========================================================================
+    
     logger.info('Start userInterfaceAPI Test')
     import multiprocessing
     import time

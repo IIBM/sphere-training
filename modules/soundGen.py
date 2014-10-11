@@ -1,9 +1,10 @@
 import pygame
 from pygame.locals import *
-
 import math
 import numpy
+import time
 import logging
+import track_bola_utils
 
 logger = logging.getLogger('soundGen')
 
@@ -55,12 +56,28 @@ class soundGen():
         #there is needed a delay, after the play command.
 
 if __name__ == '__main__':
-    import time
-    formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    dateformat = '%Y/%m/%d %I:%M:%S %p'
-
-    logging.basicConfig(filename='logs/sound.log', filemode='w',
-        level=logging.DEBUG, format=formatter, datefmt = dateformat)
+    # create a logging format
+    dateformat = '%Y/%m/%d %H:%M:%S'
+    formatter_str = '%(asctime)s.%(msecs)d - %(name)s - %(levelname)s - %(message)s'
+    filename_to_log='logs/sound.log'
+    
+    
+    logging.basicConfig(filename=filename_to_log, filemode='w+',
+        level=logging.DEBUG, format=formatter_str,
+        datefmt=dateformat)
+    
+    #===========================================================================
+    #the following lines are only to ALSO log to stdout, are not strictly necessary
+    #===========================================================================
+    console = logging.StreamHandler()
+    console.setLevel(logging.WARNING)
+    formatter = track_bola_utils.formatterWithMillis(fmt=formatter_str,datefmt=dateformat)
+    console.setFormatter(formatter)
+    logger.addHandler(console)
+    #===========================================================================
+    
+    
+    
     logger.info('Start Sound Test')
     s1 = soundGen()
     duration = 3.0 # in seconds

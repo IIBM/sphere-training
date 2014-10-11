@@ -7,6 +7,7 @@ import gtk.glade
 from argparse import Action
 import logging
 logger = logging.getLogger('userInterface_glade')
+import track_bola_utils
 
 class GUIGTK_Class():
     
@@ -615,11 +616,25 @@ class GUIGTK_Class():
 
 if __name__ == "__main__":
         # create a logging format
-        formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        dateformat = '%Y/%m/%d %I:%M:%S %p'
-    
-        logging.basicConfig(filename='logs/userInterface_glade.log', filemode='w',
-            level=logging.DEBUG, format=formatter, datefmt = dateformat)
+        dateformat = '%Y/%m/%d %H:%M:%S'
+        formatter_str = '%(asctime)s.%(msecs)d - %(name)s - %(levelname)s - %(message)s'
+        filename_to_log='logs/userInterface_glade.log'
+        
+        
+        logging.basicConfig(filename=filename_to_log, filemode='w+',
+            level=logging.DEBUG, format=formatter_str,
+            datefmt=dateformat)
+        
+        #===========================================================================
+        #the following lines are only to ALSO log to stdout, are not strictly necessary
+        #===========================================================================
+        console = logging.StreamHandler()
+        console.setLevel(logging.WARNING)
+        formatter = track_bola_utils.formatterWithMillis(fmt=formatter_str,datefmt=dateformat)
+        console.setFormatter(formatter)
+        logger.addHandler(console)
+        #===========================================================================
+        
         logger.info('Start userInterface_glade Test')
         try:
                 a = GUIGTK_Class(True)

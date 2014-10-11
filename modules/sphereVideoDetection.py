@@ -3,8 +3,8 @@
 '''
     Programa que detecta movimiento de un flujo de video (webcam o video) configurado en un archivo de configuración:
     En base al video, establece un vector que corresponde a la dirección del movimiento detectado.
-    El movimiento se detecta de círculos negros en movimiento, comparando posición actual con su posición pasada (probable).
-    Este archivo reemplaza spherevideotracker.py.<>
+    El movimiento se detecta tomando círculos negros en movimiento, comparando posición actual con su posición pasada (probable).
+    Este archivo reemplaza spherevideotracker.py <>
      
 '''
 
@@ -20,6 +20,7 @@ import cv2
 import logging
 import sys
 logger = logging.getLogger('sphereVideoDetection')
+import track_bola_utils
 
 
 
@@ -978,11 +979,25 @@ class sphereVideoDetection():
 #===============================================================================
 if __name__ == '__main__':
     # create a logging format
-    formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    dateformat = '%Y/%m/%d %I:%M:%S %p'
+    dateformat = '%Y/%m/%d %H:%M:%S'
+    formatter_str = '%(asctime)s.%(msecs)d - %(name)s - %(levelname)s - %(message)s'
+    filename_to_log='logs/sphereVideoDetection.log'
     
-    logging.basicConfig(filename='logs/sphereVideoDetection.log', filemode='w',
-            level=logging.DEBUG, format=formatter, datefmt=dateformat)
+    
+    logging.basicConfig(filename=filename_to_log, filemode='w+',
+        level=logging.DEBUG, format=formatter_str,
+        datefmt=dateformat)
+    
+    #===========================================================================
+    #the following lines are only to ALSO log to stdout, are not strictly necessary
+    #===========================================================================
+    console = logging.StreamHandler()
+    console.setLevel(logging.WARNING)
+    formatter = track_bola_utils.formatterWithMillis(fmt=formatter_str,datefmt=dateformat)
+    console.setFormatter(formatter)
+    logger.addHandler(console)
+    #===========================================================================
+    
     logger.info('Start sphereVideoDetection Test')
     # Crea un objeto de captura de video, imprime tiempo de movimiento continuo o tiempo que permanece quieto.
     try:
