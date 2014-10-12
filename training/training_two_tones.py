@@ -501,6 +501,8 @@ class Training():
         
         trial_comment = "" #comment about this training session.
         
+        subject_name = "" #subject name, set at training init, used in logging filename.
+        
         
         #fin Training.gVariables.
         pass
@@ -664,38 +666,89 @@ class Training():
         
         sys.exit(0)
     
-    def trainingInit(self):
-        print self.gVariables.trainingName
+    def getSubjectName(self):
         # logging: first determine the subject (or test if not applicable)
         import Tkinter
         import tkMessageBox
+        sbjlistfile = "subject_list.txt"
+        f = open(sbjlistfile ,"r+")
+        subj_list = []
+        subj_list = f.readlines()
         
+        j = len(subj_list)
+        i=0;
+        while i < j:
+            subj_list[i] = subj_list[i].strip()
+            if len(subj_list[i]) <= 1:
+                subj_list.remove(subj_list[i])
+                j = 0;
+                i=0;
+            i+=1;
+        print "Subject's list: ",subj_list
         top = Tkinter.Tk()
-        e1 = Tkinter.Entry(top, width=35)
-        e1.delete(0, Tkinter.END)
-        e1.insert(0, "Subject")
-        print e1.get()
+        
+        import autoCompleteEntry
+        
+        entry_lst = autoCompleteEntry.AutocompleteEntry(subj_list, top, width=35)
+        #entry_lst.delete(0, Tkinter.END)
+        #entry_lst.insert(0, "Subject")
+        
+        def override_enter():
+            print "dmy"
+            finalizeIntroMessage()
         
         def finalizeIntroMessage():
             try:
-                subj_name = str(e1.get() )
+                subj_name = str(entry_lst.get() )
             except:
                 subj_name = ""
-            print "Subject's name: %s" % subj_name
+            tmp = 0
+            newname_found = False
+            f = open(sbjlistfile ,"r+")
+            for i in range(0, len(subj_list) ):
+                if subj_name.strip() == subj_list[i]:
+                    tmp = 1;
+            if tmp == 0:
+                #print "nuevo nombre"
+                #print subj_name
+                newname_found = True
+                subj_list.append(subj_name.strip())
+                #f.write(subj_name + "\n")
+                pass
+            self.gVariables.subject_name = subj_name
             top.destroy()
+            if (newname_found == True):
+                print "Adding new name to subject list."
+                f.close()
+                f = open(sbjlistfile ,"w")
+                print subj_list
+                for sn in subj_list:
+                    f.write(sn + "\n")
+                #f.writelines(subj_list)
+                pass
+            f.close()
             pass
         
         B = Tkinter.Button(top, text="OK", command=finalizeIntroMessage, height=5, width=35)
-        e1.pack()
+        entry_lst.pack()
         B.pack()
+        entry_lst.focus_set()
+        entry_lst.enter_method = override_enter
         top.mainloop()
         
+        pass
+    
+    def trainingInit(self):
+        print self.gVariables.trainingName
+        #get subject name:
+        self.getSubjectName()
+        print "Subject's name: %s" % self.gVariables.subject_name
         # logging:
         self.gVariables.logger = logging.getLogger( self.gVariables.trainingName )
         # create a logging format
         dateformat = '%Y/%m/%d %H:%M:%S'
         formatter_str = '%(asctime)s.%(msecs)d - %(name)s - %(levelname)s - %(message)s'
-        filename_to_log='logs/%s_%s.log' % (self.gVariables.trainingName, time.strftime("%Y-%m-%d") )
+        filename_to_log='logs/%s_%s_%s.log' % (self.gVariables.subject_name, self.gVariables.trainingName, time.strftime("%Y-%m-%d") )
         
         
         logging.basicConfig(filename=filename_to_log, filemode='w+',
@@ -1183,5 +1236,4 @@ class Training():
 
 
 if __name__ == '__main__':
-    ###############
     a = Training()
