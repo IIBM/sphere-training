@@ -36,16 +36,16 @@ class Valve(object):
     def __str__(self):
       return repr(self)
     def open(self) :
-         logger.info('Valve opened')
+         logger.debug('Valve opened')
          a = self.p.getData()
          return self.p.setData(a|ValvePinMask)
     def close(self) :
-         logger.info('Valve closed')
+         logger.debug('Valve closed')
          a = self.p.getData()
          return self.p.setData(a&(~ValvePinMask))
      
     def drop(self) :
-         logger.info('Valve drop')
+         logger.debug('Valve drop')
          self.open()
          time.sleep(DropTime)
          self.close()

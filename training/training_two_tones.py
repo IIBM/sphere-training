@@ -39,7 +39,7 @@ class Training():
         @staticmethod
         def fn_giveDrop():
                 #print "giving drop"
-                Training.gVariables.logger.info('valve drop')
+                Training.gVariables.logger.debug('valve drop')
                 Training.gVariables.valve1.drop()
                 if (Training.gVariables.trialExecuting == True):
                     Training.gVariables.logger.info('Drop given manually - training started.')
@@ -60,13 +60,13 @@ class Training():
         @staticmethod
         def fn_closeValve():
                 #Calls the valve object to close if opened.
-                Training.gVariables.logger.info('valve close')
+                Training.gVariables.logger.info('valve closed manually')
                 Training.gVariables.valve1.close()
         
         @staticmethod
         def fn_openValve():
             #Calls the valve object to open if closed.
-            Training.gVariables.logger.info('valve open')
+            Training.gVariables.logger.info('valve opened manually')
             Training.gVariables.valve1.open()
         
         @staticmethod
@@ -591,7 +591,7 @@ class Training():
                 Training.gVariables.start_time = timeit.default_timer()
                 Training.gVariables.current_trial_start_time = timeit.default_timer()
             except:
-                Training.gVariables.logger.info( 'Error generating "timeit" variables' )
+                Training.gVariables.logger.warning( 'Error generating "timeit" variables' )
                 pass
             Training.gVariables.current_trial_stage = 3
             Training.gVariables.trialCount = 0
@@ -646,11 +646,11 @@ class Training():
         if (Training.gVariables.dropReleased == 0 and Training.gVariables.trialExecuting == True):
                 # print "Release drop of water."
                 Training.gVariables.valve1.drop()
-                Training.gVariables.logger.info("Drop of water released.")
+                Training.gVariables.logger.debug("Drop of water released.")
                 Training.gVariables.successTrialCount += 1
                 Training.gVariables.dropReleased = 1
                 if (Training.gVariables.current_trial_type == 1) :
-                                Training.gVariables.successMovementTrialCount += 1
+                    Training.gVariables.successMovementTrialCount += 1
                 else:
                     Training.gVariables.successIdleTrialCount += 1
     
@@ -784,13 +784,13 @@ class Training():
         # valve:
         import valve
         self.gVariables.valve1 = valve.Valve()
-        self.gVariables.logger.info('Valve created.')
+        self.gVariables.logger.debug('Valve created.')
         # soundGen:
         import soundGen
         self.gVariables.s1 = soundGen.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
         self.gVariables.s2 = soundGen.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
         self.gVariables.trialExecuting = False  # boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
-        self.gVariables.logger.info('Soundgen init started..')
+        self.gVariables.logger.debug('Soundgen init started..')
         #GUI:
         import multiprocessing
         self.gVariables.jobList = multiprocessing.JoinableQueue()
@@ -810,13 +810,13 @@ class Training():
         self.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
         self.gVariables.videoDet.setMovementTimeWindow(self.gVariables.movementTime)  # seconds that should be moving.
         self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
-        self.gVariables.logger.info('sphereVideoDetection started.')
+        self.gVariables.logger.debug('sphereVideoDetection started.')
         #Display:
         self.initDisplay()
         #main Program Loop
         self.gVariables.fred1 = threading.Thread(target=self.mainLoopFunction)
         self.gVariables.fred1.start()
-        self.gVariables.logger.info('Training loop function started..')
+        self.gVariables.logger.debug('Training loop function started..')
     
     def initUserInputGUI(self,jobList):
         #initialize user input GUI and associated variables.
@@ -874,7 +874,7 @@ class Training():
                     Training.gVariables.logger.debug(Training.gVariables.toneOneProbability)
                     Training.gVariables.logger.debug(Training.gVariables.current_trial_type)
                     if (Training.gVariables.toneOneProbability < 0.75) and (Training.gVariables.toneOneProbability > 0.25) and (Training.gVariables.history_trial[-1] == Training.gVariables.history_trial[-2]) and (Training.gVariables.history_trial[-2] == Training.gVariables.history_trial[-3]) :
-                        # 3 equal trial have past. forced changing trial
+                        # 3 equal trial have past. forcing change of trial type
                         Training.gVariables.logger.info('fixed tone')
                         if (Training.gVariables.history_trial[-1]) == 2:
                             Training.gVariables.current_trial_type = 1
@@ -888,14 +888,15 @@ class Training():
                             Training.gVariables.current_trial_type = 2
                             
                     if (Training.gVariables.current_trial_type == 1) :
-                            Training.gVariables.logger.info('tone 1: 1 kHz')
+                            Training.gVariables.logger.info('tone 1: %s Hz' % str(Training.gVariables.soundGenFrequency1) )
+                            
                             Training.gVariables.s1.play()
                             Training.gVariables.movementTrialCount += 1
                             # a new "time window" should be set for 
                             # some movement analysis methods to work.
                             Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.movementTime)
                     else :
-                            Training.gVariables.logger.info('tone 2: 8 kHz')
+                            Training.gVariables.logger.info('tone 2: %s Hz'  % str(Training.gVariables.soundGenFrequency2))
                             Training.gVariables.s2.play()
                             Training.gVariables.idleTrialCount += 1
                             # a new "time window" should be set for 
@@ -949,7 +950,7 @@ class Training():
                         Training.gVariables.logger.info('Trial successful')
                     else:
                         Training.gVariables.logger.info('Trial not successful')
-                    Training.gVariables.logger.info('Success rate:%r' % (Training.gVariables.successRate))
+                    Training.gVariables.logger.info('Success rate: %r' % (Training.gVariables.successRate))
                     Training.gVariables.current_trial_stage = 3
             # Training.gVariables.logger.debug('Movement Vector: %s',Training.gVariables.movementVector)
             
