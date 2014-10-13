@@ -711,8 +711,9 @@ class Training():
             if tmp == 0:
                 #print "nuevo nombre"
                 #print subj_name
-                newname_found = True
-                subj_list.append(subj_name.strip())
+                if len(subj_name) > 1:
+                    newname_found = True
+                    subj_list.append(subj_name.strip())
                 #f.write(subj_name + "\n")
                 pass
             self.gVariables.subject_name = subj_name
@@ -743,12 +744,24 @@ class Training():
         #get subject name:
         self.getSubjectName()
         print "Subject's name: %s" % self.gVariables.subject_name
+        #counting number of sessions
+        session_files_count = 0
+        rootDir = '.'
+        for dirName, subdirList, fileList in os.walk(rootDir):
+            for fname in fileList:
+                if fname.startswith("%s_" % self.gVariables.subject_name):
+                    session_files_count += 1;
+                    print fname
+                    pass
+        print session_files_count;
+        #a SNN (session_files_count+1) string is put in the new filename.
+        session_files_count +=1
         # logging:
         self.gVariables.logger = logging.getLogger( self.gVariables.trainingName )
         # create a logging format
         dateformat = '%Y/%m/%d %H:%M:%S'
         formatter_str = '%(asctime)s.%(msecs)d - %(name)s - %(levelname)s - %(message)s'
-        filename_to_log='logs/%s_%s_%s.log' % (self.gVariables.subject_name, self.gVariables.trainingName, time.strftime("%Y-%m-%d") )
+        filename_to_log='logs/%s_S%s_%s_%s.log' % (self.gVariables.subject_name, str(session_files_count).zfill(3) , self.gVariables.trainingName, time.strftime("%Y-%m-%d") )
         
         
         logging.basicConfig(filename=filename_to_log, filemode='w+',
