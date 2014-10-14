@@ -991,7 +991,7 @@ class Training():
                         self.gVariables.jobList.task_done()
                 except:
                         return;
-                Training.gVariables.logger.info( str("GUICheck: queue: " + str(tempvar) )  )
+                Training.gVariables.logger.debug( str("GUICheck: queue: " + str(tempvar) )  )
                 index = tempvar[0]
                 try:
                     argument = tempvar[1]
@@ -1000,175 +1000,175 @@ class Training():
                     pass
                 
                 print "GUICheck: Got a Message:", index
-                Training.gVariables.logger.info( str("GUICheck: Got a Message:" + str(index)) )
+                Training.gVariables.logger.debug( str("GUICheck: Got a Message:" + str(index)) )
                 print "GUICheck: Message's argument:", argument
                 try:
                     a = str(argument)
-                    Training.gVariables.logger.info( str("GUICheck: Message's argument:" + a ) )
+                    Training.gVariables.logger.debug( str("GUICheck: Message's argument:" + a ) )
                 except:
-                    Training.gVariables.logger.info( str("GUICheck: Message's argument cannot be parsed to str" ) )
+                    Training.gVariables.logger.warning( str("GUICheck: Message received argument cannot be parsed to str" ) )
                     pass
                 
                 if (index == 0):
                     return;
                 if (index == 1):
                     print "GUICheck: 'Drop' message."
-                    Training.gVariables.logger.info( "GUICheck: 'Drop' message." )
+                    Training.gVariables.logger.debug( "GUICheck: 'Drop' message." )
                     Training.gVariables.fn_giveDrop()
                 elif (index == 2):
                     print "GUICheck: 'Reward' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Reward' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Reward' message" )
                     Training.gVariables.fn_giveReward()
                 elif (index == 3):
                     print "GUICheck: 'Open' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Open' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Open' message" )
                     Training.gVariables.fn_openValve()
                 elif (index == 4):
                     print "GUICheck: 'Close' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Close' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Close' message" )
                     Training.gVariables.fn_closeValve()
                 elif (index == 5):
                     print "GUICheck: 'Start Training' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Start Training' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Start Training' message" )
                     Training.gVariables.fn_startStopTraining(1)
                 elif (index == 6):
                     print "GUICheck: 'Stop Training' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Stop Training' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Stop Training' message" )
                     Training.gVariables.fn_startStopTraining(2)
                 elif (index == 7):
                     print "GUICheck: 'Pause Training' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Pause Training' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Pause Training' message" )
                     Training.gVariables.fn_pauseResumeTraining(2) ########
                 elif (index == 8):
                     print "GUICheck: 'Resume Training' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Resume Training' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Resume Training' message" )
                     Training.gVariables.fn_pauseResumeTraining(1) ########
                 elif (index == 9):
                     print "GUICheck: 'Exit Training' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Exit Training' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Exit Training' message" )
                     self.exitTraining()
                 elif (index == 10):
                     print "GUICheck: 'Tone 1 Test' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Tone 1 Test' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Tone 1 Test' message" )
                     Training.gVariables.fn_tone1Test( argument )
                 elif (index == 11):
                     print "GUICheck: 'Tone 2 Test' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Tone 2 Test' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Tone 2 Test' message" )
                     Training.gVariables.fn_tone2Test( argument )
                 elif (index == 12):
                     print "GUICheck: 'Show Feedback' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Show Feedback' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Show Feedback' message" )
                     Training.gVariables.fn_showUserFeedback()
                 elif (index == 13):
                     print "GUICheck: 'Hide Feedback' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Hide Feedback' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Hide Feedback' message" )
                     Training.gVariables.fn_hideUserFeedback()
                 elif (index == 14):
                     print "GUICheck: 'Show Tracking' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Show Tracking' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Show Tracking' message" )
                     Training.gVariables.fn_showTrackingFeedback()
                 elif (index == 15):
                     print "GUICheck: 'Hide Tracking' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Hide Tracking' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Hide Tracking' message" )
                     Training.gVariables.fn_hideTrackingFeedback()
                 elif (index == 16):
                     print "GUICheck: 'Set Comment' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Set Comment' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Set Comment' message" )
                     try:
                         tempstring = str(argument)
                     except:
                         tempstring = ""
                     Training.gVariables.trial_comment = tempstring
                     print "GUICheck: comment read from Queue: ", tempstring
-                    Training.gVariables.logger.info( str( "GUICheck: comment read from Queue: "+ tempstring ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: comment read from Queue: "+ tempstring ) )
                 elif (index == 17):
                     print "GUICheck: 'Variable to change: Tone1 Frequency' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Tone1 Frequency' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Tone1 Frequency' message" )
                     Training.gVariables.fn_setFrequencyT1( argument )
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 18):
                     print "GUICheck: 'Variable to change: Tone2 Frequency' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Tone2 Frequency' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Tone2 Frequency' message" )
                     Training.gVariables.fn_setFrequencyT2( argument )
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 19):
                     print "GUICheck: 'Variable to change: Movement Amount' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Movement Amount' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Movement Amount' message" )
                     Training.gVariables.fn_movementThresholdSet(argument)
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 20):
                     print "GUICheck: 'Variable to change: Method Type to be used' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Method Type to be used' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Method Type to be used' message" )
                     Training.gVariables.fn_setMovementMethod(argument)
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from ns: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from ns: " + str(argument) ) )
                 elif (index == 21):
                     print "GUICheck: 'Variable to change: Movement Time' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Movement Time' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Movement Time' message" )
                     Training.gVariables.fn_movementTimeSet(argument)
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str("GUICheck: Argument value read from Queue: " + str(argument)) )
+                    Training.gVariables.logger.debug( str("GUICheck: Argument value read from Queue: " + str(argument)) )
                 elif (index == 22):
                     print "GUICheck: 'Variable to change: Idle Time' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Idle Time' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Idle Time' message" )
                     Training.gVariables.fn_idleTimeSet(argument)
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str("GUICheck: Argument value read from Queue: " + str(argument)) )
+                    Training.gVariables.logger.debug( str("GUICheck: Argument value read from Queue: " + str(argument)) )
                 elif (index == 23):
                     print "GUICheck: 'Variable to change: Tone Start' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Tone Start' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Tone Start' message" )
                     print "Tone Start variable is not meant to change. Add intertrial delay instead."
-                    Training.gVariables.logger.info( "Tone Start variable is not meant to change. Add intertrial delay instead." )
+                    Training.gVariables.logger.debug( "Tone Start variable is not meant to change. Add intertrial delay instead." )
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 24):
                     print "GUICheck: 'Variable to change: Tone End' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Tone End' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Tone End' message" )
                     Training.gVariables.fn_setTone1Duration(float(argument))
                     Training.gVariables.fn_setTone2Duration(float(argument))
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 25):
                     print "GUICheck: 'Variable to change: Movement Window Start' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Movement Window Start' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Movement Window Start' message" )
                     Training.gVariables.fn_setMovementWindowStart( float(argument) )
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 26):
                     print "GUICheck: 'Variable to change: Movement Window End' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Movement Window End' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Movement Window End' message" )
                     Training.gVariables.fn_setMovementWindowEnd( float(argument) )
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 27):
                     print "GUICheck: 'Variable to change: Inter Trial Start' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Inter Trial Start' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Inter Trial Start' message" )
                     Training.gVariables.fn_setITRandom1( float(argument) )
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 28):
                     print "GUICheck: 'Variable to change: Inter Trial End' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Inter Trial End' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Inter Trial End' message" )
                     Training.gVariables.fn_setITRandom2( float(argument) )
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 29):
                     print "GUICheck: 'Variable to change: Probability Tone One' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Variable to change: Probability Tone One' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Probability Tone One' message" )
                     Training.gVariables.fn_toneOneProbabilitySet( float(argument) )
                     print "GUICheck: Argument value read from Queue: ", argument
-                    Training.gVariables.logger.info( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 30):
                     print "GUICheck: 'Recalibrate Camera' message"
-                    Training.gVariables.logger.info( "GUICheck: 'Recalibrate Camera' message" )
+                    Training.gVariables.debug.info( "GUICheck: 'Recalibrate Camera' message" )
                     Training.gVariables.videoDet.calibrate()
                     pass
-                
-                print "GUICheck: done."
-                Training.gVariables.logger.info( "GUICheck: done." )
+                pass
+                #print "GUICheck: done."
+                Training.gVariables.logger.debug( "GUICheck: done." )
     
     
     
@@ -1189,7 +1189,7 @@ class Training():
         #Starts capturing user Input from command-line console.
         time.sleep(1.0)
         print "No GUI mode: Initializing..."
-        self.gVariables.logger.info( "No GUI mode: Initializing..." )
+        self.gVariables.logger.info( "No GUI mode: Initializing Command-line interface..." )
         import termios, fcntl, sys, os
         fd = sys.stdin.fileno()
         try:
@@ -1202,6 +1202,7 @@ class Training():
             fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
         except:
             print "Error capturing input."
+            self.gVariables.logger.warning( "Error capturing input." )
         time.sleep(1.0)
         printInstructions()
         while True:
@@ -1210,31 +1211,37 @@ class Training():
                 if (key == 'd' or key == 'D'):
                     printInstructions()
                     print "d : Drop"
+                    self.gVariables.logger.info( "Command executed by user: Drop" )
                     self.gVariables.fn_giveDrop()
                 if (key == 'r' or key == 'R'):
-                    
                     printInstructions()
                     print "r : Reward"
+                    self.gVariables.logger.info( "Command executed by user: Reward" )
                     self.gVariables.fn_giveReward()
                 if (key == 'o' or key == 'O'):
                     printInstructions()
                     print "o : Open"
+                    self.gVariables.logger.info( "Command executed by user: Open" )
                     self.gVariables.fn_openValve()
                 if (key == 'c' or key == 'C'):
                     printInstructions()
                     print "c : Close"
+                    self.gVariables.logger.info( "Command executed by user: Close" )
                     self.gVariables.fn_closeValve()
                 if (key == 'k' or key == 'K'):
                     printInstructions()
                     print "k : Start / Stop Training"
+                    self.gVariables.logger.info( "Command executed by user: Start / Stop Training" )
                     self.gVariables.fn_startStopTraining(0)
                 if (key == 'p' or key == 'P'):
                     printInstructions()
                     print "p : Pause / Resume Training"
+                    self.gVariables.logger.info( "Command executed by user: Pause / Resume Training" )
                     self.gVariables.fn_pauseResumeTraining(0)
                 if (key == 'q' or key == 'Q'):
                     printInstructions()
                     print "q : Quit Training"
+                    self.gVariables.logger.info( "Command executed by user: Quit Training" )
                     termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
                     fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
                     self.exitTraining()

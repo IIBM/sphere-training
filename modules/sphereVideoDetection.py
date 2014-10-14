@@ -62,7 +62,7 @@ class sphereVideoDetection():
             logger.info("configCamera.py copied and imported successfully.")
         except:
             print "Error importing configCamera."
-            logger.info("Error importing configCamera.")
+            logger.error("Error importing configCamera.")
             os._exit(1)
         # import configCamera
         
@@ -149,7 +149,7 @@ class sphereVideoDetection():
         self.CAM_HUE_VALUE = configCamera.CAM_HUE_VALUE
         self.CAM_GAIN_VALUE = configCamera.CAM_GAIN_VALUE
         self.CAM_EXPOSURE_VALUE = configCamera.CAM_EXPOSURE_VALUE
-        
+        logger.info("Initial config done. Starting loop function...")
         import threading
         # Create one non-blocking thread for capturing video Stream
         self.fred1 = threading.Thread(target=self.mainVideoDetection, name="VideoDetection")
@@ -829,7 +829,7 @@ class sphereVideoDetection():
                         
                         if (self.manageCalibrationVariables(1) == False):
                             print "Error writing and saving calibration file."
-                            logger.info("Error writing and saving calibration file.")
+                            logger.warning("Error writing and saving calibration file.")
                         else:
                             print "Calibration file saved."
                             logger.info("Calibration file saved.")
