@@ -487,7 +487,7 @@ class Training():
         
         videoMovementMethod = -1 #movement method to be used for movement analysis.
         
-        absolute_start_time = timeit.default_timer()  # time when training with tone started.
+        absolute_start_time = timeit.default_timer()  # time when training started.
         start_time = timeit.default_timer()  # time when training with tone started.
         current_trial_start_time = timeit.default_timer()  # current trial in execution, absolute time it started
         current_trial_time = timeit.default_timer()  # second of the current trial (between 0 and the maximum length of a trial)
@@ -598,6 +598,64 @@ class Training():
             Training.gVariables.trialCount = 0
             Training.gVariables.successTrialCount = 0
             Training.gVariables.dropsAmountGivenManually = 0
+            #######################################################
+            Training.gVariables.logger.debug("START: Logging the current state of all variables:")
+            #logging the current status of config file first..
+            Training.gVariables.logger.debug("START: config_training_two_tones.py")
+            with open("config_training_two_tones.py", 'r') as configfile:
+                Training.gVariables.logger.debug("\n"+configfile.read())
+            Training.gVariables.logger.debug("END: config_training_two_tones.py")
+            
+            Training.gVariables.logger.debug("trainingName %s" % str(Training.gVariables.trainingName))
+            Training.gVariables.logger.debug("eventTime1_sound %s" % str(Training.gVariables.eventTime1_sound))
+            Training.gVariables.logger.debug("eventTime1_movement_start %s" % str(Training.gVariables.eventTime1_movement_start))
+            Training.gVariables.logger.debug("eventTime2_movement %s" % str(Training.gVariables.eventTime2_movement))
+            Training.gVariables.logger.debug("eventTime3_trialEnd %s" % str(Training.gVariables.eventTime3_trialEnd))
+            Training.gVariables.logger.debug("minIdleIntertrialTime %s" % str(Training.gVariables.minIdleIntertrialTime))
+            Training.gVariables.logger.debug("interTrialRandom1Time %s" % str(Training.gVariables.interTrialRandom1Time))
+            Training.gVariables.logger.debug("interTrialRandom2Time %s" % str(Training.gVariables.interTrialRandom2Time))
+            Training.gVariables.logger.debug("maxMovementThreshold %s" % str(Training.gVariables.maxMovementThreshold))
+            Training.gVariables.logger.debug("maxMovementTime %s" % str(Training.gVariables.maxMovementTime))
+            Training.gVariables.logger.debug("maxIdleTime %s" % str(Training.gVariables.maxIdleTime))
+            Training.gVariables.logger.debug("movementTime %s" % str(Training.gVariables.movementTime))
+            Training.gVariables.logger.debug("idleTime %s" % str(Training.gVariables.idleTime))
+            Training.gVariables.logger.debug("soundGenDuration1 %s" % str(Training.gVariables.soundGenDuration1))
+            Training.gVariables.logger.debug("soundGenDuration2 %s" % str(Training.gVariables.soundGenDuration2))
+            Training.gVariables.logger.debug("soundGenFrequency1 %s" % str(Training.gVariables.soundGenFrequency1))
+            Training.gVariables.logger.debug("soundGenFrequency2 %s" % str(Training.gVariables.soundGenFrequency2))
+            Training.gVariables.logger.debug("trialCount %s" % str(Training.gVariables.trialCount))
+            Training.gVariables.logger.debug("movementTrialCount %s" % str(Training.gVariables.movementTrialCount))
+            Training.gVariables.logger.debug("idleTrialCount %s" % str(Training.gVariables.idleTrialCount))
+            Training.gVariables.logger.debug("successTrialCount %s" % str(Training.gVariables.successTrialCount))
+            Training.gVariables.logger.debug("successMovementTrialCount %s" % str(Training.gVariables.successMovementTrialCount))
+            Training.gVariables.logger.debug("successIdleTrialCount %s" % str(Training.gVariables.successIdleTrialCount))
+            Training.gVariables.logger.debug("successRate %s" % str(Training.gVariables.successRate))
+            Training.gVariables.logger.debug("dropReleased %s" % str(Training.gVariables.dropReleased))
+            Training.gVariables.logger.debug("dropsAmountGivenManually %s" % str(Training.gVariables.dropsAmountGivenManually))
+            Training.gVariables.logger.debug("trialExecuting %s" % str(Training.gVariables.trialExecuting))
+            Training.gVariables.logger.debug("trialStarted %s" % str(Training.gVariables.trialStarted))
+            Training.gVariables.logger.debug("trialSuccessful %s" % str(Training.gVariables.trialSuccessful))
+            Training.gVariables.logger.debug("countMovement %s" % str(Training.gVariables.countMovement))
+            Training.gVariables.logger.debug("countIdleTime %s" % str(Training.gVariables.countIdleTime))
+            Training.gVariables.logger.debug("LOOP_FUNCTION_SLEEP_TIME %s" % str(Training.gVariables.LOOP_FUNCTION_SLEEP_TIME))
+            Training.gVariables.logger.debug("GUIType %s" % str(Training.gVariables.GUIType))
+            Training.gVariables.logger.debug("videoDet %s" % str(Training.gVariables.videoDet))
+            Training.gVariables.logger.debug("videoMovementMethod %s" % str(Training.gVariables.videoMovementMethod))
+            Training.gVariables.logger.debug("absolute_start_time %s" % str(Training.gVariables.absolute_start_time))
+            Training.gVariables.logger.debug("start_time %s" % str(Training.gVariables.start_time))
+            Training.gVariables.logger.debug("current_trial_start_time %s" % str(Training.gVariables.current_trial_start_time))
+            Training.gVariables.logger.debug("current_trial_time %s" % str(Training.gVariables.current_trial_time))
+            Training.gVariables.logger.debug("current_trial_paused_time %s" % str(Training.gVariables.current_trial_paused_time))
+            Training.gVariables.logger.debug("current_trial_stage %s" % str(Training.gVariables.current_trial_stage))
+            Training.gVariables.logger.debug("toneOneProbability %s" % str(Training.gVariables.toneOneProbability))
+            Training.gVariables.logger.debug("history_trial %s" % str(Training.gVariables.history_trial))
+            Training.gVariables.logger.debug("current_trial_type %s" % str(Training.gVariables.current_trial_type))
+            Training.gVariables.logger.debug("current_trial_type_str %s" % str(Training.gVariables.current_trial_type_str))
+            Training.gVariables.logger.debug("trial_comment %s" % str(Training.gVariables.trial_comment))
+            Training.gVariables.logger.debug("subject_name %s" % str(Training.gVariables.subject_name))
+            
+            Training.gVariables.logger.debug("END: Logging the current state of all variables:")
+            #######################################################
             Training.gVariables.logger.info('Variables set. Starting %s' % Training.gVariables.trainingName)
             Training.gVariables.trialStarted = True
             Training.gVariables.trialExecuting = True
