@@ -487,6 +487,7 @@ class Training():
         
         videoMovementMethod = -1 #movement method to be used for movement analysis.
         
+        absolute_start_time = timeit.default_timer()  # time when training with tone started.
         start_time = timeit.default_timer()  # time when training with tone started.
         current_trial_start_time = timeit.default_timer()  # current trial in execution, absolute time it started
         current_trial_time = timeit.default_timer()  # second of the current trial (between 0 and the maximum length of a trial)
@@ -600,6 +601,7 @@ class Training():
             Training.gVariables.logger.info('Variables set. Starting %s' % Training.gVariables.trainingName)
             Training.gVariables.trialStarted = True
             Training.gVariables.trialExecuting = True
+            Training.gVariables.absolute_start_time = timeit.default_timer()
             print "Tone Training started."
             Training.gVariables.logger.info( "Tone Training started." )
             a = "  %d seconds: tone" % Training.gVariables.soundGenDuration1
@@ -867,12 +869,11 @@ class Training():
                             Training.gVariables.videoDet.getIdleTime() >= Training.gVariables.minIdleIntertrialTime and
                                     Training.gVariables.videoDet.getMovementStatus() == False) or (Training.gVariables.trialCount == 0)):
                     Training.gVariables.logger.info('Starting trial:%d' % Training.gVariables.trialCount)
+                    
                     Training.gVariables.trialCount += 1
                     Training.gVariables.dropReleased = 0
                     Training.gVariables.current_trial_start_time = timeit.default_timer()
-                    Training.gVariables.logger.debug(Training.gVariables.history_trial)
-                    Training.gVariables.logger.debug(Training.gVariables.toneOneProbability)
-                    Training.gVariables.logger.debug(Training.gVariables.current_trial_type)
+
                     if (Training.gVariables.toneOneProbability < 0.75) and (Training.gVariables.toneOneProbability > 0.25) and (Training.gVariables.history_trial[-1] == Training.gVariables.history_trial[-2]) and (Training.gVariables.history_trial[-2] == Training.gVariables.history_trial[-3]) :
                         # 3 equal trial have past. forcing change of trial type
                         Training.gVariables.logger.info('fixed tone')
@@ -903,6 +904,15 @@ class Training():
                             # some movement analysis methods to work.
                             Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.idleTime)
 
+                    if (Training.gVariables.current_trial_type == 1):
+                            sttrial = "move"
+                    elif (Training.gVariables.current_trial_type == 2):
+                            sttrial = "still"
+                    Training.gVariables.logger.info('Trial type:%s' % sttrial)
+                    Training.gVariables.logger.debug(Training.gVariables.history_trial)
+                    Training.gVariables.logger.debug(Training.gVariables.toneOneProbability)
+                    Training.gVariables.logger.debug(Training.gVariables.current_trial_type)
+                    
                     Training.gVariables.history_trial[0:-1] = Training.gVariables.history_trial[1:]
                     Training.gVariables.history_trial[-1] = Training.gVariables.current_trial_type
 
@@ -943,7 +953,10 @@ class Training():
                 elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime3_trialEnd and
                       Training.gVariables.current_trial_stage == 2):
                     Training.gVariables.logger.info('End trial:%d' % (Training.gVariables.trialCount - 1 ) )
-                    Training.gVariables.logger.info('Trial type: ' + str(Training.gVariables.current_trial_type_str))
+                    Training.gVariables.logger.info('Trial type was: ' + str(Training.gVariables.current_trial_type_str))
+                    now = timeit.default_timer()
+                    frmtime = Training.gVariables.getFormattedTime(int(now - Training.gVariables.absolute_start_time))
+                    Training.gVariables.logger.info('Amount of time passed since start of training: %s' % frmtime)
                     # #
                     Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.minIdleIntertrialTime)
                     if(Training.gVariables.dropReleased == 1):
