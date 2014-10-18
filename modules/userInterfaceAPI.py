@@ -73,271 +73,271 @@ class userInterface_API:
     
     
     def overrideaction_drop(self):
-        logger.info ( "Default API: Drop" )
+        logger.debug ( "Default API: Drop" )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(1,0)
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info ( "Default API: done." )
+        logger.debug ( "Default API: done." )
     
     def overrideaction_reward(self):
-        logger.info ( "Default API: Reward" )
+        logger.debug ( "Default API: Reward" )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(2,0)
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info ( "Default API: done." )
+        logger.debug ( "Default API: done." )
     
     def overrideaction_open(self):
-        logger.info ( "Default API: Open" )
+        logger.debug ( "Default API: Open" )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(3)
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info ( "Default API: done." )
+        logger.debug ( "Default API: done." )
     
     def overrideaction_close(self):
-        logger.info ( "Default API: Close" )
+        logger.debug ( "Default API: Close" )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(4)
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info ( "Default API: done." )
+        logger.debug ( "Default API: done." )
     
     def overrideaction_startTraining(self):
-        logger.info ( "Default API: Start Training" )
+        logger.debug ( "Default API: Start Training" )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(5)
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info ( "Default API: done." )
+        logger.debug ( "Default API: done." )
     
     def overrideaction_stopTraining(self):
-        logger.info ( "Default API: Stop Training" )
+        logger.debug ( "Default API: Stop Training" )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(6)
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info ( "Default API: done." )
+        logger.debug ( "Default API: done." )
     
     def overrideaction_pauseTraining(self):
-        logger.info ( "Default API: Pause / Resume Training" )
+        logger.debug ( "Default API: Pause / Resume Training" )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(7)
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info ( "Default API: done." )
+        logger.debug ( "Default API: done." )
     
     def overrideaction_resumeTraining(self):
-        logger.info ( "Default API: Pause / Resume Training" )
+        logger.debug ( "Default API: Pause / Resume Training" )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(8)
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info ( "Default API: done." )
+        logger.debug ( "Default API: done." )
     
     def overrideaction_applyC(self):
-        logger.info ( "Default API: Apply Comment" )
+        logger.debug ( "Default API: Apply Comment" )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(16, self.comment)
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info ( "Default API: done." )
+        logger.debug ( "Default API: done." )
     
     def overrideaction_applyP(self):
-        logger.info ( "Default API: Apply Parameters" )
+        logger.debug ( "Default API: Apply Parameters" )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #this actually is composed of a list of messages sent to thread.
         #we will wait till every message has been send to finish the function.
         self.setNameSpaceMessage(17, self.currentGUI.frequencyTone1 )
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
         
         
         self.setNameSpaceMessage(18, self.currentGUI.frequencyTone2 )
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
         
         
         self.setNameSpaceMessage(19, self.currentGUI.movementAmount )
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         
         self.setNameSpaceMessage(20, self.currentGUI.movementMethod )
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         
         self.setNameSpaceMessage(21, self.currentGUI.movementTime )
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         
         self.setNameSpaceMessage(22, self.currentGUI.idleTime )
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
     
     
     
     def overrideaction_applyTE(self):
-        logger.info ( "Default API: Apply Trial Events" )
+        logger.debug ( "Default API: Apply Trial Events" )
         self.setNameSpaceMessage(23, self.currentGUI.toneStart )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         
         self.setNameSpaceMessage(24, self.currentGUI.toneEnd )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         
         
         self.setNameSpaceMessage(25, self.currentGUI.movementWindowStart )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         
         
         self.setNameSpaceMessage(26, self.currentGUI.movementWindowEnd )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         
         
         self.setNameSpaceMessage(27, self.currentGUI.interTrialStart )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         
         
         
         self.setNameSpaceMessage(28, self.currentGUI.interTrialEnd )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
+        #logger.debug ( "ns: " + ns.__str__() )
         
         
         self.setNameSpaceMessage(29, self.currentGUI.probabilityToneOne )
         #print "API Namespace:", ns
-        #logger.info ( "ns: " + ns.__str__() )
-        logger.info ( "Default API: done." )
+        #logger.debug ( "ns: " + ns.__str__() )
+        logger.debug ( "Default API: done." )
         
         
         
     
     def overrideaction_testT1(self):
-        logger.info( "Default API: Test T1" )
-        #logger.info( "ns: " + ns.__str__() )
+        logger.debug( "Default API: Test T1" )
+        #logger.debug( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
         self.frequencyTone1 = self.currentGUI.frequencyTone1
         self.setNameSpaceMessage(10, self.frequencyTone1 )
-        #logger.info( "ns: " + ns.__str__() )
+        #logger.debug( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info( "Default API: done." )
+        logger.debug( "Default API: done." )
     
     def overrideaction_testT2(self):
-        logger.info( "Default API: Test T2" )
-        #logger.info( "ns: " + ns.__str__() )
+        logger.debug( "Default API: Test T2" )
+        #logger.debug( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
         self.frequencyTone2 = self.currentGUI.frequencyTone2
         self.setNameSpaceMessage(11, self.frequencyTone2 )
-        #logger.info( "ns: " + ns.__str__() )
+        #logger.debug( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
-        logger.info( "Default API: done." )
+        logger.debug( "Default API: done." )
     
     def overrideaction_showfeedback(self):
-        logger.info( "Default API: Show Feedback" )
+        logger.debug( "Default API: Show Feedback" )
         self.setNameSpaceMessage(12)
-        logger.info( "Default API: done." )
+        logger.debug( "Default API: done." )
     
     def overrideaction_hidefeedback(self):
-        logger.info( "Default API: Hide Feedback" )
+        logger.debug( "Default API: Hide Feedback" )
         self.setNameSpaceMessage(13)
-        logger.info( "Default API: done." )
+        logger.debug( "Default API: done." )
     
     def overrideaction_showtracking(self):
-        logger.info( "Default API: Show Tracking" )
+        logger.debug( "Default API: Show Tracking" )
         self.setNameSpaceMessage(14)
-        logger.info( "Default API: done." )
+        logger.debug( "Default API: done." )
     
     def overrideaction_hidetracking(self):
-        logger.info( "Default API: Hide Tracking" )
+        logger.debug( "Default API: Hide Tracking" )
         self.setNameSpaceMessage(15)
-        logger.info( "Default API: done." )
+        logger.debug( "Default API: done." )
     
     def overrideaction_recalibratec(self):
-        logger.info( "Default API: Recalibrate Camera" )
+        logger.debug( "Default API: Recalibrate Camera" )
         self.setNameSpaceMessage(30)
-        logger.info( "Default API: done." )
+        logger.debug( "Default API: done." )
         pass
     
     def action_drop(self):
-        logger.info( "API: Drop" )
+        logger.debug( "API: Drop" )
         try:
             self.overrideaction_drop()
         except:
-            logger.info( "API Drop: OverrideAction Error" )
+            logger.warning( "API Drop: OverrideAction Error" )
     
     def action_reward(self):
-        logger.info( "API: Reward" )
+        logger.debug( "API: Reward" )
         try:
             self.overrideaction_reward()
         except:
-            logger.info( "API Reward: OverrideAction Error" )
+            logger.warning( "API Reward: OverrideAction Error" )
         
     def action_open(self):
-        logger.info( "API: Open" )
+        logger.debug( "API: Open" )
         try:
             self.overrideaction_open()
         except:
-            logger.info( "API Open: OverrideAction Error" )
+            logger.warning( "API Open: OverrideAction Error" )
         
     def action_close(self):
-        logger.info( "API: Close" )
+        logger.debug( "API: Close" )
         try:
             self.overrideaction_close()
         except:
-            logger.info( "API Close: OverrideAction Error" )
+            logger.warning( "API Close: OverrideAction Error" )
     
     def action_startTraining(self):
-        logger.info( "API: Start Training" )
+        logger.debug( "API: Start Training" )
         try:
             self.overrideaction_startTraining()
         except:
-            logger.info( "API Start Training: OverrideAction Error" )
+            logger.warning( "API Start Training: OverrideAction Error" )
     
     def action_stopTraining(self):
-        logger.info( "API: Stop Training" )
+        logger.debug( "API: Stop Training" )
         try:
             self.overrideaction_stopTraining()
         except:
-            logger.info( "API Stop Training: OverrideAction Error" )
+            logger.warning( "API Stop Training: OverrideAction Error" )
     
     def action_pauseTraining(self):
-        logger.info( "API: Pause Training" )
+        logger.debug( "API: Pause Training" )
         try:
             self.overrideaction_pauseTraining()
         except:
-            logger.info( "API Pause Training: OverrideAction Error" )
+            logger.warning( "API Pause Training: OverrideAction Error" )
     
     def action_resumeTraining(self):
-        logger.info( "API: Resume Training" )
+        logger.debug( "API: Resume Training" )
         try:
             self.overrideaction_resumeTraining()
         except:
-            logger.info( "API Resume Training: OverrideAction Error" )
+            logger.warning( "API Resume Training: OverrideAction Error" )
     
     def action_applyC(self):
         try:
             tempstr = str(self.currentGUI.comment).decode(encoding='UTF-8',errors='ignore')
         except:
             print "API: Apply Comment error - Couldn't code to UTF8. Will send an empty string instead."
-            logger.info( "API: Apply Comment error - Couldn't code to UTF8. Will send an empty string instead." )
+            logger.warning( "API: Apply Comment error - Couldn't code to UTF8. Will send an empty string instead." )
             tempstr = ""
         self.comment = tempstr
-        logger.info( "API: Apply Comments: " + tempstr )
+        logger.debug( "API: Apply Comments: " + tempstr )
         try:
             self.overrideaction_applyC()
         except:
-            logger.info( "API ApplyC: OverrideAction Error" )
+            logger.warning( "API ApplyC: OverrideAction Error" )
     
     def action_applyP(self):
         self.frequencyTone1 = self.currentGUI.frequencyTone1
@@ -346,11 +346,11 @@ class userInterface_API:
         self.movementMethod = self.currentGUI.movementMethod
         self.movementTime = self.currentGUI.movementTime
         self.idleTime = self.currentGUI.idleTime
-        logger.info( "API: Apply Parameters:" )
+        logger.debug( "API: Apply Parameters:" )
         try:
             self.overrideaction_applyP()
         except:
-            logger.info( "API ApplyP: OverrideAction Error" )
+            logger.warning( "API ApplyP: OverrideAction Error" )
     
     def action_applyTE(self):
         self.toneStart = self.currentGUI.toneStart
@@ -360,69 +360,69 @@ class userInterface_API:
         self.interTrialStart = self.currentGUI.interTrialStart
         self.interTrialEnd = self.currentGUI.interTrialEnd
         self.probabilityToneOne = self.currentGUI.probabilityToneOne
-        logger.info( "API: Apply Trial Events:" )
+        logger.debug( "API: Apply Trial Events:" )
         try:
             self.overrideaction_applyTE()
         except:
-            logger.info( "API ApplyTE: OverrideAction Error" )
+            logger.warning( "API ApplyTE: OverrideAction Error" )
     
     def action_testT1(self):
-        logger.info( "API: Test Tone 1" )
+        logger.debug( "API: Test Tone 1" )
         try:
             self.overrideaction_testT1()
         except:
-            logger.info( "API Test Tone 1: OverrideAction Error" )
+            logger.warning( "API Test Tone 1: OverrideAction Error" )
     
     def action_testT2(self):
-        logger.info( "API: Test Tone 2" )
+        logger.debug( "API: Test Tone 2" )
         try:
             self.overrideaction_testT2()
         except:
-            logger.info( "API Test Tone 2: OverrideAction Error" )
+            logger.warning( "API Test Tone 2: OverrideAction Error" )
     
     def action_showfeedback(self):
-        logger.info( "API: Show Feedback" )
+        logger.debug( "API: Show Feedback" )
         try:
             self.overrideaction_showfeedback()
         except:
-            logger.info( "API Show Feedback: OverrideAction Error" )
+            logger.warning( "API Show Feedback: OverrideAction Error" )
     
     def action_hidefeedback(self):
-        logger.info( "API: Hide Feedback" )
+        logger.debug( "API: Hide Feedback" )
         try:
             self.overrideaction_hidefeedback()
         except:
-            logger.info( "API Hide Feedback: OverrideAction Error" )
+            logger.warning( "API Hide Feedback: OverrideAction Error" )
     
     def action_showtracking(self):
-        logger.info( "API: Show Tracking" )
+        logger.debug( "API: Show Tracking" )
         try:
             self.overrideaction_showtracking()
         except:
-            logger.info( "API Show Tracking: OverrideAction Error" )
+            logger.warning( "API Show Tracking: OverrideAction Error" )
     
     def action_hidetracking(self):
-        logger.info( "API: Hide Tracking" )
+        logger.debug( "API: Hide Tracking" )
         try:
             self.overrideaction_hidetracking()
         except:
-            logger.info( "API Hide Tracking: OverrideAction Error" )
+            logger.warning( "API Hide Tracking: OverrideAction Error" )
     
     def action_recalibratec(self):
-        logger.info( "API: Recalibrate Camera" )
+        logger.debug( "API: Recalibrate Camera" )
         try:
             self.overrideaction_recalibratec()
         except:
-            logger.info( "API Recalibrate Camera: OverrideAction Error" )
+            logger.warning( "API Recalibrate Camera: OverrideAction Error" )
     
     def action_exit(self):
-        logger.info( "Default API: Exiting GUI from API." )
-        #logger.info( "ns: ", str(ns) )
+        logger.debug( "Default API: Exiting GUI from API." )
+        #logger.debug( "ns: ", str(ns) )
         #print "API Namespace:", ns
         self.setNameSpaceMessage(9)
         #print "API Namespace:", ns
-        #logger.info( "ns: ", str(ns) )
-        logger.info( "Default API: done." )
+        #logger.debug( "ns: ", str(ns) )
+        logger.debug( "Default API: done." )
         try:
             os._exit(0)
         except:
@@ -465,7 +465,7 @@ class userInterface_API:
         #self.thread_function(
         #thread1 = threading.Thread(target=self.thread_function, name="glade_GUI")
         #thread1.start()
-        logger.info( "message variables: "+ self.ns.__str__() )
+        logger.debug( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Glade Interface Started" )
         print "Glade interface started."
         self.setInitialValues()
@@ -500,7 +500,7 @@ class userInterface_API:
         self.currentGUI.overrideaction_hidetracking = self.action_hidetracking
         self.currentGUI.overrideaction_recalibratec = self.action_recalibratec
         self.currentGUI.overrideaction_exit = self.action_exit
-        logger.info( "message variables: "+ self.ns.__str__() )
+        logger.debug( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Tkinter Interface Started" )
         print "Tkinter Interface Started"
         self.setInitialValues()

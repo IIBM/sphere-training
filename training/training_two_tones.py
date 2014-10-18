@@ -699,6 +699,7 @@ class Training():
         Training.gVariables.trialExecuting = True
         Training.gVariables.current_trial_paused_time = (timeit.default_timer() - Training.gVariables.current_trial_paused_time)
         print "Resuming training. Time that has been in pause: ", Training.gVariables.current_trial_paused_time
+        Training.gVariables.logger.info('Resuming training. Time that has been in pause: %s' % Training.gVariables.current_trial_paused_time)
         Training.gVariables.logger.info('%s resumed.' % Training.gVariables.trainingName)
     
     @staticmethod
