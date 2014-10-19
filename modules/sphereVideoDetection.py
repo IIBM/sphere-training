@@ -856,6 +856,25 @@ class sphereVideoDetection():
                 #===============================================================
                 # capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
                 capturedImage = cam.read()[1]
+                #lo primero que se hace es verificar que se haya podido leer algo. Caso contrario, end of video..
+                if (type(capturedImage) == type(None)):
+                    logger.info("sphereVideoDetection reached END OF VIDEO . Seeking to the start...")
+                    #cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_POS_FRAMES, 0)
+                    cam.set(cv.CV_CAP_PROP_POS_MSEC, 0)
+                    cam.set(cv.CV_CAP_PROP_POS_MSEC, 0)
+                    capturedImage = cam.read()[1]
+                    #break
+                    pass
+                
+                if capturedImage.size == 0:
+                    logger.info("sphereVideoDetection reached END OF VIDEO . Seeking to the start...")
+                    #cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_POS_FRAMES, 0)
+                    cam.set(cv.CV_CAP_PROP_POS_MSEC, 0)
+                    cam.set(cv.CV_CAP_PROP_POS_MSEC, 0)
+                    capturedImage = cam.read()[1]
+                    #break;
+                    pass
+                pass
                 # t_before es el del anterior ciclo, t_now es el recién capturado (procesándolo 1ero..),
                 
                 # t_before = t_now #saves old matrix; unnecessary since what is important from old matrix is the circle and point matrix

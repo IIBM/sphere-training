@@ -1235,7 +1235,7 @@ class Training():
                     Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 30):
                     print "GUICheck: 'Recalibrate Camera' message"
-                    Training.gVariables.debug.info( "GUICheck: 'Recalibrate Camera' message" )
+                    Training.gVariables.logger.debug( "GUICheck: 'Recalibrate Camera' message" )
                     Training.gVariables.videoDet.calibrate()
                     pass
                 pass
