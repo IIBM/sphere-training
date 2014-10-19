@@ -729,8 +729,7 @@ class Training():
     
     def getSubjectName(self):
         # logging: first determine the subject (or test if not applicable)
-        import Tkinter
-        import tkMessageBox
+        
         sbjlistfile = "subject_list.txt"
         f = open(sbjlistfile ,"r+")
         subj_list = []
@@ -746,16 +745,10 @@ class Training():
                 i=0;
             i+=1;
         print "Subject's list: ",subj_list
-        top = Tkinter.Tk()
         
-        import autoCompleteEntry
-        
-        entry_lst = autoCompleteEntry.AutocompleteEntry(subj_list, top, width=35)
-        #entry_lst.delete(0, Tkinter.END)
-        #entry_lst.insert(0, "Subject")
         
         def override_enter():
-            print "dmy"
+            #print "dmy"
             finalizeIntroMessage()
         
         def finalizeIntroMessage():
@@ -791,12 +784,22 @@ class Training():
             f.close()
             pass
         
+        import Tkinter
+        import tkMessageBox
+        import autoCompleteEntry
+        top = Tkinter.Tk()
+        entry_lst = autoCompleteEntry.AutocompleteEntry(subj_list, top, width=35)
         B = Tkinter.Button(top, text="OK", command=finalizeIntroMessage, height=5, width=35)
         entry_lst.pack()
         B.pack()
         entry_lst.focus_set()
         entry_lst.enter_method = override_enter
         top.mainloop()
+        
+        import userInterfaceAPI
+        
+        uiAPI = userInterfaceAPI.userInterface_API(False)
+        print uiAPI.getSubjName();
         
         pass
     

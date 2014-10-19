@@ -9,6 +9,32 @@ class userInterface_API:
     usingTK = 0 #0: using GTk;   1: using TK
     jobList = 0 # message Job Queue between processes.
     ns = 0
+    subj_list = ["fake"]
+    
+
+    
+    def getSubjName(self):
+        
+        def finalizeIntroMessage():
+            print "dmy finalize"
+            pass
+        
+        def override_enter():
+            print "dmy enter"
+            pass
+        
+        import Tkinter
+        import tkMessageBox
+        import autoCompleteEntry
+        top = Tkinter.Tk()
+        entry_lst = autoCompleteEntry.AutocompleteEntry(self.subj_list, top, width=35)
+        B = Tkinter.Button(top, text="OK", command=finalizeIntroMessage, height=5, width=35)
+        entry_lst.pack()
+        B.pack()
+        entry_lst.focus_set()
+        entry_lst.enter_method = override_enter
+        top.mainloop()
+        return "returning subj_name"
     
     def __init__(self, toStart = False):
         logger.info( "initializing userInterfaceAPI" )
