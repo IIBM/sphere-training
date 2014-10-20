@@ -10,23 +10,63 @@ class userInterface_API:
     jobList = 0 # message Job Queue between processes.
     ns = 0
     subj_list = ["fake"]
-    
+    subj_name = ""
 
     
     def getSubjName(self):
-        
-        def finalizeIntroMessage():
-            print "dmy finalize"
-            pass
-        
-        def override_enter():
-            print "dmy enter"
-            pass
-        
         import Tkinter
         import tkMessageBox
         import autoCompleteEntry
         top = Tkinter.Tk()
+        """
+        from gi.repository import Gtk
+        
+        class MyExample(Gtk.Window):
+            def __init__(self):
+                Gtk.Window.__init__(self)
+                self.connect("delete-event", Gtk.main_quit)
+        
+                liststore = Gtk.ListStore(str)
+                for match in ["test1", "test2", "test3", "spam", "foo", "eggs", "bar"]:
+                    liststore.append([match])
+        
+                completion = Gtk.EntryCompletion()
+                completion.set_model(liststore)
+                completion.set_text_column(0)
+        
+                entry = Gtk.Entry()
+                entry.set_completion(completion)
+                self.add(entry)
+                self.show_all()
+        
+        if __name__ == "__main__":
+            app = MyExample()
+            Gtk.main()
+        """
+        
+        def finalizeIntroMessage():
+            #print "dmy finalize"
+            try:
+                #print "subj_name: %s" % str( entry_lst.get() )
+                self.subj_name = str( entry_lst.get() )
+            except:
+                self.subj_name = ""
+            #print "done: %s" % self.subj_name
+            top.destroy()
+            pass
+        
+        def override_enter():
+            #print "dmy enter"
+            try:
+                #print "subj_name: %s" % str( entry_lst.get() )
+                self.subj_name = str( entry_lst.get() )
+            except:
+                self.subj_name = ""
+            #print "done: %s" % self.subj_name
+            top.destroy()
+            pass
+        
+        
         entry_lst = autoCompleteEntry.AutocompleteEntry(self.subj_list, top, width=35)
         B = Tkinter.Button(top, text="OK", command=finalizeIntroMessage, height=5, width=35)
         entry_lst.pack()
@@ -34,7 +74,8 @@ class userInterface_API:
         entry_lst.focus_set()
         entry_lst.enter_method = override_enter
         top.mainloop()
-        return "returning subj_name"
+        #print "API subj_name %s" % self.subj_name
+        return self.subj_name
     
     def __init__(self, toStart = False):
         logger.info( "initializing userInterfaceAPI" )

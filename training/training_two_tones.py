@@ -729,31 +729,12 @@ class Training():
     
     def getSubjectName(self):
         # logging: first determine the subject (or test if not applicable)
+        import userInterfaceAPI
         
-        sbjlistfile = "subject_list.txt"
-        f = open(sbjlistfile ,"r+")
-        subj_list = []
-        subj_list = f.readlines()
-        
-        j = len(subj_list)
-        i=0;
-        while i < j:
-            subj_list[i] = subj_list[i].strip()
-            if len(subj_list[i]) <= 1:
-                subj_list.remove(subj_list[i])
-                j = 0;
-                i=0;
-            i+=1;
-        print "Subject's list: ",subj_list
-        
-        
-        def override_enter():
-            #print "dmy"
-            finalizeIntroMessage()
-        
-        def finalizeIntroMessage():
+        def checkSubjectName( starg ):
+            #checks if valid and if it is a new subject
             try:
-                subj_name = str(entry_lst.get() )
+                subj_name = str(starg )
             except:
                 subj_name = ""
             tmp = 0
@@ -771,7 +752,6 @@ class Training():
                 #f.write(subj_name + "\n")
                 pass
             self.gVariables.subject_name = subj_name
-            top.destroy()
             if (newname_found == True):
                 print "Adding new name to subject list."
                 f.close()
@@ -784,22 +764,29 @@ class Training():
             f.close()
             pass
         
-        import Tkinter
-        import tkMessageBox
-        import autoCompleteEntry
-        top = Tkinter.Tk()
-        entry_lst = autoCompleteEntry.AutocompleteEntry(subj_list, top, width=35)
-        B = Tkinter.Button(top, text="OK", command=finalizeIntroMessage, height=5, width=35)
-        entry_lst.pack()
-        B.pack()
-        entry_lst.focus_set()
-        entry_lst.enter_method = override_enter
-        top.mainloop()
+        sbjlistfile = "subject_list.txt"
+        f = open(sbjlistfile ,"r+")
+        subj_list = []
+        subj_list = f.readlines()
         
-        import userInterfaceAPI
+        j = len(subj_list)
+        i=0;
+        while i < j:
+            subj_list[i] = subj_list[i].strip()
+            if len(subj_list[i]) <= 1:
+                subj_list.remove(subj_list[i])
+                j = 0;
+                i=0;
+            i+=1;
+        print "List of subjects: ",subj_list
+        
         
         uiAPI = userInterfaceAPI.userInterface_API(False)
-        print uiAPI.getSubjName();
+        uiAPI.subj_list = subj_list;
+        subj_name =  uiAPI.getSubjName();
+        checkSubjectName(subj_name)
+        
+        self.gVariables.subject_name = subj_name
         
         pass
     
