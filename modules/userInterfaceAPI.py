@@ -18,13 +18,18 @@ class userInterface_API:
         import tkMessageBox
         import autoCompleteEntry
         top = Tkinter.Tk()
-        """
+        
         from gi.repository import Gtk
         
         class MyExample(Gtk.Window):
+            
+            def buttonClicked(self, widget, data=None):
+                print "dmy"
+            
             def __init__(self):
-                Gtk.Window.__init__(self)
+                Gtk.Window.__init__(self, title="Subject List")
                 self.connect("delete-event", Gtk.main_quit)
+                self.box = Gtk.Box(spacing=6)
         
                 liststore = Gtk.ListStore(str)
                 for match in ["test1", "test2", "test3", "spam", "foo", "eggs", "bar"]:
@@ -36,9 +41,18 @@ class userInterface_API:
         
                 entry = Gtk.Entry()
                 entry.set_completion(completion)
-                self.add(entry)
+                
+                self.button = Gtk.Button("OK")
+                self.button.connect("clicked", self.buttonClicked, None)
+                
+                #self.add(self.button);
+                self.box.pack_start(entry, True, True, 0)
+                self.box.pack_start(self.button, True, True, 0)
+                self.add(self.box)
+                ##self.add(entry)
                 self.show_all()
         
+        """
         if __name__ == "__main__":
             app = MyExample()
             Gtk.main()
@@ -74,6 +88,10 @@ class userInterface_API:
         entry_lst.focus_set()
         entry_lst.enter_method = override_enter
         top.mainloop()
+        app =  MyExample()
+        
+        
+        Gtk.main()
         #print "API subj_name %s" % self.subj_name
         return self.subj_name
     
