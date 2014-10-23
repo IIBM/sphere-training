@@ -16,48 +16,14 @@ class userInterface_API:
     def getSubjName(self):
         import Tkinter
         import tkMessageBox
-        import autoCompleteEntry
+        
+        
+        import autoCompleteEntry_gtk
+        
+        ###################
+        #MOVER ESTO A UNA CLASE autoCompleteEntry_tk
+        import autoCompleteEntry_tk__
         top = Tkinter.Tk()
-        
-        from gi.repository import Gtk
-        
-        class MyExample(Gtk.Window):
-            
-            def buttonClicked(self, widget, data=None):
-                print "dmy"
-            
-            def __init__(self):
-                Gtk.Window.__init__(self, title="Subject List")
-                self.connect("delete-event", Gtk.main_quit)
-                self.box = Gtk.Box(spacing=6)
-        
-                liststore = Gtk.ListStore(str)
-                for match in ["test1", "test2", "test3", "spam", "foo", "eggs", "bar"]:
-                    liststore.append([match])
-        
-                completion = Gtk.EntryCompletion()
-                completion.set_model(liststore)
-                completion.set_text_column(0)
-        
-                entry = Gtk.Entry()
-                entry.set_completion(completion)
-                
-                self.button = Gtk.Button("OK")
-                self.button.connect("clicked", self.buttonClicked, None)
-                
-                #self.add(self.button);
-                self.box.pack_start(entry, True, True, 0)
-                self.box.pack_start(self.button, True, True, 0)
-                self.add(self.box)
-                ##self.add(entry)
-                self.show_all()
-        
-        """
-        if __name__ == "__main__":
-            app = MyExample()
-            Gtk.main()
-        """
-        
         def finalizeIntroMessage():
             #print "dmy finalize"
             try:
@@ -81,17 +47,18 @@ class userInterface_API:
             pass
         
         
-        entry_lst = autoCompleteEntry.AutocompleteEntry(self.subj_list, top, width=35)
+        entry_lst = autoCompleteEntry_tk__.AutocompleteEntry(self.subj_list, top, width=35)
         B = Tkinter.Button(top, text="OK", command=finalizeIntroMessage, height=5, width=35)
         entry_lst.pack()
         B.pack()
         entry_lst.focus_set()
         entry_lst.enter_method = override_enter
         top.mainloop()
-        app =  MyExample()
+        #END MOVER ESTO A UNA CLASE autoCompleteEntry_tk
+        ################################################
         
+        app =  autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list)
         
-        Gtk.main()
         #print "API subj_name %s" % self.subj_name
         return self.subj_name
     
