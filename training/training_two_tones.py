@@ -766,7 +766,6 @@ class Training():
         
         sbjlistfile = "subject_list.txt"
         f = open(sbjlistfile ,"r+")
-        subj_list = []
         subj_list = f.readlines()
         
         j = len(subj_list)
@@ -778,15 +777,17 @@ class Training():
                 j = 0;
                 i=0;
             i+=1;
-        print "List of subjects: ",subj_list
+        print "List of subjects: %r " % subj_list
         
-        
-        uiAPI = userInterfaceAPI.userInterface_API(False)
-        uiAPI.usingTK = self.gVariables.GUIType
-        print "..---"
-        print uiAPI.usingTK
-        uiAPI.subj_list = subj_list;
-        subj_name =  uiAPI.getSubjName();
+        if (self.gVariables.GUIType != 2):
+            uiAPI = userInterfaceAPI.userInterface_API(False)
+            uiAPI.usingTK = self.gVariables.GUIType
+            uiAPI.subj_list = subj_list;
+            subj_name =  uiAPI.getSubjName();
+            del uiAPI
+        else:
+            #non-gui mode: ask for name with CL input
+            subj_name = str(raw_input("Please enter subject name: "))
         checkSubjectName(subj_name)
         
         self.gVariables.subject_name = subj_name

@@ -9,7 +9,7 @@ class userInterface_API:
     usingTK = 0 #0: using GTk;   1: using TK
     jobList = 0 # message Job Queue between processes.
     ns = 0
-    subj_list = ["fake"]
+    subj_list = [""]
     subj_name = ""
 
     
@@ -17,17 +17,20 @@ class userInterface_API:
         
         
         if (self.usingTK == 0):
+            import multiprocessing #needed here, else it will crash when launching the main GUI gtk window.
             import autoCompleteEntry_gtk
-            app =  autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list)
-            print ".-"
-            self.subj_name = app.getSubjectName()
+            procApp = multiprocessing.Process(target=autoCompleteEntry_gtk.autoCompleteDialog, args=[self.subj_list,])
+            procApp.start()
+            #app =  autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list)
+            #self.subj_name = app.getSubjectName()
+            
         elif (self.usingTK == 1):
             import autoCompleteEntry_tk
             app3 =  autoCompleteEntry_tk.autoCompleteEntry_tk(self.subj_list)
-            print ".-"
             self.subj_name = app3.getSubjectName()
-        
+            del app3
         #print "API subj_name %s" % self.subj_name
+        logger.debug( "subject name: %s" % self.subj_name )
         return self.subj_name
     
     def __init__(self, toStart = False):

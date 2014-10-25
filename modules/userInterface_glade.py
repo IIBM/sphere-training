@@ -9,6 +9,7 @@ import logging
 logger = logging.getLogger('userInterface_glade')
 import track_bola_utils
 
+
 class GUIGTK_Class():
     
         class Empty_cl():
