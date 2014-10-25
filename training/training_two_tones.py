@@ -782,6 +782,9 @@ class Training():
         
         
         uiAPI = userInterfaceAPI.userInterface_API(False)
+        uiAPI.usingTK = self.gVariables.GUIType
+        print "..---"
+        print uiAPI.usingTK
         uiAPI.subj_list = subj_list;
         subj_name =  uiAPI.getSubjName();
         checkSubjectName(subj_name)

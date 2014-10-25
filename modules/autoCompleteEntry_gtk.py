@@ -5,6 +5,9 @@ from docutils.utils.math.latex2mathml import mtr
 
 class autoCompleteDialog():
             
+            def getSubjectName(self):
+                return self.subj_name
+            
             def enter_method(self, widget, data=None):
                 print "dmy"
             
@@ -34,6 +37,7 @@ class autoCompleteDialog():
 #                 self.add(self.box)
 #                 ##self.add(entry)
                 
+                self.subj_name = ""
                 
                 dlg = gtk.Dialog('Subject List')
                 dlg.show()
@@ -63,6 +67,7 @@ class autoCompleteDialog():
             
                 if response == gtk.RESPONSE_OK:
                   label = entry2.get_text()
+                  self.subj_name = label
                   print label
                 dlg.destroy()
                 

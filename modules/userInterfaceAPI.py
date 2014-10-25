@@ -14,50 +14,18 @@ class userInterface_API:
 
     
     def getSubjName(self):
-        import Tkinter
-        import tkMessageBox
         
         
-        import autoCompleteEntry_gtk
-        
-        ###################
-        #MOVER ESTO A UNA CLASE autoCompleteEntry_tk
-        import autoCompleteEntry_tk__
-        top = Tkinter.Tk()
-        def finalizeIntroMessage():
-            #print "dmy finalize"
-            try:
-                #print "subj_name: %s" % str( entry_lst.get() )
-                self.subj_name = str( entry_lst.get() )
-            except:
-                self.subj_name = ""
-            #print "done: %s" % self.subj_name
-            top.destroy()
-            pass
-        
-        def override_enter():
-            #print "dmy enter"
-            try:
-                #print "subj_name: %s" % str( entry_lst.get() )
-                self.subj_name = str( entry_lst.get() )
-            except:
-                self.subj_name = ""
-            #print "done: %s" % self.subj_name
-            top.destroy()
-            pass
-        
-        
-        entry_lst = autoCompleteEntry_tk__.AutocompleteEntry(self.subj_list, top, width=35)
-        B = Tkinter.Button(top, text="OK", command=finalizeIntroMessage, height=5, width=35)
-        entry_lst.pack()
-        B.pack()
-        entry_lst.focus_set()
-        entry_lst.enter_method = override_enter
-        top.mainloop()
-        #END MOVER ESTO A UNA CLASE autoCompleteEntry_tk
-        ################################################
-        
-        app =  autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list)
+        if (self.usingTK == 0):
+            import autoCompleteEntry_gtk
+            app =  autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list)
+            print ".-"
+            self.subj_name = app.getSubjectName()
+        elif (self.usingTK == 1):
+            import autoCompleteEntry_tk
+            app3 =  autoCompleteEntry_tk.autoCompleteEntry_tk(self.subj_list)
+            print ".-"
+            self.subj_name = app3.getSubjectName()
         
         #print "API subj_name %s" % self.subj_name
         return self.subj_name
