@@ -4,13 +4,15 @@ import time
 
 class autoCompleteDialog():
             
+            
+            
             def getSubjectName(self):
                 return self.subj_name
             
             def enter_method(self, widget, data=None):
                 print "dmy"
             
-            def __init__(self, mtrz):
+            def __init__(self, mtrz, jobList):
                 import gtk
                 
                 import copy
@@ -59,6 +61,10 @@ class autoCompleteDialog():
                 del dlg
                 
                 print "gtk: %s" % self.subj_name
+                
+                jobList.put( self.subj_name )
+                jobList.join()
+                
                 print "gtk autoCompleteEntry_gtk finalized."
                 
 

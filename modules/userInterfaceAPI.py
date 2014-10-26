@@ -19,11 +19,28 @@ class userInterface_API:
         if (self.usingTK == 0):
             import multiprocessing #needed here, else it will crash when launching the main GUI gtk window.
             import autoCompleteEntry_gtk
-            procApp = multiprocessing.Process(target=autoCompleteEntry_gtk.autoCompleteDialog, args=[self.subj_list,])
+            GUIjobList = multiprocessing.JoinableQueue()
+            procApp = multiprocessing.Process(target=autoCompleteEntry_gtk.autoCompleteDialog, args=[self.subj_list,GUIjobList,])
             procApp.start()
+            tempvar = ""
+            while True:
+                if (GUIjobList.qsize() > 0 or GUIjobList.empty() == False ):
+                    #print "element detected."
+                    try:
+                            tempvar = GUIjobList.get()
+                            GUIjobList.task_done()
+                            break;
+                    except:
+                            pass
+                time.sleep(0.5)
+            self.subj_name = str(tempvar).strip()
+            procApp.terminate()
+            del procApp
+            del GUIjobList
+            #print "proc. finished"
             #app =  autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list)
             #self.subj_name = app.getSubjectName()
-            
+            pass
         elif (self.usingTK == 1):
             import autoCompleteEntry_tk
             app3 =  autoCompleteEntry_tk.autoCompleteEntry_tk(self.subj_list)
