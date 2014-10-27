@@ -17,6 +17,7 @@ class userInterface_API:
         
         
         if (self.usingTK == 0):
+            logger.debug("GTK GUI Subject List started.")
             import multiprocessing #needed here, else it will crash when launching the main GUI gtk window.
             import autoCompleteEntry_gtk
             GUIjobList = multiprocessing.JoinableQueue()
@@ -25,7 +26,7 @@ class userInterface_API:
             tempvar = ""
             while True:
                 if (GUIjobList.qsize() > 0 or GUIjobList.empty() == False ):
-                    #print "element detected."
+                    logger.debug( "Message element detected on getSubjName")
                     try:
                             tempvar = GUIjobList.get()
                             GUIjobList.task_done()
@@ -37,15 +38,17 @@ class userInterface_API:
             procApp.terminate()
             del procApp
             del GUIjobList
-            #print "proc. finished"
-            #app =  autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list)
-            #self.subj_name = app.getSubjectName()
+            logger.debug("GUI Job ended.")
+            logger.debug("GTK GUI Subject List ended.")
             pass
         elif (self.usingTK == 1):
+            logger.debug("TK GUI Subject List started.")
             import autoCompleteEntry_tk
             app3 =  autoCompleteEntry_tk.autoCompleteEntry_tk(self.subj_list)
             self.subj_name = app3.getSubjectName()
             del app3
+            time.sleep(0.5) #.
+            logger.debug("TK GUI Subject List ended.")
         #print "API subj_name %s" % self.subj_name
         logger.debug( "subject name: %s" % self.subj_name )
         return self.subj_name

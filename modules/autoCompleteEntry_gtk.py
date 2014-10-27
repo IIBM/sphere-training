@@ -1,6 +1,6 @@
-#from gi.repository import Gtk
-
 import time
+import logging
+logger = logging.getLogger('autoCompleteEntry_gtk')
 
 class autoCompleteDialog():
             
@@ -13,6 +13,7 @@ class autoCompleteDialog():
                 print "dmy"
             
             def __init__(self, mtrz, jobList):
+                logger.debug("Started.")
                 import gtk
                 
                 import copy
@@ -27,7 +28,11 @@ class autoCompleteDialog():
                 
                 
                 liststore = gtk.ListStore(str)
-                print "subject list: %r" % mtrz
+                #print "subject list: %r" % mtrz
+                try:
+                    logger.debug("subject list: %r" % mtrz)
+                except:
+                    pass
                 for i in range(0, len(mtrz)):
                     #print mtrz[i]
                 #for match in ["test1", "test2", "test3", "spam", "foo", "eggs", "bar"]:
@@ -60,12 +65,12 @@ class autoCompleteDialog():
                 del btnOK
                 del dlg
                 
-                print "gtk: %s" % self.subj_name
+                logger.debug( "gtk: %s" % self.subj_name)
                 
                 jobList.put( self.subj_name )
                 jobList.join()
                 
-                print "gtk autoCompleteEntry_gtk finalized."
+                logger.debug( "gtk autoCompleteEntry_gtk finalized.")
                 
 
                 #self.show_all()
