@@ -70,8 +70,9 @@ class sphereVideoDetection():
         # declare self variables to use.
         self.mustquit = 0
         self.available = True
-        self.vectorInstantaneo = track_bola_utils.vectorSimple()  # vector acumulado
-        self.vectorAcumulado = track_bola_utils.vectorSimple()  # vector acumulado
+        self.vectorInstantaneo = track_bola_utils.vectorSimple()  # instant vector, generally regarded as an internal variable.
+        self.vectorAcumulado = track_bola_utils.vectorSimple()  # accumulated vector. Keeps adding instant.x and .y since start of program.
+        self.vectorPseudoInstantaneo = track_bola_utils.vectorSimple()  # pseudo instant vector. Contains last non-zero instant value
         self.startCalibration = True  # if True, a calibration will be performed
         
         self.firstCalibration = False  # if True, a first calibration was performed.
@@ -160,11 +161,13 @@ class sphereVideoDetection():
     
     def resetX(self):
         self.vectorInstantaneo.x = 0
+        self.vectorPseudoInstantaneo.x = 0
         self.vectorAcumulado.x = 0
         self.movEjeX = 0
 
     def resetY(self):
         self.vectorInstantaneo.y = 0
+        self.vectorPseudoInstantaneo.y = 0
         self.vectorAcumulado.y = 0
         self.movEjeY = 0
 
@@ -175,10 +178,12 @@ class sphereVideoDetection():
         return self.vectorAcumulado.y
     
     def getInstantX(self):
-       return self.vectorInstantaneo.x
+       #return self.vectorInstantaneo.x
+       return self.vectorPseudoInstantaneo.x
     
     def getInstantY(self):
-        return self.vectorInstantaneo.y
+        #return self.vectorInstantaneo.y
+        return self.vectorPseudoInstantaneo.y
 
     def calibrate(self):
         self.startCalibration = True
@@ -376,6 +381,8 @@ class sphereVideoDetection():
                     self.movementVector[self.movementVectorLength - 1] = 0
                     # print "0 appended   ", movementAmount ,"    Thres: ", self.movementThreshold
         
+        self.vectorPseudoInstantaneo.x = self.vectorInstantaneo.x
+        self.vectorPseudoInstantaneo.y = self.vectorInstantaneo.y
         self.vectorInstantaneo.x = 0
         self.vectorInstantaneo.y = 0
         
@@ -559,7 +566,8 @@ class sphereVideoDetection():
         # Historia de movimiento para saber cuánto suman los movimientos interrumpidos.
         # EJ: [ 0.3 0.5 1.0 0.0 0.1 0.0 ]  suma bastante movimiento en total. Es mejor que preguntar instantáneamente cuanto se está moviendo.
         
-        
+        self.vectorPseudoInstantaneo.x = self.vectorInstantaneo.x
+        self.vectorPseudoInstantaneo.y = self.vectorInstantaneo.y
         self.vectorInstantaneo.x = 0
         self.vectorInstantaneo.y = 0
     
@@ -593,6 +601,8 @@ class sphereVideoDetection():
                         timeDif = 0
                     self.continuousMovementTime = timeDif
                     # self.last_saved_time_movement = timeit.default_timer()
+                    self.vectorPseudoInstantaneo.x = self.vectorInstantaneo.x
+                    self.vectorPseudoInstantaneo.y = self.vectorInstantaneo.y
                     self.vectorInstantaneo.x = 0
                     self.vectorInstantaneo.y = 0
             else:
@@ -609,6 +619,8 @@ class sphereVideoDetection():
                         timeDif = 0
                     self.continuousIdleTime = timeDif
                     # self.last_saved_time_idle = timeit.default_timer()
+                    self.vectorPseudoInstantaneo.x = self.vectorInstantaneo.x
+                    self.vectorPseudoInstantaneo.y = self.vectorInstantaneo.y
                     self.vectorInstantaneo.x = 0
                     self.vectorInstantaneo.y = 0
             # history of movement mejoraría la performance de este método.

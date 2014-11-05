@@ -26,6 +26,7 @@ from configvideo import *
 import track_bola_utils
 
 class Training():
+    variable_1 = "test training."
     
     class gVariables():
         #Global variables to be used within the Training class.
@@ -1324,3 +1325,6 @@ class Training():
 
 if __name__ == '__main__':
     a = Training()
+    while (True):
+        time.sleep(0.3)
+        print "x: %d        y: %d" % ( a.gVariables.videoDet.getInstantX() , a.gVariables.videoDet.getInstantY() )
