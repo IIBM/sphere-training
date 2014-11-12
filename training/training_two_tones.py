@@ -584,7 +584,8 @@ class Training():
                         Training.gVariables.display.updateInfo("% s/t", Training.gVariables.successRate)
                         a = str(Training.gVariables.current_trial_time)[:4] + " - " + str(Training.gVariables.eventTime3_trialEnd)
                         Training.gVariables.display.updateInfo("Trial Time", a)
-        Training.gVariables.display.renderAgain()
+        #Training.gVariables.display.renderAgain() # not necessary since the update info calls renderAgain
+        pass
     
     @staticmethod
     def restartTraining():
@@ -1316,11 +1317,16 @@ class Training():
                 pass
     
     def mainLoopFunction(self):
+        DISPLAY_INTERVAL = 4
+        counter_val = 0
         while(True):
                     time.sleep(Training.gVariables.LOOP_FUNCTION_SLEEP_TIME)
                     self.GUICheck() #check if any GUI input was received
                     self.trialLoop()  #
-                    self.updateDisplayInfo()
+                    if (counter_val == DISPLAY_INTERVAL):
+                        self.updateDisplayInfo();
+                        counter_val = 0;
+                    counter_val+=1;
 
 
 if __name__ == '__main__':

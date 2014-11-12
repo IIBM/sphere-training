@@ -4,15 +4,21 @@ import time
 import logging
 logger = logging.getLogger('trainingDisplay')
 import track_bola_utils
+import multiprocessing
 
-class trainingDisplay() :
+class multiproc_trainingDisplay():
     #Class that renders relevant text added by the user, lets you update its information.
     #Created because the need of showing Trials and Successful trials to the user on a regular training.
     #This class should be able to display two different types of information (important, in a bigger font, and 
     # less important information in a regular font) and adjust the graphical window according to the amount of information.
     #This class is a WIP.>< 
-
-    def __init__(self):
+    
+    
+    def __init__(self, jobl):
+        self.jobList = jobl
+        
+        
+        
         self.available = True
         self.displayText1 = [] #important text to display in a relatively big font
         self.displayText2 = [] #less important text to display in a smaller font
@@ -30,7 +36,49 @@ class trainingDisplay() :
         self.secondaryFont = pygame.font.SysFont(None, 36)
         time.sleep(0.5)
         self.renderAgain()
+        pass
 
+    def checkJobList(self):
+        if (self.jobList.qsize() > 0 or self.jobList.empty() == False ):
+                try:
+                        tempvar = self.jobList.get()
+                        self.jobList.task_done()
+                except:
+                        return;
+                print str("checkJobList: queue: " + str(tempvar) )
+                index = tempvar[0]
+                try:
+                    argument = tempvar[1]
+                except:
+                    argument = ""
+                    pass
+                
+                print "checkJobList: Got a Message:", index
+                print "checkJobList: Message's argument:", argument
+#                 try:
+#                     a = str(argument)
+#                     print "Argument: %s" %a
+#                 except:
+#                     print "Message's argument cannot be parsed to str."
+#                     pass
+                if (index == "updateInfo"):
+                    print "Command updateInfo received."
+                    self.updateInfo(argument[0], argument[1])
+                elif (index == "importantInfo"):
+                    print "Command importantInfo received."
+                    self.addImportantInfo(argument)
+                elif (index == "secondaryInfo"):
+                    print "Command secondaryInfo received."
+                    self.addSecondaryInfo(argument)
+                elif (index == "exitDisplay"):
+                    print "Command exitDisplay received."
+                    self.exitDisplay()
+                elif (index == "askUserInput"):
+                    print "Command askUserInput received."
+                    self.askUserInput(a)
+                elif (index == "renderAgain"):
+                    print "Command renderAgain received."
+                    self.renderAgain()
 
     def renderAgain(self):
         #render things in pygame again.
@@ -61,8 +109,6 @@ class trainingDisplay() :
                     self.windowSurface.blit(text1, textRect1)
                 # draw the window onto the screen
                 pygame.display.update()
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT: sys.exit()
 
     
     def askUserInput(self, texts):
@@ -120,6 +166,54 @@ class trainingDisplay() :
         """
         self.renderAgain()
 
+
+class trainingDisplay() :
+    #This class relays information to the multiproc_trainingDisplay class..
+    #check that class for information about trainingDisplay functionality.>< 
+    
+    def launch_multiproc(self, jobl):
+        a = multiproc_trainingDisplay(jobl)
+        while(True):
+            time.sleep(0.01)
+            a.checkJobList()
+            #a.updateInfo("Other secondary information", var)
+            for event in pygame.event.get():
+                    if event.type == pygame.QUIT: sys.exit()
+    
+    def __init__(self):
+        import multiprocessing
+        self.jobList = multiprocessing.JoinableQueue()
+        
+        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.jobList,) )
+        self.displayProc.start()
+        
+        print "process started."
+
+
+    def renderAgain(self):
+        #render things in pygame again.
+        self.jobList.put( ("renderAgain", "") )
+        pass
+
+    
+    def askUserInput(self, texts):
+        self.jobList.put( ("askUserInput", texts) )
+        
+    
+    def addImportantInfo(self, info):
+        self.jobList.put( ("importantInfo", info) )
+    
+    def addSecondaryInfo(self, info):
+        self.jobList.put( ("secondaryInfo", info) )
+    
+    def exitDisplay(self):
+        #print "exiting Display."
+        self.jobList.put( ("exitDisplay", "") )
+        sys.exit()
+    
+    def updateInfo(self, text, newValue):
+        self.jobList.put( ("updateInfo", (text, newValue)) );
+
 if __name__ == '__main__':
     # create a logging format
     dateformat = '%Y/%m/%d %H:%M:%S'
@@ -156,5 +250,3 @@ if __name__ == '__main__':
         var+=1
         print "loop: " , var
         logger.info( str("loop: " + str(var) ) )
-        for event in pygame.event.get():
-                if event.type == pygame.QUIT: sys.exit()
