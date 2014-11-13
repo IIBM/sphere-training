@@ -5,12 +5,64 @@ import numpy
 import time
 import logging
 import track_bola_utils
+import sys
 
 logger = logging.getLogger('soundGen')
 
-class soundGen():
 
-    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16):
+
+
+class multiproc_soundGen():
+    
+    def checkJobList(self):
+        if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
+                try:
+                        tempvar = self.displayJobList.get()
+                        self.displayJobList.task_done()
+                except:
+                        return;
+                #print str("checkJobList: queue: " + str(tempvar) )
+                index = tempvar[0]
+                try:
+                    argument = tempvar[1]
+                except:
+                    argument = ""
+                    pass
+                
+                #print "checkJobList: Got a Message:", index
+                #print "checkJobList: Message's argument:", argument
+#                 try:
+#                     a = str(argument)
+#                     print "Argument: %s" %a
+#                 except:
+#                     print "Message's argument cannot be parsed to str."
+#                     pass
+                if (index == "updateInfo"):
+                    #print "Command updateInfo received."
+                    self.updateInfo(argument[0], argument[1])
+                elif (index == "importantInfo"):
+                    #print "Command importantInfo received."
+                    self.addImportantInfo(argument)
+                elif (index == "tone"):
+                    #print "Command secondaryInfo received."
+                    print tempvar[1]
+                    print tempvar[2]
+                    self.tone(tempvar[1], tempvar[2])
+                    print "tone.."
+                elif (index == "play"):
+                    #print "Command exitDisplay received."
+                    print "play.."
+                    self.play()
+                    
+                elif (index == "askUserInput"):
+                    #print "Command askUserInput received."
+                    self.askUserInput(a)
+                elif (index == "renderAgain"):
+                    pass
+
+
+    def __init__(self,jobl, freq=None,duration=None,sample_rate=44100, bits=16):
+        self.displayJobList = jobl
         logger.info('New instance of soundGen')
         pygame.mixer.pre_init(sample_rate, -bits, 2)
         pygame.init()
@@ -23,6 +75,15 @@ class soundGen():
             self.duration = duration
             self.freq = freq
         self.sound = self.tone(self.duration,self.freq)
+        print self.sound
+        print "initialized."
+
+
+    def exit(self):
+        pygame.mixer.quit()
+        pygame.quit()
+        #sys.exit()
+        pass
 
     def tone(self, duration=1.0, freq=1000.0) :
         self.duration = duration
@@ -39,6 +100,7 @@ class soundGen():
             buf[s][1] = int(round(max_sample*math.sin(2*math.pi*self.freq*t))) # right
 
         self.sound = pygame.sndarray.make_sound(buf)
+        print self.sound
         return self.sound
 
     #TODO add new waveforms
@@ -46,6 +108,54 @@ class soundGen():
     def play(self):
         logger.info('Tone freq = %s Hz, duration = %s s',self.freq,self.duration)
         self.sound.play()
+        print "playing."
+
+    def getFrequency(self):
+        return self.freq
+    
+    def getDuration(self):
+        return self.duration
+
+
+class soundGen():
+    
+    def launch_multiproc(self, jobl, freq, duration, sample_rate, bits):
+        a = multiproc_soundGen(jobl, freq, duration, sample_rate, bits)
+        while(True):
+            time.sleep(0.005)
+            a.checkJobList()
+            #a.updateInfo("Other secondary information", var)
+            #for event in pygame.event.get():
+            #        if event.type == pygame.QUIT: sys.exit()
+            pass
+    
+    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16):
+        
+        self.freq = freq
+        self.duration = duration
+        
+        import multiprocessing
+        self.displayJobList = multiprocessing.JoinableQueue()
+        
+        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList, freq,duration,sample_rate, bits,) )
+        self.displayProc.start()
+        
+        print "process started."
+
+
+    def exit(self):
+        pygame.mixer.quit()
+        pygame.quit()
+        #sys.exit()
+        pass
+
+    def tone(self, duration=1.0, freq=1000.0) :
+        self.displayJobList.put( ( "tone" , duration, freq ) )
+
+    #TODO add new waveforms
+
+    def play(self):
+        self.displayJobList.put( ( "play", "" ) )
 
     def getFrequency(self):
         return self.freq
@@ -96,10 +206,11 @@ if __name__ == '__main__':
 
     time.sleep(1)
 
-    a = s1.tone(duration)
-    a.play()
-    time.sleep(duration)
 
     s2 = soundGen(3*freq1,2*duration)
+    s2.play()
     time.sleep(2*duration)
     logger.info('End Sound Test')
+    s1.exit()
+    s2.exit()
+    sys.exit()

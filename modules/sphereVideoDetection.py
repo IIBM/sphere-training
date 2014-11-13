@@ -998,7 +998,9 @@ class sphereVideoDetection():
                     # cv.DestroyWindow(self.winName)
                     logger.info("Exiting sphereVideoDetection")
                     # os.kill(os.getpid(), signal.SIGINT)
-                    os._exit(0)
+                    print self.mustquit
+                    if (self.mustquit == 0):
+                        os._exit(0)
                     return
 
 

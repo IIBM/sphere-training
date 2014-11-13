@@ -15,7 +15,7 @@ class multiproc_trainingDisplay():
     
     
     def __init__(self, jobl):
-        self.jobList = jobl
+        self.displayJobList = jobl
         
         
         
@@ -39,13 +39,13 @@ class multiproc_trainingDisplay():
         pass
 
     def checkJobList(self):
-        if (self.jobList.qsize() > 0 or self.jobList.empty() == False ):
+        if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
                 try:
-                        tempvar = self.jobList.get()
-                        self.jobList.task_done()
+                        tempvar = self.displayJobList.get()
+                        self.displayJobList.task_done()
                 except:
                         return;
-                print str("checkJobList: queue: " + str(tempvar) )
+                #print str("checkJobList: queue: " + str(tempvar) )
                 index = tempvar[0]
                 try:
                     argument = tempvar[1]
@@ -53,8 +53,8 @@ class multiproc_trainingDisplay():
                     argument = ""
                     pass
                 
-                print "checkJobList: Got a Message:", index
-                print "checkJobList: Message's argument:", argument
+                #print "checkJobList: Got a Message:", index
+                #print "checkJobList: Message's argument:", argument
 #                 try:
 #                     a = str(argument)
 #                     print "Argument: %s" %a
@@ -62,22 +62,22 @@ class multiproc_trainingDisplay():
 #                     print "Message's argument cannot be parsed to str."
 #                     pass
                 if (index == "updateInfo"):
-                    print "Command updateInfo received."
+                    #print "Command updateInfo received."
                     self.updateInfo(argument[0], argument[1])
                 elif (index == "importantInfo"):
-                    print "Command importantInfo received."
+                    #print "Command importantInfo received."
                     self.addImportantInfo(argument)
                 elif (index == "secondaryInfo"):
-                    print "Command secondaryInfo received."
+                    #print "Command secondaryInfo received."
                     self.addSecondaryInfo(argument)
                 elif (index == "exitDisplay"):
-                    print "Command exitDisplay received."
+                    #print "Command exitDisplay received."
                     self.exitDisplay()
                 elif (index == "askUserInput"):
-                    print "Command askUserInput received."
+                    #print "Command askUserInput received."
                     self.askUserInput(a)
                 elif (index == "renderAgain"):
-                    print "Command renderAgain received."
+                    #print "Command renderAgain received."
                     self.renderAgain()
 
     def renderAgain(self):
@@ -137,7 +137,8 @@ class multiproc_trainingDisplay():
         #print "exiting Display."
         self.available = False
         pygame.quit()
-        sys.exit()
+        #sys.exit()
+        pass
     
     def updateInfo(self, text, newValue):
         #sets from the class lists. the one that has "text", and updates it with newValue
@@ -174,17 +175,18 @@ class trainingDisplay() :
     def launch_multiproc(self, jobl):
         a = multiproc_trainingDisplay(jobl)
         while(True):
-            time.sleep(0.01)
+            time.sleep(0.005)
             a.checkJobList()
             #a.updateInfo("Other secondary information", var)
-            for event in pygame.event.get():
-                    if event.type == pygame.QUIT: sys.exit()
+            #for event in pygame.event.get():
+            #        if event.type == pygame.QUIT: sys.exit()
+            pass
     
     def __init__(self):
         import multiprocessing
-        self.jobList = multiprocessing.JoinableQueue()
+        self.displayJobList = multiprocessing.JoinableQueue()
         
-        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.jobList,) )
+        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList,) )
         self.displayProc.start()
         
         print "process started."
@@ -192,27 +194,29 @@ class trainingDisplay() :
 
     def renderAgain(self):
         #render things in pygame again.
-        self.jobList.put( ("renderAgain", "") )
+        self.displayJobList.put( ("renderAgain", "") )
         pass
 
     
     def askUserInput(self, texts):
-        self.jobList.put( ("askUserInput", texts) )
+        self.displayJobList.put( ("askUserInput", texts) )
         
     
     def addImportantInfo(self, info):
-        self.jobList.put( ("importantInfo", info) )
+        self.displayJobList.put( ("importantInfo", info) )
     
     def addSecondaryInfo(self, info):
-        self.jobList.put( ("secondaryInfo", info) )
+        self.displayJobList.put( ("secondaryInfo", info) )
     
     def exitDisplay(self):
         #print "exiting Display."
-        self.jobList.put( ("exitDisplay", "") )
-        sys.exit()
+        self.displayJobList.put( ("exitDisplay", "") )
+        time.sleep(0.5)
+        #sys.exit()
+        pass
     
     def updateInfo(self, text, newValue):
-        self.jobList.put( ("updateInfo", (text, newValue)) );
+        self.displayJobList.put( ("updateInfo", (text, newValue)) );
 
 if __name__ == '__main__':
     # create a logging format
@@ -243,10 +247,18 @@ if __name__ == '__main__':
     a.addSecondaryInfo(("% s/t", 45.0))
     a.addSecondaryInfo(("Other secondary information", 45.5))
     a.renderAgain()
+    b = trainingDisplay()
+    b.addImportantInfo(("Trials", 300))
+    b.renderAgain()
+    c = trainingDisplay()
+    c.addImportantInfo(("other", 222))
+    c.renderAgain()
     var = 0
     while(True):
         time.sleep(1)
         a.updateInfo("Other secondary information", var)
+        b.updateInfo("Trials", 100+var)
+        c.updateInfo("other", 222+var)
         var+=1
         print "loop: " , var
         logger.info( str("loop: " + str(var) ) )

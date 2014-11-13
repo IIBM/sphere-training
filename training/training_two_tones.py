@@ -525,6 +525,7 @@ class Training():
         Training.gVariables.display.addSecondaryInfo(("Trial Time", "0 - 10"))
         Training.gVariables.display.addSecondaryInfo(("Trial status", ""))
         Training.gVariables.display.renderAgain()
+        Training.gVariables.display.renderAgain()
     
     def updateDisplayInfo(self):
         if (Training.gVariables.trialExecuting == True):
@@ -545,8 +546,8 @@ class Training():
                                  Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "SUCCESS")
                             else:
                                 Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "FAIL")
-        Training.gVariables.display.updateInfo("Trials", Training.gVariables.trialCount)
-        Training.gVariables.display.updateInfo("Successful Trials", Training.gVariables.successTrialCount)
+                        Training.gVariables.display.updateInfo("Trials", Training.gVariables.trialCount)
+                        Training.gVariables.display.updateInfo("Successful Trials", Training.gVariables.successTrialCount)
         
         # stmvnt = str(Training.gVariables.successMovementTrialCount) + " / " + str(Training.gVariables.movementTrialCount )
         # stidle = str(Training.gVariables.successIdleTrialCount) + " / " + str(Training.gVariables.idleTrialCount )
@@ -725,7 +726,18 @@ class Training():
         if (self.gVariables.GUIType != 2) :
             self.gVariables.GUIProcess.terminate()
         self.gVariables.videoDet.exit()
+        print "videodet exit"
+        time.sleep(1)
         self.gVariables.display.exitDisplay()
+        print "display exit"
+        time.sleep(3)
+        self.gVariables.s1.exit()
+        self.gVariables.s2.exit()
+        print "sound exit"
+
+        
+        
+        
         
         sys.exit(0)
     
@@ -1317,7 +1329,7 @@ class Training():
                 pass
     
     def mainLoopFunction(self):
-        DISPLAY_INTERVAL = 4
+        DISPLAY_INTERVAL = 2
         counter_val = 0
         while(True):
                     time.sleep(Training.gVariables.LOOP_FUNCTION_SLEEP_TIME)
@@ -1331,6 +1343,7 @@ class Training():
 
 if __name__ == '__main__':
     a = Training()
-    while (True):
-        time.sleep(0.3)
-        print "x: %d        y: %d" % ( a.gVariables.videoDet.getInstantX() , a.gVariables.videoDet.getInstantY() )
+    #while (True):
+    #    time.sleep(0.3)
+    #    print "x: %d        y: %d" % ( a.gVariables.videoDet.getInstantX() , a.gVariables.videoDet.getInstantY() )
+    pass
