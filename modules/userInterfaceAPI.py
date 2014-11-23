@@ -78,8 +78,8 @@ class userInterface_API:
     def setQueue(self, nuevoqueue):
         #Set the namespace of this class, to interoperate with the master process.
         self.jobList = nuevoqueue
-        print "Queue set."
-        logger.info( "Queue set" )
+        #logger.info( "Queue set" )
+        pass
     
     def setInitialValues(self):
         #print "User Interface API: sending variables to GUI, with the purpose of setting up initial values."

@@ -720,25 +720,22 @@ class Training():
     
     def exitTraining(self):
         # Finalize this training and exits.
-        print "Exiting."
         self.gVariables.logger.info('Exit signal.')
         self.gVariables.logger.info('Comment about this training: %s', Training.gVariables.trial_comment)
         if (self.gVariables.GUIType != 2) :
             self.gVariables.GUIProcess.terminate()
         self.gVariables.videoDet.exit()
-        print "videodet exit"
-        time.sleep(1)
+        #print "videodet exit"
+        time.sleep(0.2)
         self.gVariables.display.exitDisplay()
-        print "display exit"
-        time.sleep(3)
+        #print "display exit"
+        time.sleep(0.2)
         self.gVariables.s1.exit()
         self.gVariables.s2.exit()
-        print "sound exit"
-
+        #print "sound exit"
         
         
-        
-        
+        print "Exiting."
         sys.exit(0)
     
     def getSubjectName(self):
@@ -820,9 +817,9 @@ class Training():
             for fname in fileList:
                 if fname.startswith("%s_" % self.gVariables.subject_name):
                     session_files_count += 1;
-                    print fname
+                    #self.gVariables.logger.debug("Previous subject log found: %s" % str(fname) ) #todavía no existe el logger
                     pass
-        print session_files_count;
+        print "There are %r session files from this subject" % session_files_count;
         #a SNN (session_files_count+1) string is put in the new filename.
         session_files_count +=1
         # logging:
@@ -898,8 +895,8 @@ class Training():
         
         
         #currentGUI.jobList = jobList
-        print currentGUI.jobList
-        print ".."
+        #print currentGUI.jobList
+        #print ".."
         currentGUI.toneStart = 0.0
         currentGUI.toneEnd = configs.eventTime1_sound
         currentGUI.movementWindowStart = configs.eventTime1_movement_start

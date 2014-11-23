@@ -138,6 +138,7 @@ class multiproc_trainingDisplay():
         self.available = False
         pygame.quit()
         #sys.exit()
+        logger.debug("trainingDisplay process finished.")
         pass
     
     def updateInfo(self, text, newValue):
@@ -189,7 +190,7 @@ class trainingDisplay() :
         self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList,) )
         self.displayProc.start()
         
-        print "process started."
+        logger.debug("trainingDisplay process Started.")
 
 
     def renderAgain(self):
@@ -212,6 +213,7 @@ class trainingDisplay() :
         #print "exiting Display."
         self.displayJobList.put( ("exitDisplay", "") )
         time.sleep(0.5)
+        self.displayProc.terminate()
         #sys.exit()
         pass
     

@@ -45,13 +45,13 @@ class multiproc_soundGen():
                     self.addImportantInfo(argument)
                 elif (index == "tone"):
                     #print "Command secondaryInfo received."
-                    print tempvar[1]
-                    print tempvar[2]
+                    logger.debug( str(tempvar[1]) )
+                    logger.debug( str(tempvar[2]) )
                     self.tone(tempvar[1], tempvar[2])
-                    print "tone.."
+                    logger.debug('tone..')
                 elif (index == "play"):
                     #print "Command exitDisplay received."
-                    print "play.."
+                    
                     self.play()
                     
                 elif (index == "askUserInput"):
@@ -59,6 +59,11 @@ class multiproc_soundGen():
                     self.askUserInput(a)
                 elif (index == "renderAgain"):
                     pass
+                elif (index == "exit"):
+                    #print "Command exitDisplay received."
+                    logger.debug('exiting..')
+                    self.exit()
+                    
 
 
     def __init__(self,jobl, freq=None,duration=None,sample_rate=44100, bits=16):
@@ -75,8 +80,7 @@ class multiproc_soundGen():
             self.duration = duration
             self.freq = freq
         self.sound = self.tone(self.duration,self.freq)
-        print self.sound
-        print "initialized."
+        logger.debug("soundGen(multiproc) instance initialized.")
 
 
     def exit(self):
@@ -100,7 +104,7 @@ class multiproc_soundGen():
             buf[s][1] = int(round(max_sample*math.sin(2*math.pi*self.freq*t))) # right
 
         self.sound = pygame.sndarray.make_sound(buf)
-        print self.sound
+        logger.debug(str(self.sound))
         return self.sound
 
     #TODO add new waveforms
@@ -108,7 +112,7 @@ class multiproc_soundGen():
     def play(self):
         logger.info('Tone freq = %s Hz, duration = %s s',self.freq,self.duration)
         self.sound.play()
-        print "playing."
+        logger.debug("playing")
 
     def getFrequency(self):
         return self.freq
@@ -140,12 +144,13 @@ class soundGen():
         self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList, freq,duration,sample_rate, bits,) )
         self.displayProc.start()
         
-        print "process started."
+        logger.debug('soundGen process started')
 
 
     def exit(self):
-        pygame.mixer.quit()
-        pygame.quit()
+        self.displayJobList.put( ( "exit", "" ) )
+        time.sleep(0.5)
+        self.displayProc.terminate()
         #sys.exit()
         pass
 
