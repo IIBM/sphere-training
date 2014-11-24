@@ -53,9 +53,8 @@ class GUIGTK_Class():
                 self.gladefile = "userInputv2.glade"
                 import sys
                 #repair inconsistent path:
-                tempstr = sys.path[0]
-                tempstr = tempstr.replace("/training", "/modules")
-                self.gladefile = tempstr + "/userInputv2.glade"
+                self.gladefile = "../modules/userInputv2.glade"
+                
                 logger.info( self.gladefile )
                 
                 self.glade = gtk.Builder()
