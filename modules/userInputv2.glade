@@ -3,6 +3,7 @@
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="commentWin">
+    <property name="title">Comment.</property>
     <property name="can_focus">False</property>
     <signal name="delete-event" handler="commentswindow_destroy" swapped="no"/>
     <child>
@@ -69,9 +70,10 @@
     </child>
   </object>
   <object class="GtkWindow" id="helpWindow">
+    <property name="title">Help.</property>
     <property name="can_focus">False</property>
-    <property name="default_width">400</property>
-    <property name="default_height">250</property>
+    <property name="default_width">600</property>
+    <property name="default_height">600</property>
     <signal name="delete-event" handler="helpWindow_destroy" swapped="no"/>
     <child>
       <object class="GtkNotebook" id="notebook1">
@@ -817,6 +819,7 @@ Currently 3 methods are available (read docs above).</property>
     <property name="stock">gtk-missing-image</property>
   </object>
   <object class="GtkWindow" id="mainWindow">
+    <property name="title">Main Form (Glade)</property>
     <property name="can_focus">False</property>
     <signal name="key-press-event" handler="mainwindow_keypress" swapped="no"/>
     <signal name="delete-event" handler="mainwindow_destroy" swapped="no"/>
@@ -1124,6 +1127,7 @@ Gives a drop of water</property>
     </child>
   </object>
   <object class="GtkWindow" id="parametersWin">
+    <property name="title">Parameters.</property>
     <property name="can_focus">False</property>
     <signal name="delete-event" handler="parameterswindow_destroy" swapped="no"/>
     <child>
@@ -1625,6 +1629,7 @@ Gives a drop of water</property>
     </child>
   </object>
   <object class="GtkWindow" id="trialEventsWin">
+    <property name="title">Trial Events.</property>
     <property name="can_focus">False</property>
     <signal name="delete-event" handler="trialeventswindow_destroy" swapped="no"/>
     <child>

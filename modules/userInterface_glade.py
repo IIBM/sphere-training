@@ -60,15 +60,10 @@ class GUIGTK_Class():
                 self.glade = gtk.Builder()
                 
                 self.glade.add_from_file(self.gladefile)
+                #para solucionar problema viewport: http://www.daa.com.au/pipermail/pygtk/2009-June/017189.html
                 self.glade.connect_signals(handlers)
                 self.glade.get_object("mainWindow").show_all()
-                self.glade.get_object("mainWindow").set_title("Main Form (Glade)")
-                self.glade.get_object("commentWin").set_title("Comment.")
-                self.glade.get_object("parametersWin").set_title("Parameters.")
-                self.glade.get_object("trialEventsWin").set_title("Trial Events.")
-                self.glade.get_object("helpWindow").set_title("Help Window.")
-                #self.glade.get_object("helpWindow").show_all()
-                self.glade.get_object("helpWindow").set_size_request(600,600)
+                #self.glade.get_object("helpWindow").set_size_request(600,600)
                 
                 #gray color on one entry:
                 #clr = gtk.gdk.Color(red = 200, green = 200, blue = 200);
