@@ -3,9 +3,9 @@
 ######################################################
 # Training two tones:
 """
-    This training creates two tones of different frequency.
-    Each tone has one second of duration (adjustable). After the tone, there is a two second
-    interval (also adjustable) where the subject must move (first tone) or stand still (second
+    This training system creates two tones of different frequency.
+    Each tone has one second of duration (adjustable). After the tone ends, there is a two second
+    interval (also adjustable) where the subject must either move (first tone) or stand still (second
     tone).
     If the subject succeds in the task, gets a reward (drop of water).
     There is a certain probabilty of ocurrence for each tone. If one tone appears three
@@ -1043,12 +1043,14 @@ class Training():
                        ) ):
                     # Training.giveReward() #the reward is given at the end of the mvnt window
                     Training.gVariables.trialSuccessful = True
+                    Training.gVariables.logger.info('Movement threshold reached. Will give reward at the end of movement window. (mvnt)')
                     # print "Continuous total time: %r"%Training.gVariables.videoDet.getMovementTime()
                 elif (Training.gVariables.current_trial_type == 2):
                   if (Training.gVariables.videoDet.getMovementStatus() == False and 
                     Training.gVariables.videoDet.getIdleTime() >= (Training.gVariables.idleTime)):  #
                     # Training.giveReward() #the reward is given at the end of the mvnt window
                     Training.gVariables.trialSuccessful = True
+                    Training.gVariables.logger.info('Movement threshold reached. Will give reward at the end of movement window. (idle)')
                     # print "Continuous total time: %r"%Training.gVariables.videoDet.getMovementTime()
                     pass
             else:
