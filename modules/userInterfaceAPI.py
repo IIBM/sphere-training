@@ -108,11 +108,12 @@ class userInterface_API:
         pass
     
     def setNameSpaceMessage(self, arg1, arg2=0):
-        print "setNameSpaceMessage"
+        #print "setNameSpaceMessage"
         self.jobList.put( (arg1, arg2) )
         self.jobList.join()
         #self.jobList.put_nowait((arg1, arg2))
-        print "done."
+        #print "done."
+        pass
     
     
     def overrideaction_drop(self):

@@ -739,7 +739,7 @@ class Training():
         sys.exit(0)
     
     def getSubjectName(self):
-        # logging: first determine the subject (or test if not applicable)
+        # getSubjectName : asks user (by showing a list) which name corresponds to this training.
         import userInterfaceAPI
         
         def checkSubjectName( starg ):
@@ -776,9 +776,12 @@ class Training():
             pass
         
         sbjlistfile = "subject_list.txt"
-        f = open(sbjlistfile ,"r+")
-        subj_list = f.readlines()
-        
+        try:
+            f = open(sbjlistfile ,"r+")
+            subj_list = f.readlines()
+        except:
+            self.gVariables.logger.warning( "Error getting subject list." );
+            
         j = len(subj_list)
         i=0;
         while i < j:
@@ -806,6 +809,7 @@ class Training():
         pass
     
     def trainingInit(self):
+        #trainingInit : Called when the class is instantiated.
         print self.gVariables.trainingName
         #get subject name:
         self.getSubjectName()
@@ -847,6 +851,7 @@ class Training():
         
         self.gVariables.logger.info('===============================================')
         self.gVariables.logger.info('Start %s' % self.gVariables.trainingName)
+        self.gVariables.logger.info('Subject name: %s' % self.gVariables.subject_name)
         # valve:
         import valve
         self.gVariables.valve1 = valve.Valve()
@@ -886,8 +891,7 @@ class Training():
     
     def initUserInputGUI(self,jobList):
         #initialize user input GUI and associated variables.
-        #this function uses trainingAPI to handle graphical user interfaces
-        #ns = is the NameSpace associated with multiprocessing , contains the shared variables (message1 and 2)
+        #    this function uses trainingAPI to handle graphical user interfaces
         import userInterfaceAPI
         currentGUI = userInterfaceAPI.userInterface_API(False)
         currentGUI.setQueue(jobList)
@@ -1077,15 +1081,15 @@ class Training():
                 except:
                     argument = ""
                     pass
-                
-                print "GUICheck: Got a Message:", index
+                pass
+                #print "GUICheck: Got a Message:", index
                 Training.gVariables.logger.debug( str("GUICheck: Got a Message:" + str(index)) )
-                print "GUICheck: Message's argument:", argument
+                #print "GUICheck: Message's argument:", argument
                 try:
                     a = str(argument)
                     Training.gVariables.logger.debug( str("GUICheck: Message's argument:" + a ) )
                 except:
-                    Training.gVariables.logger.warning( str("GUICheck: Message received argument cannot be parsed to str" ) )
+                    Training.gVariables.logger.warning( str("GUICheck: Message's received argument cannot be parsed to string" ) )
                     pass
                 
                 if (index == 0):
@@ -1115,13 +1119,23 @@ class Training():
                     Training.gVariables.logger.debug( "GUICheck: 'Stop Training' message" )
                     Training.gVariables.fn_startStopTraining(2)
                 elif (index == 7):
-                    print "GUICheck: 'Pause Training' message"
-                    Training.gVariables.logger.debug( "GUICheck: 'Pause Training' message" )
-                    Training.gVariables.fn_pauseResumeTraining(2) ########
+                    if (Training.gVariables.trialExecuting == True):
+                        print "GUICheck: 'Pause Training' message"
+                        Training.gVariables.logger.debug( "GUICheck: 'Pause Training' message" )
+                        Training.gVariables.fn_pauseResumeTraining(2) ########
+                    else:
+                        print "GUICheck: 'Resume Training' message"
+                        Training.gVariables.logger.debug( "GUICheck: 'Resume Training' message" )
+                        Training.gVariables.fn_pauseResumeTraining(1) ########
                 elif (index == 8):
-                    print "GUICheck: 'Resume Training' message"
-                    Training.gVariables.logger.debug( "GUICheck: 'Resume Training' message" )
-                    Training.gVariables.fn_pauseResumeTraining(1) ########
+                    if (Training.gVariables.trialExecuting == True):
+                        print "GUICheck: 'Pause Training' message"
+                        Training.gVariables.logger.debug( "GUICheck: 'Pause Training' message" )
+                        Training.gVariables.fn_pauseResumeTraining(2) ########
+                    else:
+                        print "GUICheck: 'Resume Training' message"
+                        Training.gVariables.logger.debug( "GUICheck: 'Resume Training' message" )
+                        Training.gVariables.fn_pauseResumeTraining(1) ########
                 elif (index == 9):
                     print "GUICheck: 'Exit Training' message"
                     Training.gVariables.logger.debug( "GUICheck: 'Exit Training' message" )
