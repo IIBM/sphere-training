@@ -163,7 +163,6 @@ class GUIGTK_Class:
     
     def exit_all(self):
         logger.info('Exiting userInterface_tk')
-        print "from GUITK"
         os._exit(0)
     
     
@@ -481,14 +480,14 @@ class GUIGTK_Class:
         
         
         def hideForm1(self, toHide = True):
-            print "Hide Form 1."
+            logger.debug("Hide Form 1.")
             #a = gVariables.AppFrm1.__Entry3MvmntWindowStart.get() 
             if (toHide == True):
                 self.reference.AppFrm1.withdraw()
                 return;
             #GUIGTK_Class.AppFrm1.get_changes()
             
-            print "Reading variables "
+            logger.debug("Reading variables ");
             a = self.reference.AppFrm1.var1_TStart #tone duration
             b = self.reference.AppFrm1.var2_TEnd
             c = self.reference.AppFrm1.var3_MWS
@@ -496,13 +495,13 @@ class GUIGTK_Class:
             e = self.reference.AppFrm1.var5_ITStart #changed to intertrial random1 time
             f = self.reference.AppFrm1.var6_ITEnd #changed to intertrial random2 time
             g = self.reference.AppFrm1.var7_Probab1
-            print a
-            print b
-            print c
-            print d
-            print e
-            print f
-            print g
+            #print a
+            #print b
+            #print c
+            #print d
+            #print e
+            #print f
+            #print g
             self.reference.toneStart = a
             self.reference.toneEnd = b
             self.reference.movementWindowStart = c
@@ -512,7 +511,7 @@ class GUIGTK_Class:
             self.reference.probabilityToneOne = g
         
         def hideForm3(self, toHide = True):
-            print "Hide Form 3."
+            logger.debug("Hide Form 3.")
             
             if (toHide == True):
                 self.reference.AppFrm3.withdraw()
@@ -520,7 +519,7 @@ class GUIGTK_Class:
             
             #GUIGTK_Class.AppFrm3.get_changes()
             
-            print "Reading variables "
+            logger.debug("Reading variables ")
             a = self.reference.AppFrm3.var1_T1
             b = self.reference.AppFrm3.var2_T2
             c = self.reference.AppFrm3.var3_MA
@@ -529,14 +528,14 @@ class GUIGTK_Class:
             f = self.reference.AppFrm3.var6_ShowTracking
             g = self.reference.AppFrm3.var7_ShowFeedback
             h = self.reference.AppFrm3.var8_num_selected
-            print a
-            print b
-            print c
-            print d
-            print e
-            print f
-            print g
-            print h
+#             print a
+#             print b
+#             print c
+#             print d
+#             print e
+#             print f
+#             print g
+#             print h
             self.reference.frequencyTone1 = a
             self.reference.frequencyTone2 = b
             self.reference.movementAmount = c
@@ -548,7 +547,7 @@ class GUIGTK_Class:
                 self.reference.AppFrm3.withdraw()
         
         def hideForm5(self, toHide = True):
-            print "Hide Form 5."
+            logger.debug("Hide Form 5.")
             self.reference.comment = self.reference.AppFrm5.commentStr
             print self.reference.comment
             if (toHide == True):
@@ -650,12 +649,13 @@ class GUIGTK_Class:
                 return;
             import Tkinter as tk
             rootNW=tk.Tk()
+            rootNW.wm_title("Help.")
             self.helpfrm = self.reference.Form_help(rootNW)
-            print self.reference
+            #print self.reference
             self.helpfrm.reference = self.reference
             self.reference.helpNumber = 1;
-            print "ref"
-            print self.helpfrm.reference 
+            #print "ref"
+            #print self.helpfrm.reference 
             self.helpfrm.pack(side="top", fill="both", expand=True)
             #rootNW.mainloop()
             pass
@@ -1771,7 +1771,8 @@ class GUIGTK_Class:
             self.calculateBestSize()
         
         def change_page(self):
-            print "Help form: changing page"
+            #print "Help form: changing page"
+            logger.debug("Help form: changing page")
             #self.calculateBestSize()
             for child in self.frame.winfo_children():
                 child.destroy()
@@ -1781,14 +1782,15 @@ class GUIGTK_Class:
                 self.populate_pg3()
             elif self.current_help_page == 3:
                 self.populate_pg1()
-            print "Current page: ",self.current_help_page
+            #print "Current page: %r" % self.current_help_page
+            logger.debug("Current page: %r" % self.current_help_page)
 
         def dummy_fn(self, arg):
-            print "test fn."
-            print self.reference.helpNumber
+            logger.debug("test fn.") 
+            #print self.reference.helpNumber
             self.reference.helpNumber = 0;
-            print self.reference.helpNumber
-    
+            #print self.reference.helpNumber
+            pass
     
         def populate_pg1(self):
             '''populate frame.'''
@@ -2150,10 +2152,10 @@ class GUIGTK_Class:
             screen_width = self.frame.winfo_screenwidth()
             screen_height = self.frame.winfo_screenheight()
             
-            print screen_width
-            print screen_height
+            #print screen_width
+            #print screen_height
             
-            print ".."
+            #print ".."
             bestWidth = 0
             
             if (screen_width < 800):
@@ -2175,11 +2177,13 @@ class GUIGTK_Class:
             
             if (screen_height > 650):
                 bestHeight = 680
-            print self.root.winfo_width()
-            print self.root.winfo_height()
             
-            print self.frame.winfo_reqwidth()
-            print self.frame.winfo_reqheight()
+            #print self.root.winfo_width()
+            #print self.root.winfo_height()
+            
+            #print self.frame.winfo_reqwidth()
+            #print self.frame.winfo_reqheight()
+            
             self.root.geometry("%dx%d" % (bestWidth,bestHeight) )
             pass
     
