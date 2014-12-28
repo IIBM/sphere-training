@@ -859,6 +859,10 @@ Gives a drop of water</property>
               <object class="GtkButton" id="btnReward">
                 <property name="label" translatable="yes">Reward</property>
                 <property name="visible">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_markup">Reward Button</property>
+                <property name="tooltip_text" translatable="yes">Reward Button (shortcut: R) 
+Gives a drop of water and counts the trial as successful.</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <signal name="clicked" handler="clicked_reward" swapped="no"/>
@@ -877,6 +881,10 @@ Gives a drop of water</property>
                 <property name="label" translatable="yes">Open Valve</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_markup">Open Button</property>
+                <property name="tooltip_text" translatable="yes">Open Button (shortcut: O)
+Opens the valve.</property>
                 <property name="receives_default">True</property>
                 <signal name="clicked" handler="clicked_open" swapped="no"/>
               </object>
@@ -893,6 +901,10 @@ Gives a drop of water</property>
               <object class="GtkButton" id="btnClose">
                 <property name="label" translatable="yes">Close Valve</property>
                 <property name="visible">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_markup">Close Button</property>
+                <property name="tooltip_text" translatable="yes">Close Button (shortcut: C)
+Closes the valve.</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <signal name="clicked" handler="clicked_close" swapped="no"/>
@@ -910,6 +922,11 @@ Gives a drop of water</property>
               <object class="GtkButton" id="btnStart">
                 <property name="label" translatable="yes">Start / Stop Training</property>
                 <property name="visible">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_markup">Start / Stop Training</property>
+                <property name="tooltip_text" translatable="yes">Start / Stop Training (shortcut: K)
+Starts the training if it hasn't started before.
+Else stops the training.</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <signal name="clicked" handler="clicked_start" swapped="no"/>
@@ -927,6 +944,11 @@ Gives a drop of water</property>
               <object class="GtkButton" id="btnPause">
                 <property name="label" translatable="yes">Pause / Resume Training</property>
                 <property name="visible">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_markup">Pause / Resume Training</property>
+                <property name="tooltip_text" translatable="yes">Pause / Resume Training (shortcut: P)
+Pauses the training if it is currently running.
+Else resumes the paused training.</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <signal name="clicked" handler="clicked_pause" swapped="no"/>
@@ -944,6 +966,10 @@ Gives a drop of water</property>
               <object class="GtkButton" id="btnExit">
                 <property name="label" translatable="yes">Exit</property>
                 <property name="visible">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_markup">Exit Training</property>
+                <property name="tooltip_text" translatable="yes">Exit Training
+Exits the training and all its modules.</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <signal name="clicked" handler="clicked_exit" swapped="no"/>
@@ -1004,6 +1030,10 @@ Gives a drop of water</property>
                   <object class="GtkButton" id="btnComment">
                     <property name="label" translatable="yes">Comment about this training</property>
                     <property name="visible">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Comment about this training</property>
+                    <property name="tooltip_text" translatable="yes">Comment about this training
+Displays an input box for writing a comment about this training session.</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <signal name="clicked" handler="clicked_comment" swapped="no"/>
@@ -1032,6 +1062,11 @@ Gives a drop of water</property>
                   <object class="GtkButton" id="btnTrialEvents">
                     <property name="label" translatable="yes">Edit Trial Events</property>
                     <property name="visible">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Trial Events</property>
+                    <property name="tooltip_text" translatable="yes">Trial Events
+Opens a form to configure Trial Events.
+This includes the duration of tone, the length of the detection window, among other variables.</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <signal name="clicked" handler="clicked_trialevents" swapped="no"/>
@@ -1060,6 +1095,11 @@ Gives a drop of water</property>
                   <object class="GtkButton" id="btnParameters">
                     <property name="label" translatable="yes">Edit Parameters</property>
                     <property name="visible">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Parameters</property>
+                    <property name="tooltip_text" translatable="yes">Parameters
+Opens a form to configure Parameters
+This includes tone frequencies, video options and movement detection variables.</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <signal name="clicked" handler="clicked_parameters" swapped="no"/>
@@ -1099,7 +1139,8 @@ Gives a drop of water</property>
                 <property name="receives_default">True</property>
                 <property name="has_tooltip">True</property>
                 <property name="tooltip_markup">Help Button</property>
-                <property name="tooltip_text" translatable="yes">Help Button</property>
+                <property name="tooltip_text" translatable="yes">Help
+Displays a frame with help topics.</property>
                 <property name="use_stock">True</property>
                 <property name="focus_on_click">False</property>
                 <signal name="clicked" handler="clicked_help" swapped="no"/>
