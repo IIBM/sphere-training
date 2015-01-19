@@ -1,11 +1,22 @@
 sphere-training
 ==========
 
-Codigo para el tracking de los movimientos de la bola
+This software helps to automatically control a classical conditioning training.
+The setup consist of a rat over a sphere.
+The system generates one or two different tones as stimulus and detects the movement of the sphere trough video processing.
 
-Incluye cOdigo para los diferentes entrenamientos, y los mOdulos de detecciOn de movimiento.
+Installation
+
+In "modules" directory
+ - create a file configvideo.py using configvideo.py.example
+ - select beteween videocam and example file, with variable VIDEOSOURCE
+    VIDEOSOURCE = CAM_NUMBER
+    or
+    VIDEOSOURCE = PATH + FILE 
+ - complete CAM_NUMBER or PATH and FILE with the proper option. PATH could be absolute or relative to the directory where configvideo.py is located
+
+Dependence:
 
 valve.py ->
       python-parallel
-
 
