@@ -1,4 +1,4 @@
-trainingName = "training_two_tones"
+trainingName = "training"
 # relevant Training variables
 eventTime1_sound = 1.0  # (sec) Instant of time when the soundGen ends.
 eventTime1_movement_start = 1.0 #(sec) Instant of time when the movement starts to be considered

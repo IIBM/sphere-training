@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ######################################################
-# Training two tones:
+# Training:
 """
     This training system creates two tones of different frequency.
     Each tone has one second of duration (adjustable). After the tone ends, there is a two second
@@ -337,21 +337,21 @@ class Training():
                     del(sys.modules["configCamera"]) 
                 
                 try:
-                    import config_training_two_tones as cfgtwotones
+                    import config_training as cfgtraining
                 except ImportError:
-                    print "File config_training_two_tones.py not found. Generating a new copy..."
+                    print "File config_training.py not found. Generating a new copy..."
                     a = os.getcwd() + "/"
                     print a
                     import shutil
-                    shutil.copyfile(a+"config_training_two_tones.py.example", a+"config_training_two_tones.py")
-                    import config_training_two_tones as cfgtwotones
-                    print "config_training_two_tones.py copied and imported successfully."
+                    shutil.copyfile(a+"config_training.py.example", a+"config_training.py")
+                    import config_training as cfgtraining
+                    print "config_training.py copied and imported successfully."
                 except:
-                    print "Error importing config_training_two_tones."
+                    print "Error importing config_training."
                     os._exit(1)
                 
-                if 'config_training_two_tones' in sys.modules:  
-                    del(sys.modules["config_training_two_tones"]) 
+                if 'config_training' in sys.modules:  
+                    del(sys.modules["config_training"]) 
                 
                 ####
                 # End of checking existance of config files.
@@ -435,30 +435,30 @@ class Training():
         __checkConfigFiles()
         
         
-        import config_training_two_tones as cfgtwotones
-        trainingName = cfgtwotones.trainingName
+        import config_training as cfgtraining
+        trainingName = cfgtraining.trainingName
         # relevant Training variables
-        eventTime1_sound = cfgtwotones.eventTime1_sound  # in seconds. Instant of time when the soundGen ends.
-        eventTime1_movement_start = cfgtwotones.eventTime1_movement_start  # in seconds. Instant of time when the movement starts to be considered
-        eventTime2_movement = cfgtwotones.eventTime2_movement  # in seconds. Instant of time when movement ceases to be considered for reward
-        eventTime3_trialEnd = cfgtwotones.eventTime3_trialEnd  # in seconds. Instant of time when the trial ends.
-        minIdleIntertrialTime = cfgtwotones.minIdleIntertrialTime  # no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
+        eventTime1_sound = cfgtraining.eventTime1_sound  # in seconds. Instant of time when the soundGen ends.
+        eventTime1_movement_start = cfgtraining.eventTime1_movement_start  # in seconds. Instant of time when the movement starts to be considered
+        eventTime2_movement = cfgtraining.eventTime2_movement  # in seconds. Instant of time when movement ceases to be considered for reward
+        eventTime3_trialEnd = cfgtraining.eventTime3_trialEnd  # in seconds. Instant of time when the trial ends.
+        minIdleIntertrialTime = cfgtraining.minIdleIntertrialTime  # no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
         
-        interTrialRandom1Time = cfgtwotones.interTrialRandom1Time  # intertrial time is random between this value and the random2 value
-        interTrialRandom2Time = cfgtwotones.interTrialRandom2Time  # intertrial time is random between previous value and this value. This
+        interTrialRandom1Time = cfgtraining.interTrialRandom1Time  # intertrial time is random between this value and the random2 value
+        interTrialRandom2Time = cfgtraining.interTrialRandom2Time  # intertrial time is random between previous value and this value. This
         # is also the max duration of a trial.
         
-        maxMovementThreshold = cfgtwotones.maxMovementThreshold
-        maxMovementTime = cfgtwotones.maxMovementTime  # max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
-        maxIdleTime = cfgtwotones.maxIdleTime
-        movementTime = cfgtwotones.movementTime  # continuous moving time that should be reached to give reward. 0.5 = 500 ms
+        maxMovementThreshold = cfgtraining.maxMovementThreshold
+        maxMovementTime = cfgtraining.maxMovementTime  # max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
+        maxIdleTime = cfgtraining.maxIdleTime
+        movementTime = cfgtraining.movementTime  # continuous moving time that should be reached to give reward. 0.5 = 500 ms
         # ex.: movementTime = 0.5 means that there should be movement detected over 500 ms at least
-        idleTime = cfgtwotones.idleTime  # continuous idle time that should be reached to give reward. 10= 1000 ms
+        idleTime = cfgtraining.idleTime  # continuous idle time that should be reached to give reward. 10= 1000 ms
         
-        soundGenDuration1 = cfgtwotones.soundGenDuration1
-        soundGenDuration2 = cfgtwotones.soundGenDuration2
-        soundGenFrequency1 = cfgtwotones.soundGenFrequency1  # in Hz
-        soundGenFrequency2 = cfgtwotones.soundGenFrequency2  # in Hz
+        soundGenDuration1 = cfgtraining.soundGenDuration1
+        soundGenDuration2 = cfgtraining.soundGenDuration2
+        soundGenFrequency1 = cfgtraining.soundGenFrequency1  # in Hz
+        soundGenFrequency2 = cfgtraining.soundGenFrequency2  # in Hz
         
         trialCount = 0  # total number of trials
         movementTrialCount = 0  # total number of trials which requires the subject to move
@@ -481,7 +481,7 @@ class Training():
         LOOP_FUNCTION_SLEEP_TIME = 0.05  # sleep time for the trial loop function (how frequently it asks videodet)
         
         #GUI Type:
-        GUIType = cfgtwotones.usingTK
+        GUIType = cfgtraining.usingTK
         
         # video Detection:
         videoDet = 0  # video Detection object. initialized in the main.
@@ -496,7 +496,7 @@ class Training():
         
         current_trial_stage = 0  # 0: tone, 1: movement detection, 2: inter-trial, 3: instant before changing to 0
     
-        toneOneProbability = cfgtwotones.toneOneProbability
+        toneOneProbability = cfgtraining.toneOneProbability
         history_trial = [1, 2, 1, 2, 1, 2]
         current_trial_type = 0  # 1: for tone one, reward after movement 2: for tone two, reward after standing still
         current_trial_type_str = ""  # same as type but with string format.
@@ -604,10 +604,10 @@ class Training():
             #######################################################
             Training.gVariables.logger.debug("START: Logging the current state of all variables:")
             #logging the current status of config file first..
-            Training.gVariables.logger.debug("START: config_training_two_tones.py")
-            with open("config_training_two_tones.py", 'r') as configfile:
+            Training.gVariables.logger.debug("START: config_training.py")
+            with open("config_training.py", 'r') as configfile:
                 Training.gVariables.logger.debug("\n"+configfile.read())
-            Training.gVariables.logger.debug("END: config_training_two_tones.py")
+            Training.gVariables.logger.debug("END: config_training.py")
             
             Training.gVariables.logger.debug("trainingName %s" % str(Training.gVariables.trainingName))
             Training.gVariables.logger.debug("eventTime1_sound %s" % str(Training.gVariables.eventTime1_sound))
@@ -895,7 +895,7 @@ class Training():
         import userInterfaceAPI
         currentGUI = userInterfaceAPI.userInterface_API(False)
         currentGUI.setQueue(jobList)
-        import config_training_two_tones as configs
+        import config_training as configs
         
         
         #currentGUI.jobList = jobList
