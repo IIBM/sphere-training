@@ -461,8 +461,8 @@ class Training():
         soundGenFrequency2 = cfgtraining.soundGenFrequency2  # in Hz
         
         trialCount = 0  # total number of trials
-        movementTrialCount = 0  # total number of trials which requires the subject to move
-        idleTrialCount = 0  # total number of trials which requires the subject to stay idle.
+        movementTrialCount = 0  # total number of trials of the type "Move" (which requires the subject to move)
+        idleTrialCount = 0  # total number of trials of the type "Idle" (which requires the subject to stay idle.)
         successTrialCount = 0  # total number of succesful trials
         successMovementTrialCount = 0  # total number of succesful trials regarding movement state
         successIdleTrialCount = 0  # total number of succesful trials regarding idle state
@@ -559,20 +559,24 @@ class Training():
                             tempH1 = temp1 * 100.0
                             tempString1 = str(tempH1)
                             if (len(tempString1) > 3):
-                                                tempS1 = str(tempH1)[:4]
+                                tempS1 = str(tempH1)[:4]
                             else:
-                                                tempS1 = str(tempH1)[:3]
+                                tempS1 = str(tempH1)[:3]
                             Training.gVariables.display.updateInfo("Successful Trials mvnt", tempS1)
+                        else:
+                            Training.gVariables.display.updateInfo("Successful Trials mvnt", "0.0")
                         
                         if (Training.gVariables.idleTrialCount > 0):
                             temp2 = (1.0 * Training.gVariables.successIdleTrialCount / Training.gVariables.idleTrialCount)
                             tempH2 = temp2 * 100.0
                             tempString2 = str(tempH2)
                             if (len(tempString2) > 3):
-                                                tempS2 = str(tempH2)[:4]
+                                 tempS2 = str(tempH2)[:4]
                             else:
-                                                tempS2 = str(tempH2)[:3]
+                                 tempS2 = str(tempH2)[:3]
                             Training.gVariables.display.updateInfo("Successful Trials idle", tempS2)
+                        else:
+                            Training.gVariables.display.updateInfo("Successful Trials idle", "0.0")
                         ########
                         temp = (1.0 * Training.gVariables.successTrialCount / Training.gVariables.trialCount)
                         tempH = temp * 100.0
@@ -600,7 +604,18 @@ class Training():
             Training.gVariables.current_trial_stage = 3
             Training.gVariables.trialCount = 0
             Training.gVariables.successTrialCount = 0
-            Training.gVariables.dropsAmountGivenManually = 0
+            Training.gVariables.successIdleTrialCount = 0;
+            Training.gVariables.countIdleTime = 0;
+            
+            Training.gVariables.movementTrialCount = 0  # total number of trials which requires the subject to move
+            Training.gVariables.idleTrialCount = 0  # total number of trials which requires the subject to stay idle.
+            Training.gVariables.successTrialCount = 0  # total number of succesful trials
+            Training.gVariables.successMovementTrialCount = 0  # total number of succesful trials regarding movement state
+            Training.gVariables.successIdleTrialCount = 0  # total number of succesful trials regarding idle state
+            Training.gVariables.successRate = 0  # success rate = (success trials / total trial count) %
+            Training.gVariables.dropReleased = 0  # 0: no drop of water released this trial, 1: drop of water released
+            Training.gVariables.dropsAmountGivenManually = 0  # number of drops given manually.
+            
             #######################################################
             Training.gVariables.logger.debug("START: Logging the current state of all variables:")
             #logging the current status of config file first..
@@ -679,7 +694,13 @@ class Training():
     
     @staticmethod
     def stopTraining():
-        #Stop
+            #Stop
+            if (Training.gVariables.current_trial_stage < 2 ):
+                #stage 0: starting trial / playing tone
+                #stage 1: detecting movement
+                #if trial stage is 0 or 1, the subject hadn't have enough time to complete the trial opportunity window, so this trial cannot count
+                #in the analysis. (decreasing trial count.)
+                Training.gVariables.trialCount-=1;
             Training.gVariables.logger.info('%s stopped.' % Training.gVariables.trainingName)
             Training.gVariables.logger.info('Success rate: %s' % Training.gVariables.successRate)
             Training.gVariables.logger.info('Movement trials: %d / %d' % (Training.gVariables.successMovementTrialCount, Training.gVariables.movementTrialCount))
@@ -936,9 +957,11 @@ class Training():
                 if ((Training.gVariables.current_trial_stage == 3 and 
                             Training.gVariables.videoDet.getIdleTime() >= Training.gVariables.minIdleIntertrialTime and
                                     Training.gVariables.videoDet.getMovementStatus() == False) or (Training.gVariables.trialCount == 0)):
-                    Training.gVariables.logger.info('Starting trial:%d' % Training.gVariables.trialCount)
+                    
                     
                     Training.gVariables.trialCount += 1
+                    Training.gVariables.logger.info('Starting trial:%d' % Training.gVariables.trialCount)
+                    
                     Training.gVariables.dropReleased = 0
                     Training.gVariables.current_trial_start_time = timeit.default_timer()
 
