@@ -527,8 +527,9 @@ class Training():
         Training.gVariables.display.renderAgain()
         Training.gVariables.display.renderAgain()
     
-    def updateDisplayInfo(self):
-        if (Training.gVariables.trialExecuting == True):
+    @staticmethod
+    def internal_updateDisplayInfoForce():
+        if (True):
                         now = timeit.default_timer()
                         b = Training.gVariables.getFormattedTime(int(now - Training.gVariables.start_time))
                         Training.gVariables.display.updateInfo("Time", b)
@@ -591,6 +592,11 @@ class Training():
                         Training.gVariables.display.updateInfo("Trial Time", a)
         #Training.gVariables.display.renderAgain() # not necessary since the update info calls renderAgain
         pass
+        pass
+    
+    def updateDisplayInfo(self):
+        if (Training.gVariables.trialExecuting == True):
+            self.internal_updateDisplayInfoForce();
     
     @staticmethod
     def restartTraining():
@@ -700,7 +706,17 @@ class Training():
                 #stage 1: detecting movement
                 #if trial stage is 0 or 1, the subject hadn't have enough time to complete the trial opportunity window, so this trial cannot count
                 #in the analysis. (decreasing trial count.)
-                Training.gVariables.trialCount-=1;
+                Training.gVariables.trialCount -= 1;
+                if (Training.gVariables.current_trial_type == 1):
+                    Training.gVariables.movementTrialCount -= 1;
+                    #print "Restado mvnt por trial trunco"
+                    pass
+                elif (Training.gVariables.current_trial_type == 2):
+                    Training.gVariables.idleTrialCount -= 1;
+                    #print "Restado idle por trial trunco"
+                    pass
+                
+            Training.internal_updateDisplayInfoForce();
             Training.gVariables.logger.info('%s stopped.' % Training.gVariables.trainingName)
             Training.gVariables.logger.info('Success rate: %s' % Training.gVariables.successRate)
             Training.gVariables.logger.info('Movement trials: %d / %d' % (Training.gVariables.successMovementTrialCount, Training.gVariables.movementTrialCount))
