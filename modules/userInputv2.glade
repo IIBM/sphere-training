@@ -45,6 +45,10 @@
                     <property name="label" translatable="yes">Apply</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Apply</property>
+                    <property name="tooltip_text" translatable="yes">Apply
+Applies the Comment.</property>
                     <property name="receives_default">True</property>
                     <signal name="clicked" handler="clicked_applyC" swapped="no"/>
                   </object>
@@ -62,7 +66,7 @@
           <object class="GtkLabel" id="label22">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">&lt;b&gt;Comment about this training session:&lt;/b&gt;</property>
+            <property name="label" translatable="yes">&lt;b&gt;Comment about this training:&lt;/b&gt;</property>
             <property name="use_markup">True</property>
           </object>
         </child>
@@ -619,6 +623,10 @@ Note that all trials will always play at least one of the two tones.</property>
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">&lt;b&gt;Tone 1: &lt;/b&gt; This Entry sets the Tone 1 Frequency in Hertz.</property>
                             <property name="use_markup">True</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup">Apply</property>
+                            <property name="tooltip_text" translatable="yes">Tone 1
+This Entry sets the Tone 1 Frequency in Hertz.</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -1199,6 +1207,10 @@ Displays a frame with help topics.</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Tone1:</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Test Tone 1</property>
+                        <property name="tooltip_text" translatable="yes">Tone 1
+Sets the frequency of the Tone 1.</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -1245,6 +1257,10 @@ Displays a frame with help topics.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup">Test Tone 1</property>
+                            <property name="tooltip_text" translatable="yes">Test Tone 1
+Saves frequency changes and plays Tone 1.</property>
                             <signal name="clicked" handler="clicked_testT1" swapped="no"/>
                           </object>
                           <packing>
@@ -1266,6 +1282,10 @@ Displays a frame with help topics.</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Tone2:</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Test Tone 1</property>
+                        <property name="tooltip_text" translatable="yes">Tone 2
+Sets the frequency of the Tone 2.</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -1312,6 +1332,10 @@ Displays a frame with help topics.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup">Test Tone 1</property>
+                            <property name="tooltip_text" translatable="yes">Test Tone 2
+Saves frequency changes and plays Tone 2.</property>
                             <signal name="clicked" handler="clicked_testT2" swapped="no"/>
                           </object>
                           <packing>
@@ -1369,6 +1393,10 @@ Displays a frame with help topics.</property>
                         <property name="label" translatable="yes">Show / Hide Tracking</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Test Tone 1</property>
+                        <property name="tooltip_text" translatable="yes">Show / Hide Tracking
+Shows / hides computer-generated tracking lines and circles on the display.</property>
                         <property name="receives_default">True</property>
                         <signal name="clicked" handler="clicked_shtracking" swapped="no"/>
                       </object>
@@ -1384,6 +1412,11 @@ Displays a frame with help topics.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Test Tone 1</property>
+                        <property name="tooltip_text" translatable="yes">Show / Hide Feedback
+Show / Hide Feedback.
+Note that hiding the feedback will not affect the movement detection modules.</property>
                         <signal name="clicked" handler="clicked_shfeedback" swapped="no"/>
                       </object>
                       <packing>
@@ -1398,6 +1431,10 @@ Displays a frame with help topics.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Recalibrate Camera</property>
+                        <property name="tooltip_text" translatable="yes">Recalibrate Camera
+Generates a new calibration file for the movement detection taking as sample the current video output.</property>
                         <signal name="clicked" handler="clicked_recalibratec" swapped="no"/>
                       </object>
                       <packing>
@@ -1415,6 +1452,11 @@ Displays a frame with help topics.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Movement Amount:</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup">Test Tone 1</property>
+                            <property name="tooltip_text" translatable="yes">Movement Amount
+Sets the movement threshold to consider a given frame as 'moving'.
+(see sphereVideoDetection docs)</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -1455,6 +1497,14 @@ Displays a frame with help topics.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Method Used</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup">Test Tone 1</property>
+                            <property name="tooltip_text" translatable="yes">Method Used
+Establishes the method to use for the movement detection (see sphereVideoDetection docs).
+Valid current methods are:
+  0 : Accumulate Time
+  1 : Movement Vector
+  2 : Movement Vector - Binary (default)</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -1532,6 +1582,11 @@ Displays a frame with help topics.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Movement Time:</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup">Test Tone 1</property>
+                            <property name="tooltip_text" translatable="yes">Movement Time
+(for Tone1 trials)
+Amount of 'continuous movement' time that should be detected to consider the trial as successful.</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -1585,6 +1640,11 @@ Displays a frame with help topics.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Idle Time:</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup">Test Tone 1</property>
+                            <property name="tooltip_text" translatable="yes">Idle Time
+(for Tone2 trials)
+Amount of 'continuous non-movement' time that should be detected to consider the trial as successful.</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -1658,6 +1718,10 @@ Displays a frame with help topics.</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="has_tooltip">True</property>
+            <property name="tooltip_markup">Test Tone 1</property>
+            <property name="tooltip_text" translatable="yes">Apply
+Applies and saves all changes made to the Parameters.</property>
             <signal name="clicked" handler="clicked_applyP" swapped="no"/>
           </object>
           <packing>
@@ -1699,6 +1763,11 @@ Displays a frame with help topics.</property>
                       <object class="GtkLabel" id="label15">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Tone Start</property>
+                        <property name="tooltip_text" translatable="yes">Tone Start
+Instant of time when tone starts.
+ It is defined as always 0 and cannot be changed</property>
                         <property name="label" translatable="yes">Tone Start:</property>
                       </object>
                       <packing>
@@ -1743,6 +1812,10 @@ Displays a frame with help topics.</property>
                       <object class="GtkLabel" id="label16">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Tone End</property>
+                        <property name="tooltip_text" translatable="yes">Tone End
+Instant of time when tone stops.</property>
                         <property name="label" translatable="yes">Tone End:</property>
                       </object>
                       <packing>
@@ -1787,6 +1860,10 @@ Displays a frame with help topics.</property>
                       <object class="GtkLabel" id="label17">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Movement Window Start</property>
+                        <property name="tooltip_text" translatable="yes">Movement Window Start
+Instant of time when movement starts to be considered.</property>
                         <property name="label" translatable="yes">Movement Window Start:</property>
                       </object>
                       <packing>
@@ -1831,6 +1908,10 @@ Displays a frame with help topics.</property>
                       <object class="GtkLabel" id="label18">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Movement Window End</property>
+                        <property name="tooltip_text" translatable="yes">Movement Window End
+Instant of time when movement stops being detected.</property>
                         <property name="label" translatable="yes">Movement Window End:</property>
                       </object>
                       <packing>
@@ -1875,6 +1956,11 @@ Displays a frame with help topics.</property>
                       <object class="GtkLabel" id="label19">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Intertrial Start</property>
+                        <property name="tooltip_text" translatable="yes">Intertrial Start
+An intertrial stage runs between this value and ends in the 'InterTrial End' value.
+The intertrial stage duration is random between these two values.</property>
                         <property name="label" translatable="yes">Intertrial Start:</property>
                       </object>
                       <packing>
@@ -1919,6 +2005,11 @@ Displays a frame with help topics.</property>
                       <object class="GtkLabel" id="label20">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Intertrial End</property>
+                        <property name="tooltip_text" translatable="yes">Intertrial End
+An intertrial stage runs between 'InterTrial Start' and ends in this value.
+The intertrial stage duration is random between these two values.</property>
                         <property name="label" translatable="yes">Intertrial End:</property>
                       </object>
                       <packing>
@@ -1963,6 +2054,11 @@ Displays a frame with help topics.</property>
                       <object class="GtkLabel" id="label21">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Probability Tone 1</property>
+                        <property name="tooltip_text" translatable="yes">Probability Tone 1
+Sets the probability that the Tone 1 plays.
+The remaining probability is that of the Tone 2 playing.</property>
                         <property name="label" translatable="yes">Probability Tone 1:</property>
                       </object>
                       <packing>
@@ -2016,6 +2112,10 @@ Displays a frame with help topics.</property>
                 <child>
                   <object class="GtkButton" id="btnAppl">
                     <property name="label" translatable="yes">Apply</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Apply</property>
+                    <property name="tooltip_text" translatable="yes">Apply
+Applies and saves all changes made to the Trial Events.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>

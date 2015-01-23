@@ -1041,7 +1041,7 @@ class GUIGTK_Class:
             self.__tooltipTE6_REC = GUIGTK_Class.ToolTip(self.__Button4_5recalibrate, text=
                                     "Recalibrate Camera:"+"\n"+
                                      "Generates a new calibration file for the movement detection,"+
-                                     " talking as samples the current video output.")
+                                     " taking as sample the current video output.")
             
             
             
