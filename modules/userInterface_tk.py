@@ -357,8 +357,10 @@ class GUIGTK_Class:
             self.__Frame15.pack(side='top')
             self.__Frame14 = Frame(self.__Frame1)
             self.__Frame14.pack(side='top')
-            self.__Text1KeyInput = Text(self.__Frame14,background='#f3f3f3',height=5
-                ,relief='groove',state='disabled',width=30)
+            #self.__Text1KeyInput = Text(self.__Frame14,background=self.__btnFrmEditParameters['bg'],height=5
+            #    ,relief='flat',state='disabled',width=30, borderwidth=0)
+            self.__Text1KeyInput = Canvas(self.__Frame14, width=20, height=20, highlightthickness=0,
+                                          selectborderwidth=0)
             self.__Text1KeyInput.pack(side='top')
             self.__Text1KeyInput.bind('<KeyPress>',self.__on_Text1KeyInput_Key)
             self.__Text1KeyInput.bind('<KeyPress-C>',self.__on_Text1KeyInput_Key_C)
