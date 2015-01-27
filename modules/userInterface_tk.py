@@ -91,7 +91,7 @@ class GUIGTK_Class:
         self.App.pack(expand='yes',fill='both')
         self.App.reference = self
         
-        Rootn.geometry('480x240+10+10')
+        Rootn.geometry('440x240+10+10')
         Rootn.title('Main Form (TK)')
         
         time.sleep(2.5) #to prevent user from touching GUI before the other frames are well-displayed.
@@ -311,9 +311,29 @@ class GUIGTK_Class:
             self.__tooltip11_Help = GUIGTK_Class.ToolTip(self.__btnHelp, text=
                                     "Help:"+"\n"+
                                      "Displays a frame with help topics.")
-            
-            
             self.__btnHelp.pack(side='left')
+            
+            self.__EspacioHelpSS = Canvas(self.__Frame27, width=35, height=35, highlightthickness=0,
+                                          selectborderwidth=0)
+            self.__EspacioHelpSS.pack(side='left')
+            
+            
+            
+            self.__btnSaveState = Button(self.__Frame27,anchor='w',justify='right'
+                ,text='Save State')
+            self.__btnSaveState.bind('<ButtonRelease-1>' \
+                ,self.____btnSaveState_pressed)
+            
+            self.__tooltip11_SaveState = GUIGTK_Class.ToolTip(self.__btnSaveState, text=
+                                    "Save State:"+"\n"+
+                                     "Saves current state, including trial variables and parameters.")
+            
+            #poner imagen
+            self.photo=PhotoImage(file="res/saveBtn.png");
+            self.__btnSaveState.config(image=self.photo);
+            
+            self.__btnSaveState.pack(side='left')
+            
             self.__Frame2 = Frame(self.__Frame26)
             self.__Frame2.pack(side='left')
             self.__Frame1 = Frame(self.__Frame26)
@@ -660,6 +680,11 @@ class GUIGTK_Class:
             #print self.helpfrm.reference 
             self.helpfrm.pack(side="top", fill="both", expand=True)
             #rootNW.mainloop()
+            pass
+        
+        def ____btnSaveState_pressed(self, Event = None):
+            print "Save State button."
+            #habrIa que enviar un mensaje a training para que se salven los datos desde allI
             pass
     
         def __on_btnComment_ButRel_1(self,Event=None):
