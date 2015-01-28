@@ -264,8 +264,15 @@ class userInterface_API:
         #logger.debug ( "ns: " + ns.__str__() )
         logger.debug ( "Default API: done." )
         
-        
-        
+    
+    def overrideaction_savestate(self):
+        logger.debug ( "Default API: Drop" )
+        #print "API Namespace:", ns
+        #logger.debug ( "ns: " + ns.__str__() )
+        self.setNameSpaceMessage(31,0)
+        #logger.debug ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
+        logger.debug ( "Default API: done." )
     
     def overrideaction_testT1(self):
         logger.debug( "Default API: Test T1" )
@@ -319,6 +326,13 @@ class userInterface_API:
             self.overrideaction_drop()
         except:
             logger.warning( "API Drop: OverrideAction Error" )
+    
+    def action_savestate(self):
+        logger.debug( "API: SaveState" )
+        try:
+            self.overrideaction_savestate()
+        except:
+            logger.warning( "API SaveState: OverrideAction Error" )
     
     def action_reward(self):
         logger.debug( "API: Reward" )
@@ -526,6 +540,7 @@ class userInterface_API:
         time.sleep(0.5)
         logger.info( str(self) +  "Launching Tkinter Interface" )
         self.currentGUI.overrideaction_drop = self.action_drop
+        self.currentGUI.overrideaction_savestate = self.action_savestate
         self.currentGUI.overrideaction_reward = self.action_reward
         self.currentGUI.overrideaction_open = self.action_open
         self.currentGUI.overrideaction_close = self.action_close

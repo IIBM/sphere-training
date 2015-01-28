@@ -329,7 +329,12 @@ class GUIGTK_Class:
                                      "Saves current state, including trial variables and parameters.")
             
             #poner imagen
-            self.photo=PhotoImage(file="res/saveBtn.png");
+            #find working directory, replace training with modules , to handle case where it is executed from training
+            if ("/training" in os.getcwd()):
+                a = (os.getcwd().split("/training") [0]) + "/modules/"
+            else:
+                a = os.getcwd() + "/";
+            self.photo=PhotoImage(file=a+"res/saveBtn.png");
             self.__btnSaveState.config(image=self.photo);
             
             self.__btnSaveState.pack(side='left')
@@ -683,8 +688,9 @@ class GUIGTK_Class:
             pass
         
         def ____btnSaveState_pressed(self, Event = None):
-            print "Save State button."
             #habrIa que enviar un mensaje a training para que se salven los datos desde allI
+            print "Save State"
+            self.reference.overrideaction_savestate();
             pass
     
         def __on_btnComment_ButRel_1(self,Event=None):
@@ -2230,6 +2236,10 @@ class GUIGTK_Class:
             pass
     
     
+    
+    def overrideaction_savestate(self):
+        logger.info( "Default: Save State" )
+        return 0
     
     def overrideaction_drop(self):
         logger.info( "Default: Drop" )

@@ -1298,6 +1298,11 @@ class Training():
                     Training.gVariables.logger.debug( "GUICheck: 'Recalibrate Camera' message" )
                     Training.gVariables.videoDet.calibrate()
                     pass
+                elif (index == 31):
+                    print "GUICheck: 'Save State' message"
+                    Training.gVariables.logger.debug( "GUICheck: 'Save State' message" )
+                    
+                    pass
                 pass
                 #print "GUICheck: done."
                 Training.gVariables.logger.debug( "GUICheck: done." )
