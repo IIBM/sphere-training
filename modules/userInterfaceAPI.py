@@ -266,7 +266,7 @@ class userInterface_API:
         
     
     def overrideaction_savestate(self):
-        logger.debug ( "Default API: Drop" )
+        logger.debug ( "Default API: SaveState" )
         #print "API Namespace:", ns
         #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(31,0)
