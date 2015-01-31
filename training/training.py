@@ -49,6 +49,13 @@ class Training():
                     Training.gVariables.logger.info('Drop given manually - training not started.')
         
         @staticmethod
+        def fn_savestate():
+                #print "giving drop"
+                Training.gVariables.logger.debug('save state')
+                print "Saving all variables state."
+                pass
+        
+        @staticmethod
         def fn_giveReward():
                 #gives a drop of water and counts the trial as successful.
                 Training.giveReward();
@@ -1301,7 +1308,7 @@ class Training():
                 elif (index == 31):
                     print "GUICheck: 'Save State' message"
                     Training.gVariables.logger.debug( "GUICheck: 'Save State' message" )
-                    
+                    Training.gVariables.fn_savestate();
                     pass
                 pass
                 #print "GUICheck: done."
