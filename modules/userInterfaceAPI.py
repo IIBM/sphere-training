@@ -501,6 +501,7 @@ class userInterface_API:
         logger.info( str(self) +  "  Glade Interface : launching" )
         self.currentGUI = userInterface_glade.GUIGTK_Class()
         self.currentGUI.overrideaction_exit = self.action_exit
+        self.currentGUI.overrideaction_savestate = self.action_savestate
         self.currentGUI.overrideaction_drop = self.action_drop
         self.currentGUI.overrideaction_reward = self.action_reward
         self.currentGUI.overrideaction_open = self.action_open

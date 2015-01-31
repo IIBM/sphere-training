@@ -22,6 +22,7 @@ class GUIGTK_Class():
                             "onDeleteWindow": self.action_exit,
                             "destroy": self.action_exit,
                             "clicked_drop": self.action_drop,
+                            "clicked_savestate": self.action_savestate,
                             "clicked_reward": self.action_reward,
                             "clicked_open": self.action_open,
                             "clicked_close": self.action_close,
@@ -79,6 +80,10 @@ class GUIGTK_Class():
         
         def overrideaction_drop(self):
             logger.info( "Default: Drop" )
+            return 0
+        
+        def overrideaction_savestate(self):
+            logger.info( "Default: Save State" )
             return 0
         
         def overrideaction_reward(self):
@@ -238,6 +243,13 @@ class GUIGTK_Class():
                     self.overrideaction_drop()
                 except:
                     logger.info( "Drop: An error ocurred." )
+        
+        def action_savestate(self, button):
+                #print "SS"
+                try:
+                    self.overrideaction_savestate()
+                except:
+                    logger.info( "Save State: An error ocurred." )
         
         def action_reward(self, button):
                 try:

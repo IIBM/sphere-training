@@ -689,7 +689,7 @@ class GUIGTK_Class:
         
         def ____btnSaveState_pressed(self, Event = None):
             #habrIa que enviar un mensaje a training para que se salven los datos desde allI
-            print "Save State"
+            #print "Save State"
             self.reference.overrideaction_savestate();
             pass
     

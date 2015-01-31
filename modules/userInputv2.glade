@@ -1116,6 +1116,10 @@ This includes tone frequencies, video options and movement detection variables.<
                     <property name="height_request">2</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Help</property>
+                    <property name="tooltip_text" translatable="yes">Help:
+Displays a frame with help topics.</property>
                     <property name="receives_default">True</property>
                     <property name="use_stock">True</property>
                     <property name="focus_on_click">False</property>
@@ -1133,7 +1137,12 @@ This includes tone frequencies, video options and movement detection variables.<
                     <property name="width_request">40</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <signal name="clicked" handler="clicked_savestate" swapped="no"/>
                     <property name="receives_default">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Help</property>
+                    <property name="tooltip_text" translatable="yes">Save State:
+Saves current state, including trial variables and parameters.</property>
                     <property name="image">imgSaveState</property>
                     <property name="image_position">top</property>
                   </object>
