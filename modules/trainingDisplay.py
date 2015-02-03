@@ -34,8 +34,8 @@ class multiproc_trainingDisplay():
         pygame.display.set_caption('Variables')
         self.basicFont = pygame.font.SysFont(None, 48)
         self.secondaryFont = pygame.font.SysFont(None, 36)
-        time.sleep(0.5)
-        self.renderAgain()
+        #time.sleep(0.5)
+        #self.renderAgain()
         pass
 
     def checkJobList(self):

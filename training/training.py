@@ -492,6 +492,7 @@ class Training():
         
         # video Detection:
         videoDet = 0  # video Detection object. initialized in the main.
+        videoSecond = 0 # second camera.
         
         videoMovementMethod = -1 #movement method to be used for movement analysis.
         
@@ -502,7 +503,7 @@ class Training():
         current_trial_paused_time = 0  # to handle pause and resume correctly..
         
         current_trial_stage = 0  # 0: tone, 1: movement detection, 2: inter-trial, 3: instant before changing to 0
-    
+        
         toneOneProbability = cfgtraining.toneOneProbability
         history_trial = [1, 2, 1, 2, 1, 2]
         current_trial_type = 0  # 1: for tone one, reward after movement 2: for tone two, reward after standing still
@@ -768,6 +769,8 @@ class Training():
         self.gVariables.logger.info('Comment about this training: %s', Training.gVariables.trial_comment)
         if (self.gVariables.GUIType != 2) :
             self.gVariables.GUIProcess.terminate()
+        
+        self.gVariables.videoSecond.terminate();
         self.gVariables.videoDet.exit()
         #print "videodet exit"
         time.sleep(0.2)
@@ -926,6 +929,9 @@ class Training():
         self.gVariables.videoDet.setMovementTimeWindow(self.gVariables.movementTime)  # seconds that should be moving.
         self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
         self.gVariables.logger.debug('sphereVideoDetection started.')
+        #second cam:
+        self.gVariables.videoSecond = multiprocessing.Process(target=self.startSecondCam, args=(0,))
+        self.gVariables.videoSecond.start()
         #Display:
         self.initDisplay()
         #main Program Loop
@@ -964,6 +970,12 @@ class Training():
         currentGUI.usingTK = configs.usingTK
         
         currentGUI.launch_GUI()
+    
+    
+    def startSecondCam(self, num):
+        time.sleep(10)
+        import simpleCam
+        self.gVariables.videoSecond = simpleCam.simpleCam(num);
     
     def trialLoop(self):
             # This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
