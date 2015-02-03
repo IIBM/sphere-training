@@ -990,7 +990,6 @@ class Training():
         
         currentGUI.launch_GUI()
     
-    
     def startSecondCam(self, num):
         time.sleep(10)
         import simpleCam
@@ -1032,8 +1031,8 @@ class Training():
                             Training.gVariables.current_trial_type = 1
                         else :
                             Training.gVariables.current_trial_type = 2
-                            
-                    if (Training.gVariables.current_trial_type == 1) :
+                    
+                    if (Training.gVariables.type_pavlov == 1 or Training.gVariables.current_trial_type == 1) :
                             Training.gVariables.logger.info('tone 1: %s Hz' % str(Training.gVariables.soundGenFrequency1) )
                             
                             Training.gVariables.s1.play()
@@ -1088,11 +1087,15 @@ class Training():
                 elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime2_movement and 
                       Training.gVariables.current_trial_stage == 1):
                     Training.gVariables.logger.info('End trial movement detection')
-                    if (Training.gVariables.trialSuccessful == True):
-                        Training.giveReward()
-                        Training.gVariables.logger.info('Reward given because trial was successful')
+                    if (Training.gVariables.type_pavlov == 0):
+                        if (Training.gVariables.trialSuccessful == True):
+                            Training.giveReward()
+                            Training.gVariables.logger.info('Reward given because trial was successful')
+                        else:
+                            Training.gVariables.logger.info('Reward not given because trial was not successful')
                     else:
-                        Training.gVariables.logger.info('Reward not given because trial was not successful')
+                        Training.giveReward()
+                        Training.gVariables.logger.info('Reward given because pavlov mode is enabled')
                     Training.gVariables.logger.info('Start inter-trial delay')
                     Training.gVariables.current_trial_stage = 2
                 elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime3_trialEnd and
