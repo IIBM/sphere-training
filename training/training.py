@@ -513,6 +513,14 @@ class Training():
         
         trial_comment = "" #comment about this training session.
         
+        type_pavlov = cfgtraining.type_pavlov;
+        type_skinner = cfgtraining.type_skinner;
+        
+        if (type_pavlov == 1 and type_skinner == 1):
+            print "Warning! Both Pavlov and Skinner mode are enabled. This training instance will use Pavlov mode only."
+            type_skinner = 0;
+        
+        
         subject_name = "" #subject name, set at training init, used in logging filename.
         
         
