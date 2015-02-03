@@ -6,10 +6,14 @@ import time
 
 class simpleCam():
     def __init__(self, devnum):
+        CAM_WIDTH = 320;
+        CAM_HEIGHT = 240;
         import cv2
         time.sleep(1)
         cap = cv2.VideoCapture(devnum)
         print cap
+        cap.set(3, CAM_WIDTH);
+        cap.set(4, CAM_HEIGHT);
         time.sleep(1)
         print "starting"
         logger.debug("simpleCam starting.")
