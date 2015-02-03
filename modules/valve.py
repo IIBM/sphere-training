@@ -7,8 +7,8 @@ logger = logging.getLogger('valve')
 ValvePinMask = 0x04
 DropTime = .1
 
-DEVICE = '/dev/ttyUSB0'
-BAUDRATE = 115200
+DEVICE = '/dev/ttyACM0'
+BAUDRATE = 57600
 
 class dummypp () :
     def __init__(self) :
