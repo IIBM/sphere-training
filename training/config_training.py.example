@@ -16,6 +16,8 @@ movementTime = 1.0  # continuous moving time that should be reached to give rewa
 idleTime = 1.6  # continuous idle time that should be reached to give reward. 1 = 1000 ms
 maxIdleTime = 2.0
 
+secondcam = -1 # -1: disabled ; 0: /dev/video0 , etc.
+
 soundGenDuration1 = 1.0 #tone 1 duration in seconds
 soundGenDuration2 = 1.0 #tone 2 duration in seconds
 soundGenFrequency1 = 1000  # in Hz

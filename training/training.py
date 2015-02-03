@@ -462,6 +462,8 @@ class Training():
         # ex.: movementTime = 0.5 means that there should be movement detected over 500 ms at least
         idleTime = cfgtraining.idleTime  # continuous idle time that should be reached to give reward. 10= 1000 ms
         
+        secondcam = cfgtraining.secondcam; #device number to use as second camera. Set -1 to disable this feature.
+        
         soundGenDuration1 = cfgtraining.soundGenDuration1
         soundGenDuration2 = cfgtraining.soundGenDuration2
         soundGenFrequency1 = cfgtraining.soundGenFrequency1  # in Hz
@@ -770,7 +772,11 @@ class Training():
         if (self.gVariables.GUIType != 2) :
             self.gVariables.GUIProcess.terminate()
         
-        self.gVariables.videoSecond.terminate();
+        if (self.gVariables.secondcam != -1):
+            try:
+                self.gVariables.videoSecond.terminate();
+            except:
+                pass
         self.gVariables.videoDet.exit()
         #print "videodet exit"
         time.sleep(0.2)
@@ -930,8 +936,13 @@ class Training():
         self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
         self.gVariables.logger.debug('sphereVideoDetection started.')
         #second cam:
-        self.gVariables.videoSecond = multiprocessing.Process(target=self.startSecondCam, args=(0,))
-        self.gVariables.videoSecond.start()
+        if (self.gVariables.secondcam >= 0):
+            numseccam = int(self.gVariables.secondcam)
+            self.gVariables.videoSecond = multiprocessing.Process(target=self.startSecondCam, args=(numseccam,))
+            self.gVariables.videoSecond.start()
+            self.gVariables.logger.debug('secondCam started with cam number: %d' % self.gVariables.secondcam);
+        else:
+            self.gVariables.logger.debug('secondCam was not started (configuration file has -1 as value)' );
         #Display:
         self.initDisplay()
         #main Program Loop
