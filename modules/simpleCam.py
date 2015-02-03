@@ -2,19 +2,24 @@
 import track_bola_utils
 import logging
 logger = logging.getLogger('simpleCam')
+import time
 
 class simpleCam():
     def __init__(self, devnum):
         import cv2
+        time.sleep(1)
         cap = cv2.VideoCapture(devnum)
+        print cap
+        time.sleep(1)
         print "starting"
         logger.debug("simpleCam starting.")
-        cv2.namedWindow("Device: %d" % devnum, 1)
+        cv2.namedWindow("Device: %d" % devnum)
+        time.sleep(1)
         logger.debug("namedWindow created. About to enter loop")
         while(True):
+            cv2.waitKey(100)
             ret, frame = cap.read()
             cv2.imshow("Device: %d" % devnum, frame)
-            cv2.waitKey(30)
 
 
 if __name__ == '__main__':

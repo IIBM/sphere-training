@@ -991,7 +991,7 @@ class Training():
         currentGUI.launch_GUI()
     
     def startSecondCam(self, num):
-        time.sleep(10)
+        time.sleep(8)
         import simpleCam
         self.gVariables.videoSecond = simpleCam.simpleCam(num);
     
