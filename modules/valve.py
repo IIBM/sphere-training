@@ -1,8 +1,4 @@
 
-#requiere pyusb
-import usb.core
-import usb.util
-
 import time
 import track_bola_utils
 import logging
@@ -27,6 +23,10 @@ class Valve(object):
       #print "init valve."
       try :
         logger.info('New instance of valve')
+        #requires pyusb
+        import usb.core
+        import usb.util
+        logger.debug("imports done succesfully.");
         self.p = usb.core.find(idVendor=IDVendor, idProduct=IDProduct)
         # was it found?
         if self.p is None:
