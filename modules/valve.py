@@ -3,7 +3,7 @@
 import usb.core
 import usb.util
 
-from serial import *
+import time
 import track_bola_utils
 import logging
 logger = logging.getLogger('valve')
@@ -64,34 +64,6 @@ class Valve(object):
 
 
 
-#===============================================================================
-# class Valve() :
-#     def __init__(self) :
-#         try :
-#           logger.info('New instance of valve')
-#           import parallel
-#           self.p = parallel.Parallel()
-#         except :
-#           logger.warning('Could not find any parallel port. Using dummy parallel port')
-#           self.p = dummypp()
-# 
-#     def open(self) :
-#         logger.info('Valve opened')
-#         a = self.p.getData()
-#         return self.p.setData(a|ValvePinMask)
-# 
-#     def close(self) :
-#         logger.info('Valve closed')
-#         a = self.p.getData()
-#         return self.p.setData(a&(~ValvePinMask))
-#     
-#     def drop(self) :
-#         logger.info('Valve drop')
-#         self.open()
-#         time.sleep(DropTime)
-#         self.close()
-#===============================================================================
-
 if __name__ == '__main__':
     # create a logging format
     dateformat = '%Y/%m/%d %H:%M:%S'
@@ -123,11 +95,11 @@ if __name__ == '__main__':
     v1.drop()
     time.sleep(2)
     print v1
-#    v2 = Valve()
-#    v2.open()
-#    time.sleep(2)
-#    v2.close()
-#    print v2
+    v2 = Valve()
+    v2.open()
+    time.sleep(2)
+    v2.close()
+    print v2
     
     logger.info('End Valve Test')
 
