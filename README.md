@@ -18,5 +18,5 @@ In "modules" directory
 Dependence:
 
 valve.py ->
-      python-parallel
+  pyusb
 

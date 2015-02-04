@@ -1,26 +1,24 @@
+
+#requiere pyusb
+import usb.core
+import usb.util
+
 from serial import *
-import time
 import track_bola_utils
 import logging
 logger = logging.getLogger('valve')
 
-ValvePinMask = 0x04
-DropTime = .1
+IDVendor = 0x16c0
+IDProduct = 0x05dc
 
-DEVICE = '/dev/ttyACM0'
-BAUDRATE = 57600
-
-class dummypp () :
+class dummydev () :
     def __init__(self) :
         self.data = 0
 
-    def write(self,data) :
-        self.data = data
+    def ctrl_transfer(self,bmRequestType,bmRequest,wValue,wIndex) :
+        self.data = wValue
         return self.data
   
-
-
-
 class Valve(object):
   ### singleton inner class: valve.
   class __Valve:
@@ -28,24 +26,31 @@ class Valve(object):
       self.val = None
       #print "init valve."
       try :
-           logger.info('New instance of valve')
-           self.p = Serial(DEVICE, BAUDRATE, timeout=1.0, stopbits=1)
+        logger.info('New instance of valve')
+        self.p = usb.core.find(idVendor=IDVendor, idProduct=IDProduct)
+        # was it found?
+        if self.p is None:
+            raise ValueError(msg)
+
+        # set the active configuration. With no arguments, the first
+        # configuration will be the active one
+        self.p.set_configuration()
       except :
-           logger.warning('Could not find any serial port. Using dummy parallel port')
-           self.p = dummypp()
+        logger.warning('Device idVendor = ' + str(hex(IDVendor)) + ' and idProduct = ' + str(hex(IDProduct)) + ' not found. Using dummy device')
+        self.p = dummydev()
     def __str__(self):
       return repr(self)
     def open(self) :
          logger.debug('Valve opened')
-         return self.p.write('o')
+         return self.p.ctrl_transfer(0x40, 1, 1, 0)
 
     def close(self) :
          logger.debug('Valve closed')
-         return self.p.write('c')
+         return self.p.ctrl_transfer(0x40, 1, 2, 0)
 
     def drop(self) :
          logger.debug('Valve drop')
-         return self.p.write('d')
+         return self.p.ctrl_transfer(0x40, 1, 3, 0)
   ###
   instance = None
   def __new__(cls): # __new__ always a classmethod
@@ -56,8 +61,6 @@ class Valve(object):
     return getattr(self.instance, name)
   def __setattr__(self, name):
     return setattr(self.instance, name)
-
-
 
 
 
@@ -127,3 +130,4 @@ if __name__ == '__main__':
 #    print v2
     
     logger.info('End Valve Test')
+
