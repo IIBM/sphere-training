@@ -178,6 +178,8 @@ class GUIGTK_Class():
                 self.interTrialStart = 0
                 self.interTrialEnd = 0
                 self.probabilityToneOne = 0
+                self.type_pavlov = 0
+                self.type_skinner = 0
         
         def commitInitialData(self):
             #Set graphic elements' data with the variables that has been passed from the upper class that is executing this module.
@@ -210,10 +212,46 @@ class GUIGTK_Class():
             self.glade.get_object("entryMovementTime").set_text( str(self.movementTime) )
             self.glade.get_object("entryIdleTime").set_text( str(self.idleTime) )
             self.glade.get_object("entryCommentTr").set_text( str(self.comment) )
+            
+            self.setPavlovVars();
+            self.setSkinnerVars();
+            
             logger.info( "   Done: Setting userInterface_glade initial data.")
             gtk.main() #probably not launched before. Launching gtk.main
             pass
         
+        def setPavlovVars(self):
+            if (self.type_pavlov == 1):
+                clr = gtk.gdk.Color('#ddd') #gray color, so users know that it isn't editable
+                #self.glade.get_object("entryToneStart").modify_text(0, clr);
+                self.glade.get_object("entryMvmntWinStart").modify_base(0, clr);
+                self.glade.get_object("entryMvmntWinEnd").modify_base(0, clr);
+                self.glade.get_object("entryMvmntWinStart").set_editable(False)
+                self.glade.get_object("entryMvmntWinEnd").set_editable(False)
+            else:
+                clr = gtk.gdk.Color('#fff') #gray color, so users know that it isn't editable
+                #self.glade.get_object("entryToneStart").modify_text(0, clr);
+                self.glade.get_object("entryMvmntWinStart").modify_base(0, clr);
+                self.glade.get_object("entryMvmntWinStart").set_editable(True)
+                self.glade.get_object("entryMvmntWinEnd").modify_base(0, clr);
+                self.glade.get_object("entryMvmntWinEnd").set_editable(True)
+        
+        def setSkinnerVars(self):
+            print "skinner vars."
+            if (self.type_skinner == 1):
+                clr = gtk.gdk.Color('#ddd') #gray color, so users know that it isn't editable
+                #self.glade.get_object("entryToneStart").modify_text(0, clr);
+                self.glade.get_object("entryTone1").modify_base(0, clr);
+                self.glade.get_object("entryTone1").set_editable(False)
+                self.glade.get_object("entryTone2").modify_base(0, clr);
+                self.glade.get_object("entryTone2").set_editable(False)
+            else:
+                clr = gtk.gdk.Color('#fff') #gray color, so users know that it isn't editable
+                #self.glade.get_object("entryToneStart").modify_text(0, clr);
+                self.glade.get_object("entryTone1").modify_base(0, clr);
+                self.glade.get_object("entryTone1").set_editable(True)
+                self.glade.get_object("entryTone2").modify_base(0, clr);
+                self.glade.get_object("entryTone2").set_editable(True)
         
         def action_keypress(self, widget, event):
             #print "keypress"

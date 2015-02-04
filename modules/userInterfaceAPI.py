@@ -11,6 +11,8 @@ class userInterface_API:
     ns = 0
     subj_list = [""]
     subj_name = ""
+    type_pavlov = 0
+    type_skinner = 0;
 
     
     def getSubjName(self):
@@ -99,7 +101,12 @@ class userInterface_API:
         self.currentGUI.movementTime = self.movementTime
         self.currentGUI.idleTime = self.idleTime
         self.currentGUI.comment = self.comment
+        self.currentGUI.type_pavlov = self.type_pavlov
+        self.currentGUI.type_skinner = self.type_skinner
         self.currentGUI.commitInitialData()
+        
+        
+        
         pass
     
     def dummy_fn(self):

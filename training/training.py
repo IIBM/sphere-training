@@ -521,6 +521,7 @@ class Training():
             type_skinner = 0;
         
         
+        
         subject_name = "" #subject name, set at training init, used in logging filename.
         
         
@@ -928,6 +929,11 @@ class Training():
         self.gVariables.jobList = multiprocessing.JoinableQueue()
         #self.gVariables.jobList.put_nowait((0, 0))
         
+        #adjusting trial types and modes:
+        if (self.gVariables.type_pavlov == 1):
+            #movement starts and ceases to be detected just after the tone ends. Basically, there's no movement window when Pavlov mode is enabled.
+            self.gVariables.eventTime2_movement = self.gVariables.soundGenDuration1
+            self.gVariables.eventTime1_movement_start = self.gVariables.soundGenDuration1
         
         if (self.gVariables.GUIType != 2):
             self.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(self.gVariables.jobList,))
@@ -957,6 +963,7 @@ class Training():
         self.gVariables.fred1 = threading.Thread(target=self.mainLoopFunction)
         self.gVariables.fred1.start()
         self.gVariables.logger.debug('Training loop function started..')
+        
     
     def initUserInputGUI(self,jobList):
         #initialize user input GUI and associated variables.
@@ -971,22 +978,25 @@ class Training():
         #print currentGUI.jobList
         #print ".."
         currentGUI.toneStart = 0.0
-        currentGUI.toneEnd = configs.eventTime1_sound
-        currentGUI.movementWindowStart = configs.eventTime1_movement_start
-        currentGUI.movementWindowEnd = configs.eventTime2_movement
-        currentGUI.interTrialStart = configs.interTrialRandom1Time
-        currentGUI.interTrialEnd = configs.interTrialRandom2Time
-        currentGUI.probabilityToneOne = configs.toneOneProbability
-        currentGUI.frequencyTone1 = configs.soundGenFrequency1
-        currentGUI.frequencyTone2 = configs.soundGenFrequency2
+        currentGUI.toneEnd = self.gVariables.eventTime1_sound
+        currentGUI.movementWindowStart = self.gVariables.eventTime1_movement_start
+        currentGUI.movementWindowEnd = self.gVariables.eventTime2_movement
+        currentGUI.interTrialStart = self.gVariables.interTrialRandom1Time
+        currentGUI.interTrialEnd = self.gVariables.interTrialRandom2Time
+        currentGUI.probabilityToneOne = self.gVariables.toneOneProbability
+        currentGUI.frequencyTone1 = self.gVariables.soundGenFrequency1
+        currentGUI.frequencyTone2 = self.gVariables.soundGenFrequency2
         
-        currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but readed from training config file
+        currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
         currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
-        currentGUI.movementTime = configs.movementTime
-        currentGUI.idleTime = configs.idleTime
+        currentGUI.movementTime = self.gVariables.movementTime
+        currentGUI.idleTime = self.gVariables.idleTime
         currentGUI.comment = configs.initialComment
         
         currentGUI.usingTK = configs.usingTK
+        
+        currentGUI.type_pavlov = self.gVariables.type_pavlov
+        currentGUI.type_skinner = self.gVariables.type_skinner
         
         currentGUI.launch_GUI()
     

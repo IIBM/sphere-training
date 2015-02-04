@@ -57,6 +57,9 @@ class GUIGTK_Class:
         self.movementMethod = 0
         self.movementTime = 0
         self.idleTime = 0
+        
+        self.type_pavlov = 0;
+        self.type_skinner = 0;
         self.comment = ""
         
         self.helpNumber = 0;
@@ -1244,6 +1247,9 @@ class GUIGTK_Class:
             movementMethod = int( self.reference.movementMethod )
             self.__EntryMethodUsed.insert(0, str(movementMethod))
             
+            self.setSkinnerVars(); #this one first, is important, check readonly params.
+            self.setPavlovVars();
+            
             
             self.reference.App.showFrame3()
             self.reference.AppFrm3.withdraw()
@@ -1374,6 +1380,24 @@ class GUIGTK_Class:
             #print "Parameters: Previous states saved."
             pass
         
+        def setPavlovVars(self):
+            print "pavlov vars"
+            if (self.reference.type_pavlov == 1):
+                print "pavlov"
+                self.__Entry2Tone2.config(state = "readonly")
+            else:
+                self.__Entry2Tone2.config(state = "normal")
+        
+        def setSkinnerVars(self):
+            print "skinner vars"
+            if (self.reference.type_skinner == 1):
+                print "skinner"
+                self.__Entry1Tone1.config(state = "readonly")
+                self.__Entry2Tone2.config(state = "readonly")
+            else:
+                self.__Entry1Tone1.config(state = "normal")
+                self.__Entry2Tone2.config(state = "normal")
+        
         def get_changes(self):
             #Raw input data.
             #print "commiting changes to variables in Form 3.."
@@ -1429,8 +1453,10 @@ class GUIGTK_Class:
             self.__lblTrialEventsTitle.pack(side='top')
             self.__Frame10 = Frame(self.__Frame5)
             self.__Frame10.pack(side='top')
-            self.__Frame14 = Frame(self.__Frame7,height=66)
+            self.__Frame14 = Frame(self.__Frame7,height=35)
             self.__Frame14.pack(side='top')
+            self.__FrameCHEBKBTNS = Frame(self.__Frame7)
+            self.__FrameCHEBKBTNS.pack(side='top')
             self.__Frame15 = Frame(self.__Frame7)
             self.__Frame15.pack(side='top')
             self.__Frame13 = Frame(self.__Frame7)
@@ -1476,6 +1502,20 @@ class GUIGTK_Class:
     #         self.__Scale1.pack(side='top')
             self.__Frame24 = Frame(self.__Frame15)
             self.__Frame24.pack(side='left')
+            
+            
+            self.__CheckPavlov = Checkbutton(self.__FrameCHEBKBTNS,text='Pavlov mode')
+            self.__CheckPavlov.pack(side='top')
+            
+            self.__CheckSkinner = Checkbutton(self.__FrameCHEBKBTNS,text='Skinner mode')
+            self.__CheckSkinner.pack(side='top')
+            
+            self.__CheckOC = Checkbutton(self.__FrameCHEBKBTNS,text='Operant Conditioning mode')
+            self.__CheckOC.pack(side='top')
+            
+            self.__CheckDiscrimination = Checkbutton(self.__FrameCHEBKBTNS,text='Discrimination mode')
+            self.__CheckDiscrimination.pack(side='top')
+            
             self.__Label1 = Label(self.__Frame24,text='Tone Start:')
             self.__Label1.pack(side='top')
             self.__Frame25 = Frame(self.__Frame15)
@@ -1647,6 +1687,9 @@ class GUIGTK_Class:
             prob = self.reference.probabilityToneOne * 100
             self.__Scale2.set(int(prob))
             
+            self.setPavlovVars();
+            self.setSkinnerVars();
+            
             self.reference.App.showFrame1()
             self.reference.AppFrm1.withdraw()
             ###
@@ -1672,6 +1715,28 @@ class GUIGTK_Class:
 #             self.__Entry6ITEnd.delete(0,10) #removes 10 characters.
 #             self.__Entry6ITEnd.insert(0, self.gVariables.interTrialRandom2Time )
             pass
+        
+        def setPavlovVars(self):
+            print "pavlov vars"
+            if (self.reference.type_pavlov == 1):
+                print "pavlov"
+                self.__Entry3MvmntWindowStart.config(state = "readonly")
+                self.__Entry4MvntWindowEnd.config(state = "readonly")
+                self.__CheckPavlov.select()
+            else:
+                self.__Entry3MvmntWindowStart.config(state = "normal")
+                self.__Entry4MvntWindowEnd.config(state = "normal")
+                self.__CheckPavlov.deselect()
+        
+        def setSkinnerVars(self):
+            print "skinner vars"
+            if (self.reference.type_skinner == 1):
+                print "skinner"
+                self.__Entry2TEnd.config(state = "readonly")
+                self.__CheckSkinner.select()
+            else:
+                self.__Entry2TEnd.config(state = "normal")
+                self.__CheckSkinner.deselect()
         
         def get_changes(self):
             #print "commiting changes to variables in Form 1.."
