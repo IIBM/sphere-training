@@ -27,8 +27,10 @@ toneOneProbability = 0.5
 usingTK = 0 #0: using Glade GTk;   1: using TKinter   2: non-GUI mode
 initialComment = "" #Training comment initial value.
 
-type_pavlov = 0 #0: classic conditioning (Pavlov) mode enabled. Check documentation for more info.
-type_skinner = 0 #0: operant conditioning (Skinner) mode enabled. Check documentation for more info.
+type_pavlov = 0 #1: classic conditioning (Pavlov) mode enabled. Check documentation for more info.
+type_skinner = 0 #1: Skinner operant mode enabled. Check documentation for more info.
+type_ocond = 0 #1: Operant Conditioning mode enabled. Check documentation for more info. 
+type_discr = 0 #1: Discrimination mode enabled. Check documentation for more info.
 
 #Duplicate Values from sphereVideoDetection; if needed, change both places:
 MOVEMENT_THRESHOLD_INITIAL_VALUE = 30 #initial movement threshold value (amount of difference in sum, to consider a movement valid)

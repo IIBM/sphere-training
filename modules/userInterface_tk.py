@@ -1250,9 +1250,15 @@ class GUIGTK_Class:
             movementMethod = int( self.reference.movementMethod )
             self.__EntryMethodUsed.insert(0, str(movementMethod))
             
+            
+            self.resetGUIElements();
             self.setSkinnerVars(); #this one first, is important, check readonly params.
+            self.setOCVars();
+            
+            
             self.setPavlovVars();
             
+            self.setDiscrVars()
             
             self.reference.App.showFrame3()
             self.reference.AppFrm3.withdraw()
@@ -1386,16 +1392,13 @@ class GUIGTK_Class:
         def setOCVars(self):
             print "oc vars"
             if (self.reference.type_ocond == 1):
-                self.__Entry2TEnd.config(state = "readonly")
                 self.__Entry5IdleTime.config(state = "readonly")
-                pass
-            else:
-                self.__Entry2TEnd.config(state = "normal")
-                self.__Entry5IdleTime.config(state = "normal")
+                self.__Entry2Tone2.config(state = "readonly")
                 pass
         
         def setDiscrVars(self):
             print "discr vars"
+            
             pass
         
         def setPavlovVars(self):
@@ -1407,13 +1410,6 @@ class GUIGTK_Class:
                 self.__EntryMethodUsed.config(state = "readonly")
                 self.__Entry4MvntTime.config(state = "readonly")
                 self.__Entry5IdleTime.config(state = "readonly")
-            if (self.reference.type_pavlov == 0 ):
-                if (self.reference.type_skinner == 0):
-                    self.__Entry2Tone2.config(state = "normal")
-                self.__Entry3MvntAm.config(state = "normal")
-                self.__EntryMethodUsed.config(state = "normal")
-                self.__Entry4MvntTime.config(state = "normal")
-                self.__Entry5IdleTime.config(state = "normal")
         
         def setSkinnerVars(self):
             print "skinner vars"
@@ -1421,9 +1417,14 @@ class GUIGTK_Class:
                 print "skinner"
                 self.__Entry1Tone1.config(state = "readonly")
                 self.__Entry2Tone2.config(state = "readonly")
-            if (self.reference.type_skinner == 0):
-                self.__Entry1Tone1.config(state = "normal")
-                self.__Entry2Tone2.config(state = "normal")
+        
+        def resetGUIElements(self):
+            self.__Entry1Tone1.config(state = "normal")
+            self.__Entry2Tone2.config(state = "normal")
+            self.__Entry3MvntAm.config(state = "normal")
+            self.__Entry4MvntTime.config(state = "normal")
+            self.__Entry5IdleTime.config(state = "normal")
+            
         
         def get_changes(self):
             #Raw input data.
@@ -1714,6 +1715,8 @@ class GUIGTK_Class:
             prob = self.reference.probabilityToneOne * 100
             self.__Scale2.set(int(prob))
             
+            
+            self.resetGUIElements();
             self.setPavlovVars();
             self.setSkinnerVars();
             
@@ -1753,10 +1756,6 @@ class GUIGTK_Class:
                 self.__Entry3MvmntWindowStart.config(state = "readonly")
                 self.__Entry4MvntWindowEnd.config(state = "readonly")
                 self.__CheckPavlov.select()
-            else:
-                self.__Entry3MvmntWindowStart.config(state = "normal")
-                self.__Entry4MvntWindowEnd.config(state = "normal")
-                self.__CheckPavlov.deselect()
         
         def setSkinnerVars(self):
             print "skinner vars"
@@ -1764,19 +1763,11 @@ class GUIGTK_Class:
                 print "skinner"
                 self.__Entry2TEnd.config(state = "readonly")
                 self.__CheckSkinner.select()
-            else:
-                self.__Entry2TEnd.config(state = "normal")
-                self.__CheckSkinner.deselect()
         
         def setOCVars(self):
             print "oc vars"
             if (self.reference.type_ocond == 1):
                 self.__CheckOC.select()
-                self.__Entry2TEnd.config(state = "readonly")
-                pass
-            else:
-                self.__CheckOC.deselect()
-                self.__Entry2TEnd.config(state = "normal")
                 pass
         
         def setDiscrVars(self):
@@ -1784,9 +1775,15 @@ class GUIGTK_Class:
             if (self.reference.type_discr == 1):
                 self.__CheckDiscrimination.select()
                 pass
-            else:
-                self.__CheckDiscrimination.deselect()
-                pass
+            
+        def resetGUIElements(self):
+            self.__CheckDiscrimination.deselect()
+            self.__CheckOC.deselect()
+            self.__Entry2TEnd.config(state = "normal")
+            self.__CheckSkinner.deselect()
+            self.__Entry3MvmntWindowStart.config(state = "normal")
+            self.__Entry4MvntWindowEnd.config(state = "normal")
+            self.__CheckPavlov.deselect()
         
         def get_changes(self):
             #print "commiting changes to variables in Form 1.."
