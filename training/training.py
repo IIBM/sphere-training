@@ -515,6 +515,8 @@ class Training():
         
         type_pavlov = cfgtraining.type_pavlov;
         type_skinner = cfgtraining.type_skinner;
+        type_ocond = cfgtraining.type_ocond;
+        type_discr = cfgtraining.type_discr;
         
         if (type_pavlov == 1 and type_skinner == 1):
             print "Warning! Both Pavlov and Skinner mode are enabled. This training instance will use Pavlov mode only."
@@ -997,6 +999,8 @@ class Training():
         
         currentGUI.type_pavlov = self.gVariables.type_pavlov
         currentGUI.type_skinner = self.gVariables.type_skinner
+        currentGUI.type_ocond = self.gVariables.type_ocond
+        currentGUI.type_discr = self.gVariables.type_discr
         
         currentGUI.launch_GUI()
     

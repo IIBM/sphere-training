@@ -13,7 +13,8 @@ class userInterface_API:
     subj_name = ""
     type_pavlov = 0
     type_skinner = 0;
-
+    type_ocond = 0;
+    type_discr = 0;
     
     def getSubjName(self):
         
@@ -103,6 +104,8 @@ class userInterface_API:
         self.currentGUI.comment = self.comment
         self.currentGUI.type_pavlov = self.type_pavlov
         self.currentGUI.type_skinner = self.type_skinner
+        self.currentGUI.type_ocond = self.type_ocond
+        self.currentGUI.type_discr = self.type_discr
         self.currentGUI.commitInitialData()
         
         

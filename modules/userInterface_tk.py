@@ -60,6 +60,9 @@ class GUIGTK_Class:
         
         self.type_pavlov = 0;
         self.type_skinner = 0;
+        self.type_ocond = 0;
+        self.type_discr = 0;
+        
         self.comment = ""
         
         self.helpNumber = 0;
@@ -1380,13 +1383,37 @@ class GUIGTK_Class:
             #print "Parameters: Previous states saved."
             pass
         
+        def setOCVars(self):
+            print "oc vars"
+            if (self.reference.type_ocond == 1):
+                self.__Entry2TEnd.config(state = "readonly")
+                self.__Entry5IdleTime.config(state = "readonly")
+                pass
+            else:
+                self.__Entry2TEnd.config(state = "normal")
+                self.__Entry5IdleTime.config(state = "normal")
+                pass
+        
+        def setDiscrVars(self):
+            print "discr vars"
+            pass
+        
         def setPavlovVars(self):
             print "pavlov vars"
-            if (self.reference.type_pavlov == 1):
+            if (self.reference.type_pavlov == 1 ):
                 print "pavlov"
                 self.__Entry2Tone2.config(state = "readonly")
-            else:
-                self.__Entry2Tone2.config(state = "normal")
+                self.__Entry3MvntAm.config(state = "readonly")
+                self.__EntryMethodUsed.config(state = "readonly")
+                self.__Entry4MvntTime.config(state = "readonly")
+                self.__Entry5IdleTime.config(state = "readonly")
+            if (self.reference.type_pavlov == 0 ):
+                if (self.reference.type_skinner == 0):
+                    self.__Entry2Tone2.config(state = "normal")
+                self.__Entry3MvntAm.config(state = "normal")
+                self.__EntryMethodUsed.config(state = "normal")
+                self.__Entry4MvntTime.config(state = "normal")
+                self.__Entry5IdleTime.config(state = "normal")
         
         def setSkinnerVars(self):
             print "skinner vars"
@@ -1394,7 +1421,7 @@ class GUIGTK_Class:
                 print "skinner"
                 self.__Entry1Tone1.config(state = "readonly")
                 self.__Entry2Tone2.config(state = "readonly")
-            else:
+            if (self.reference.type_skinner == 0):
                 self.__Entry1Tone1.config(state = "normal")
                 self.__Entry2Tone2.config(state = "normal")
         
@@ -1690,6 +1717,9 @@ class GUIGTK_Class:
             self.setPavlovVars();
             self.setSkinnerVars();
             
+            self.setOCVars();
+            self.setDiscrVars();
+            
             self.reference.App.showFrame1()
             self.reference.AppFrm1.withdraw()
             ###
@@ -1737,6 +1767,26 @@ class GUIGTK_Class:
             else:
                 self.__Entry2TEnd.config(state = "normal")
                 self.__CheckSkinner.deselect()
+        
+        def setOCVars(self):
+            print "oc vars"
+            if (self.reference.type_ocond == 1):
+                self.__CheckOC.select()
+                self.__Entry2TEnd.config(state = "readonly")
+                pass
+            else:
+                self.__CheckOC.deselect()
+                self.__Entry2TEnd.config(state = "normal")
+                pass
+        
+        def setDiscrVars(self):
+            print "Discr. vars"
+            if (self.reference.type_discr == 1):
+                self.__CheckDiscrimination.select()
+                pass
+            else:
+                self.__CheckDiscrimination.deselect()
+                pass
         
         def get_changes(self):
             #print "commiting changes to variables in Form 1.."
