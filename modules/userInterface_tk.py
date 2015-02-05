@@ -25,24 +25,31 @@ class GUIGTK_Class:
             #print "Initializing GUI GTK class."
             self.thread0 = threading.Thread(target=self.startFrame0 , name="Frame0")
             self.thread0.start()
-            
-            self.thread1 = threading.Thread(target=self.startFrame1 , name="Frame1")
             time.sleep(0.25)
-            self.thread1.start()
             
-            self.thread3 = threading.Thread(target=self.startFrame3 , name="Frame3")
-            time.sleep(0.25)
-            self.thread3.start()
-            
-            self.thread5 = threading.Thread(target=self.startFrame5 , name="Frame5")
-            time.sleep(0.25) #i can swear without this delay it won't work properly
-            self.thread5.start()
+            while True:
+                if (self.allowGUIContinue == 1):
+                    print "init.."
+                    self.thread1 = threading.Thread(target=self.startFrame1 , name="Frame1")
+                    time.sleep(0.25)
+                    self.thread1.start()
+                    
+                    self.thread3 = threading.Thread(target=self.startFrame3 , name="Frame3")
+                    time.sleep(0.25)
+                    self.thread3.start()
+                    
+                    self.thread5 = threading.Thread(target=self.startFrame5 , name="Frame5")
+                    time.sleep(0.25) #i can swear without this delay it won't work properly
+                    self.thread5.start()
+                    break;
             
             
             #print "GUI GTK class initialized."
             pass
     
     def customVariablesInit(self):
+        self.allowGUIContinue = 0;
+        
         self.previousVars = self.Empty_cl()
         self.toneStart = 0
         self.toneEnd = 0
@@ -100,6 +107,7 @@ class GUIGTK_Class:
         Rootn.geometry('440x240+10+10')
         Rootn.title('Main Form (TK)')
         
+        self.allowGUIContinue = 1;
         time.sleep(2.5) #to prevent user from touching GUI before the other frames are well-displayed.
         Rootn.deiconify()
         Rootn.mainloop()
@@ -112,6 +120,7 @@ class GUIGTK_Class:
         Root2.withdraw()
         
         self.AppFrm1 = self.Form1(Root2)
+        self.AppFrm1.initAll()
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
         #App.pack(expand='yes', fill='both')
@@ -131,6 +140,7 @@ class GUIGTK_Class:
         Root.withdraw()
         
         self.AppFrm3 = self.Form3(Root)
+        self.AppFrm3.initAll()
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
         #App.pack(expand='yes', fill='both')
@@ -146,19 +156,17 @@ class GUIGTK_Class:
         pass
     
     def startFrame5(self):
-        import Tkinter
         Root = Tkinter.Tk()
         Root.withdraw()
         
-        del Tkinter
         self.AppFrm5 = self.Form5(Root)
-        self.AppFrm5.reference = self
+        self.AppFrm5.initAll()
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
         #App.pack(expand='yes', fill='both')
         #App.gVariables = gVariables
         self.AppFrm5.protocol('WM_DELETE_WINDOW', self.App.hideForm5)
-        
+        self.AppFrm5.reference = self
         #gVariables.AppFrm1.geometry('640x480+10+10')
         self.AppFrm5.title('Comment.')
         self.AppFrm5.withdraw()
@@ -779,6 +787,10 @@ class GUIGTK_Class:
             #Your code here
             #
             apply(Toplevel.__init__,(self,Master),kw)
+            
+        
+        
+        def initAll(self):
             self.bind('<Destroy>',self.__on_Form5_Dstry)
             self.__lblComment = Label(self,text='Comment about this training:')
             self.__lblComment.pack(side='top')
@@ -809,7 +821,6 @@ class GUIGTK_Class:
             self.get_changes()
             #print "Form5: Comment Frame loaded"
             logger.info("Form5: Comment Frame loaded")
-        
         
         def __on_ApplyBtn_ButRel_1(self,Event=None):
             self.get_changes()
@@ -852,8 +863,9 @@ class GUIGTK_Class:
             #
             #Your code here
             #FORM: Parameters
-    
             apply(Toplevel.__init__,(self,Master),kw)
+        
+        def initAll(self):
             self.bind('<Destroy>',self.__on_Form3_Dstry)
             self.__Frame6 = Frame(self)
             self.__Frame6.pack(side='left')
@@ -1417,6 +1429,7 @@ class GUIGTK_Class:
                 print "skinner"
                 self.__Entry1Tone1.config(state = "readonly")
                 self.__Entry2Tone2.config(state = "readonly")
+                self.__Entry5IdleTime.config(state = "readonly")
         
         def resetGUIElements(self):
             self.__Entry1Tone1.config(state = "normal")
@@ -1456,6 +1469,8 @@ class GUIGTK_Class:
             #Your code here
             #FORM: Trial Events
             apply(Toplevel.__init__,(self,Master),kw)
+        
+        def initAll(self):
             self.bind('<Destroy>',self.__on_Form1_Dstry)
             self.__Frame2 = Frame(self)
             self.__Frame2.pack(side='left')
@@ -1818,6 +1833,12 @@ class GUIGTK_Class:
             pass
         
         def checkTrialEventsVarsConsistency(self):
+            
+            print (self.__CheckPavlov.selection_get())
+            print (self.__CheckSkinner.selection_get())
+            print (self.__CheckOC.selection_get())
+            print (self.__CheckDiscrimination.selection_get())
+            
             try:
                 self.reference.toneStart = float(self.var1_TStart)
             except:
