@@ -17,6 +17,8 @@ class GUIGTK_Class():
         type_discr = 0
         requireStillnessVar = 0;
         
+        current_type = ""
+        
         orig_toneend = 0;
         orig_mvntwinend = 0;
         
@@ -493,6 +495,7 @@ class GUIGTK_Class():
             self.glade.get_object("entryProbab1").set_editable(False);
             self.glade.get_object("entryProbab1").modify_base(0, clr);
             
+            self.current_type = "pavlov"
             pass
         
         def setSkinnerVars(self):
@@ -517,6 +520,8 @@ class GUIGTK_Class():
             
             self.glade.get_object("entryProbab1").set_editable(False);
             self.glade.get_object("entryProbab1").modify_base(0, clr);
+            
+            self.current_type = "skinner"
             pass
         
         def setOCVars(self):
@@ -532,9 +537,14 @@ class GUIGTK_Class():
             
             self.glade.get_object("entryProbab1").set_editable(False);
             self.glade.get_object("entryProbab1").modify_base(0, clr);
+            
+            self.current_type = "oc"
             pass
         
         def setDiscrVars(self):
+            if (self.type_discr == 0):
+                return;
+            self.current_type = "discr"
             pass
         
         def saveParametersPreviousState(self):

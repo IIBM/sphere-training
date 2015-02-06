@@ -73,6 +73,8 @@ class GUIGTK_Class:
         self.type_ocond = 0;
         self.type_discr = 0;
         
+        self.current_type = ""
+        
         self.comment = ""
         
         self.helpNumber = 0;
@@ -1414,17 +1416,20 @@ class GUIGTK_Class:
             if (self.reference.type_ocond == 1):
                 self.__Entry5IdleTime.config(state = "readonly")
                 self.__Entry2Tone2.config(state = "readonly")
+                self.reference.current_type = "oc"
                 pass
         
         def setDiscrVars(self):
             print "discr vars"
-            
+            if (self.reference.type_discr == 1):
+                self.reference.current_type = "discr"
             pass
         
         def setPavlovVars(self):
             print "pavlov vars"
             if (self.reference.type_pavlov == 1 ):
                 print "pavlov"
+                self.reference.current_type = "pavlov"
                 self.__Entry2Tone2.config(state = "readonly")
                 self.__Entry3MvntAm.config(state = "readonly")
                 self.__EntryMethodUsed.config(state = "readonly")
@@ -1435,11 +1440,13 @@ class GUIGTK_Class:
             print "skinner vars"
             if (self.reference.type_skinner == 1):
                 print "skinner"
+                self.reference.current_type = "skinner"
                 self.__Entry1Tone1.config(state = "readonly")
                 self.__Entry2Tone2.config(state = "readonly")
                 self.__Entry5IdleTime.config(state = "readonly")
         
         def resetGUIElements(self):
+            self.reference.current_type = ""
             self.__Entry1Tone1.config(state = "normal")
             self.__Entry2Tone2.config(state = "normal")
             self.__Entry3MvntAm.config(state = "normal")
@@ -1801,6 +1808,7 @@ class GUIGTK_Class:
             print "pavlov vars"
             if (self.reference.type_pavlov == 1):
                 print "pavlov"
+                self.reference.current_type = "pavlov"
                 self.__Entry4MvntWindowEnd.delete(0,10) #removes 10 characters.
                 self.__Entry4MvntWindowEnd.insert(0, str( self.__Entry3MvmntWindowStart.get() ) )
                 self.__Entry3MvmntWindowStart.config(state = "readonly")
@@ -1812,6 +1820,7 @@ class GUIGTK_Class:
             self.skinner.set( self.reference.type_skinner )
             if (self.reference.type_skinner == 1):
                 print "skinner"
+                self.reference.current_type = "skinner"
                 self.__Entry2TEnd.delete(0,10) #removes 10 characters.
                 self.__Entry2TEnd.insert(0, str(0.0) )
                 self.__Entry2TEnd.config(state = "readonly")
@@ -1821,6 +1830,7 @@ class GUIGTK_Class:
             print "oc vars"
             self.oc.set( self.reference.type_ocond )
             if (self.reference.type_ocond == 1):
+                self.reference.current_type = "oc"
                 self.__CheckOC.select()
                 pass
         
@@ -1828,6 +1838,7 @@ class GUIGTK_Class:
             print "Discr. vars"
             self.discr.set( self.reference.type_discr )
             if (self.reference.type_discr == 1):
+                self.reference.current_type = "discr"
                 self.__CheckDiscrimination.select()
                 pass
             
@@ -1843,6 +1854,7 @@ class GUIGTK_Class:
             self.__Entry2TEnd.insert(0, str(self.orig_toneend))
             self.__Entry4MvntWindowEnd.delete(0,10) #removes 10 characters.
             self.__Entry4MvntWindowEnd.insert(0, str(self.orig_mvntwinend))
+            self.reference.current_type = ""
         
         def get_changes(self):
             #print "commiting changes to variables in Form 1.."

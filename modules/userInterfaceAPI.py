@@ -275,6 +275,8 @@ class userInterface_API:
         #logger.debug ( "ns: " + ns.__str__() )
         
         self.setNameSpaceMessage(32, self.currentGUI.requireStillnessVar )
+        
+        self.setNameSpaceMessage(33, self.currentGUI.current_type )
         logger.debug ( "Default API: done." )
         
     

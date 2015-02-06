@@ -1363,11 +1363,41 @@ class Training():
                     print "GUICheck: 'Require Stillness' message"
                     Training.gVariables.logger.debug( "GUICheck: 'Require Stillness' message" )
                     Training.gVariables.requireStillness = int(a)
-                    print "Arg:"
-                    print a
-                    print a
-                    print a
+                    print "Arg: %d" % int(a)
                     pass
+                elif (index == 33):
+                    print "GUICheck: 'current_type' message"
+                    Training.gVariables.logger.debug( "GUICheck: 'current_type' message" )
+                    Training.gVariables.current_mode = a
+                    print "Current type: %s" % a
+                    if ("pavlov" in a):
+                        print "pavlov mode detected"
+                        Training.gVariables.type_pavlov = 1
+                        Training.gVariables.type_skinner = 0
+                        Training.gVariables.type_discr = 0
+                        Training.gVariables.type_ocond = 0
+                        pass
+                    if ("skinner") in a:
+                        print "skinner detected"
+                        Training.gVariables.type_pavlov = 0
+                        Training.gVariables.type_skinner = 1
+                        Training.gVariables.type_discr = 0
+                        Training.gVariables.type_ocond = 0
+                        pass
+                    if ("oc") in a:
+                        print "oc detected"
+                        Training.gVariables.type_pavlov = 0
+                        Training.gVariables.type_skinner = 0
+                        Training.gVariables.type_discr = 0
+                        Training.gVariables.type_ocond = 1
+                        pass
+                    if ("discr") in a:
+                        print "discr detected"
+                        Training.gVariables.type_pavlov = 0
+                        Training.gVariables.type_skinner = 0
+                        Training.gVariables.type_discr = 1
+                        Training.gVariables.type_ocond = 0
+                        pass
                 pass
                 #print "GUICheck: done."
                 Training.gVariables.logger.debug( "GUICheck: done." )
