@@ -29,7 +29,6 @@ class GUIGTK_Class:
             
             while True:
                 if (self.allowGUIContinue == 1):
-                    print "init.."
                     self.thread1 = threading.Thread(target=self.startFrame1 , name="Frame1")
                     time.sleep(0.25)
                     self.thread1.start()
@@ -1266,8 +1265,10 @@ class GUIGTK_Class:
             self.__EntryMethodUsed.insert(0, str(movementMethod))
             
             
+            #parameters: nothing to save from initial state.
+            
             self.resetGUIElements();
-            self.setSkinnerVars(); #this one first, is important, check readonly params.
+            self.setSkinnerVars();
             self.setOCVars();
             
             
@@ -1438,8 +1439,10 @@ class GUIGTK_Class:
             self.__Entry1Tone1.config(state = "normal")
             self.__Entry2Tone2.config(state = "normal")
             self.__Entry3MvntAm.config(state = "normal")
+            self.__EntryMethodUsed.config(state = "normal")
             self.__Entry4MvntTime.config(state = "normal")
             self.__Entry5IdleTime.config(state = "normal")
+            print "everything resetted."
             
         
         def get_changes(self):
@@ -1466,6 +1469,9 @@ class GUIGTK_Class:
     
     class Form1(Toplevel):
         #Trial Events.
+        orig_toneend = 0;
+        orig_mvntwinend = 0;
+        
         def __init__(self,Master=None,**kw):
             kw['class_'] = 'Frame'
             #
@@ -1478,6 +1484,7 @@ class GUIGTK_Class:
             self.skinner = IntVar(self)
             self.oc = IntVar(self)
             self.discr = IntVar(self)
+            self.requireStillness = IntVar(self)
             self.bind('<Destroy>',self.__on_Form1_Dstry)
             self.__Frame2 = Frame(self)
             self.__Frame2.pack(side='left')
@@ -1525,21 +1532,25 @@ class GUIGTK_Class:
             self.__Frame18.pack(side='top')
             self.__Frame38 = Frame(self.__Frame7)
             self.__Frame38.pack(side='top')
-            self.__ApplyBtn = Button(self.__Frame38,text='Apply')
-            self.__ApplyBtn.pack(side='top')
-            self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
             
-            self.__tooltipTE1_Apply = GUIGTK_Class.ToolTip(self.__ApplyBtn, text=
-                                    "Apply:"+"\n"+
-                                     "Applies and saves all changes made to the Trial Events.")
+            
             
             self.__CloseBtn = Button(self.__Frame38,text='Close')
-            self.__CloseBtn.pack(side='top')
+            self.__CloseBtn.pack(side='bottom')
             self.__CloseBtn.bind('<ButtonRelease-1>',self.__on_CloseBtn_ButRel_1)
             
             self.__tooltipTE2_Close = GUIGTK_Class.ToolTip(self.__CloseBtn, text=
                                     "Close:"+"\n"+
                                      "Closes this window without saving changes.")
+            
+            
+            self.__ApplyBtn = Button(self.__Frame38,text='Apply')
+            self.__ApplyBtn.pack(side='bottom')
+            self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
+            
+            self.__tooltipTE1_Apply = GUIGTK_Class.ToolTip(self.__ApplyBtn, text=
+                                    "Apply:"+"\n"+
+                                     "Applies and saves all changes made to the Trial Events.")
             
             self.__Frame37 = Frame(self.__Frame7)
             self.__Frame37.pack(side='top')
@@ -1672,6 +1683,10 @@ class GUIGTK_Class:
                                      )
             
             
+            self.__CheckRequireStillness = Checkbutton(self.__Frame38,text='Require stillness to end trial.',
+                                                       variable=self.requireStillness);
+            self.__CheckRequireStillness.pack(side='top')
+            
             self.__alreadyExecuted = 0
             self.__Entry1TStart.insert(0,"0.0")
             self.__Entry2TEnd.insert(0,"0.0")
@@ -1738,6 +1753,10 @@ class GUIGTK_Class:
             self.__Scale2.set(int(prob))
             
             
+            self.orig_toneend = self.reference.toneEnd
+            
+            self.orig_mvntwinend = self.reference.movementWindowEnd
+            
             self.resetGUIElements();
             self.setPavlovVars();
             self.setSkinnerVars();
@@ -1776,6 +1795,8 @@ class GUIGTK_Class:
             print "pavlov vars"
             if (self.reference.type_pavlov == 1):
                 print "pavlov"
+                self.__Entry4MvntWindowEnd.delete(0,10) #removes 10 characters.
+                self.__Entry4MvntWindowEnd.insert(0, str( self.__Entry3MvmntWindowStart.get() ) )
                 self.__Entry3MvmntWindowStart.config(state = "readonly")
                 self.__Entry4MvntWindowEnd.config(state = "readonly")
                 self.__CheckPavlov.select()
@@ -1785,6 +1806,8 @@ class GUIGTK_Class:
             self.skinner.set( self.reference.type_skinner )
             if (self.reference.type_skinner == 1):
                 print "skinner"
+                self.__Entry2TEnd.delete(0,10) #removes 10 characters.
+                self.__Entry2TEnd.insert(0, str(0.0) )
                 self.__Entry2TEnd.config(state = "readonly")
                 self.__CheckSkinner.select()
         
@@ -1810,6 +1833,10 @@ class GUIGTK_Class:
             self.__Entry3MvmntWindowStart.config(state = "normal")
             self.__Entry4MvntWindowEnd.config(state = "normal")
             self.__CheckPavlov.deselect()
+            self.__Entry2TEnd.delete(0,10) #removes 10 characters.
+            self.__Entry2TEnd.insert(0, str(self.orig_toneend))
+            self.__Entry4MvntWindowEnd.delete(0,10) #removes 10 characters.
+            self.__Entry4MvntWindowEnd.insert(0, str(self.orig_mvntwinend))
         
         def get_changes(self):
             #print "commiting changes to variables in Form 1.."
@@ -1850,31 +1877,58 @@ class GUIGTK_Class:
             print self.oc.get()
             print self.discr.get()
             
+            changed = 0;
+            
+            if ( self.reference.type_pavlov != self.pavlov.get() or 
+            self.reference.type_skinner != self.skinner.get() or
+            self.reference.type_ocond != self.oc.get() or
+            self.reference.type_discr != self.discr.get() ):
+                changed = 1;
+            
             if (self.pavlov.get() == 1):
-                self.reference.type_pavlov = 1
-                self.reference.type_skinner = 0
-                self.reference.type_ocond = 0
-                self.reference.type_discr = 0
                 self.skinner.set(0)
                 self.oc.set(0)
                 self.discr.set(0)
             
             if (self.skinner.get() == 1):
-                self.reference.type_skinner = 1
-                self.reference.type_ocond = 0
-                self.reference.type_discr = 0
+                self.pavlov.set(0)
                 self.oc.set(0)
                 self.discr.set(0)
             
             
             if (self.oc.get() == 1):
-                self.reference.type_ocond = 1
-                self.reference.type_discr = 0
+                self.skinner.set(0)
+                self.pavlov.set(0)
                 self.discr.set(0)
             
             if (self.discr.get() == 1 ):
-                self.reference.type_discr = 1
+                self.skinner.set(0)
+                self.pavlov.set(0)
+                self.oc.set(0)
             
+            self.reference.type_pavlov = self.pavlov.get()
+            self.reference.type_skinner = self.skinner.get()
+            self.reference.type_ocond = self.oc.get()
+            self.reference.type_discr = self.discr.get()
+            
+            if (changed):
+                self.resetGUIElements()
+                self.setSkinnerVars();
+                self.setPavlovVars();
+                self.setOCVars()
+                self.setDiscrVars();
+                
+                print self.pavlov.get()
+                print self.skinner.get()
+                print self.oc.get()
+                print self.discr.get()
+                
+                self.reference.AppFrm3.resetGUIElements()
+                self.reference.AppFrm3.setPavlovVars()
+                self.reference.AppFrm3.setSkinnerVars()
+                self.reference.AppFrm3.setOCVars()
+                self.reference.AppFrm3.setDiscrVars()
+            pass
             try:
                 self.reference.toneStart = float(self.var1_TStart)
             except:
