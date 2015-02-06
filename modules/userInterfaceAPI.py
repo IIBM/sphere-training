@@ -6,7 +6,7 @@ logger = logging.getLogger('userInterfaceAPI')
 import track_bola_utils
 
 class userInterface_API:
-    usingTK = 1 #0: using GTk;   1: using TK
+    usingTK = 0 #0: using GTk;   1: using TK
     jobList = 0 # message Job Queue between processes.
     ns = 0
     subj_list = [""]
