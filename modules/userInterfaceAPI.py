@@ -238,6 +238,7 @@ class userInterface_API:
     
     
     def overrideaction_applyTE(self):
+        print "TE_AP"
         logger.debug ( "Default API: Apply Trial Events" )
         self.setNameSpaceMessage(23, self.currentGUI.toneStart )
         #print "API Namespace:", ns
@@ -273,7 +274,7 @@ class userInterface_API:
         #print "API Namespace:", ns
         #logger.debug ( "ns: " + ns.__str__() )
         
-        self.setNameSpaceMessage(32, self.currentGUI.requireStillness.get() )
+        self.setNameSpaceMessage(32, self.currentGUI.requireStillnessVar )
         logger.debug ( "Default API: done." )
         
     
@@ -430,14 +431,7 @@ class userInterface_API:
         self.interTrialStart = self.currentGUI.interTrialStart
         self.interTrialEnd = self.currentGUI.interTrialEnd
         self.probabilityToneOne = self.currentGUI.probabilityToneOne
-        self.requireStillness = self.currentGUI.requireStillness;
-        print self.requireStillness.get()
-        print self.requireStillness.get()
-        print self.requireStillness.get()
-        print self.requireStillness.get()
-        print self.requireStillness.get()
-        print self.requireStillness.get()
-        print self.requireStillness.get()
+        self.requireStillnessVar = self.currentGUI.requireStillnessVar;
         logger.debug( "API: Apply Trial Events:" )
         try:
             self.overrideaction_applyTE()
@@ -557,6 +551,7 @@ class userInterface_API:
     def launch_tkinter(self):
         import userInterface_tk
         self.currentGUI = userInterface_tk.GUIGTK_Class()
+        self.currentGUI.initAll();
         #print "Overriding functions:"
         time.sleep(0.5)
         time.sleep(0.5)

@@ -20,6 +20,10 @@ class GUIGTK_Class:
     
     
     def __init__(self):
+            #object created. Pending initialization..
+            pass
+    
+    def initAll(self):
             self.customVariablesInit()
             import threading
             #print "Initializing GUI GTK class."
@@ -2003,6 +2007,7 @@ class GUIGTK_Class:
                 print "Bad input: probabilityToneOne to previous var."
             pass
             self.reference.requireStillness = self.requireStillness
+            self.reference.requireStillnessVar = self.requireStillness.get()
     
     
     class Form_help(Frame):

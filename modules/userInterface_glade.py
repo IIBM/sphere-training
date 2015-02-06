@@ -11,7 +11,15 @@ import track_bola_utils
 
 
 class GUIGTK_Class():
-    
+        type_pavlov = 0;
+        type_skinner = 0
+        type_ocond = 0
+        type_discr = 0
+        requireStillnessVar = 0;
+        
+        orig_toneend = 0;
+        orig_mvntwinend = 0;
+        
         class Empty_cl():
             #Used to save our variables' previous states.
             def __init__(self):
@@ -75,6 +83,8 @@ class GUIGTK_Class():
                 clr = gtk.gdk.Color('#ddd') #gray color, so users know that it isn't editable
                 #self.glade.get_object("entryToneStart").modify_text(0, clr);
                 self.glade.get_object("entryToneStart").modify_base(0, clr);
+                
+                self.glade.get_object("checkbuttonRequireS").set_active(True);
                 
                 if (self.startEv == True):
                     gtk.main()
@@ -184,6 +194,8 @@ class GUIGTK_Class():
                 self.probabilityToneOne = 0
                 self.type_pavlov = 0
                 self.type_skinner = 0
+                self.type_ocond = 0
+                self.type_discr = 0
         
         def commitInitialData(self):
             #Set graphic elements' data with the variables that has been passed from the upper class that is executing this module.
@@ -217,8 +229,14 @@ class GUIGTK_Class():
             self.glade.get_object("entryIdleTime").set_text( str(self.idleTime) )
             self.glade.get_object("entryCommentTr").set_text( str(self.comment) )
             
+            self.orig_mvntwinend = self.movementWindowEnd
+            self.orig_toneend = self.toneEnd
+            
+            self.resetGUIElements();
             self.setPavlovVars();
             self.setSkinnerVars();
+            self.setOCVars();
+            self.setDiscrVars();
             
             logger.info( "   Done: Setting userInterface_glade initial data.")
             gtk.main() #probably not launched before. Launching gtk.main
@@ -407,26 +425,31 @@ class GUIGTK_Class():
             
             self.glade.get_object("entryMvmntWinEnd").set_editable(True);
             self.glade.get_object("entryMvmntWinEnd").modify_base(0, clr);
+            self.glade.get_object("entryMvmntWinEnd").set_text( str( self.orig_mvntwinend ) )
             
             self.glade.get_object("entryToneEnd").set_editable(True);
             self.glade.get_object("entryToneEnd").modify_base(0, clr);
+            self.glade.get_object("entryToneEnd").set_text( str( self.orig_toneend ) )
             
-            if (self.pavlov == 1):
+            self.glade.get_object("entryProbab1").set_editable(True);
+            self.glade.get_object("entryProbab1").modify_base(0, clr);
+            
+            if (self.type_pavlov == 1):
                 self.glade.get_object("checkbuttonPavlov").set_active(True);
             else:
                 self.glade.get_object("checkbuttonPavlov").set_active(False);
             
-            if (self.skinner == 1):
+            if (self.type_skinner == 1):
                 self.glade.get_object("checkbuttonSkinner").set_active(True);
             else:
                 self.glade.get_object("checkbuttonSkinner").set_active(False);
             
-            if (self.ocond == 1):
+            if (self.type_ocond == 1):
                 self.glade.get_object("checkbuttonOC").set_active(True);
             else:
                 self.glade.get_object("checkbuttonOC").set_active(False);
             
-            if (self.discr == 1):
+            if (self.type_discr == 1):
                 self.glade.get_object("checkbuttonDiscr").set_active(True);
             else:
                 self.glade.get_object("checkbuttonDiscr").set_active(False);
@@ -434,12 +457,75 @@ class GUIGTK_Class():
             pass
         
         def setPavlovVars(self):
+            if (self.type_pavlov == 0):
+                return;
+            clr = gtk.gdk.Color('#ddd')
+            
+            self.glade.get_object("entryMvmntWinEnd").set_editable(True);
+            self.glade.get_object("entryMvmntWinEnd").set_text( str( self.glade.get_object("entryMvmntWinStart").get_text() ) )
+            self.glade.get_object("entryMvmntWinEnd").set_editable(False);
+            self.glade.get_object("entryMvmntWinEnd").modify_base(0, clr);
+            
+            self.glade.get_object("entryMvmntWinStart").set_editable(False);
+            self.glade.get_object("entryMvmntWinStart").modify_base(0, clr);
+            
+            self.glade.get_object("entryTone2").set_editable(False);
+            self.glade.get_object("entryTone2").modify_base(0, clr);
+            
+            self.glade.get_object("entryMovementAmount").set_editable(False);
+            self.glade.get_object("entryMovementAmount").modify_base(0, clr);
+            
+            self.glade.get_object("entryMethod").set_editable(False);
+            self.glade.get_object("entryMethod").modify_base(0, clr);
+            
+            self.glade.get_object("entryMovementTime").set_editable(False);
+            self.glade.get_object("entryMovementTime").modify_base(0, clr);
+            
+            self.glade.get_object("entryIdleTime").set_editable(False);
+            self.glade.get_object("entryIdleTime").modify_base(0, clr);
+            
+            self.glade.get_object("entryProbab1").set_editable(False);
+            self.glade.get_object("entryProbab1").modify_base(0, clr);
+            
             pass
         
         def setSkinnerVars(self):
+            if (self.type_skinner == 0):
+                return;
+            clr = gtk.gdk.Color('#ddd')
+            
+            
+            self.glade.get_object("entryTone1").set_editable(False);
+            self.glade.get_object("entryTone1").modify_base(0, clr);
+            
+            self.glade.get_object("entryTone2").set_editable(False);
+            self.glade.get_object("entryTone2").modify_base(0, clr);
+            
+            self.glade.get_object("entryToneEnd").set_editable(True);
+            self.glade.get_object("entryToneEnd").set_text( str( 0.0 ) )
+            self.glade.get_object("entryToneEnd").set_editable(False);
+            self.glade.get_object("entryToneEnd").modify_base(0, clr);
+            
+            self.glade.get_object("entryIdleTime").set_editable(False);
+            self.glade.get_object("entryIdleTime").modify_base(0, clr);
+            
+            self.glade.get_object("entryProbab1").set_editable(False);
+            self.glade.get_object("entryProbab1").modify_base(0, clr);
             pass
         
         def setOCVars(self):
+            if (self.type_ocond == 0):
+                return;
+            clr = gtk.gdk.Color('#ddd')
+            
+            self.glade.get_object("entryTone2").set_editable(False);
+            self.glade.get_object("entryTone2").modify_base(0, clr);
+            
+            self.glade.get_object("entryIdleTime").set_editable(False);
+            self.glade.get_object("entryIdleTime").modify_base(0, clr);
+            
+            self.glade.get_object("entryProbab1").set_editable(False);
+            self.glade.get_object("entryProbab1").modify_base(0, clr);
             pass
         
         def setDiscrVars(self):
@@ -457,35 +543,7 @@ class GUIGTK_Class():
             pass
         
         def checkTrialEventsVarsConsistency(self):
-            if (self.pavlov == 1):
-                self.skinner = 0;
-                self.ocond = 0;
-                self.discr = 0;
             
-            if (self.skinner == 1):
-                self.pavlov = 0;
-                self.ocond = 0;
-                self.discr = 0;
-            
-            if (self.ocond == 1):
-                self.pavlov = 0;
-                self.skinner = 0;
-                self.discr = 0;
-            
-            if (self.discr == 1):
-                self.pavlov = 0;
-                self.ocond = 0;
-                self.skinner = 0;
-            
-            print self.pavlov
-            print self.skinner
-            print self.ocond
-            print self.discr
-            self.resetGUIElements()
-            self.setPavlovVars()
-            self.setSkinnerVars()
-            self.setOCVars()
-            self.setDiscrVars()
             
             try:
                 a = float(self.toneStart)
@@ -548,7 +606,91 @@ class GUIGTK_Class():
                 print "Raw P Input done."
                 pass
         
+        def __TE_modes(self):
+                self.modeHasChanged = 0;
+                temppavlov = self.glade.get_object("checkbuttonPavlov").get_active()
+                
+                if (temppavlov == False):
+                    if (self.type_pavlov == 1):
+                        self.modeHasChanged = 1;
+                    self.type_pavlov = 0;
+                else:
+                    if (self.type_pavlov == 0):
+                        self.modeHasChanged = 1;
+                    self.type_pavlov = 1;
+                
+                tempskinner = self.glade.get_object("checkbuttonSkinner").get_active()
+                
+                if (tempskinner == False):
+                    if (self.type_skinner == 1):
+                        self.modeHasChanged = 1;
+                    self.type_skinner = 0;
+                else:
+                    if (self.type_skinner == 0):
+                        self.modeHasChanged = 1;
+                    self.type_skinner = 1;
+                
+                tempocond = self.glade.get_object("checkbuttonOC").get_active()
+                
+                if (tempocond == False):
+                    if (self.type_ocond == 1):
+                        self.modeHasChanged = 1;
+                    self.type_ocond = 0;
+                else:
+                    if (self.type_ocond == 0):
+                        self.modeHasChanged = 1;
+                    self.type_ocond = 1;
+                
+                tempdiscr = self.glade.get_object("checkbuttonDiscr").get_active()
+                
+                if (tempdiscr == False):
+                    if (self.type_discr == 1):
+                        self.modeHasChanged = 1;
+                    self.type_discr = 0;
+                else:
+                    if (self.type_discr == 0):
+                        self.modeHasChanged = 1;
+                    self.type_discr = 1;
+                
+                
+                if (self.type_pavlov == 1):
+                    self.type_skinner = 0;
+                    self.type_ocond = 0;
+                    self.type_discr = 0;
+                
+                if (self.type_skinner == 1):
+                    self.type_pavlov = 0;
+                    self.type_ocond = 0;
+                    self.type_discr = 0;
+                
+                if (self.type_ocond == 1):
+                    self.type_pavlov = 0;
+                    self.type_skinner = 0;
+                    self.type_discr = 0;
+                
+                if (self.type_discr == 1):
+                    self.type_pavlov = 0;
+                    self.type_ocond = 0;
+                    self.type_skinner = 0;
+                
+                #print "mode has changed: %d" % self.modeHasChanged
+                #print self.type_pavlov
+                #print self.type_skinner
+                #print self.type_ocond
+                #print self.type_discr
+                
+                if (self.modeHasChanged == 1):
+                    self.resetGUIElements()
+                    self.setPavlovVars()
+                    self.setSkinnerVars()
+                    self.setOCVars()
+                    self.setDiscrVars()
+                
+                
+        
         def __rawTEInput(self):
+                self.__TE_modes();
+                
                 self.toneStart = self.glade.get_object("entryToneStart").get_text()
                 self.toneEnd = self.glade.get_object("entryToneEnd").get_text()
                 self.movementWindowStart = self.glade.get_object("entryMvmntWinStart").get_text()
@@ -556,33 +698,13 @@ class GUIGTK_Class():
                 self.interTrialStart = self.glade.get_object("entryITStart").get_text()
                 self.interTrialEnd = self.glade.get_object("entryITEnd").get_text()
                 self.probabilityToneOne = self.glade.get_object("entryProbab1").get_text()
-                self.pavlov = self.glade.get_object("checkbuttonPavlov").get_active()
                 
-                if (self.pavlov == False):
-                    self.pavlov = 0;
+                tempreq = self.glade.get_object("checkbuttonRequireS").get_active()
+                    
+                if (tempreq == False):
+                    self.requireStillnessVar = 0
                 else:
-                    self.pavlov = 1;
-                
-                self.skinner = self.glade.get_object("checkbuttonSkinner").get_active()
-                
-                if (self.skinner == False):
-                    self.skinner = 0;
-                else:
-                    self.skinner = 1;
-                
-                self.ocond = self.glade.get_object("checkbuttonOC").get_active()
-                
-                if (self.ocond == False):
-                    self.ocond = 0;
-                else:
-                    self.ocond = 1;
-                
-                self.discr = self.glade.get_object("checkbuttonDiscr").get_active()
-                
-                if (self.discr == False):
-                    self.discr = 0;
-                else:
-                    self.discr = 1;
+                    self.requireStillnessVar = 1 
                 
                 print "Raw TE Input done."
                 pass
