@@ -26,7 +26,6 @@ from configvideo import *
 import track_bola_utils
 
 class Training():
-    variable_1 = "test training."
     
     class gVariables():
         #Global variables to be used within the Training class.
@@ -450,6 +449,8 @@ class Training():
         eventTime2_movement = cfgtraining.eventTime2_movement  # in seconds. Instant of time when movement ceases to be considered for reward
         eventTime3_trialEnd = cfgtraining.eventTime3_trialEnd  # in seconds. Instant of time when the trial ends.
         minIdleIntertrialTime = cfgtraining.minIdleIntertrialTime  # no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
+        
+        requireStillness = cfgtraining.requireStillness # require to stay idle to end trial and start next one.
         
         interTrialRandom1Time = cfgtraining.interTrialRandom1Time  # intertrial time is random between this value and the random2 value
         interTrialRandom2Time = cfgtraining.interTrialRandom2Time  # intertrial time is random between previous value and this value. This
@@ -1016,14 +1017,14 @@ class Training():
                 # Check / update current trial stage and time
                 #===================================================================
             if (Training.gVariables.trialExecuting == True):
-                    # Update Trial Time. Important since this is where events happen at certain moments in this line.
+                # Update Trial Time. Important since this is where events happen at certain moments in this line.
                 Training.gVariables.current_trial_start_time += Training.gVariables.current_trial_paused_time
                 Training.gVariables.start_time += Training.gVariables.current_trial_paused_time  # we consider that training time has not passed in the pause state.
                 Training.gVariables.current_trial_paused_time = 0
                 Training.gVariables.current_trial_time = (timeit.default_timer() - Training.gVariables.current_trial_start_time)
-                if ((Training.gVariables.current_trial_stage == 3 and 
-                            Training.gVariables.videoDet.getIdleTime() >= Training.gVariables.minIdleIntertrialTime and
-                                    Training.gVariables.videoDet.getMovementStatus() == False) or (Training.gVariables.trialCount == 0)):
+                if ( ( Training.gVariables.current_trial_stage == 3 and 
+                            ( ( Training.gVariables.videoDet.getIdleTime() >= Training.gVariables.minIdleIntertrialTime and
+                                    Training.gVariables.videoDet.getMovementStatus() == False) or (Training.gVariables.requireStillness == 0) ) or (Training.gVariables.trialCount == 0)  ) ) :
                     
                     
                     Training.gVariables.trialCount += 1
@@ -1357,6 +1358,15 @@ class Training():
                     print "GUICheck: 'Save State' message"
                     Training.gVariables.logger.debug( "GUICheck: 'Save State' message" )
                     Training.gVariables.fn_savestate();
+                    pass
+                elif (index == 32):
+                    print "GUICheck: 'Require Stillness' message"
+                    Training.gVariables.logger.debug( "GUICheck: 'Require Stillness' message" )
+                    Training.gVariables.requireStillness = int(a)
+                    print "Arg:"
+                    print a
+                    print a
+                    print a
                     pass
                 pass
                 #print "GUICheck: done."

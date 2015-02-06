@@ -6,7 +6,7 @@ logger = logging.getLogger('userInterfaceAPI')
 import track_bola_utils
 
 class userInterface_API:
-    usingTK = 0 #0: using GTk;   1: using TK
+    usingTK = 1 #0: using GTk;   1: using TK
     jobList = 0 # message Job Queue between processes.
     ns = 0
     subj_list = [""]
@@ -272,6 +272,8 @@ class userInterface_API:
         self.setNameSpaceMessage(29, self.currentGUI.probabilityToneOne )
         #print "API Namespace:", ns
         #logger.debug ( "ns: " + ns.__str__() )
+        
+        self.setNameSpaceMessage(32, self.currentGUI.requireStillness.get() )
         logger.debug ( "Default API: done." )
         
     
@@ -428,6 +430,14 @@ class userInterface_API:
         self.interTrialStart = self.currentGUI.interTrialStart
         self.interTrialEnd = self.currentGUI.interTrialEnd
         self.probabilityToneOne = self.currentGUI.probabilityToneOne
+        self.requireStillness = self.currentGUI.requireStillness;
+        print self.requireStillness.get()
+        print self.requireStillness.get()
+        print self.requireStillness.get()
+        print self.requireStillness.get()
+        print self.requireStillness.get()
+        print self.requireStillness.get()
+        print self.requireStillness.get()
         logger.debug( "API: Apply Trial Events:" )
         try:
             self.overrideaction_applyTE()

@@ -1687,6 +1687,8 @@ class GUIGTK_Class:
                                                        variable=self.requireStillness);
             self.__CheckRequireStillness.pack(side='top')
             
+            self.__CheckRequireStillness.select();
+            
             self.__alreadyExecuted = 0
             self.__Entry1TStart.insert(0,"0.0")
             self.__Entry2TEnd.insert(0,"0.0")
@@ -2000,6 +2002,7 @@ class GUIGTK_Class:
                 
                 print "Bad input: probabilityToneOne to previous var."
             pass
+            self.reference.requireStillness = self.requireStillness
     
     
     class Form_help(Frame):

@@ -6,6 +6,8 @@ eventTime2_movement = 3.0  # (sec) Instant of time when movement ceases to be co
 eventTime3_trialEnd = 10.0  # (sec) Instant of time when the trial ends.
 minIdleIntertrialTime = 1.0  # no-movement time (sec) before the start of next trial. If not reached this time with no movement, trial won't start
 
+requireStillness = 1 # if 1, a idle intertrial time is required to end current trial and start next one.
+
 interTrialRandom1Time = 7.0  # intertrial time (sec) is random between this value and the random2 value
 interTrialRandom2Time = 10.0  # intertrial time (sec) is random between previous value and this value.
 
