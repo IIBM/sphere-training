@@ -111,8 +111,13 @@ class multiproc_soundGen():
 
     def play(self):
         logger.info('Tone freq = %s Hz, duration = %s s',self.freq,self.duration)
-        self.sound.play()
-        logger.debug("playing")
+        if (float(self.duration)  < 0.000003571):
+            #print "not played because duration is less than audible."
+            logger.debug("Not played tone because duration is less than audible.")
+        else:
+            self.sound.play()
+            logger.debug("playing")
+        pass
 
     def getFrequency(self):
         return self.freq

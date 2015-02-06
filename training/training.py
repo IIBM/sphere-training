@@ -1047,6 +1047,9 @@ class Training():
                         else :
                             Training.gVariables.current_trial_type = 2
                     
+                    if (Training.gVariables.type_ocond == 1): #force it to "move"
+                        Training.gVariables.current_trial_type = 1
+                    
                     if (Training.gVariables.type_pavlov == 1 or Training.gVariables.current_trial_type == 1) :
                             Training.gVariables.logger.info('tone 1: %s Hz' % str(Training.gVariables.soundGenFrequency1) )
                             

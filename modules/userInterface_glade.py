@@ -240,11 +240,11 @@ class GUIGTK_Class():
             self.setOCVars();
             self.setDiscrVars();
             
-            
-            if self.requireStillnessVar == 1: #pending: get this var from config file
-                self.glade.get_object("checkbuttonRequireS").set_active(True);
-            else:
-                self.glade.get_object("checkbuttonRequireS").set_active(False);
+            self.glade.get_object("checkbuttonRequireS").set_active(True);
+            #if self.requireStillnessVar == 1: #pending: get this var from config file
+            #    self.glade.get_object("checkbuttonRequireS").set_active(True);
+            #else:
+            #    self.glade.get_object("checkbuttonRequireS").set_active(False);
             
             logger.info( "   Done: Setting userInterface_glade initial data.")
             gtk.main() #probably not launched before. Launching gtk.main
