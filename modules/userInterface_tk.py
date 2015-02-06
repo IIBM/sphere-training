@@ -120,6 +120,8 @@ class GUIGTK_Class:
         Root2.withdraw()
         
         self.AppFrm1 = self.Form1(Root2)
+        
+        
         self.AppFrm1.initAll()
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
@@ -127,6 +129,7 @@ class GUIGTK_Class:
         #App.gVariables = gVariables
         self.AppFrm1.protocol('WM_DELETE_WINDOW', self.App.hideForm1)
         self.AppFrm1.reference = self
+        
         #gVariables.AppFrm1.geometry('640x480+10+10')
         self.AppFrm1.title('Trial Events.')
         self.AppFrm1.withdraw()
@@ -1471,6 +1474,10 @@ class GUIGTK_Class:
             apply(Toplevel.__init__,(self,Master),kw)
         
         def initAll(self):
+            self.pavlov = IntVar(self)
+            self.skinner = IntVar(self)
+            self.oc = IntVar(self)
+            self.discr = IntVar(self)
             self.bind('<Destroy>',self.__on_Form1_Dstry)
             self.__Frame2 = Frame(self)
             self.__Frame2.pack(side='left')
@@ -1547,16 +1554,16 @@ class GUIGTK_Class:
             self.__Frame24.pack(side='left')
             
             
-            self.__CheckPavlov = Checkbutton(self.__FrameCHEBKBTNS,text='Pavlov mode')
+            self.__CheckPavlov = Checkbutton(self.__FrameCHEBKBTNS,text='Pavlov mode', variable=self.pavlov)
             self.__CheckPavlov.pack(side='top')
             
-            self.__CheckSkinner = Checkbutton(self.__FrameCHEBKBTNS,text='Skinner mode')
+            self.__CheckSkinner = Checkbutton(self.__FrameCHEBKBTNS,text='Skinner mode', variable=self.skinner)
             self.__CheckSkinner.pack(side='top')
             
-            self.__CheckOC = Checkbutton(self.__FrameCHEBKBTNS,text='Operant Conditioning mode')
+            self.__CheckOC = Checkbutton(self.__FrameCHEBKBTNS,text='Operant Conditioning mode', variable=self.oc)
             self.__CheckOC.pack(side='top')
             
-            self.__CheckDiscrimination = Checkbutton(self.__FrameCHEBKBTNS,text='Discrimination mode')
+            self.__CheckDiscrimination = Checkbutton(self.__FrameCHEBKBTNS,text='Discrimination mode', variable=self.discr)
             self.__CheckDiscrimination.pack(side='top')
             
             self.__Label1 = Label(self.__Frame24,text='Tone Start:')
@@ -1765,6 +1772,7 @@ class GUIGTK_Class:
             pass
         
         def setPavlovVars(self):
+            self.pavlov.set( self.reference.type_pavlov )
             print "pavlov vars"
             if (self.reference.type_pavlov == 1):
                 print "pavlov"
@@ -1774,6 +1782,7 @@ class GUIGTK_Class:
         
         def setSkinnerVars(self):
             print "skinner vars"
+            self.skinner.set( self.reference.type_skinner )
             if (self.reference.type_skinner == 1):
                 print "skinner"
                 self.__Entry2TEnd.config(state = "readonly")
@@ -1781,12 +1790,14 @@ class GUIGTK_Class:
         
         def setOCVars(self):
             print "oc vars"
+            self.oc.set( self.reference.type_ocond )
             if (self.reference.type_ocond == 1):
                 self.__CheckOC.select()
                 pass
         
         def setDiscrVars(self):
             print "Discr. vars"
+            self.discr.set( self.reference.type_discr )
             if (self.reference.type_discr == 1):
                 self.__CheckDiscrimination.select()
                 pass
@@ -1834,10 +1845,35 @@ class GUIGTK_Class:
         
         def checkTrialEventsVarsConsistency(self):
             
-            print (self.__CheckPavlov.selection_get())
-            print (self.__CheckSkinner.selection_get())
-            print (self.__CheckOC.selection_get())
-            print (self.__CheckDiscrimination.selection_get())
+            print self.pavlov.get()
+            print self.skinner.get()
+            print self.oc.get()
+            print self.discr.get()
+            
+            if (self.pavlov.get() == 1):
+                self.reference.type_pavlov = 1
+                self.reference.type_skinner = 0
+                self.reference.type_ocond = 0
+                self.reference.type_discr = 0
+                self.skinner.set(0)
+                self.oc.set(0)
+                self.discr.set(0)
+            
+            if (self.skinner.get() == 1):
+                self.reference.type_skinner = 1
+                self.reference.type_ocond = 0
+                self.reference.type_discr = 0
+                self.oc.set(0)
+                self.discr.set(0)
+            
+            
+            if (self.oc.get() == 1):
+                self.reference.type_ocond = 1
+                self.reference.type_discr = 0
+                self.discr.set(0)
+            
+            if (self.discr.get() == 1 ):
+                self.reference.type_discr = 1
             
             try:
                 self.reference.toneStart = float(self.var1_TStart)
