@@ -84,7 +84,7 @@ class GUIGTK_Class():
                 #self.glade.get_object("entryToneStart").modify_text(0, clr);
                 self.glade.get_object("entryToneStart").modify_base(0, clr);
                 
-                self.glade.get_object("checkbuttonRequireS").set_active(True);
+                
                 
                 if (self.startEv == True):
                     gtk.main()
@@ -237,6 +237,12 @@ class GUIGTK_Class():
             self.setSkinnerVars();
             self.setOCVars();
             self.setDiscrVars();
+            
+            
+            if self.requireStillnessVar == 1: #pending: get this var from config file
+                self.glade.get_object("checkbuttonRequireS").set_active(True);
+            else:
+                self.glade.get_object("checkbuttonRequireS").set_active(False);
             
             logger.info( "   Done: Setting userInterface_glade initial data.")
             gtk.main() #probably not launched before. Launching gtk.main

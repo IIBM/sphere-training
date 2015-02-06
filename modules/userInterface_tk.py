@@ -1691,7 +1691,7 @@ class GUIGTK_Class:
                                                        variable=self.requireStillness);
             self.__CheckRequireStillness.pack(side='top')
             
-            self.__CheckRequireStillness.select();
+            self.__CheckRequireStillness.select(); #pending get this from config.
             
             self.__alreadyExecuted = 0
             self.__Entry1TStart.insert(0,"0.0")
