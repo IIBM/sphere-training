@@ -73,11 +73,6 @@ Applies the Comment.</property>
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="imgSaveState">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixbuf">res/saveBtn.png</property>
-  </object>
   <object class="GtkWindow" id="helpWindow">
     <property name="can_focus">False</property>
     <property name="title">Help.</property>
@@ -790,6 +785,11 @@ Currently 3 methods are available (read docs above).</property>
       </object>
     </child>
   </object>
+  <object class="GtkImage" id="imgSaveState">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">res/saveBtn.png</property>
+  </object>
   <object class="GtkWindow" id="mainWindow">
     <property name="can_focus">False</property>
     <property name="title">Main Form (Glade)</property>
@@ -1116,11 +1116,11 @@ This includes tone frequencies, video options and movement detection variables.<
                     <property name="height_request">2</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
                     <property name="has_tooltip">True</property>
                     <property name="tooltip_markup">Help</property>
                     <property name="tooltip_text" translatable="yes">Help:
 Displays a frame with help topics.</property>
-                    <property name="receives_default">True</property>
                     <property name="use_stock">True</property>
                     <property name="focus_on_click">False</property>
                     <signal name="clicked" handler="clicked_help" swapped="no"/>
@@ -1137,7 +1137,6 @@ Displays a frame with help topics.</property>
                     <property name="width_request">40</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="clicked" handler="clicked_savestate" swapped="no"/>
                     <property name="receives_default">True</property>
                     <property name="has_tooltip">True</property>
                     <property name="tooltip_markup">Help</property>
@@ -1145,6 +1144,7 @@ Displays a frame with help topics.</property>
 Saves current state, including trial variables and parameters.</property>
                     <property name="image">imgSaveState</property>
                     <property name="image_position">top</property>
+                    <signal name="clicked" handler="clicked_savestate" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -1757,6 +1757,65 @@ Applies and saves all changes made to the Parameters.</property>
                   <placeholder/>
                 </child>
                 <child>
+                  <object class="GtkCheckButton" id="checkbuttonPavlov">
+                    <property name="label" translatable="yes">Pavlov mode</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="checkbuttonSkinner">
+                    <property name="label" translatable="yes">Skinner mode</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="checkbuttonOC">
+                    <property name="label" translatable="yes">Operant Conditioning mode</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="checkbuttonDiscr">
+                    <property name="label" translatable="yes">Discrimination mode</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
                   <object class="GtkHBox" id="hbox8">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -1799,7 +1858,7 @@ Instant of time when tone starts.
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
                 <child>
@@ -1847,7 +1906,7 @@ Instant of time when tone stops.</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">8</property>
                   </packing>
                 </child>
                 <child>
@@ -1895,7 +1954,7 @@ Instant of time when movement starts to be considered.</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">5</property>
+                    <property name="position">10</property>
                   </packing>
                 </child>
                 <child>
@@ -1943,7 +2002,7 @@ Instant of time when movement stops being detected.</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">7</property>
+                    <property name="position">12</property>
                   </packing>
                 </child>
                 <child>
@@ -1992,7 +2051,7 @@ The intertrial stage duration is random between these two values.</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">9</property>
+                    <property name="position">14</property>
                   </packing>
                 </child>
                 <child>
@@ -2041,7 +2100,7 @@ The intertrial stage duration is random between these two values.</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">11</property>
+                    <property name="position">16</property>
                   </packing>
                 </child>
                 <child>
@@ -2104,7 +2163,24 @@ The remaining probability is that of the Tone 2 playing.</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">13</property>
+                    <property name="position">18</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="checkbuttonRequireS">
+                    <property name="label" translatable="yes">Require stillness to end trial.</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">20</property>
                   </packing>
                 </child>
                 <child>
@@ -2116,16 +2192,12 @@ The remaining probability is that of the Tone 2 playing.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="has_tooltip">True</property>
-                    <property name="tooltip_markup">Apply</property>
-                    <property name="tooltip_text" translatable="yes">Apply
-Applies and saves all changes made to the Trial Events.</property>
                     <signal name="clicked" handler="clicked_applyTE" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">15</property>
+                    <property name="position">22</property>
                   </packing>
                 </child>
                 <child>
