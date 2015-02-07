@@ -406,6 +406,7 @@ class GUIGTK_Class():
             pass
         
         def resetGUIElements(self):
+            self.current_type = ""
             clr = gtk.gdk.Color('#fff') #white color, editable mode for all.
             self.glade.get_object("entryTone1").set_editable(True);
             self.glade.get_object("entryTone1").modify_base(0, clr);
@@ -623,6 +624,7 @@ class GUIGTK_Class():
                 pass
         
         def __TE_modes(self):
+                
                 self.modeHasChanged = 0;
                 temppavlov = self.glade.get_object("checkbuttonPavlov").get_active()
                 
