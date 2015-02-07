@@ -1050,7 +1050,7 @@ class Training():
                     if (Training.gVariables.type_ocond == 1 or Training.gVariables.type_skinner == 1 or Training.gVariables.type_pavlov == 1): #force it to "move"
                         Training.gVariables.current_trial_type = 1 #pavlov here is unnecessary, but to keep all except discr in "move" type.
                     
-                    if (Training.gVariables.type_pavlov == 1 or Training.gVariables.current_trial_type == 1) :
+                    if (Training.gVariables.current_trial_type == 1) :
                             Training.gVariables.logger.info('tone 1: %s Hz' % str(Training.gVariables.soundGenFrequency1) )
                             
                             Training.gVariables.s1.play()
