@@ -546,7 +546,7 @@ class Training():
         Training.gVariables.display.addSecondaryInfo(("% s/t", 0.0))
         Training.gVariables.display.addSecondaryInfo(("Trial Time", "0 - 10"))
         Training.gVariables.display.addSecondaryInfo(("Trial status", ""))
-        Training.gVariables.display.renderAgain()
+        time.sleep(0.5)
         Training.gVariables.display.renderAgain()
     
     @staticmethod
@@ -960,6 +960,7 @@ class Training():
             self.gVariables.logger.debug('secondCam started with cam number: %d' % self.gVariables.secondcam);
         else:
             self.gVariables.logger.debug('secondCam was not started (configuration file has -1 as value)' );
+            print 'secondCam was not started (configuration file has -1 as value)'
         #Display:
         self.initDisplay()
         #main Program Loop
@@ -1006,7 +1007,6 @@ class Training():
         currentGUI.launch_GUI()
     
     def startSecondCam(self, num):
-        time.sleep(8)
         import simpleCam
         self.gVariables.videoSecond = simpleCam.simpleCam(num);
     

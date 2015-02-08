@@ -6,6 +6,7 @@ import time
 
 class simpleCam():
     def __init__(self, devnum):
+        time.sleep(4)
         CAM_WIDTH = 320;
         CAM_HEIGHT = 240;
         import cv2
@@ -17,13 +18,19 @@ class simpleCam():
         time.sleep(1)
         print "starting"
         logger.debug("simpleCam starting.")
-        cv2.namedWindow("Device: %d" % devnum)
+        window_name = "Device: %d" % devnum
+        cv2.namedWindow(window_name)
         time.sleep(1)
         logger.debug("namedWindow created. About to enter loop")
         while(True):
-            cv2.waitKey(100)
+            if (cv2.waitKey(60) == 27):
+                break
             ret, frame = cap.read()
-            cv2.imshow("Device: %d" % devnum, frame)
+            cv2.imshow(window_name, frame)
+        print "Exiting.-"
+        cap.release()
+        cv2.destroyWindow(window_name)
+        
 
 
 if __name__ == '__main__':

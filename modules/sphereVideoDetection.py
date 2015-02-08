@@ -993,12 +993,16 @@ class sphereVideoDetection():
                 key = cv2.waitKey(self.sleepTime)
                 if (key == 27 or key == 1048603 or self.mustquit == 1):  # escape pressed
                     # end Program.
-                    # cam.release()
+                    try:
+                        cam.release()
+                    except:
+                        pass
                     cv2.destroyWindow(self.winName)
+                    cv2.destroyAllWindows()
                     # cv.DestroyWindow(self.winName)
                     logger.info("Exiting sphereVideoDetection")
                     # os.kill(os.getpid(), signal.SIGINT)
-                    print self.mustquit
+                    #print self.mustquit
                     if (self.mustquit == 0):
                         os._exit(0)
                     return
