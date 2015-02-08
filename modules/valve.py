@@ -13,6 +13,7 @@ class dummydev () :
 
     def ctrl_transfer(self,bmRequestType,bmRequest,wValue,wIndex) :
         self.data = wValue
+        #print self.data
         return self.data
   
 class Valve(object):
@@ -20,9 +21,19 @@ class Valve(object):
   class __Valve:
     def __init__(self):
       self.val = None
+      self.using_dev = 0;
       #print "init valve."
       try :
+        createUSBDevice()
+      except :
+        logger.warning('Device idVendor = ' + str(hex(IDVendor)) + ' and idProduct = ' + str(hex(IDProduct)) + ' not found. Using dummy device')
+        self.p = dummydev()
+    def __str__(self):
+      return repr(self)
+    
+    def createUSBDevice(self):
         logger.info('New instance of valve')
+        self.using_dev = 0;
         #requires pyusb
         import usb.core
         import usb.util
@@ -31,27 +42,48 @@ class Valve(object):
         # was it found?
         if self.p is None:
             raise ValueError(msg)
-
         # set the active configuration. With no arguments, the first
         # configuration will be the active one
         self.p.set_configuration()
-      except :
-        logger.warning('Device idVendor = ' + str(hex(IDVendor)) + ' and idProduct = ' + str(hex(IDProduct)) + ' not found. Using dummy device')
-        self.p = dummydev()
-    def __str__(self):
-      return repr(self)
+        self.using_dev = 1;
+        print "USB device created successfully."
+        logger.info('USB device created successfully.')
+    
     def open(self) :
          logger.debug('Valve opened')
-         return self.p.ctrl_transfer(0x40, 1, 1, 0)
+         retmsg = self.control_transfer(0x40, 1, 1, 0);
+         return retmsg
 
     def close(self) :
          logger.debug('Valve closed')
-         return self.p.ctrl_transfer(0x40, 1, 2, 0)
+         retmsg = self.control_transfer(0x40, 1, 2, 0);
+         return retmsg
 
     def drop(self) :
          logger.debug('Valve drop')
-         return self.p.ctrl_transfer(0x40, 1, 3, 0)
+         retmsg = self.control_transfer(0x40, 1, 3, 0);
+         return retmsg
+    
+    def control_transfer(self, num1, num2, num3, num4):
+        if (self.using_dev == 1):
+            a = -1
+            try:
+                 a = self.p.ctrl_transfer(num1, num2, num3, num4)
+            except:
+                 try:
+                     time.sleep(0.5)
+                     createUSBDevice()
+                     a = self.p.ctrl_transfer(num1, num2, num3, num4)
+                 except:
+                     a = -1
+            return a
+        else:
+            a = self.p.ctrl_transfer(num1, num2, num3, num4)
+    
+    
   ###
+
+  
   instance = None
   def __new__(cls): # __new__ always a classmethod
     if not Valve.instance:
