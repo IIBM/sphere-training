@@ -24,7 +24,7 @@ class Valve(object):
       self.using_dev = 0;
       #print "init valve."
       try :
-        createUSBDevice()
+        self.createUSBDevice()
       except :
         logger.warning('Device idVendor = ' + str(hex(IDVendor)) + ' and idProduct = ' + str(hex(IDProduct)) + ' not found. Using dummy device')
         self.p = dummydev()
@@ -70,9 +70,10 @@ class Valve(object):
             try:
                  a = self.p.ctrl_transfer(num1, num2, num3, num4)
             except:
+            logger.error('Valve disconnected')
                  try:
-                     time.sleep(0.5)
-                     createUSBDevice()
+                     time.sleep(0.05)
+                     self.createUSBDevice()
                      a = self.p.ctrl_transfer(num1, num2, num3, num4)
                  except:
                      a = -1
