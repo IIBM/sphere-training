@@ -70,7 +70,7 @@ class Valve(object):
             try:
                  a = self.p.ctrl_transfer(num1, num2, num3, num4)
             except:
-            logger.error('Valve disconnected')
+                 logger.error('Valve disconnected')
                  try:
                      time.sleep(0.05)
                      self.createUSBDevice()
