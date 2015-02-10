@@ -1004,6 +1004,8 @@ class Training():
         currentGUI.type_ocond = self.gVariables.type_ocond
         currentGUI.type_discr = self.gVariables.type_discr
         
+        currentGUI.requireStillnessVar = self.gVariables.requireStillness
+        
         currentGUI.launch_GUI()
     
     def startSecondCam(self, num):

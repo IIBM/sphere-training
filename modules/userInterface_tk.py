@@ -11,6 +11,7 @@ import track_bola_utils
 
 
 class GUIGTK_Class:
+    requireStillnessVar = 0;
     
     class Empty_cl():
         #Used to save our variables' previous states.
@@ -126,14 +127,14 @@ class GUIGTK_Class:
         
         self.AppFrm1 = self.Form1(Root2)
         
-        
+        self.AppFrm1.reference = self
         self.AppFrm1.initAll()
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
         #App.pack(expand='yes', fill='both')
         #App.gVariables = gVariables
         self.AppFrm1.protocol('WM_DELETE_WINDOW', self.App.hideForm1)
-        self.AppFrm1.reference = self
+        
         
         #gVariables.AppFrm1.geometry('640x480+10+10')
         self.AppFrm1.title('Trial Events.')
@@ -147,14 +148,16 @@ class GUIGTK_Class:
         Root = Tkinter.Tk()
         Root.withdraw()
         
+        
         self.AppFrm3 = self.Form3(Root)
+        self.AppFrm3.reference = self
         self.AppFrm3.initAll()
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
         #App.pack(expand='yes', fill='both')
         #App.gVariables = gVariables
         self.AppFrm3.protocol('WM_DELETE_WINDOW', self.App.hideForm3)
-        self.AppFrm3.reference = self
+        
         #gVariables.AppFrm1.geometry('640x480+10+10')
         self.AppFrm3.title('Parameters.')
         self.AppFrm3.withdraw()
@@ -168,13 +171,14 @@ class GUIGTK_Class:
         Root.withdraw()
         
         self.AppFrm5 = self.Form5(Root)
+        self.AppFrm5.reference = self
         self.AppFrm5.initAll()
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
         #App.pack(expand='yes', fill='both')
         #App.gVariables = gVariables
         self.AppFrm5.protocol('WM_DELETE_WINDOW', self.App.hideForm5)
-        self.AppFrm5.reference = self
+        
         #gVariables.AppFrm1.geometry('640x480+10+10')
         self.AppFrm5.title('Comment.')
         self.AppFrm5.withdraw()
@@ -1496,6 +1500,7 @@ class GUIGTK_Class:
             self.oc = IntVar(self)
             self.discr = IntVar(self)
             self.requireStillness = IntVar(self)
+            
             self.bind('<Destroy>',self.__on_Form1_Dstry)
             self.__Frame2 = Frame(self)
             self.__Frame2.pack(side='left')
@@ -1744,6 +1749,15 @@ class GUIGTK_Class:
             #print "configuring initial data for Form1."
             logging.info("configuring initial data for Form1.")
             
+            self.requireStillness.set(self.reference.requireStillnessVar)
+            print ",,.- %d" % self.reference.requireStillnessVar
+            
+            if (self.reference.requireStillnessVar == 0):
+                self.__CheckRequireStillness.deselect();
+            else:
+                self.__CheckRequireStillness.select();
+            
+            self.requireStillness.set(self.reference.requireStillnessVar)            
             self.__Entry1TStart.delete(0,10) #removes 10 characters.
             self.__Entry1TStart.insert(0, self.reference.toneStart )
             

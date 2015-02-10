@@ -15,6 +15,7 @@ class userInterface_API:
     type_skinner = 0;
     type_ocond = 0;
     type_discr = 0;
+    requireStillnessVar = 0;
     
     def getSubjName(self):
         
@@ -106,6 +107,9 @@ class userInterface_API:
         self.currentGUI.type_skinner = self.type_skinner
         self.currentGUI.type_ocond = self.type_ocond
         self.currentGUI.type_discr = self.type_discr
+        self.currentGUI.requireStillnessVar = self.requireStillnessVar;
+        print "..................-"
+        print self.requireStillnessVar
         self.currentGUI.commitInitialData()
         
         
