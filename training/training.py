@@ -815,7 +815,11 @@ class Training():
                 subj_name = ""
             tmp = 0
             newname_found = False
-            f = open(sbjlistfile ,"r+")
+            try:
+                f = open(sbjlistfile ,"r+")
+            except:
+                print "Couldn't open subject list file. Creating new subject list file."
+                f = open(sbjlistfile ,"w")
             for i in range(0, len(subj_list) ):
                 if subj_name.strip() == subj_list[i]:
                     tmp = 1;
@@ -843,10 +847,11 @@ class Training():
         sbjlistfile = "subject_list.txt"
         try:
             f = open(sbjlistfile ,"r+")
-            subj_list = f.readlines()
         except:
-            self.gVariables.logger.warning( "Error getting subject list." );
-            
+            #self.gVariables.logger.warning( "Error getting subject list." ); #logger does not exist yet.
+            print "Error getting subject list. Creating new one."
+            f = open(sbjlistfile ,"w+")
+        subj_list = f.readlines()
         j = len(subj_list)
         i=0;
         while i < j:
