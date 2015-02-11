@@ -354,15 +354,16 @@ class GUIGTK_Class:
                                     "Save State:"+"\n"+
                                      "Saves current state, including trial variables and parameters.")
             
-            #poner imagen
             #find working directory, replace training with modules , to handle case where it is executed from training
             if ("/training" in os.getcwd()):
                 a = (os.getcwd().split("/training") [0]) + "/modules/"
             else:
                 a = os.getcwd() + "/";
-            self.photo=PhotoImage(file=a+"res/saveBtn.png");
-            self.__btnSaveState.config(image=self.photo);
-            
+            try:
+                self.photo=PhotoImage(file=a+"res/saveBtn.png");
+                self.__btnSaveState.config(image=self.photo);
+            except:
+                logger.warning("Couldn't set saveBtn.png image.");
             self.__btnSaveState.pack(side='left')
             
             self.__Frame2 = Frame(self.__Frame26)
@@ -2617,3 +2618,5 @@ if __name__ == '__main__':
     
     logger.info('Start userInterface_tk Test')
     a = GUIGTK_Class()
+    a.initAll()
+    print "started tk interface."

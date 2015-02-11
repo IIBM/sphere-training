@@ -2,12 +2,12 @@ import Tkinter
 import logging
 from Tkinter import *
 logger = logging.getLogger('autoCompleteEntry_tk')
-
+import re
 
 
 
 class AutocompleteEntry(Entry):
-    import re
+    
     
     def __init__(self, lista, *args, **kwargs):
         

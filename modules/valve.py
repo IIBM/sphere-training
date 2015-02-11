@@ -16,21 +16,19 @@ class dummydev () :
         #print self.data
         return self.data
   
-class Valve(object):
-  ### singleton inner class: valve.
-  class __Valve:
-    def __init__(self):
-      self.val = None
-      self.using_dev = 0;
-      #print "init valve."
-      try :
-        self.createUSBDevice()
-      except :
-        logger.warning('Device idVendor = ' + str(hex(IDVendor)) + ' and idProduct = ' + str(hex(IDProduct)) + ' not found. Using dummy device')
-        self.p = dummydev()
-    def __str__(self):
-      return repr(self)
-    
+  
+
+class multiproc_Valve():
+    def __init__(self, jobl):
+        self.displayJobList = jobl
+        self.val = None
+        self.using_dev = 0;
+        #print "init valve."
+        try :
+          self.createUSBDevice()
+        except :
+          logger.warning('Device idVendor = ' + str(hex(IDVendor)) + ' and idProduct = ' + str(hex(IDProduct)) + ' not found. Using dummy device')
+          self.p = dummydev()
     def createUSBDevice(self):
         logger.info('createUSBDevice: New instance of valve')
         self.using_dev = 0;
@@ -50,21 +48,6 @@ class Valve(object):
         self.using_dev = 1;
         print "USB device created successfully."
         logger.info('USB device created successfully.')
-    
-    def open(self) :
-         logger.debug('Valve opened')
-         retmsg = self.control_transfer(0x40, 1, 1, 0);
-         return retmsg
-
-    def close(self) :
-         logger.debug('Valve closed')
-         retmsg = self.control_transfer(0x40, 1, 2, 0);
-         return retmsg
-
-    def drop(self) :
-         logger.debug('Valve drop')
-         retmsg = self.control_transfer(0x40, 1, 3, 0);
-         return retmsg
     
     def control_transfer(self, num1, num2, num3, num4):
         if (self.using_dev == 1):
@@ -88,6 +71,90 @@ class Valve(object):
             return a
         else:
             a = self.p.ctrl_transfer(num1, num2, num3, num4)
+    
+    def checkJobList(self):
+        if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
+                try:
+                        tempvar = self.displayJobList.get()
+                        self.displayJobList.task_done()
+                except:
+                        return;
+                #print str("checkJobList: queue: " + str(tempvar) )
+                index = tempvar[0]
+                try:
+                    argument = tempvar[1]
+                except:
+                    argument = ""
+                    pass
+                
+                #print "checkJobList: Got a Message:", index
+                #print "checkJobList: Message's argument:", argument
+#                 try:
+#                     a = str(argument)
+#                     print "Argument: %s" %a
+#                 except:
+#                     print "Message's argument cannot be parsed to str."
+#                     pass
+                if (index == "open"):
+                    self.open()
+                elif (index == "drop"):
+                    self.drop()
+                elif (index == "close"):
+                    self.close()
+    def open(self) :
+         logger.debug('Valve opened')
+         retmsg = self.control_transfer(0x40, 1, 1, 0);
+         return retmsg
+
+    def close(self) :
+         logger.debug('Valve closed')
+         retmsg = self.control_transfer(0x40, 1, 2, 0);
+         return retmsg
+
+    def drop(self) :
+         logger.debug('Valve drop')
+         retmsg = self.control_transfer(0x40, 1, 3, 0);
+         return retmsg
+     
+     
+class Valve(object):
+  ### singleton inner class: valve.
+  class __Valve:
+    def __init__(self):
+        import multiprocessing
+        self.displayJobList = multiprocessing.JoinableQueue()
+        
+        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList,) )
+        self.displayProc.start()
+        
+        logger.debug("trainingDisplay process Started.")
+        pass
+    def __str__(self):
+      return repr(self)
+    
+    def exit(self):
+        self.displayProc.terminate()
+        self.displayJobList.close()
+    
+    def launch_multiproc(self, jobl):
+        a = multiproc_Valve(jobl)
+        while(True):
+            time.sleep(0.010)
+            a.checkJobList()
+            #a.updateInfo("Other secondary information", var)
+            #for event in pygame.event.get():
+            #        if event.type == pygame.QUIT: sys.exit()
+            pass
+    
+    def open(self):
+        self.displayJobList.put( ("open", "") )
+    
+    def drop(self):
+        self.displayJobList.put( ("drop", "") )
+    
+    def close(self):
+        self.displayJobList.put( ("close", "") )
+    
   
   ###
 
@@ -140,6 +207,6 @@ if __name__ == '__main__':
     time.sleep(2)
     v2.close()
     print v2
-    
+    v2.exit()
     logger.info('End Valve Test')
 
