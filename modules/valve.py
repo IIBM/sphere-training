@@ -32,19 +32,21 @@ class Valve(object):
       return repr(self)
     
     def createUSBDevice(self):
-        logger.info('New instance of valve')
+        logger.info('createUSBDevice: New instance of valve')
         self.using_dev = 0;
         #requires pyusb
         import usb.core
         import usb.util
-        logger.debug("imports done succesfully.");
+        logger.debug("createUSBDevice: imports done succesfully.");
         self.p = usb.core.find(idVendor=IDVendor, idProduct=IDProduct)
+        logger.debug("createUSBDevice: find done successfully.");
         # was it found?
         if self.p is None:
             raise ValueError(msg)
         # set the active configuration. With no arguments, the first
         # configuration will be the active one
         self.p.set_configuration()
+        logger.debug("createUSBDevice: configuration set successfully.");
         self.using_dev = 1;
         print "USB device created successfully."
         logger.info('USB device created successfully.')
@@ -68,20 +70,25 @@ class Valve(object):
         if (self.using_dev == 1):
             a = -1
             try:
+                 logger.debug('Control transfer %r %r %r %r' % (num1, num2, num3, num4) )
                  a = self.p.ctrl_transfer(num1, num2, num3, num4)
+                 logger.debug('Control transfer done.')
             except:
-                 logger.error('Valve disconnected')
+                 logger.error('Valve disconnected.')
                  try:
                      time.sleep(0.05)
+                     logger.debug('About to recreate device.')
                      self.createUSBDevice()
+                     logger.debug('About to re-send control transfer.')
                      a = self.p.ctrl_transfer(num1, num2, num3, num4)
+                     logger.debug('Done re-send control transfer.')
                  except:
                      a = -1
+                     logger.debug('Error recreating or re-sending control transfer.')
             return a
         else:
             a = self.p.ctrl_transfer(num1, num2, num3, num4)
-    
-    
+  
   ###
 
   
