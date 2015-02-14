@@ -17,6 +17,14 @@ class userInterface_API:
     type_discr = 0;
     requireStillnessVar = 0;
     
+    
+    def autoCompleteDialog_create(self, subj_list, GUIjoblist):
+        import autoCompleteEntry_gtk
+        acdEntry = autoCompleteEntry_gtk.autoCompleteDialog(subj_list, GUIjoblist);
+        acdEntry.initAll()
+        print "done acd_c-"
+        pass
+    
     def getSubjName(self):
         
         
@@ -25,7 +33,7 @@ class userInterface_API:
             import multiprocessing #needed here, else it will crash when launching the main GUI gtk window.
             import autoCompleteEntry_gtk
             GUIjobList = multiprocessing.JoinableQueue()
-            procApp = multiprocessing.Process(target=autoCompleteEntry_gtk.autoCompleteDialog, args=[self.subj_list,GUIjobList,])
+            procApp = multiprocessing.Process(target=self.autoCompleteDialog_create, args=[self.subj_list,GUIjobList,])
             procApp.start()
             tempvar = ""
             while True:
@@ -109,9 +117,8 @@ class userInterface_API:
         self.currentGUI.type_discr = self.type_discr
         self.currentGUI.requireStillnessVar = self.requireStillnessVar;
         print "..................-"
-        print self.requireStillnessVar
+        #print self.requireStillnessVar
         self.currentGUI.commitInitialData()
-        
         
         
         pass
@@ -549,9 +556,9 @@ class userInterface_API:
         logger.debug( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Glade Interface Started" )
         print "Glade interface started."
-        self.setInitialValues()
-        while True:
-            time.sleep(1.0)
+        self.setInitialValues() #loops in this function infinitely
+        #while True:
+        #    time.sleep(1.0)
         pass
     
     

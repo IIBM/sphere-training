@@ -134,7 +134,10 @@ class Valve(object):
     
     def exit(self):
         self.displayProc.terminate()
+        del self.displayProc
+        
         self.displayJobList.close()
+        del self.displayJobList
     
     def launch_multiproc(self, jobl):
         a = multiproc_Valve(jobl)

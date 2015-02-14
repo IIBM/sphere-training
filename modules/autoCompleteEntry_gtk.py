@@ -5,15 +5,13 @@ logger = logging.getLogger('autoCompleteEntry_gtk')
 class autoCompleteDialog():
             
             
-            
             def getSubjectName(self):
                 return self.subj_name
             
             def enter_method(self, widget, data=None):
                 print "dmy"
             
-            def __init__(self, mtrz, jobList):
-                logger.debug("Started.")
+            def initAll(self):
                 import gtk
                 
                 import copy
@@ -30,13 +28,13 @@ class autoCompleteDialog():
                 liststore = gtk.ListStore(str)
                 #print "subject list: %r" % mtrz
                 try:
-                    logger.debug("subject list: %r" % mtrz)
+                    logger.debug("subject list: %r" % self.matrix)
                 except:
                     pass
-                for i in range(0, len(mtrz)):
+                for i in range(0, len(self.matrix)):
                     #print mtrz[i]
                 #for match in ["test1", "test2", "test3", "spam", "foo", "eggs", "bar"]:
-                    liststore.append([mtrz[i]])
+                    liststore.append([self.matrix[i]])
                     pass
                 completion = gtk.EntryCompletion()
                 completion.set_model(liststore)
@@ -64,21 +62,29 @@ class autoCompleteDialog():
                 del entry2
                 del btnOK
                 del dlg
+                del liststore
                 
                 logger.debug( "gtk: %s" % self.subj_name)
                 
-                jobList.put( self.subj_name )
-                jobList.join()
-                
+                try:
+                    self.jobL.put( self.subj_name )
+                    self.jobL.join()
+                except:
+                    logger.debug( "Couldn't add to joblist.")
                 logger.debug( "gtk autoCompleteEntry_gtk finalized.")
                 
-
                 #self.show_all()
+            
+            def __init__(self, mtrz, jobList):
+                logger.debug("Started.")
+                self.matrix = mtrz
+                self.jobL = jobList
                 pass
 
 if __name__ == "__main__":
-            app = autoCompleteDialog( ["probando.", "prueba"])
+            app = autoCompleteDialog( ["probando.", "prueba"], 0)
+            app.initAll()
             print "deleting."
             del app
-            time.sleep(3)
+            time.sleep(1)
             print "finish."

@@ -8,7 +8,7 @@ from argparse import Action
 import logging
 logger = logging.getLogger('userInterface_glade')
 import track_bola_utils
-
+import time
 
 class GUIGTK_Class():
         type_pavlov = 0;
@@ -89,6 +89,7 @@ class GUIGTK_Class():
                 
                 
                 if (self.startEv == True):
+                    print "gtk loop."
                     gtk.main()
 
         def on_mainWindow_delete_event(self, widget, event):
@@ -243,12 +244,17 @@ class GUIGTK_Class():
             self.glade.get_object("checkbuttonRequireS").set_active(True);
             if self.requireStillnessVar == 1: #pending: get this var from config file
                  self.glade.get_object("checkbuttonRequireS").set_active(True);
-                 print "stillness 1"
+                 #print "stillness 1"
+                 pass
             else:
                 self.glade.get_object("checkbuttonRequireS").set_active(False);
-                print "stillness 0"
+                #print "stillness 0"
+                pass
             
             logger.info( "   Done: Setting userInterface_glade initial data.")
+            time.sleep(0.5)
+            gtk.main_iteration_do()
+            time.sleep(0.5)
             gtk.main() #probably not launched before. Launching gtk.main
             pass
         

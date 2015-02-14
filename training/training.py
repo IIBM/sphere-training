@@ -526,7 +526,7 @@ class Training():
         
         
         subject_name = "" #subject name, set at training init, used in logging filename.
-        
+        programRunning = 1;
         
         #fin Training.gVariables.
         pass
@@ -781,25 +781,34 @@ class Training():
         # Finalize this training and exits.
         self.gVariables.logger.info('Exit signal.')
         self.gVariables.logger.info('Comment about this training: %s', Training.gVariables.trial_comment)
+        #self.gVariables.fred1.stop() #this function has not
+        self.gVariables.programRunning = 0;
+        time.sleep(0.5)
+        
         if (self.gVariables.GUIType != 2) :
             self.gVariables.GUIProcess.terminate()
-        
+            del self.gVariables.GUIProcess
+        self.gVariables.valve1.exit()
+        del self.gVariables.valve1
         if (self.gVariables.secondcam != -1):
             try:
                 self.gVariables.videoSecond.terminate();
+                del self.gVariables.videoSecond
             except:
                 pass
         self.gVariables.videoDet.exit()
+        del self.gVariables.videoDet
         #print "videodet exit"
         time.sleep(0.2)
         self.gVariables.display.exitDisplay()
+        del self.gVariables.display
         #print "display exit"
         time.sleep(0.2)
         self.gVariables.s1.exit()
+        del self.gVariables.s1
         self.gVariables.s2.exit()
+        del self.gVariables.s2
         #print "sound exit"
-        
-        
         print "Exiting."
         sys.exit(0)
     
@@ -918,7 +927,7 @@ class Training():
         self.gVariables.logger.addHandler(console)
         #===========================================================================
         
-        
+        self.gVariables.trialExecuting = False  # boolean, if a 8 second with tone trial is wanted, this shoulb be set to 1
         self.gVariables.logger.info('===============================================')
         self.gVariables.logger.info('Start %s' % self.gVariables.trainingName)
         self.gVariables.logger.info('Subject name: %s' % self.gVariables.subject_name)
@@ -930,7 +939,7 @@ class Training():
         import soundGen
         self.gVariables.s1 = soundGen.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
         self.gVariables.s2 = soundGen.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
-        self.gVariables.trialExecuting = False  # boolean, if a 8 second with tone trial is wanted, this shoulb de set to 1
+        
         self.gVariables.logger.debug('Soundgen init started..')
         #GUI:
         import multiprocessing
@@ -1493,7 +1502,11 @@ class Training():
     def mainLoopFunction(self):
         DISPLAY_INTERVAL = 2
         counter_val = 0
+        
         while(True):
+                    if (self.gVariables.programRunning == 0):
+                        print "Exiting main loop."
+                        return;
                     time.sleep(Training.gVariables.LOOP_FUNCTION_SLEEP_TIME)
                     self.GUICheck() #check if any GUI input was received
                     self.trialLoop()  #
