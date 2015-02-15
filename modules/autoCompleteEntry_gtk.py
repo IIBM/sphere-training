@@ -1,20 +1,12 @@
 import time
 import logging
 logger = logging.getLogger('autoCompleteEntry_gtk')
-#pasar a multiprocessing !
 
-class autoCompleteDialog():
-            
-            
-            def getSubjectName(self):
-                return self.subj_name
-            
-            def enter_method(self, widget, data=None):
-                print "dmy"
-            
-            def initAll(self):
+class multiproc_autoCompleteDialog():
+    def __init__(self, mtrz, jobList=0):
+                self.matrix = mtrz
+                self.jobL = jobList
                 import gtk
-                
                 import copy
                 self.subj_name = ""
                 
@@ -51,7 +43,6 @@ class autoCompleteDialog():
                 dlg.set_can_focus(False)
                 btnOK.set_can_focus(False)
                 entry2.grab_focus()
-                
                 response = dlg.run() #this is the dlg main loop.
                 del response
                 #if response == gtk.RESPONSE_OK:
@@ -73,18 +64,58 @@ class autoCompleteDialog():
                 except:
                     logger.debug( "Couldn't add to joblist.")
                 logger.debug( "gtk autoCompleteEntry_gtk finalized.")
-                
-                #self.show_all()
+
+class autoCompleteDialog():
+            dialog_finished = False;
             
-            def __init__(self, mtrz, jobList):
+            def getSubjectName(self):
+                return self.subj_name
+            
+            def enter_method(self, widget, data=None):
+                print "dmy"
+            
+            def internal_multiprocFunction(self):
+                a = multiproc_autoCompleteDialog(self.matrix, self.jobL)
+            
+            
+            def initAll(self):
+                import multiprocessing
+                GUIjobList = multiprocessing.JoinableQueue()
+                self.jobL = GUIjobList
+                self.procApp = multiprocessing.Process(target=self.internal_multiprocFunction ) ;
+                self.procApp.start()
+                tempvar = ""
+                while True:
+                    if (GUIjobList.qsize() > 0 or GUIjobList.empty() == False ):
+                        logger.debug( "Message element detected on getSubjName")
+                        try:
+                                tempvar = GUIjobList.get()
+                                GUIjobList.task_done()
+                                break;
+                        except:
+                                pass
+                    time.sleep(0.5)
+                self.subj_name = str(tempvar).strip()
+                print "finalizado."
+                
+            
+            def __init__(self, mtrz, jobList=0):
                 logger.debug("Started.")
                 self.matrix = mtrz
                 self.jobL = jobList
                 pass
+            
+            def exit(self):
+                self.procApp.terminate()
+                del self.procApp
+                self.jobL.close()
+                del self.jobL
+                del self.matrix
 
 if __name__ == "__main__":
-            app = autoCompleteDialog( ["probando.", "prueba"], 0)
+            app = autoCompleteDialog( ["probando.", "prueba"])
             app.initAll()
+            print "subj: %s" % app.getSubjectName()
             print "deleting."
             del app
             time.sleep(1)

@@ -32,24 +32,9 @@ class userInterface_API:
             logger.debug("GTK GUI Subject List started.")
             import multiprocessing #needed here, else it will crash when launching the main GUI gtk window.
             import autoCompleteEntry_gtk
-            GUIjobList = multiprocessing.JoinableQueue()
-            procApp = multiprocessing.Process(target=self.autoCompleteDialog_create, args=[self.subj_list,GUIjobList,])
-            procApp.start()
-            tempvar = ""
-            while True:
-                if (GUIjobList.qsize() > 0 or GUIjobList.empty() == False ):
-                    logger.debug( "Message element detected on getSubjName")
-                    try:
-                            tempvar = GUIjobList.get()
-                            GUIjobList.task_done()
-                            break;
-                    except:
-                            pass
-                time.sleep(0.5)
-            self.subj_name = str(tempvar).strip()
-            procApp.terminate()
-            del procApp
-            del GUIjobList
+            app = autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list);
+            app.initAll()
+            self.subj_name = app.getSubjectName()
             logger.debug("GUI Job ended.")
             logger.debug("GTK GUI Subject List ended.")
             pass
