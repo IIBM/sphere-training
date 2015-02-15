@@ -1,6 +1,7 @@
 import time
 import logging
 logger = logging.getLogger('autoCompleteEntry_gtk')
+#pasar a multiprocessing !
 
 class autoCompleteDialog():
             

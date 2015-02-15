@@ -3,7 +3,7 @@ import track_bola_utils
 import logging
 logger = logging.getLogger('simpleCam')
 import time
-
+#PASAR ESTA CLASE A MULTIPROCESSING. Ya que es unidireccional el flujo de información.
 class simpleCam():
     def __init__(self, devnum):
         time.sleep(4)

@@ -3,7 +3,7 @@ import logging
 from Tkinter import *
 logger = logging.getLogger('autoCompleteEntry_tk')
 import re
-
+#pasar a multiprocessing !
 
 
 class AutocompleteEntry(Entry):
