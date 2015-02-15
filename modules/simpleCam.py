@@ -1,10 +1,14 @@
 #simple camera class. When created, starts showing the device.
+# -*- coding: utf-8 -*-
+
 import track_bola_utils
 import logging
 logger = logging.getLogger('simpleCam')
 import time
 #PASAR ESTA CLASE A MULTIPROCESSING. Ya que es unidireccional el flujo de información.
-class simpleCam():
+
+class multiproc_simpleCam():
+    
     def __init__(self, devnum):
         time.sleep(4)
         CAM_WIDTH = 320;
@@ -30,7 +34,23 @@ class simpleCam():
         print "Exiting.-"
         cap.release()
         cv2.destroyWindow(window_name)
-        
+
+
+
+
+class simpleCam():
+    
+    def launch_multiproc(self, devnum):
+        a = multiproc_simpleCam(devnum)
+    
+    def __init__(self, devnum):
+        import multiprocessing
+        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(devnum,) )
+        self.displayProc.start()
+    
+    def exit(self):
+        self.displayProc.terminate()
+        del self.displayProc
 
 
 if __name__ == '__main__':
@@ -54,3 +74,5 @@ if __name__ == '__main__':
     logger.addHandler(console)
     #===========================================================================
     a = simpleCam(0);
+    time.sleep(14)
+    a.exit()

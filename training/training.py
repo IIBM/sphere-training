@@ -495,7 +495,7 @@ class Training():
         
         # video Detection:
         videoDet = 0  # video Detection object. initialized in the main.
-        videoSecond = 0 # second camera.
+        videoSecond = 0 # second camera object
         
         videoMovementMethod = -1 #movement method to be used for movement analysis.
         
@@ -792,7 +792,7 @@ class Training():
         del self.gVariables.valve1
         if (self.gVariables.secondcam != -1):
             try:
-                self.gVariables.videoSecond.terminate();
+                self.gVariables.videoSecond.exit()
                 del self.gVariables.videoSecond
             except:
                 pass
@@ -969,8 +969,8 @@ class Training():
         #second cam:
         if (self.gVariables.secondcam >= 0):
             numseccam = int(self.gVariables.secondcam)
-            self.gVariables.videoSecond = multiprocessing.Process(target=self.startSecondCam, args=(numseccam,))
-            self.gVariables.videoSecond.start()
+            import simpleCam
+            self.gVariables.videoSecond = simpleCam.simpleCam(numseccam);
             self.gVariables.logger.debug('secondCam started with cam number: %d' % self.gVariables.secondcam);
         else:
             self.gVariables.logger.debug('secondCam was not started (configuration file has -1 as value)' );
@@ -1022,9 +1022,6 @@ class Training():
         
         currentGUI.launch_GUI()
     
-    def startSecondCam(self, num):
-        import simpleCam
-        self.gVariables.videoSecond = simpleCam.simpleCam(num);
     
     def trialLoop(self):
             # This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
