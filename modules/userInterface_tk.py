@@ -1751,7 +1751,7 @@ class GUIGTK_Class:
             logging.info("configuring initial data for Form1.")
             
             self.requireStillness.set(self.reference.requireStillnessVar)
-            print ",,.- %d" % self.reference.requireStillnessVar
+            #print "requireStillnessVar: %d" % self.reference.requireStillnessVar
             
             if (self.reference.requireStillnessVar == 0):
                 self.__CheckRequireStillness.deselect();

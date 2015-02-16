@@ -99,10 +99,9 @@ class autoCompleteDialog():
                 print "finalizado."
                 
             
-            def __init__(self, mtrz, jobList=0):
+            def __init__(self, mtrz):
                 logger.debug("Started.")
                 self.matrix = mtrz
-                self.jobL = jobList
                 pass
             
             def exit(self):

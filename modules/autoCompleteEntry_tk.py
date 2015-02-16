@@ -1,10 +1,56 @@
 import Tkinter
-import logging
 from Tkinter import *
-logger = logging.getLogger('autoCompleteEntry_tk')
 import re
-#pasar a multiprocessing !
+import time
+import logging
+logger = logging.getLogger('autoCompleteEntry_tk')
 
+
+class multiproc_autoCompleteDialog:
+    def __init__(self, lista, jobL):
+        logger.debug("Started.")
+        self.jobL = jobL
+        self.subj_name = ""
+        self.top = Tkinter.Tk()
+        self.entry_lst = AutocompleteEntry(lista, self.top, width=35)
+        B = Tkinter.Button(self.top, text="OK", command=self.finalizeIntroMessage, height=5, width=35)
+        self.entry_lst.pack()
+        B.pack()
+        self.entry_lst.focus_set()
+        self.entry_lst.enter_method = self.override_enter
+        
+        self.top.mainloop()
+        try:
+                    self.jobL.put( self.subj_name )
+                    self.jobL.join()
+        except:
+                    logger.debug( "Couldn't add to joblist.")
+        logger.debug("Finished.")
+        pass
+    
+    def finalizeIntroMessage(self):
+        # print "dmy finalize"
+        try:
+            # print "subj_name: %s" % str( entry_lst.get() )
+            self.subj_name = str(self.entry_lst.get())
+        except:
+            self.subj_name = ""
+        # print "done: %s" % self.subj_name
+        self.top.destroy()
+        pass
+    
+    
+    def override_enter(self):
+        # print "dmy enter"
+        try:
+            # print "subj_name: %s" % str( entry_lst.get() )
+            self.subj_name = str(self.entry_lst.get())
+        except:
+            self.subj_name = ""
+        # print "done: %s" % self.subj_name
+        self.top.destroy()
+        pass
+    
 
 class AutocompleteEntry(Entry):
     
@@ -109,47 +155,47 @@ class AutocompleteEntry(Entry):
 
 class autoCompleteEntry_tk:
     
+    def internal_multiprocFunction(self):
+        a = multiproc_autoCompleteDialog(self.matrix, self.jobL)
+    
     def __init__(self, lista):
-        logger.debug("Started.")
-        self.subj_name = ""
-        self.top = Tkinter.Tk()
-        self.entry_lst = AutocompleteEntry(lista, self.top, width=35)
-        B = Tkinter.Button(self.top, text="OK", command=self.finalizeIntroMessage, height=5, width=35)
-        self.entry_lst.pack()
-        B.pack()
-        self.entry_lst.focus_set()
-        self.entry_lst.enter_method = self.override_enter
-        
-        self.top.mainloop()
-        logger.debug("Finished.")
-        pass
+                self.matrix = lista
+                
+                
+                logger.debug("Started.")
+    
+    def initAll(self):
+                import multiprocessing
+                GUIjobList = multiprocessing.JoinableQueue()
+                self.jobL = GUIjobList
+                self.procApp = multiprocessing.Process(target=self.internal_multiprocFunction ) ;
+                self.procApp.start()
+                tempvar = ""
+                while True:
+                    if (GUIjobList.qsize() > 0 or GUIjobList.empty() == False ):
+                        logger.debug( "Message element detected on getSubjName")
+                        try:
+                                tempvar = GUIjobList.get()
+                                GUIjobList.task_done()
+                                break;
+                        except:
+                                pass
+                    time.sleep(0.5)
+                self.subj_name = str(tempvar).strip()
+                pass
 
     def getSubjectName(self):
         logger.debug("getting subject name.")
         return self.subj_name
     
-    def finalizeIntroMessage(self):
-        # print "dmy finalize"
-        try:
-            # print "subj_name: %s" % str( entry_lst.get() )
-            self.subj_name = str(self.entry_lst.get())
-        except:
-            self.subj_name = ""
-        # print "done: %s" % self.subj_name
-        self.top.destroy()
-        pass
+    def exit(self):
+        self.procApp.terminate()
+        del self.procApp
+        self.jobL.close()
+        del self.jobL
+        logger.debug("Exiting module.")
     
     
-    def override_enter(self):
-        # print "dmy enter"
-        try:
-            # print "subj_name: %s" % str( entry_lst.get() )
-            self.subj_name = str(self.entry_lst.get())
-        except:
-            self.subj_name = ""
-        # print "done: %s" % self.subj_name
-        self.top.destroy()
-        pass
 
 
 
@@ -167,3 +213,8 @@ if __name__ == '__main__':
 #     root.mainloop()
     #mode 2:
     app3 =  autoCompleteEntry_tk(lista)
+    app3.initAll()
+    print ".-"
+    print app3.getSubjectName()
+    print ".-"
+    app3.exit()

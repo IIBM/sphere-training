@@ -27,6 +27,7 @@ import track_bola_utils
 
 class Training():
     
+    
     class gVariables():
         #Global variables to be used within the Training class.
         #Contains global variables AND some training functions (internal to the Training class).
@@ -436,6 +437,45 @@ class Training():
             except:
                 return str(a) + ' s   '
         
+        class saveVariables():
+            #each instance of this class will allocate variables associated with a type of training.
+            #the instances are loaded on init, and when a user chooses a certain type of training,
+            # it will load by default these variables associated with that type. To override, press save button.
+            type_pavlov = 0;
+            type_skinner = 0;
+            type_ocond = 0;
+            type_discr = 0;
+            nothingToLoad = 0; #if 1, there is nothing to load from here (probably there isn't a config file)
+            def __init__(self, numtype):
+                try:
+                    numParsed = int(numtype)
+                except:
+                    return 1;
+                type_pavlov = 0;
+                type_skinner = 0;
+                type_ocond = 0;
+                type_discr = 0;
+                if (numParsed == 1):
+                    #type pavlov.
+                    type_pavlov = 1;
+                    try:
+                        a = open("configs/config_Pavlov.cfg")
+                        print a.readlines()
+                        a.close()
+                    except:
+                        nothingToLoad = 1;
+                        print "Couldn't read config file."
+                if (numParsed == 2):
+                    #type skinner.
+                    type_skinner = 1;
+                if (numParsed == 3):
+                    #type ocond.
+                    type_ocond = 1;
+                if (numParsed == 4):
+                    #type discr.
+                    type_discr = 1;
+                pass
+        
         pass
         __checkModules()
         __checkConfigFiles()
@@ -523,7 +563,13 @@ class Training():
             print "Warning! Both Pavlov and Skinner mode are enabled. This training instance will use Pavlov mode only."
             type_skinner = 0;
         
+        pavlovVars = saveVariables(1)
         
+        skinnerVars = saveVariables(2)
+        
+        ocondVars = saveVariables(3)
+        
+        discrVars = saveVariables(4)
         
         subject_name = "" #subject name, set at training init, used in logging filename.
         programRunning = 1;

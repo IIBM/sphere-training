@@ -18,23 +18,18 @@ class userInterface_API:
     requireStillnessVar = 0;
     
     
-    def autoCompleteDialog_create(self, subj_list, GUIjoblist):
-        import autoCompleteEntry_gtk
-        acdEntry = autoCompleteEntry_gtk.autoCompleteDialog(subj_list, GUIjoblist);
-        acdEntry.initAll()
-        print "done acd_c-"
-        pass
     
     def getSubjName(self):
         
         
         if (self.usingTK == 0):
             logger.debug("GTK GUI Subject List started.")
-            import multiprocessing #needed here, else it will crash when launching the main GUI gtk window.
             import autoCompleteEntry_gtk
             app = autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list);
             app.initAll()
             self.subj_name = app.getSubjectName()
+            app.exit()
+            del app
             logger.debug("GUI Job ended.")
             logger.debug("GTK GUI Subject List ended.")
             pass
@@ -42,9 +37,10 @@ class userInterface_API:
             logger.debug("TK GUI Subject List started.")
             import autoCompleteEntry_tk
             app3 =  autoCompleteEntry_tk.autoCompleteEntry_tk(self.subj_list)
+            app3.initAll()
             self.subj_name = app3.getSubjectName()
-            del app3
-            time.sleep(0.5) #.
+            app3.exit()
+            del app3 #.
             logger.debug("TK GUI Subject List ended.")
         #print "API subj_name %s" % self.subj_name
         logger.debug( "subject name: %s" % self.subj_name )
