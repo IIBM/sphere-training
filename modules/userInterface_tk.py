@@ -2048,8 +2048,8 @@ class GUIGTK_Class:
             self.canvas = Tkinter.Canvas(root, borderwidth=0, background="#ffffff")
             self.DefClr = self.canvas.cget("bg")
             self.frame = Tkinter.Frame(self.canvas, background="#ffffff")
-            self.vsb = Scrollbar(root, orient="vertical", command=self.canvas.yview)
-            self.hsb = Scrollbar(root, orient="horizontal", command=self.canvas.xview)
+            self.vsb = Tkinter.Scrollbar(root, orient="vertical", command=self.canvas.yview)
+            self.hsb = Tkinter.Scrollbar(root, orient="horizontal", command=self.canvas.xview)
             self.canvas.configure(yscrollcommand=self.vsb.set, xscrollcommand=self.hsb.set )
     
             self.vsb.pack(side="right", fill="y")
