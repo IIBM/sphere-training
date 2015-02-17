@@ -459,9 +459,19 @@ class Training():
                     #type pavlov.
                     type_pavlov = 1;
                     try:
-                        a = open("configs/config_Pavlov.cfg")
-                        print a.readlines()
-                        a.close()
+                        #a = open("configs/config_Pavlov.cfg")
+                        #print a.readlines()
+                        import os, sys, inspect
+                        print "about to import."
+                        # use this if you want to include modules from a subfolder
+                        cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile( inspect.currentframe() ))[0],"configs")))
+                        if cmd_subfolder not in sys.path:
+                            sys.path.insert(0, cmd_subfolder)
+                        import config_Pavlov as cfg
+                        print cfg.nothingToLoad
+                        print cfg.soundGenFrequency1
+                        self.soundGenFrequency1 = cfg.soundGenFrequency1
+                        print "done."
                     except:
                         nothingToLoad = 1;
                         print "Couldn't read config file."
@@ -573,7 +583,8 @@ class Training():
         
         subject_name = "" #subject name, set at training init, used in logging filename.
         programRunning = 1;
-        
+        print soundGenFrequency1
+        print pavlovVars.soundGenFrequency1
         #fin Training.gVariables.
         pass
     
