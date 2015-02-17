@@ -1,5 +1,5 @@
 import Tkinter
-from Tkinter import *
+#from Tkinter import *
 import re
 import time
 import logging
@@ -52,16 +52,16 @@ class multiproc_autoCompleteDialog:
         pass
     
 
-class AutocompleteEntry(Entry):
+class AutocompleteEntry(Tkinter.Entry):
     
     
     def __init__(self, lista, *args, **kwargs):
         
-        Entry.__init__(self, *args, **kwargs)
+        Tkinter.Entry.__init__(self, *args, **kwargs)
         self.lista = lista        
         self.var = self["textvariable"]
         if self.var == '':
-            self.var = self["textvariable"] = StringVar()
+            self.var = self["textvariable"] = Tkinter.StringVar()
 
         self.var.trace('w', self.changed)
         self.bind("<Right>", self.selection)
@@ -83,15 +83,15 @@ class AutocompleteEntry(Entry):
             words = self.comparison()
             if words:            
                 if not self.lb_up:
-                    self.lb = Listbox()
+                    self.lb = Tkinter.Listbox()
                     self.lb.bind("<Double-Button-1>", self.selection)
                     self.lb.bind("<Right>", self.selection)
                     self.lb.place(x=self.winfo_x(), y=self.winfo_y()+self.winfo_height())
                     self.lb_up = True
                 
-                self.lb.delete(0, END)
+                self.lb.delete(0, Tkinter.END)
                 for w in words:
-                    self.lb.insert(END,w)
+                    self.lb.insert(Tkinter.END,w)
             else:
                 if self.lb_up:
                     self.lb.destroy()
@@ -103,10 +103,10 @@ class AutocompleteEntry(Entry):
     def selection(self, event):
 
         if self.lb_up:
-            self.var.set(self.lb.get(ACTIVE))
+            self.var.set(self.lb.get(Tkinter.ACTIVE))
             self.lb.destroy()
             self.lb_up = False
-            self.icursor(END)
+            self.icursor(Tkinter.END)
     
     def enter(self, event):
         #do the same as Right.
@@ -141,7 +141,7 @@ class AutocompleteEntry(Entry):
                 index = '0'
             else:
                 index = self.lb.curselection()[0]
-            if index != END:                        
+            if index != Tkinter.END:                        
                 self.lb.selection_clear(first=index)
                 index = str(int(index)+1)        
                 self.lb.selection_set(first=index)
@@ -160,23 +160,20 @@ class autoCompleteEntry_tk:
     
     def __init__(self, lista):
                 self.matrix = lista
-                
-                
                 logger.debug("Started.")
     
     def initAll(self):
                 import multiprocessing
-                GUIjobList = multiprocessing.JoinableQueue()
-                self.jobL = GUIjobList
+                self.jobL = multiprocessing.JoinableQueue()
                 self.procApp = multiprocessing.Process(target=self.internal_multiprocFunction ) ;
                 self.procApp.start()
                 tempvar = ""
                 while True:
-                    if (GUIjobList.qsize() > 0 or GUIjobList.empty() == False ):
+                    if (self.jobL.qsize() > 0 or self.jobL.empty() == False ):
                         logger.debug( "Message element detected on getSubjName")
                         try:
-                                tempvar = GUIjobList.get()
-                                GUIjobList.task_done()
+                                tempvar = self.jobL.get()
+                                self.jobL.task_done()
                                 break;
                         except:
                                 pass

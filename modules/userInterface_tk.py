@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-from Tkinter import *
 import Tkinter
+#from Tkinter import *
 import time
 import sys
 import os
@@ -104,7 +104,7 @@ class GUIGTK_Class:
         pass
     
     def startFrame0(self):
-        Rootn = Tk()
+        Rootn = Tkinter.Tk()
         Rootn.withdraw() #to prevent user from touching vars before initialization
         self.App = self.userInput(Rootn)
         self.App.pack(expand='yes',fill='both')
@@ -308,7 +308,7 @@ class GUIGTK_Class:
             label = Tkinter.Label(self._tipwindow, **opts)
             label.pack()
     
-    class userInput(Frame):
+    class userInput(Tkinter.Frame):
     #------------------------------------------------------------------------------#
     #                                                                              #
     #                                  userInput                                   #
@@ -319,17 +319,17 @@ class GUIGTK_Class:
             #
             #Your code here
             #
-            apply(Frame.__init__,(self,Master),kw)
+            apply(Tkinter.Frame.__init__,(self,Master),kw)
             self.bind('<Destroy>',self.__on_userInput_Dstry)
-            self.__Frame25 = Frame(self)
+            self.__Frame25 = Tkinter.Frame(self)
             self.__Frame25.pack(side='top')
-            self.__Frame26 = Frame(self)
+            self.__Frame26 = Tkinter.Frame(self)
             self.__Frame26.pack(side='top')
-            self.__Frame28 = Frame(self.__Frame25,width=320)
+            self.__Frame28 = Tkinter.Frame(self.__Frame25,width=320)
             self.__Frame28.pack(side='left')
-            self.__Frame27 = Frame(self.__Frame25)
+            self.__Frame27 = Tkinter.Frame(self.__Frame25)
             self.__Frame27.pack(side='left')
-            self.__btnHelp = Button(self.__Frame27,anchor='w',justify='right'
+            self.__btnHelp = Tkinter.Button(self.__Frame27,anchor='w',justify='right'
                 ,text='Help')
             self.__btnHelp.bind('<ButtonRelease-1>' \
                 ,self.__btnHelp_pressed)
@@ -339,13 +339,13 @@ class GUIGTK_Class:
                                      "Displays a frame with help topics.")
             self.__btnHelp.pack(side='left')
             
-            self.__EspacioHelpSS = Canvas(self.__Frame27, width=35, height=35, highlightthickness=0,
+            self.__EspacioHelpSS = Tkinter.Canvas(self.__Frame27, width=35, height=35, highlightthickness=0,
                                           selectborderwidth=0)
             self.__EspacioHelpSS.pack(side='left')
             
             
             
-            self.__btnSaveState = Button(self.__Frame27,anchor='w',justify='right'
+            self.__btnSaveState = Tkinter.Button(self.__Frame27,anchor='w',justify='right'
                 ,text='Save State')
             self.__btnSaveState.bind('<ButtonRelease-1>' \
                 ,self.____btnSaveState_pressed)
@@ -360,27 +360,30 @@ class GUIGTK_Class:
             else:
                 a = os.getcwd() + "/";
             try:
-                self.photo=PhotoImage(file=a+"res/saveBtn.png");
+                photoLocation = a+"res/saveBtn.png"
+                logger.debug("Location: %s" % photoLocation)
+                #print "Location: %s" % photoLocation
+                self.photo=Tkinter.PhotoImage(file=photoLocation);
                 self.__btnSaveState.config(image=self.photo);
             except:
                 logger.warning("Couldn't set saveBtn.png image.");
             self.__btnSaveState.pack(side='left')
             
-            self.__Frame2 = Frame(self.__Frame26)
+            self.__Frame2 = Tkinter.Frame(self.__Frame26)
             self.__Frame2.pack(side='left')
-            self.__Frame1 = Frame(self.__Frame26)
+            self.__Frame1 = Tkinter.Frame(self.__Frame26)
             self.__Frame1.pack(side='left')
-            self.__Frame5 = Frame(self.__Frame2)
+            self.__Frame5 = Tkinter.Frame(self.__Frame2)
             self.__Frame5.pack(side='top')
-            self.__Frame4 = Frame(self.__Frame2)
+            self.__Frame4 = Tkinter.Frame(self.__Frame2)
             self.__Frame4.pack(side='top')
-            self.__Frame8 = Frame(self.__Frame1)
+            self.__Frame8 = Tkinter.Frame(self.__Frame1)
             self.__Frame8.pack(side='top')
-            self.__Frame7 = Frame(self.__Frame1,height=30)
+            self.__Frame7 = Tkinter.Frame(self.__Frame1,height=30)
             self.__Frame7.pack(side='top')
-            self.__Frame13 = Frame(self.__Frame1)
+            self.__Frame13 = Tkinter.Frame(self.__Frame1)
             self.__Frame13.pack(side='top')
-            self.__btnFrmTrialEvents = Button(self.__Frame13
+            self.__btnFrmTrialEvents = Tkinter.Button(self.__Frame13
                 ,text='Edit Trial Events')
             self.__btnFrmTrialEvents.pack(side='top')
             self.__btnFrmTrialEvents.bind('<ButtonRelease-1>' \
@@ -390,11 +393,11 @@ class GUIGTK_Class:
                                     "Edit Trial Events:"+"\n"+
                                      "Displays a frame to edit the training trial events.")
             
-            self.__Frame9 = Frame(self.__Frame1,height=15,width=15)
+            self.__Frame9 = Tkinter.Frame(self.__Frame1,height=15,width=15)
             self.__Frame9.pack(side='top')
-            self.__Frame16 = Frame(self.__Frame1)
+            self.__Frame16 = Tkinter.Frame(self.__Frame1)
             self.__Frame16.pack(side='top')
-            self.__btnFrmEditParameters = Button(self.__Frame16
+            self.__btnFrmEditParameters = Tkinter.Button(self.__Frame16
                 ,text='Edit Parameters')
             self.__btnFrmEditParameters.pack(side='top')
             self.__btnFrmEditParameters.bind('<ButtonRelease-1>' \
@@ -405,13 +408,13 @@ class GUIGTK_Class:
                                      "Displays a frame to edit parameters of the training modules.")
             
             
-            self.__Frame15 = Frame(self.__Frame1,height=5)
+            self.__Frame15 = Tkinter.Frame(self.__Frame1,height=5)
             self.__Frame15.pack(side='top')
-            self.__Frame14 = Frame(self.__Frame1)
+            self.__Frame14 = Tkinter.Frame(self.__Frame1)
             self.__Frame14.pack(side='top')
             #self.__Text1KeyInput = Text(self.__Frame14,background=self.__btnFrmEditParameters['bg'],height=5
             #    ,relief='flat',state='disabled',width=30, borderwidth=0)
-            self.__Text1KeyInput = Canvas(self.__Frame14, width=20, height=20, highlightthickness=0,
+            self.__Text1KeyInput = Tkinter.Canvas(self.__Frame14, width=20, height=20, highlightthickness=0,
                                           selectborderwidth=0)
             self.__Text1KeyInput.pack(side='top')
             self.__Text1KeyInput.bind('<KeyPress>',self.__on_Text1KeyInput_Key)
@@ -428,13 +431,13 @@ class GUIGTK_Class:
             self.__Text1KeyInput.bind('<KeyPress-r>',self.__on_Text1KeyInput_Key_r)
             self.__Text1KeyInput.bind('<KeyRelease-o>' \
                 ,self.__on_Text1KeyInput_KeyRel_o)
-            self.__Frame3 = Frame(self.__Frame5)
+            self.__Frame3 = Tkinter.Frame(self.__Frame5)
             self.__Frame3.pack(side='left')
-            self.__Frame6 = Frame(self.__Frame5,takefocus=1,width=80)
+            self.__Frame6 = Tkinter.Frame(self.__Frame5,takefocus=1,width=80)
             self.__Frame6.pack(side='left')
-            self.__Frame23 = Frame(self.__Frame8)
+            self.__Frame23 = Tkinter.Frame(self.__Frame8)
             self.__Frame23.pack(side='left')
-            self.__btnComment = Button(self.__Frame23
+            self.__btnComment = Tkinter.Button(self.__Frame23
                 ,text='Comment about this training')
             self.__btnComment.pack(side='top')
             self.__btnComment.bind('<ButtonRelease-1>' \
@@ -444,11 +447,11 @@ class GUIGTK_Class:
                                     "Comment about this training:"+"\n"+
                                      "Displays an input box for writing a comment about this training session.")
             
-            self.__Frame24 = Frame(self.__Frame8,width=10)
+            self.__Frame24 = Tkinter.Frame(self.__Frame8,width=10)
             self.__Frame24.pack(side='left')
-            self.__Frame10 = Frame(self.__Frame3)
+            self.__Frame10 = Tkinter.Frame(self.__Frame3)
             self.__Frame10.pack(side='top')
-            self.__btnDrop = Button(self.__Frame10,text='Drop')
+            self.__btnDrop = Tkinter.Button(self.__Frame10,text='Drop')
             self.__btnDrop.pack(side='top')
             self.__btnDrop.bind('<ButtonRelease-1>',self.__on_btnDrop_ButRel_1)
             
@@ -456,36 +459,36 @@ class GUIGTK_Class:
                                     'Drop: '+ "\n" + '(shortcut: D) Gives a drop of water.')
             
             
-            self.__Frame20 = Frame(self.__Frame3)
+            self.__Frame20 = Tkinter.Frame(self.__Frame3)
             self.__Frame20.pack(side='top')
-            self.__btnReward = Button(self.__Frame20,text='Reward')
+            self.__btnReward = Tkinter.Button(self.__Frame20,text='Reward')
             self.__btnReward.pack(side='top')
             self.__btnReward.bind('<ButtonRelease-1>',self.__on_btnReward_ButRel_1)
             
             self.__tooltip2_Reward = GUIGTK_Class.ToolTip(self.__btnReward, text=
                                     'Reward '+ "\n" + '(shortcut: R) Gives a drop of water and counts the trial as successful.')
             
-            self.__Frame12 = Frame(self.__Frame3)
+            self.__Frame12 = Tkinter.Frame(self.__Frame3)
             self.__Frame12.pack(side='top')
-            self.__btnOpen = Button(self.__Frame12,text='Open Valve')
+            self.__btnOpen = Tkinter.Button(self.__Frame12,text='Open Valve')
             self.__btnOpen.pack(side='top')
             self.__btnOpen.bind('<ButtonRelease-1>',self.__on_btnOpen_ButRel_1)
             
             self.__tooltip3_Open = GUIGTK_Class.ToolTip(self.__btnOpen, text=
                                     'Open: '+ "\n" + '(shortcut: O) Opens the valve.')
             
-            self.__Frame17 = Frame(self.__Frame3)
+            self.__Frame17 = Tkinter.Frame(self.__Frame3)
             self.__Frame17.pack(side='top')
-            self.__btnClose = Button(self.__Frame17,text='Close Valve')
+            self.__btnClose = Tkinter.Button(self.__Frame17,text='Close Valve')
             self.__btnClose.pack(side='top')
             self.__btnClose.bind('<ButtonRelease-1>',self.__on_btnClose_ButRel_1)
             
             self.__tooltip4_Close = GUIGTK_Class.ToolTip(self.__btnClose, text=
                                     'Close: '+ "\n" + '(shortcut: C) Closes the valve.')
             
-            self.__Frame11 = Frame(self.__Frame3)
+            self.__Frame11 = Tkinter.Frame(self.__Frame3)
             self.__Frame11.pack(side='top')
-            self.__btnStart = Button(self.__Frame11,text='Start / Stop Training')
+            self.__btnStart = Tkinter.Button(self.__Frame11,text='Start / Stop Training')
             self.__btnStart.pack(side='top')
             self.__btnStart.bind('<ButtonRelease-1>',self.__on_btnStart_ButRel_1)
             
@@ -494,9 +497,9 @@ class GUIGTK_Class:
                                     "\n" +"(shortcut: K) Starts the training if it hasn't started before."+"\n"
                                     +"Else stops the training.")
             
-            self.__Frame21 = Frame(self.__Frame3)
+            self.__Frame21 = Tkinter.Frame(self.__Frame3)
             self.__Frame21.pack(side='top')
-            self.__btnPause = Button(self.__Frame21,text='Pause / Resume Training')
+            self.__btnPause = Tkinter.Button(self.__Frame21,text='Pause / Resume Training')
             self.__btnPause.pack(side='top')
             self.__btnPause.bind('<ButtonRelease-1>',self.__on_btnPause_ButRel_1)
             
@@ -505,19 +508,19 @@ class GUIGTK_Class:
                                      "(shortcut: P) Pauses the training if it is currently running."+"\n"
                                     +"Else resumes the paused training.")
             
-            self.__Frame19 = Frame(self.__Frame3)
+            self.__Frame19 = Tkinter.Frame(self.__Frame3)
             self.__Frame19.pack(side='top')
     #         self.__btnResume = Button(self.__Frame19,text='Resume Training')
     #         self.__btnResume.pack(side='top')
     #         self.__btnResume.bind('<ButtonRelease-1>',self.__on_btnResume_ButRel_1)
-            self.__Frame22 = Frame(self.__Frame3)
+            self.__Frame22 = Tkinter.Frame(self.__Frame3)
             self.__Frame22.pack(side='top')
     #         self.__btnStop = Button(self.__Frame22,text='Stop Training')
     #         self.__btnStop.pack(side='top')
     #         self.__btnStop.bind('<ButtonRelease-1>',self.__on_btnStop_ButRel_1)
-            self.__Frame18 = Frame(self.__Frame3)
+            self.__Frame18 = Tkinter.Frame(self.__Frame3)
             self.__Frame18.pack(side='top')
-            self.__btnExit = Button(self.__Frame18,text='Exit')
+            self.__btnExit = Tkinter.Button(self.__Frame18,text='Exit')
             self.__btnExit.pack(side='top')
             self.__btnExit.bind('<ButtonRelease-1>',self.__on_btnExit_ButRel_1)
             
@@ -785,7 +788,7 @@ class GUIGTK_Class:
     
     
     
-    class Form5(Toplevel):
+    class Form5(Tkinter.Toplevel):
         #comment.
         #------------------------------------------------------------------------------#
         #                                                                              #
@@ -799,13 +802,13 @@ class GUIGTK_Class:
             #
             #Your code here
             #
-            apply(Toplevel.__init__,(self,Master),kw)
+            apply(Tkinter.Toplevel.__init__,(self,Master),kw)
             
         
         
         def initAll(self):
             self.bind('<Destroy>',self.__on_Form5_Dstry)
-            self.__lblComment = Label(self,text='Comment about this training:')
+            self.__lblComment = Tkinter.Label(self,text='Comment about this training:')
             self.__lblComment.pack(side='top')
             
             
@@ -814,13 +817,13 @@ class GUIGTK_Class:
                                      "Sets a comment line (max: 100 chars) about this training session.")
             
             
-            self.__EntryComment = Entry(self)
+            self.__EntryComment = Tkinter.Entry(self)
             self.__EntryComment.pack(side='top')
             self.__EntryComment.bind('<KeyRelease>',self.__on_EntryComment_KeyRel)
             
-            self.__Frame62 = Frame(self,height=30,width=30)
+            self.__Frame62 = Tkinter.Frame(self,height=30,width=30)
             self.__Frame62.pack(side='top')
-            self.__ApplyBtn = Button(self.__Frame62,text='Apply')
+            self.__ApplyBtn = Tkinter.Button(self.__Frame62,text='Apply')
             self.__ApplyBtn.pack(side='top')
             self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
             
@@ -864,7 +867,7 @@ class GUIGTK_Class:
     
     
     
-    class Form3(Toplevel):
+    class Form3(Tkinter.Toplevel):
         #parameters
         #------------------------------------------------------------------------------#
         #                                                                              #
@@ -876,35 +879,35 @@ class GUIGTK_Class:
             #
             #Your code here
             #FORM: Parameters
-            apply(Toplevel.__init__,(self,Master),kw)
+            apply(Tkinter.Toplevel.__init__,(self,Master),kw)
         
         def initAll(self):
             self.bind('<Destroy>',self.__on_Form3_Dstry)
-            self.__Frame6 = Frame(self)
+            self.__Frame6 = Tkinter.Frame(self)
             self.__Frame6.pack(side='left')
-            self.__Frame5 = Frame(self)
+            self.__Frame5 = Tkinter.Frame(self)
             self.__Frame5.pack(side='left')
-            self.__Frame69 = Frame(self.__Frame6,width=10)
+            self.__Frame69 = Tkinter.Frame(self.__Frame6,width=10)
             self.__Frame69.pack(side='top')
-            self.__Frame68 = Frame(self.__Frame6,width=10)
+            self.__Frame68 = Tkinter.Frame(self.__Frame6,width=10)
             self.__Frame68.pack(side='top')
-            self.__Frame70 = Frame(self.__Frame5)
+            self.__Frame70 = Tkinter.Frame(self.__Frame5)
             self.__Frame70.pack(side='top')
-            self.__Frame2 = Frame(self.__Frame5,height=5,width=15)
+            self.__Frame2 = Tkinter.Frame(self.__Frame5,height=5,width=15)
             self.__Frame2.pack(side='top')
-            self.__Frame1 = Frame(self.__Frame5)
+            self.__Frame1 = Tkinter.Frame(self.__Frame5)
             self.__Frame1.pack(side='top')
-            self.__Frame14 = Frame(self.__Frame5,height=30,width=30)
+            self.__Frame14 = Tkinter.Frame(self.__Frame5,height=30,width=30)
             self.__Frame14.pack(side='top')
-            self.__Frame42 = Frame(self.__Frame5)
+            self.__Frame42 = Tkinter.Frame(self.__Frame5)
             self.__Frame42.pack(side='top')
-            self.__Frame25 = Frame(self.__Frame5,height=30,width=30)
+            self.__Frame25 = Tkinter.Frame(self.__Frame5,height=30,width=30)
             self.__Frame25.pack(side='top')
-            self.__Frame43 = Frame(self.__Frame5)
+            self.__Frame43 = Tkinter.Frame(self.__Frame5)
             self.__Frame43.pack(side='top')
-            self.__Frame62 = Frame(self.__Frame5,height=30,width=30)
+            self.__Frame62 = Tkinter.Frame(self.__Frame5,height=30,width=30)
             self.__Frame62.pack(side='top')
-            self.__ApplyBtn = Button(self.__Frame62,text='Apply')
+            self.__ApplyBtn = Tkinter.Button(self.__Frame62,text='Apply')
             self.__ApplyBtn.pack(side='top')
             self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
             
@@ -914,7 +917,7 @@ class GUIGTK_Class:
                                      "Applies and saves all changes made to the Parameters.")
             
             
-            self.__CloseBtn = Button(self.__Frame62,text='Close')
+            self.__CloseBtn = Tkinter.Button(self.__Frame62,text='Close')
             self.__CloseBtn.pack(side='top')
             self.__CloseBtn.bind('<ButtonRelease-1>',self.__on_CloseBtn_ButRel_1)
             
@@ -924,63 +927,63 @@ class GUIGTK_Class:
                                      "Closes this window without saving changes.")
             
             
-            self.__Frame4 = Frame(self.__Frame70,height=30)
+            self.__Frame4 = Tkinter.Frame(self.__Frame70,height=30)
             self.__Frame4.pack(side='left')
-            self.__Label1 = Label(self.__Frame4,text='Parameters')
+            self.__Label1 = Tkinter.Label(self.__Frame4,text='Parameters')
             self.__Label1.pack(side='top')
-            self.__Frame3 = Frame(self.__Frame70,height=30,width=250)
+            self.__Frame3 = Tkinter.Frame(self.__Frame70,height=30,width=250)
             self.__Frame3.pack(side='left')
-            self.__Frame7 = Frame(self.__Frame1,width=20)
+            self.__Frame7 = Tkinter.Frame(self.__Frame1,width=20)
             self.__Frame7.pack(side='left')
-            self.__Frame8 = Frame(self.__Frame1)
+            self.__Frame8 = Tkinter.Frame(self.__Frame1)
             self.__Frame8.pack(side='left')
-            self.__Frame27 = Frame(self.__Frame42,width=20)
+            self.__Frame27 = Tkinter.Frame(self.__Frame42,width=20)
             self.__Frame27.pack(side='left')
-            self.__Frame26 = Frame(self.__Frame42)
+            self.__Frame26 = Tkinter.Frame(self.__Frame42)
             self.__Frame26.pack(side='left')
-            self.__Frame45 = Frame(self.__Frame43)
+            self.__Frame45 = Tkinter.Frame(self.__Frame43)
             self.__Frame45.pack(side='left')
-            self.__Frame44 = Frame(self.__Frame43)
+            self.__Frame44 = Tkinter.Frame(self.__Frame43)
             self.__Frame44.pack(side='left')
-            self.__Frame9 = Frame(self.__Frame8)
+            self.__Frame9 = Tkinter.Frame(self.__Frame8)
             self.__Frame9.pack(side='top')
-            self.__Label2 = Label(self.__Frame9,text='Audio:')
+            self.__Label2 = Tkinter.Label(self.__Frame9,text='Audio:')
             self.__Label2.pack(side='top')
-            self.__Frame16 = Frame(self.__Frame8)
+            self.__Frame16 = Tkinter.Frame(self.__Frame8)
             self.__Frame16.pack(side='top')
-            self.__Frame15 = Frame(self.__Frame8)
+            self.__Frame15 = Tkinter.Frame(self.__Frame8)
             self.__Frame15.pack(side='top')
-            self.__Frame10 = Frame(self.__Frame8)
+            self.__Frame10 = Tkinter.Frame(self.__Frame8)
             self.__Frame10.pack(side='top')
-            self.__Frame22 = Frame(self.__Frame8)
+            self.__Frame22 = Tkinter.Frame(self.__Frame8)
             self.__Frame22.pack(side='top')
-            self.__Frame71 = Frame(self.__Frame27)
+            self.__Frame71 = Tkinter.Frame(self.__Frame27)
             self.__Frame71.pack(side='top')
-            self.__Frame72 = Frame(self.__Frame27)
+            self.__Frame72 = Tkinter.Frame(self.__Frame27)
             self.__Frame72.pack(side='top')
-            self.__Frame29 = Frame(self.__Frame26)
+            self.__Frame29 = Tkinter.Frame(self.__Frame26)
             self.__Frame29.pack(side='top')
-            self.__Label7 = Label(self.__Frame29,text='Video:')
+            self.__Label7 = Tkinter.Label(self.__Frame29,text='Video:')
             self.__Label7.pack(side='top')
-            self.__Frame28 = Frame(self.__Frame26)
+            self.__Frame28 = Tkinter.Frame(self.__Frame26)
             self.__Frame28.pack(side='top')
-            self.__Frame35 = Frame(self.__Frame26)
+            self.__Frame35 = Tkinter.Frame(self.__Frame26)
             self.__Frame35.pack(side='top')
-            self.__Frame46 = Frame(self.__Frame44)
+            self.__Frame46 = Tkinter.Frame(self.__Frame44)
             self.__Frame46.pack(side='top')
-            self.__Label10 = Label(self.__Frame46,text='Trial:')
+            self.__Label10 = Tkinter.Label(self.__Frame46,text='Trial:')
             self.__Label10.pack(side='top')
-            self.__Frame47 = Frame(self.__Frame44)
+            self.__Frame47 = Tkinter.Frame(self.__Frame44)
             self.__Frame47.pack(side='top')
-            self.__Frame17 = Frame(self.__Frame16)
+            self.__Frame17 = Tkinter.Frame(self.__Frame16)
             self.__Frame17.pack(side='left')
-            self.__Label3 = Label(self.__Frame17,text='Tone1:')
+            self.__Label3 = Tkinter.Label(self.__Frame17,text='Tone1:')
             self.__Label3.pack(side='top')
-            self.__Frame18 = Frame(self.__Frame16,width=100)
+            self.__Frame18 = Tkinter.Frame(self.__Frame16,width=100)
             self.__Frame18.pack(side='left')
-            self.__Frame11 = Frame(self.__Frame15)
+            self.__Frame11 = Tkinter.Frame(self.__Frame15)
             self.__Frame11.pack(side='left')
-            self.__Entry1Tone1 = Entry(self.__Frame11,width=8)
+            self.__Entry1Tone1 = Tkinter.Entry(self.__Frame11,width=8)
             self.__Entry1Tone1.pack(side='top')
             
             
@@ -989,13 +992,13 @@ class GUIGTK_Class:
                                      "Sets the frequency of the Tone 1.")
             
             
-            self.__Frame13 = Frame(self.__Frame15)
+            self.__Frame13 = Tkinter.Frame(self.__Frame15)
             self.__Frame13.pack(side='left')
-            self.__Label4 = Label(self.__Frame13,text='Hz')
+            self.__Label4 = Tkinter.Label(self.__Frame13,text='Hz')
             self.__Label4.pack(side='top')
-            self.__Frame12 = Frame(self.__Frame15)
+            self.__Frame12 = Tkinter.Frame(self.__Frame15)
             self.__Frame12.pack(side='left')
-            self.__Button1TestT1 = Button(self.__Frame12,text='Test')
+            self.__Button1TestT1 = Tkinter.Button(self.__Frame12,text='Test')
             self.__Button1TestT1.pack(side='top')
             self.__Button1TestT1.bind('<ButtonRelease-1>' \
                 ,self.__on_Button1TestT1_ButRel_1)
@@ -1006,15 +1009,15 @@ class GUIGTK_Class:
                                      "Saves frequency changes and plays Tone 1.")
             
             
-            self.__Frame23 = Frame(self.__Frame10)
+            self.__Frame23 = Tkinter.Frame(self.__Frame10)
             self.__Frame23.pack(side='left')
-            self.__Label6 = Label(self.__Frame23,text='Tone2:')
+            self.__Label6 = Tkinter.Label(self.__Frame23,text='Tone2:')
             self.__Label6.pack(side='top')
-            self.__Frame24 = Frame(self.__Frame10,width=100)
+            self.__Frame24 = Tkinter.Frame(self.__Frame10,width=100)
             self.__Frame24.pack(side='left')
-            self.__Frame19 = Frame(self.__Frame22)
+            self.__Frame19 = Tkinter.Frame(self.__Frame22)
             self.__Frame19.pack(side='left')
-            self.__Entry2Tone2 = Entry(self.__Frame19,width=8)
+            self.__Entry2Tone2 = Tkinter.Entry(self.__Frame19,width=8)
             self.__Entry2Tone2.pack(side='top')
             
             
@@ -1023,13 +1026,13 @@ class GUIGTK_Class:
                                      "Sets the frequency of the Tone 2.")
             
             
-            self.__Frame20 = Frame(self.__Frame22)
+            self.__Frame20 = Tkinter.Frame(self.__Frame22)
             self.__Frame20.pack(side='left')
-            self.__Label5 = Label(self.__Frame20,text='Hz')
+            self.__Label5 = Tkinter.Label(self.__Frame20,text='Hz')
             self.__Label5.pack(side='top')
-            self.__Frame21 = Frame(self.__Frame22)
+            self.__Frame21 = Tkinter.Frame(self.__Frame22)
             self.__Frame21.pack(side='left')
-            self.__Button2TestT2 = Button(self.__Frame21,text='Test')
+            self.__Button2TestT2 = Tkinter.Button(self.__Frame21,text='Test')
             self.__Button2TestT2.pack(side='top')
             self.__Button2TestT2.bind('<ButtonRelease-1>' \
                 ,self.__on_Button2TestT2_ButRel_1)
@@ -1040,31 +1043,31 @@ class GUIGTK_Class:
                                      "Saves frequency changes and plays Tone 2.")
             
             
-            self.__Frame32 = Frame(self.__Frame28)
+            self.__Frame32 = Tkinter.Frame(self.__Frame28)
             self.__Frame32.pack(side='left')
-            self.__Frame31 = Frame(self.__Frame28,width=100)
+            self.__Frame31 = Tkinter.Frame(self.__Frame28,width=100)
             self.__Frame31.pack(side='left')
-            self.__Frame48 = Frame(self.__Frame47)
+            self.__Frame48 = Tkinter.Frame(self.__Frame47)
             self.__Frame48.pack(side='left')
-            self.__Frame49 = Frame(self.__Frame47,width=50)
+            self.__Frame49 = Tkinter.Frame(self.__Frame47,width=50)
             self.__Frame49.pack(side='left')
-            self.__Frame33 = Frame(self.__Frame32)
+            self.__Frame33 = Tkinter.Frame(self.__Frame32)
             self.__Frame33.pack(side='top')
-            self.__Frame30 = Frame(self.__Frame32)
+            self.__Frame30 = Tkinter.Frame(self.__Frame32)
             self.__Frame30.pack(side='top')
-            self.__Frame36 = Frame(self.__Frame32)
+            self.__Frame36 = Tkinter.Frame(self.__Frame32)
             self.__Frame36.pack(side='top')
-            self.__Frame34 = Frame(self.__Frame32)
+            self.__Frame34 = Tkinter.Frame(self.__Frame32)
             self.__Frame34.pack(side='top')
-            self.__Frame52 = Frame(self.__Frame48)
+            self.__Frame52 = Tkinter.Frame(self.__Frame48)
             self.__Frame52.pack(side='top')
-            self.__Frame51 = Frame(self.__Frame48)
+            self.__Frame51 = Tkinter.Frame(self.__Frame48)
             self.__Frame51.pack(side='top')
-            self.__Frame50 = Frame(self.__Frame48)
+            self.__Frame50 = Tkinter.Frame(self.__Frame48)
             self.__Frame50.pack(side='top')
-            self.__Frame67 = Frame(self.__Frame33)
+            self.__Frame67 = Tkinter.Frame(self.__Frame33)
             self.__Frame67.pack(side='left')
-            self.__Button3SHTracking = Button(self.__Frame67
+            self.__Button3SHTracking = Tkinter.Button(self.__Frame67
                 ,text='Show / Hide Tracking')
             self.__Button3SHTracking.pack(side='top')
             self.__Button3SHTracking.bind('<ButtonRelease-1>' \
@@ -1076,11 +1079,11 @@ class GUIGTK_Class:
                                      "Shows / hides computer-generated tracking lines and circles on the display.")
             
             
-            self.__Frame66 = Frame(self.__Frame33,width=39)
+            self.__Frame66 = Tkinter.Frame(self.__Frame33,width=39)
             self.__Frame66.pack(side='left')
-            self.__Frame65 = Frame(self.__Frame30)
+            self.__Frame65 = Tkinter.Frame(self.__Frame30)
             self.__Frame65.pack(side='left')
-            self.__Button4SHFeedback = Button(self.__Frame65
+            self.__Button4SHFeedback = Tkinter.Button(self.__Frame65
                 ,text='Show / Hide Feedback')
             self.__Button4SHFeedback.pack(side='top')
             self.__Button4SHFeedback.bind('<ButtonRelease-1>' \
@@ -1094,7 +1097,7 @@ class GUIGTK_Class:
                                      )
             
             
-            self.__Button4_5recalibrate = Button(self.__Frame65
+            self.__Button4_5recalibrate = Tkinter.Button(self.__Frame65
                 ,text='Recalibrate Camera')
             self.__Button4_5recalibrate.pack(side='top')
             self.__Button4_5recalibrate.bind('<ButtonRelease-1>' \
@@ -1109,11 +1112,11 @@ class GUIGTK_Class:
             
             
             
-            self.__Frame64 = Frame(self.__Frame30,width=39)
+            self.__Frame64 = Tkinter.Frame(self.__Frame30,width=39)
             self.__Frame64.pack(side='left')
-            self.__Frame38 = Frame(self.__Frame36)
+            self.__Frame38 = Tkinter.Frame(self.__Frame36)
             self.__Frame38.pack(side='left')
-            self.__Label8 = Label(self.__Frame38,text='Movement Amount:')
+            self.__Label8 = Tkinter.Label(self.__Frame38,text='Movement Amount:')
             self.__Label8.pack(side='top')
             
             
@@ -1123,15 +1126,15 @@ class GUIGTK_Class:
                                      "\n"+"(see sphereVideoDetection docs)")
             
             
-            self.__Frame37 = Frame(self.__Frame36)
+            self.__Frame37 = Tkinter.Frame(self.__Frame36)
             self.__Frame37.pack(side='left')
-            self.__Entry3MvntAm = Entry(self.__Frame37,width=6)
+            self.__Entry3MvntAm = Tkinter.Entry(self.__Frame37,width=6)
             self.__Entry3MvntAm.pack(side='top')
-            self.__Frame63 = Frame(self.__Frame36,width=39)
+            self.__Frame63 = Tkinter.Frame(self.__Frame36,width=39)
             self.__Frame63.pack(side='left')
-            self.__Frame39 = Frame(self.__Frame34)
+            self.__Frame39 = Tkinter.Frame(self.__Frame34)
             self.__Frame39.pack(side='left')
-            self.__Label9 = Label(self.__Frame39,text='Method Used:')
+            self.__Label9 = Tkinter.Label(self.__Frame39,text='Method Used:')
             self.__Label9.pack(side='top')
             
             
@@ -1145,25 +1148,25 @@ class GUIGTK_Class:
                                      "\n"+"2 : Movement Vector - Binary (default)"+"\n")
             
             
-            self.__Frame41 = Frame(self.__Frame34)
+            self.__Frame41 = Tkinter.Frame(self.__Frame34)
             self.__Frame41.pack(side='left')
             #self.__Listbox1 = Listbox(self.__Frame41,height=1,width=19)
             pass
             #self.__Listbox1.pack(side='top')
             #
-            self.__EntryMethodUsed = Entry(self.__Frame41,width=6)
+            self.__EntryMethodUsed = Tkinter.Entry(self.__Frame41,width=6)
             self.__EntryMethodUsed.pack(side='top')
             #
-            self.__Frame40 = Frame(self.__Frame34)
+            self.__Frame40 = Tkinter.Frame(self.__Frame34)
             self.__Frame40.pack(side='left')
             pass
             #self.__Button5 = Button(self.__Frame40,text='Apply')
             #self.__Button5.pack(side='left')
             #self.__Button5.bind('<ButtonRelease-1>',self.__on_Button5_ButRel_1)
             pass
-            self.__Frame53 = Frame(self.__Frame52)
+            self.__Frame53 = Tkinter.Frame(self.__Frame52)
             self.__Frame53.pack(side='left')
-            self.__Label11 = Label(self.__Frame53,text='Movement Time:')
+            self.__Label11 = Tkinter.Label(self.__Frame53,text='Movement Time:')
             self.__Label11.pack(side='top')
             
             
@@ -1173,19 +1176,19 @@ class GUIGTK_Class:
                                      "Amount of 'continuous movement' time that should be detected to consider the trial as successful.")
             
             
-            self.__Frame54 = Frame(self.__Frame52)
+            self.__Frame54 = Tkinter.Frame(self.__Frame52)
             self.__Frame54.pack(side='left')
-            self.__Entry4MvntTime = Entry(self.__Frame54,width=10)
+            self.__Entry4MvntTime = Tkinter.Entry(self.__Frame54,width=10)
             self.__Entry4MvntTime.pack(side='top')
-            self.__Frame56 = Frame(self.__Frame52,width=2)
+            self.__Frame56 = Tkinter.Frame(self.__Frame52,width=2)
             self.__Frame56.pack(side='left')
-            self.__Frame55 = Frame(self.__Frame52)
+            self.__Frame55 = Tkinter.Frame(self.__Frame52)
             self.__Frame55.pack(side='left')
-            self.__Label12 = Label(self.__Frame55,text='s.')
+            self.__Label12 = Tkinter.Label(self.__Frame55,text='s.')
             self.__Label12.pack(side='top')
-            self.__Frame57 = Frame(self.__Frame51)
+            self.__Frame57 = Tkinter.Frame(self.__Frame51)
             self.__Frame57.pack(side='left')
-            self.__Label13 = Label(self.__Frame57,text='Idle Time:')
+            self.__Label13 = Tkinter.Label(self.__Frame57,text='Idle Time:')
             self.__Label13.pack(side='top')
             
             
@@ -1195,17 +1198,17 @@ class GUIGTK_Class:
                                      "Amount of 'continuous non-movement' time that should be detected to consider the trial as successful.")
             
             
-            self.__Frame61 = Frame(self.__Frame51,width=40)
+            self.__Frame61 = Tkinter.Frame(self.__Frame51,width=40)
             self.__Frame61.pack(side='left')
-            self.__Frame60 = Frame(self.__Frame51)
+            self.__Frame60 = Tkinter.Frame(self.__Frame51)
             self.__Frame60.pack(side='left')
-            self.__Entry5IdleTime = Entry(self.__Frame60,width=10)
+            self.__Entry5IdleTime = Tkinter.Entry(self.__Frame60,width=10)
             self.__Entry5IdleTime.pack(side='top')
-            self.__Frame59 = Frame(self.__Frame51,width=2)
+            self.__Frame59 = Tkinter.Frame(self.__Frame51,width=2)
             self.__Frame59.pack(side='left')
-            self.__Frame58 = Frame(self.__Frame51)
+            self.__Frame58 = Tkinter.Frame(self.__Frame51)
             self.__Frame58.pack(side='left')
-            self.__Label14 = Label(self.__Frame58,text='s.')
+            self.__Label14 = Tkinter.Label(self.__Frame58,text='s.')
             self.__Label14.pack(side='top')
             #
             #Your code here
@@ -1483,7 +1486,7 @@ class GUIGTK_Class:
     
     
     
-    class Form1(Toplevel):
+    class Form1(Tkinter.Toplevel):
         #Trial Events.
         orig_toneend = 0;
         orig_mvntwinend = 0;
@@ -1493,66 +1496,66 @@ class GUIGTK_Class:
             #
             #Your code here
             #FORM: Trial Events
-            apply(Toplevel.__init__,(self,Master),kw)
+            apply(Tkinter.Toplevel.__init__,(self,Master),kw)
         
         def initAll(self):
-            self.pavlov = IntVar(self)
-            self.skinner = IntVar(self)
-            self.oc = IntVar(self)
-            self.discr = IntVar(self)
-            self.requireStillness = IntVar(self)
+            self.pavlov = Tkinter.IntVar(self)
+            self.skinner = Tkinter.IntVar(self)
+            self.oc = Tkinter.IntVar(self)
+            self.discr = Tkinter.IntVar(self)
+            self.requireStillness = Tkinter.IntVar(self)
             
             self.bind('<Destroy>',self.__on_Form1_Dstry)
-            self.__Frame2 = Frame(self)
+            self.__Frame2 = Tkinter.Frame(self)
             self.__Frame2.pack(side='left')
-            self.__Frame1 = Frame(self)
+            self.__Frame1 = Tkinter.Frame(self)
             self.__Frame1.pack(side='left')
-            self.__Frame4 = Frame(self.__Frame2)
+            self.__Frame4 = Tkinter.Frame(self.__Frame2)
             self.__Frame4.pack(side='top')
-            self.__Frame3 = Frame(self.__Frame2)
+            self.__Frame3 = Tkinter.Frame(self.__Frame2)
             self.__Frame3.pack(side='top')
-            self.__Frame5 = Frame(self.__Frame4)
+            self.__Frame5 = Tkinter.Frame(self.__Frame4)
             self.__Frame5.pack(side='left')
-            self.__Frame6 = Frame(self.__Frame4,width=50)
+            self.__Frame6 = Tkinter.Frame(self.__Frame4,width=50)
             self.__Frame6.pack(side='left')
-            self.__Frame7 = Frame(self.__Frame3)
+            self.__Frame7 = Tkinter.Frame(self.__Frame3)
             self.__Frame7.pack(side='left')
-            self.__Frame8 = Frame(self.__Frame3)
+            self.__Frame8 = Tkinter.Frame(self.__Frame3)
             self.__Frame8.pack(side='left')
-            self.__Frame21 = Frame(self.__Frame3)
+            self.__Frame21 = Tkinter.Frame(self.__Frame3)
             self.__Frame21.pack(side='left')
-            self.__Frame9 = Frame(self.__Frame5)
+            self.__Frame9 = Tkinter.Frame(self.__Frame5)
             self.__Frame9.pack(side='top')
-            self.__lblTrialEventsTitle = Label(self.__Frame9,text='Trial Events')
+            self.__lblTrialEventsTitle = Tkinter.Label(self.__Frame9,text='Trial Events')
             self.__lblTrialEventsTitle.pack(side='top')
-            self.__Frame10 = Frame(self.__Frame5)
+            self.__Frame10 = Tkinter.Frame(self.__Frame5)
             self.__Frame10.pack(side='top')
-            self.__Frame14 = Frame(self.__Frame7,height=35)
+            self.__Frame14 = Tkinter.Frame(self.__Frame7,height=35)
             self.__Frame14.pack(side='top')
-            self.__FrameCHEBKBTNS = Frame(self.__Frame7)
+            self.__FrameCHEBKBTNS = Tkinter.Frame(self.__Frame7)
             self.__FrameCHEBKBTNS.pack(side='top')
-            self.__Frame15 = Frame(self.__Frame7)
+            self.__Frame15 = Tkinter.Frame(self.__Frame7)
             self.__Frame15.pack(side='top')
-            self.__Frame13 = Frame(self.__Frame7)
+            self.__Frame13 = Tkinter.Frame(self.__Frame7)
             self.__Frame13.pack(side='top')
-            self.__Frame20 = Frame(self.__Frame7)
+            self.__Frame20 = Tkinter.Frame(self.__Frame7)
             self.__Frame20.pack(side='top')
-            self.__Frame17 = Frame(self.__Frame7)
+            self.__Frame17 = Tkinter.Frame(self.__Frame7)
             self.__Frame17.pack(side='top')
-            self.__Frame16 = Frame(self.__Frame7)
+            self.__Frame16 = Tkinter.Frame(self.__Frame7)
             self.__Frame16.pack(side='top')
-            self.__Frame19 = Frame(self.__Frame7)
+            self.__Frame19 = Tkinter.Frame(self.__Frame7)
             self.__Frame19.pack(side='top')
-            self.__Frame36 = Frame(self.__Frame7)
+            self.__Frame36 = Tkinter.Frame(self.__Frame7)
             self.__Frame36.pack(side='top')
-            self.__Frame18 = Frame(self.__Frame7)
+            self.__Frame18 = Tkinter.Frame(self.__Frame7)
             self.__Frame18.pack(side='top')
-            self.__Frame38 = Frame(self.__Frame7)
+            self.__Frame38 = Tkinter.Frame(self.__Frame7)
             self.__Frame38.pack(side='top')
             
             
             
-            self.__CloseBtn = Button(self.__Frame38,text='Close')
+            self.__CloseBtn = Tkinter.Button(self.__Frame38,text='Close')
             self.__CloseBtn.pack(side='bottom')
             self.__CloseBtn.bind('<ButtonRelease-1>',self.__on_CloseBtn_ButRel_1)
             
@@ -1561,7 +1564,7 @@ class GUIGTK_Class:
                                      "Closes this window without saving changes.")
             
             
-            self.__ApplyBtn = Button(self.__Frame38,text='Apply')
+            self.__ApplyBtn = Tkinter.Button(self.__Frame38,text='Apply')
             self.__ApplyBtn.pack(side='bottom')
             self.__ApplyBtn.bind('<ButtonRelease-1>',self.__on_ApplyBtn_ButRel_1)
             
@@ -1569,36 +1572,36 @@ class GUIGTK_Class:
                                     "Apply:"+"\n"+
                                      "Applies and saves all changes made to the Trial Events.")
             
-            self.__Frame37 = Frame(self.__Frame7)
+            self.__Frame37 = Tkinter.Frame(self.__Frame7)
             self.__Frame37.pack(side='top')
-            self.__Frame11 = Frame(self.__Frame10,width=80)
+            self.__Frame11 = Tkinter.Frame(self.__Frame10,width=80)
             self.__Frame11.pack(side='left')
-            self.__Frame12 = Frame(self.__Frame10)
+            self.__Frame12 = Tkinter.Frame(self.__Frame10)
             self.__Frame12.pack(side='left')
     #         self.__Scale1 = Scale(self.__Frame12,length=200,orient='horizontal'
     #             ,sliderlength=20)
     #         self.__Scale1.pack(side='top')
-            self.__Frame24 = Frame(self.__Frame15)
+            self.__Frame24 = Tkinter.Frame(self.__Frame15)
             self.__Frame24.pack(side='left')
             
             
-            self.__CheckPavlov = Checkbutton(self.__FrameCHEBKBTNS,text='Pavlov mode', variable=self.pavlov)
+            self.__CheckPavlov = Tkinter.Checkbutton(self.__FrameCHEBKBTNS,text='Pavlov mode', variable=self.pavlov)
             self.__CheckPavlov.pack(side='top')
             
-            self.__CheckSkinner = Checkbutton(self.__FrameCHEBKBTNS,text='Skinner mode', variable=self.skinner)
+            self.__CheckSkinner = Tkinter.Checkbutton(self.__FrameCHEBKBTNS,text='Skinner mode', variable=self.skinner)
             self.__CheckSkinner.pack(side='top')
             
-            self.__CheckOC = Checkbutton(self.__FrameCHEBKBTNS,text='Operant Conditioning mode', variable=self.oc)
+            self.__CheckOC = Tkinter.Checkbutton(self.__FrameCHEBKBTNS,text='Operant Conditioning mode', variable=self.oc)
             self.__CheckOC.pack(side='top')
             
-            self.__CheckDiscrimination = Checkbutton(self.__FrameCHEBKBTNS,text='Discrimination mode', variable=self.discr)
+            self.__CheckDiscrimination = Tkinter.Checkbutton(self.__FrameCHEBKBTNS,text='Discrimination mode', variable=self.discr)
             self.__CheckDiscrimination.pack(side='top')
             
-            self.__Label1 = Label(self.__Frame24,text='Tone Start:')
+            self.__Label1 = Tkinter.Label(self.__Frame24,text='Tone Start:')
             self.__Label1.pack(side='top')
-            self.__Frame25 = Frame(self.__Frame15)
+            self.__Frame25 = Tkinter.Frame(self.__Frame15)
             self.__Frame25.pack(side='left')
-            self.__Entry1TStart = Entry(self.__Frame25,width=5)
+            self.__Entry1TStart = Tkinter.Entry(self.__Frame25,width=5)
             self.__Entry1TStart.pack(side='top')
             
             self.__tooltipTE3_TS = GUIGTK_Class.ToolTip(self.__Label1, text=
@@ -1607,26 +1610,26 @@ class GUIGTK_Class:
                                      " It is defined as always 0 and cannot be changed")
             
             
-            self.__Frame27 = Frame(self.__Frame13)
+            self.__Frame27 = Tkinter.Frame(self.__Frame13)
             self.__Frame27.pack(side='left')
-            self.__Label2 = Label(self.__Frame27,text='Tone End:')
+            self.__Label2 = Tkinter.Label(self.__Frame27,text='Tone End:')
             self.__Label2.pack(side='top')
-            self.__Frame26 = Frame(self.__Frame13)
+            self.__Frame26 = Tkinter.Frame(self.__Frame13)
             self.__Frame26.pack(side='left')
-            self.__Entry2TEnd = Entry(self.__Frame26,width=5)
+            self.__Entry2TEnd = Tkinter.Entry(self.__Frame26,width=5)
             self.__Entry2TEnd.pack(side='top')
             
             self.__tooltipTE4_TE = GUIGTK_Class.ToolTip(self.__Label2, text=
                                     "Tone End:"+"\n"+
                                      "Instant of time when tone stops.")
             
-            self.__Frame28 = Frame(self.__Frame20)
+            self.__Frame28 = Tkinter.Frame(self.__Frame20)
             self.__Frame28.pack(side='left')
-            self.__Label3 = Label(self.__Frame28,text='Movement Window Start:')
+            self.__Label3 = Tkinter.Label(self.__Frame28,text='Movement Window Start:')
             self.__Label3.pack(side='top')
-            self.__Frame29 = Frame(self.__Frame20)
+            self.__Frame29 = Tkinter.Frame(self.__Frame20)
             self.__Frame29.pack(side='left')
-            self.__Entry3MvmntWindowStart = Entry(self.__Frame29,width=5)
+            self.__Entry3MvmntWindowStart = Tkinter.Entry(self.__Frame29,width=5)
             self.__Entry3MvmntWindowStart.pack(side='top')
             
             self.__tooltipTE5_MWS = GUIGTK_Class.ToolTip(self.__Label3, text=
@@ -1634,26 +1637,26 @@ class GUIGTK_Class:
                                      "Instant of time when movement starts to be considered.")
             
             
-            self.__Frame30 = Frame(self.__Frame17)
+            self.__Frame30 = Tkinter.Frame(self.__Frame17)
             self.__Frame30.pack(side='left')
-            self.__Label4 = Label(self.__Frame30,text='Movement Window End:')
+            self.__Label4 = Tkinter.Label(self.__Frame30,text='Movement Window End:')
             self.__Label4.pack(side='top')
-            self.__Frame31 = Frame(self.__Frame17)
+            self.__Frame31 = Tkinter.Frame(self.__Frame17)
             self.__Frame31.pack(side='left')
-            self.__Entry4MvntWindowEnd = Entry(self.__Frame31,width=5)
+            self.__Entry4MvntWindowEnd = Tkinter.Entry(self.__Frame31,width=5)
             self.__Entry4MvntWindowEnd.pack(side='top')
             
             self.__tooltipTE6_MWE = GUIGTK_Class.ToolTip(self.__Label4, text=
                                     "Movement Window End:"+"\n"+
                                      "Instant of time when movement stops being detected.")
             
-            self.__Frame33 = Frame(self.__Frame16)
+            self.__Frame33 = Tkinter.Frame(self.__Frame16)
             self.__Frame33.pack(side='left')
-            self.__Label5 = Label(self.__Frame33,text='InterTrial Start:')
+            self.__Label5 = Tkinter.Label(self.__Frame33,text='InterTrial Start:')
             self.__Label5.pack(side='top')
-            self.__Frame32 = Frame(self.__Frame16)
+            self.__Frame32 = Tkinter.Frame(self.__Frame16)
             self.__Frame32.pack(side='left')
-            self.__Entry5ITStart = Entry(self.__Frame32,width=5)
+            self.__Entry5ITStart = Tkinter.Entry(self.__Frame32,width=5)
             self.__Entry5ITStart.pack(side='top')
             
             self.__tooltipTE7_ITS = GUIGTK_Class.ToolTip(self.__Label5, text=
@@ -1664,13 +1667,13 @@ class GUIGTK_Class:
                                      )
             
             
-            self.__Frame35 = Frame(self.__Frame19)
+            self.__Frame35 = Tkinter.Frame(self.__Frame19)
             self.__Frame35.pack(side='left')
-            self.__Label6 = Label(self.__Frame35,text='InterTrial End:')
+            self.__Label6 = Tkinter.Label(self.__Frame35,text='InterTrial End:')
             self.__Label6.pack(side='top')
-            self.__Frame34 = Frame(self.__Frame19)
+            self.__Frame34 = Tkinter.Frame(self.__Frame19)
             self.__Frame34.pack(side='left')
-            self.__Entry6ITEnd = Entry(self.__Frame34,width=5)
+            self.__Entry6ITEnd = Tkinter.Entry(self.__Frame34,width=5)
             self.__Entry6ITEnd.pack(side='top')
             
             
@@ -1682,13 +1685,13 @@ class GUIGTK_Class:
                                      )
             
             
-            self.__Frame22 = Frame(self.__Frame36)
+            self.__Frame22 = Tkinter.Frame(self.__Frame36)
             self.__Frame22.pack(side='left')
-            self.__Label7 = Label(self.__Frame22,text='Probability Tone1:')
+            self.__Label7 = Tkinter.Label(self.__Frame22,text='Probability Tone1:')
             self.__Label7.pack(side='top')
-            self.__Frame23 = Frame(self.__Frame36)
+            self.__Frame23 = Tkinter.Frame(self.__Frame36)
             self.__Frame23.pack(side='left')
-            self.__Scale2 = Scale(self.__Frame23,orient='horizontal')
+            self.__Scale2 = Tkinter.Scale(self.__Frame23,orient='horizontal')
             self.__Scale2.pack(side='top')
             
             
@@ -1700,7 +1703,7 @@ class GUIGTK_Class:
                                      )
             
             
-            self.__CheckRequireStillness = Checkbutton(self.__Frame38,text='Require stillness to end trial.',
+            self.__CheckRequireStillness = Tkinter.Checkbutton(self.__Frame38,text='Require stillness to end trial.',
                                                        variable=self.requireStillness);
             self.__CheckRequireStillness.pack(side='top')
             
@@ -2037,14 +2040,14 @@ class GUIGTK_Class:
             self.reference.requireStillnessVar = self.requireStillness.get()
     
     
-    class Form_help(Frame):
+    class Form_help(Tkinter.Frame):
         def __init__(self, root):
     
-            Frame.__init__(self, root)
+            Tkinter.Frame.__init__(self, root)
             self.root = root
-            self.canvas = Canvas(root, borderwidth=0, background="#ffffff")
+            self.canvas = Tkinter.Canvas(root, borderwidth=0, background="#ffffff")
             self.DefClr = self.canvas.cget("bg")
-            self.frame = Frame(self.canvas, background="#ffffff")
+            self.frame = Tkinter.Frame(self.canvas, background="#ffffff")
             self.vsb = Scrollbar(root, orient="vertical", command=self.canvas.yview)
             self.hsb = Scrollbar(root, orient="horizontal", command=self.canvas.xview)
             self.canvas.configure(yscrollcommand=self.vsb.set, xscrollcommand=self.hsb.set )
@@ -2090,96 +2093,96 @@ class GUIGTK_Class:
                                      text = 'Next Page', command = self.change_page).grid(row=0, column=0)
             
             rowcount = 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Drop", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Drop", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Drop: </b>Gives a drop of water, by opening the parallel port valve for 100 ms.
     The count of successful trials is not being affected by this function."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Reward", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Reward", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Reward: </b>Gives a drop of water, by opening the parallel port valve for 100 ms.
     The count of successful trials is increased by a value of one."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Open", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Open", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Open: </b>Opens the parallel port valve (indefinitely until it is closed manually)."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Close", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Close", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """Closes the parallel port valve."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Start / Stop Training:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Start / Stop Training:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Start / Stop Training: </b>If the training hasn't started or has been stopped, starts the training session.
     Else, this function will stop the training session."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Pause / Resume Training:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Pause / Resume Training:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Pause / Resume Training: </b>If the training has started and is currently running, pauses the training session.
     Else if the training session has been paused, resumes the training in the same state as it was paused."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Exit:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Exit:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Exit: </b>Exits the training program, and all its submodules, previously saving and closing all logging files."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Comment about this training:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Comment about this training:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b> Comment about this training: </b>Opens a form to write a comment about this training session.
     The comment written will be logged for this session."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Trial Events:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Trial Events:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b> Trial Events: </b> Opens a form to configure Trial Events.
     This includes the duration of tone, the length of the detection window, among other variables."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Parameters:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Parameters:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b> Parameters: </b> Opens a form to configure Parameters
     This includes tone frequencies, video options and movement detection variables."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             #for row in range(100):
             #    Label(self.frame, text="%s" % row, width=3, borderwidth="1", 
             #             relief="solid").grid(row=row, column=0)
@@ -2209,78 +2212,78 @@ class GUIGTK_Class:
       After the movement window ends, there is an 'Intertrial' gap, during
       which no tone or drop is given (unless given manually).
       This gap's duration is controlled by two variables, and is random between these 2 values."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Tone Start:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Tone Start:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Tone Start: </b> Instant of the trial time when the tone starts playing.
     By the definition of a trial, it is always 0 and cannot be changed."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Tone End:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Tone End:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Tone End: </b> Instant of the trial time when the tone ends.
     This variable defines the duration of the Tone, and should be less than Intertrial End."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Movement Window Start:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Movement Window Start:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Movement Window Start: </b> Instant of the trial time when the movement starts being detected.
     This value should be greater than 0 and less than Intertrial Start"""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Movement Window End:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Movement Window End:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Movement Window End: </b> Instant of the trial time when the movement stops being detected.
     This value should be greater than Movement Window Start, and less than Intertrial Start.
     When the trial time passes this value, the system will check if the trial was successful or not."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Intertrial Start:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Intertrial Start:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Intertrial Start: </b> Instant of time when Intertrial Starts.
     The drop (if trial was successfull) will be given in this instant of the trial time."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Intertrial End:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Intertrial End:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Intertrial End: </b> Maximum instant of time when Intertrial ends.
     The 'Intertrial Duration' is a random value between Intertrial Start and Intertrial End."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Probability Tone 1:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Probability Tone 1:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Probability Tone 1: </b> This value sets the probability of the Tone 1 being played
     in each trial.
     By default, a given trial will play Tone 1 or Tone 2, so this variable sets the Tone 2
     probability.
     Note that all trials will always play at least one of the two tones."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             #for row in range(100):
             #    Label(self.frame, text="%s" % row, width=3, borderwidth="1", 
             #             relief="solid").grid(row=row, column=0)
@@ -2331,107 +2334,107 @@ class GUIGTK_Class:
       Trial:
         Variables associated with trial movement detection, like the amount of time needed to consider
         a trial's sample as a valid 'movement'."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Tone 1:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Tone 1:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Tone 1: </b> This Entry sets the Tone 1 Frequency in Hertz."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Tone 2:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Tone 2:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Tone 2: </b> This Entry sets the Tone 2 Frequency in Hertz."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Test:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Test:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Test: </b> Saves Frequency changes in the corresponding Tone and tests it."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Show / Hide Tracking:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Show / Hide Tracking:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Show / Hide Tracking: </b> Shows or Hides tracking lines, circles, and other
     shapes that helps visually in the movement detection interpretation.
     Note that hiding the Tracking lines won't affect movement detection functionality."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Show / Hide Feedback:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Show / Hide Feedback:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Show / Hide Feedback: </b> Shows or Hides the Feedback Window (camera or video window).
     Note that hiding the Feedback window won't affect movement detection functionality."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Recalibrate Camera:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Recalibrate Camera:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Recalibrate Camera: </b> Grabs current video sample and uses it to adjust maximum and minimum
     values for the tracking function according to this new sample.
     This will also overwrite previous calibration file with the new values."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Movement Amount:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Movement Amount:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Movement Amount: </b> Sets the amount of 'movement' needed in a given frame of the movement detection
     module to consider this sample a valid 'movement' (or idle according to type of trial).
     This value is dependent on the camera, the processing capabilities,and the method used for detection."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Method Used:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Method Used:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Method Used: </b> Sets the method used for movement and idle detection.
     Currently 3 methods are available (read docs above)."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Movement Time:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Movement Time:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Movement Time: </b> Sets the movement time needed for a 'movement type' trial to be successful."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Idle Time:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Idle Time:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Idle Time: </b> Sets the idle time needed for a 'idle type' trial to be successful."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
-            Label(self.frame, text="Apply:", borderwidth="1", 
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Apply:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Apply: </b> This button applies all changes made to the variables."""
-            Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
-            Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
             #for row in range(100):
             #    Label(self.frame, text="%s" % row, width=3, borderwidth="1", 
             #             relief="solid").grid(row=row, column=0)
@@ -2619,4 +2622,4 @@ if __name__ == '__main__':
     logger.info('Start userInterface_tk Test')
     a = GUIGTK_Class()
     a.initAll()
-    print "started tk interface."
+    print "Tk interface started."
