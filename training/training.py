@@ -53,7 +53,29 @@ class Training():
                 #print "giving drop"
                 Training.gVariables.logger.debug('save state')
                 print "Saving all variables state."
+                Training.gVariables.fn_internalSaveFileWithVars("configs/config_Pavlov.py")
                 pass
+        
+        @staticmethod
+        def fn_internalSaveFileWithVars(nombr):
+            fileToSave = open(nombr, "w+");
+            fileToSave.write("#%s\n" % time.asctime( time.localtime(time.time()) ) ) ;
+            fileToSave.write("eventTime1_sound = %r\n" % Training.gVariables.eventTime1_sound);
+            fileToSave.write("eventTime1_movement_start = %r\n" % Training.gVariables.eventTime1_movement_start);
+            fileToSave.write("eventTime2_movement = %r\n" % Training.gVariables.eventTime2_movement);
+            fileToSave.write("eventTime3_trialEnd = %r\n" % Training.gVariables.eventTime3_trialEnd);
+            fileToSave.write("requireStillness = %r\n" % Training.gVariables.requireStillness);
+            fileToSave.write("interTrialRandom1Time = %r\n" % Training.gVariables.interTrialRandom1Time);
+            fileToSave.write("interTrialRandom2Time = %r\n" % Training.gVariables.interTrialRandom2Time);
+            fileToSave.write("maxMovementThreshold = %r\n" % Training.gVariables.maxMovementThreshold);
+            fileToSave.write("maxIdleTime = %r\n" % Training.gVariables.maxIdleTime);
+            fileToSave.write("movementTime = %r\n" % Training.gVariables.movementTime);
+            fileToSave.write("idleTime = %r\n" % Training.gVariables.idleTime);
+            fileToSave.write("soundGenDuration1 = %r\n" % Training.gVariables.soundGenDuration1);
+            fileToSave.write("soundGenDuration2 = %r\n" % Training.gVariables.soundGenDuration2);
+            fileToSave.write("soundGenFrequency1 = %r\n" % Training.gVariables.soundGenFrequency1);
+            fileToSave.write("soundGenFrequency2 = %r\n" % Training.gVariables.soundGenFrequency2);
+            fileToSave.write("toneOneProbability = %r\n" % Training.gVariables.toneOneProbability);
         
         @staticmethod
         def fn_giveReward():
@@ -455,35 +477,169 @@ class Training():
                 type_skinner = 0;
                 type_ocond = 0;
                 type_discr = 0;
+                nothingToLoad = 0;
+                import os, sys, inspect
+                # use this if you want to include modules from a subfolder
+                cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile( inspect.currentframe() ))[0],"configs")))
+                if cmd_subfolder not in sys.path:
+                            sys.path.insert(0, cmd_subfolder)
+                            
                 if (numParsed == 1):
                     #type pavlov.
                     type_pavlov = 1;
                     try:
                         #a = open("configs/config_Pavlov.cfg")
                         #print a.readlines()
-                        import os, sys, inspect
+                        
                         print "about to import."
-                        # use this if you want to include modules from a subfolder
-                        cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile( inspect.currentframe() ))[0],"configs")))
-                        if cmd_subfolder not in sys.path:
-                            sys.path.insert(0, cmd_subfolder)
+                        
+                        
                         import config_Pavlov as cfg
-                        print cfg.nothingToLoad
-                        print cfg.soundGenFrequency1
+                        
+                        self.eventTime1_sound = cfg.eventTime1_sound
+                        self.eventTime1_movement_start = cfg.eventTime1_movement_start
+                        self.eventTime2_movement = cfg.eventTime2_movement
+                        self.eventTime3_trialEnd = cfg.eventTime3_trialEnd
+                        self.requireStillness = cfg.requireStillness
+                        self.interTrialRandom1Time = cfg.interTrialRandom1Time
+                        self.interTrialRandom2Time = cfg.interTrialRandom2Time
+                        self.maxMovementThreshold = cfg.maxMovementThreshold
+                        self.maxIdleTime = cfg.maxIdleTime
+                        self.movementTime = cfg.movementTime
+                        self.idleTime = cfg.idleTime
+                        self.soundGenDuration1 = cfg.soundGenDuration1
+                        self.soundGenDuration2 = cfg.soundGenDuration2
                         self.soundGenFrequency1 = cfg.soundGenFrequency1
+                        self.soundGenFrequency2 = cfg.soundGenFrequency2
+                        self.toneOneProbability = cfg.toneOneProbability
+                        
                         print "done."
+                        nothingToLoad = 0
                     except:
                         nothingToLoad = 1;
-                        print "Couldn't read config file."
+                        pass
                 if (numParsed == 2):
                     #type skinner.
                     type_skinner = 1;
+                    try:
+                        #a = open("configs/config_Pavlov.cfg")
+                        #print a.readlines()
+                        
+                        print "about to import."
+                        
+                        
+                        import config_Skinner as cfg
+                        
+                        self.eventTime1_sound = cfg.eventTime1_sound
+                        self.eventTime1_movement_start = cfg.eventTime1_movement_start
+                        self.eventTime2_movement = cfg.eventTime2_movement
+                        self.eventTime3_trialEnd = cfg.eventTime3_trialEnd
+                        self.requireStillness = cfg.requireStillness
+                        self.interTrialRandom1Time = cfg.interTrialRandom1Time
+                        self.interTrialRandom2Time = cfg.interTrialRandom2Time
+                        self.maxMovementThreshold = cfg.maxMovementThreshold
+                        self.maxIdleTime = cfg.maxIdleTime
+                        self.movementTime = cfg.movementTime
+                        self.idleTime = cfg.idleTime
+                        self.soundGenDuration1 = cfg.soundGenDuration1
+                        self.soundGenDuration2 = cfg.soundGenDuration2
+                        self.soundGenFrequency1 = cfg.soundGenFrequency1
+                        self.soundGenFrequency2 = cfg.soundGenFrequency2
+                        self.toneOneProbability = cfg.toneOneProbability
+                        
+                        print "done."
+                        nothingToLoad = 0
+                    except:
+                        nothingToLoad = 1;
+                        pass
                 if (numParsed == 3):
                     #type ocond.
                     type_ocond = 1;
+                    try:
+                        #a = open("configs/config_Pavlov.cfg")
+                        #print a.readlines()
+                        
+                        print "about to import."
+                        
+                        
+                        import config_Ocond as cfg
+                        
+                        self.eventTime1_sound = cfg.eventTime1_sound
+                        self.eventTime1_movement_start = cfg.eventTime1_movement_start
+                        self.eventTime2_movement = cfg.eventTime2_movement
+                        self.eventTime3_trialEnd = cfg.eventTime3_trialEnd
+                        self.requireStillness = cfg.requireStillness
+                        self.interTrialRandom1Time = cfg.interTrialRandom1Time
+                        self.interTrialRandom2Time = cfg.interTrialRandom2Time
+                        self.maxMovementThreshold = cfg.maxMovementThreshold
+                        self.maxIdleTime = cfg.maxIdleTime
+                        self.movementTime = cfg.movementTime
+                        self.idleTime = cfg.idleTime
+                        self.soundGenDuration1 = cfg.soundGenDuration1
+                        self.soundGenDuration2 = cfg.soundGenDuration2
+                        self.soundGenFrequency1 = cfg.soundGenFrequency1
+                        self.soundGenFrequency2 = cfg.soundGenFrequency2
+                        self.toneOneProbability = cfg.toneOneProbability
+                        
+                        print "done."
+                        nothingToLoad = 0
+                    except:
+                        nothingToLoad = 1;
+                        pass
                 if (numParsed == 4):
                     #type discr.
                     type_discr = 1;
+                    try:
+                        #a = open("configs/config_Pavlov.cfg")
+                        #print a.readlines()
+                        
+                        print "about to import."
+                        
+                        
+                        import config_Discr as cfg
+                        
+                        self.eventTime1_sound = cfg.eventTime1_sound
+                        self.eventTime1_movement_start = cfg.eventTime1_movement_start
+                        self.eventTime2_movement = cfg.eventTime2_movement
+                        self.eventTime3_trialEnd = cfg.eventTime3_trialEnd
+                        self.requireStillness = cfg.requireStillness
+                        self.interTrialRandom1Time = cfg.interTrialRandom1Time
+                        self.interTrialRandom2Time = cfg.interTrialRandom2Time
+                        self.maxMovementThreshold = cfg.maxMovementThreshold
+                        self.maxIdleTime = cfg.maxIdleTime
+                        self.movementTime = cfg.movementTime
+                        self.idleTime = cfg.idleTime
+                        self.soundGenDuration1 = cfg.soundGenDuration1
+                        self.soundGenDuration2 = cfg.soundGenDuration2
+                        self.soundGenFrequency1 = cfg.soundGenFrequency1
+                        self.soundGenFrequency2 = cfg.soundGenFrequency2
+                        self.toneOneProbability = cfg.toneOneProbability
+                        
+                        print "done."
+                        nothingToLoad = 0
+                    except:
+                        nothingToLoad = 1;
+                        pass
+                
+                if (nothingToLoad == 1):
+                    #nothing to load. but as this hasn't loaded anything, its vars will be set to default vars
+                    eventTime1_sound = Training.gVariables.eventTime1_sound
+                    eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
+                    eventTime2_movement = Training.gVariables.eventTime2_movement
+                    eventTime3_trialEnd = Training.gVariables.eventTime3_trialEnd
+                    requireStillness = Training.gVariables.requireStillness
+                    interTrialRandom1Time = Training.gVariables.interTrialRandom1Time
+                    interTrialRandom2Time = Training.gVariables.interTrialRandom2Time
+                    maxMovementThreshold = Training.gVariables.maxMovementThreshold
+                    maxIdleTime = Training.gVariables.maxIdleTime
+                    movementTime = Training.gVariables.movementTime
+                    idleTime = Training.gVariables.idleTime
+                    soundGenDuration1 = Training.gVariables.soundGenDuration1
+                    soundGenDuration2 = Training.gVariables.soundGenDuration2
+                    soundGenFrequency1 = Training.gVariables.soundGenFrequency1
+                    soundGenFrequency2 = Training.gVariables.soundGenFrequency2
+                    toneOneProbability = Training.gVariables.toneOneProbability
+                    print "Couldn't read config file for this type. Setting default variables."
                 pass
         
         pass
@@ -507,7 +663,7 @@ class Training():
         # is also the max duration of a trial.
         
         maxMovementThreshold = cfgtraining.maxMovementThreshold
-        maxMovementTime = cfgtraining.maxMovementTime  # max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
+        #maxMovementTime = cfgtraining.maxMovementTime  # max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
         maxIdleTime = cfgtraining.maxIdleTime
         movementTime = cfgtraining.movementTime  # continuous moving time that should be reached to give reward. 0.5 = 500 ms
         # ex.: movementTime = 0.5 means that there should be movement detected over 500 ms at least
@@ -583,8 +739,48 @@ class Training():
         
         subject_name = "" #subject name, set at training init, used in logging filename.
         programRunning = 1;
-        print soundGenFrequency1
-        print pavlovVars.soundGenFrequency1
+        #print soundGenFrequency1
+        #print pavlovVars.soundGenFrequency1
+        
+        if type_pavlov == 1:
+            #get training variables from pavlovVars object.
+            if pavlovVars.nothingToLoad == 0:
+                #grabbing vars from object
+                eventTime1_sound = pavlovVars.eventTime1_sound
+                eventTime1_movement_start = pavlovVars.eventTime1_movement_start
+                eventTime2_movement = pavlovVars.eventTime2_movement
+                eventTime3_trialEnd = pavlovVars.eventTime3_trialEnd
+                requireStillness = pavlovVars.requireStillness
+                interTrialRandom1Time = pavlovVars.interTrialRandom1Time
+                interTrialRandom2Time = pavlovVars.interTrialRandom2Time
+                maxMovementThreshold = pavlovVars.maxMovementThreshold
+                maxIdleTime = pavlovVars.maxIdleTime
+                movementTime = pavlovVars.movementTime
+                idleTime = pavlovVars.idleTime
+                soundGenDuration1 = pavlovVars.soundGenDuration1
+                soundGenDuration2 = pavlovVars.soundGenDuration2
+                soundGenFrequency1 = pavlovVars.soundGenFrequency1
+                soundGenFrequency2 = pavlovVars.soundGenFrequency2
+                toneOneProbability = pavlovVars.toneOneProbability
+                print "grabbed from pavlovVars."
+                pass
+            pass
+        elif type_skinner == 1:
+            #get training variables ffrom skinnerVars object..
+            if skinnerVars.nothingToLoad == 0:
+                #grabbing vars from object
+                pass
+            pass
+        elif type_ocond == 1:
+            if ocondVars.nothingToLoad == 0:
+                #grabbing vars from object
+                pass
+            pass
+        elif type_discr == 1:
+            if discrVars.nothingToLoad == 0:
+                #grabbing vars from object
+                pass
+            pass
         #fin Training.gVariables.
         pass
     
@@ -718,7 +914,7 @@ class Training():
             Training.gVariables.logger.debug("interTrialRandom1Time %s" % str(Training.gVariables.interTrialRandom1Time))
             Training.gVariables.logger.debug("interTrialRandom2Time %s" % str(Training.gVariables.interTrialRandom2Time))
             Training.gVariables.logger.debug("maxMovementThreshold %s" % str(Training.gVariables.maxMovementThreshold))
-            Training.gVariables.logger.debug("maxMovementTime %s" % str(Training.gVariables.maxMovementTime))
+            #Training.gVariables.logger.debug("maxMovementTime %s" % str(Training.gVariables.maxMovementTime))
             Training.gVariables.logger.debug("maxIdleTime %s" % str(Training.gVariables.maxIdleTime))
             Training.gVariables.logger.debug("movementTime %s" % str(Training.gVariables.movementTime))
             Training.gVariables.logger.debug("idleTime %s" % str(Training.gVariables.idleTime))
