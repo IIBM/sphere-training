@@ -202,7 +202,7 @@ class GUIGTK_Class():
         
         def commitInitialData(self):
             #Set graphic elements' data with the variables that has been passed from the upper class that is executing this module.
-            logger.info( "Setting userInterface_glade initial data.")
+            logger.info( "Setting userInterface_glade data.")
             logger.info( str( self.toneStart ) )
             logger.info( str( self.toneEnd ) )
             logger.info( str( self.movementWindowStart ) )
@@ -252,11 +252,14 @@ class GUIGTK_Class():
                 pass
             
             logger.info( "   Done: Setting userInterface_glade initial data.")
+            
+            pass
+        
+        def startGUI(self):
             time.sleep(0.5)
             gtk.main_iteration_do()
             time.sleep(0.5)
             gtk.main() #probably not launched before. Launching gtk.main
-            pass
         
         def setPavlovVars(self):
             if (self.type_pavlov == 1):

@@ -13,6 +13,7 @@ logger = logging.getLogger('soundGen')
 
 
 class multiproc_soundGen():
+    toExit = 0;
     
     def checkJobList(self):
         if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
@@ -63,6 +64,8 @@ class multiproc_soundGen():
                     #print "Command exitDisplay received."
                     logger.debug('exiting..')
                     self.exit()
+                else:
+                    print "unknown message: %s" % str(index)
                     
 
 
@@ -84,6 +87,8 @@ class multiproc_soundGen():
 
 
     def exit(self):
+        print "SoundGen exiting."
+        self.toExit = 1;
         pygame.mixer.quit()
         pygame.quit()
         #sys.exit()
@@ -133,6 +138,9 @@ class soundGen():
         while(True):
             time.sleep(0.005)
             a.checkJobList()
+            if (a.toExit == 1):
+                logger.debug( "exiting launch_multiproc" )
+                return;
             #a.updateInfo("Other secondary information", var)
             #for event in pygame.event.get():
             #        if event.type == pygame.QUIT: sys.exit()
@@ -154,6 +162,7 @@ class soundGen():
 
     def exit(self):
         self.displayJobList.put( ( "exit", "" ) )
+        logger.debug("soundGen exit message.")
         time.sleep(0.5)
         self.displayProc.terminate()
         #sys.exit()

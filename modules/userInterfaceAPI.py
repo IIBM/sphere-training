@@ -5,8 +5,92 @@ import logging
 logger = logging.getLogger('userInterfaceAPI')
 import track_bola_utils
 
+
 class userInterface_API:
-    usingTK = 0 #0: using GTk;   1: using TK
+    last_message = -1; #to be accessed by training.py when it needs the var
+    last_argument = -1; #to be accessed by training.py when it needs the var
+    stopAll = False
+    
+    def launch_multiproc(self, jobl, apiToObj, toStart):
+        a = multiproc_userInterface_API(jobl, apiToObj,  False)
+        import threading
+        #checkK = threading.Thread(target=self.checkOutJobContinuously, args=(a,) )
+        #checkK.start()
+        a.startCheckingInput()
+        if (toStart):
+            a.launch_GUI()
+        
+        
+    
+    def __init__(self, toStart = False):
+        print "starting front end API process"
+        import multiprocessing
+        self.messageObjToAPI = multiprocessing.JoinableQueue()
+        self.messageAPIToObj = multiprocessing.JoinableQueue()
+        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.messageObjToAPI,self.messageAPIToObj, toStart,) )
+        self.displayProc.start()
+        print "process started."
+        import threading
+        self.checkJ = threading.Thread(target=self.checkJobContinuously)
+        print "thread starting.."
+        self.checkJ.start()
+        print "thread started."
+        logger.debug("userInterface_API process Started.")
+        pass
+    
+    def checkJobContinuously(self):
+        while (self.stopAll == False):
+            self.checkJobList()
+            time.sleep(0.1)
+    
+    def launch_GUI(self):
+        print "sending msg API to Process"
+        self.messageAPIToObj.put( (4, 4) )
+        print ".-"
+        self.messageAPIToObj.join()
+        print "finished sending msg API to Process"
+        pass
+    
+    def checkJobList(self):
+            if (self.messageObjToAPI.qsize() > 0 or self.messageObjToAPI.empty() == False ):
+                    try:
+                            tempvar = self.messageObjToAPI.get()
+                            self.messageObjToAPI.task_done()
+                    except:
+                            return;
+                    #print str("checkJobList: queue: " + str(tempvar) )
+                    index = tempvar[0]
+                    try:
+                        argument = tempvar[1]
+                    except:
+                        argument = ""
+                        pass
+                    
+                    print "checkJobList: Got a Message:", index
+                    print "checkJobList: Message's argument:", argument
+                    self.last_message = index
+                    self.last_argument = argument
+                    try:
+                        if int(index) == 9:
+                            print "index 9: exit"
+                            self.exit()
+                    except:
+                        pass
+    def exit(self):
+        time.sleep(1)
+        self.displayProc.terminate()
+        time.sleep(0.05)
+        del self.messageObjToAPI
+        del self.displayProc
+        
+        self.stopAll = True;
+        time.sleep(0.2)
+        sys.exit()
+
+
+
+class multiproc_userInterface_API:
+    usingTK = 1 #0: using GTk;   1: using TK
     jobList = 0 # message Job Queue between processes.
     ns = 0
     subj_list = [""]
@@ -46,9 +130,14 @@ class userInterface_API:
         logger.debug( "subject name: %s" % self.subj_name )
         return self.subj_name
     
-    def __init__(self, toStart = False):
+    def __init__(self, jobl, inputMsg, toStart = False):
         logger.info( "initializing userInterfaceAPI" )
         #Variables: setting up to 0 before assigning any values.
+        self.jobListOutput = jobl
+        self.jobListInput = inputMsg
+        print self.jobListInput
+        print self.jobListOutput
+        print ";;"
         self.toneStart = 0
         self.toneEnd = 0
         self.movementWindowStart = 0
@@ -70,9 +159,28 @@ class userInterface_API:
     
     def setQueue(self, nuevoqueue):
         #Set the namespace of this class, to interoperate with the master process.
-        self.jobList = nuevoqueue
+        #self.jobListOutput = nuevoqueue
         #logger.info( "Queue set" )
         pass
+    
+    def checkJobListInput(self):
+        print "checking input"
+        if (self.jobListInput.qsize() > 0 or self.jobListInput.empty() == False ):
+                    try:
+                            tempvar = self.jobListInput.get()
+                            self.jobListInput.task_done()
+                    except:
+                            return;
+                    #print str("checkJobList: queue: " + str(tempvar) )
+                    index = tempvar[0]
+                    try:
+                        argument = tempvar[1]
+                    except:
+                        argument = ""
+                        pass
+                    
+                    print "checkJobListInput: Got a Message:", index
+                    print "checkJobListInput: Message's argument:", argument
     
     def setInitialValues(self):
         #print "User Interface API: sending variables to GUI, with the purpose of setting up initial values."
@@ -100,7 +208,7 @@ class userInterface_API:
         print "..................-"
         #print self.requireStillnessVar
         self.currentGUI.commitInitialData()
-        
+        self.currentGUI.startGUI()
         
         pass
     
@@ -111,21 +219,26 @@ class userInterface_API:
     
     def setNameSpaceMessage(self, arg1, arg2=0):
         #print "setNameSpaceMessage"
-        self.jobList.put( (arg1, arg2) )
-        self.jobList.join()
-        #self.jobList.put_nowait((arg1, arg2))
-        #print "done."
+        self.jobListOutput.put( (arg1, arg2) )
+        self.jobListOutput.join()
+        #self.jobList.put_nowait((arg1, arg2jobListOutput    #print "done."
         pass
     
+    def commitChangesToGUI(self):
+        self.currentGUI.commitInitialData()
     
     def overrideaction_drop(self):
+        
         logger.debug ( "Default API: Drop" )
+        
         #print "API Namespace:", ns
         #logger.debug ( "ns: " + ns.__str__() )
         self.setNameSpaceMessage(1,0)
         #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
         logger.debug ( "Default API: done." )
+    
+    
     
     def overrideaction_reward(self):
         logger.debug ( "Default API: Reward" )
@@ -495,8 +608,19 @@ class userInterface_API:
             pass
     
     
+    def startCheckingInput(self):
+        import threading
+        self.inputCheckThread = threading.Thread(target = self.checkInputContinuously);
+        self.inputCheckThread.start()
+    
+    def checkInputContinuously(self):
+        while (True):
+            time.sleep(0.1)
+            self.checkJobListInput()
     
     def launch_GUI(self):
+        
+        
         if (self.usingTK == 0):
             self.launch_glade()
         elif (self.usingTK == 1):
@@ -601,9 +725,13 @@ if __name__ == '__main__':
     #===========================================================================
     
     logger.info('Start userInterfaceAPI Test')
-    import multiprocessing
-    import time
-    print "init.."
-    p = multiprocessing.Process(target=userInterface_API(True))
-    p.start()
+    a = userInterface_API(True);
     logger.info('End userInterfaceAPI Test')
+    time.sleep(5)
+    a.launch_GUI()
+    time.sleep(5)
+    a.launch_GUI()
+    time.sleep(5)
+    a.launch_GUI()
+    time.sleep(5)
+    a.launch_GUI()

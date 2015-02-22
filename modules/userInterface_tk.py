@@ -98,10 +98,13 @@ class GUIGTK_Class:
         self.AppFrm3.configureData()
         self.AppFrm5.configureData()
         time.sleep(0.5)
-        self.App.pack() #was forgotten previously to avoid flickering of appfrm1-5
+        
         #print "    Done with configuration of initial data to GUI"
-        logger.info("    Done with configuration of initial data to GUI")
+        logger.info("    Done with configuration of data to GUI")
         pass
+    
+    def startGUI(self):
+        self.App.pack() #was forgotten previously to avoid flickering of appfrm1-5
     
     def startFrame0(self):
         Rootn = Tkinter.Tk()

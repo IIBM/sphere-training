@@ -53,29 +53,42 @@ class Training():
                 #print "giving drop"
                 Training.gVariables.logger.debug('save state')
                 print "Saving all variables state."
-                Training.gVariables.fn_internalSaveFileWithVars("configs/config_Pavlov.py")
+                Training.gVariables.fn_internalSaveFileWithVars("configs/config_Pavlov.py", 1)
+                Training.gVariables.fn_internalSaveFileWithVars("configs/config_Skinner.py", 2)
+                Training.gVariables.fn_internalSaveFileWithVars("configs/config_Ocond.py", 3)
+                Training.gVariables.fn_internalSaveFileWithVars("configs/config_Discr.py", 4)
+                print "Done saving."
                 pass
         
         @staticmethod
-        def fn_internalSaveFileWithVars(nombr):
+        def fn_internalSaveFileWithVars(nombr, num):
+            
+            if (num == 1):
+                targetObj = Training.gVariables.pavlovVars
+            if (num == 2):
+                targetObj = Training.gVariables.skinnerVars
+            if (num == 3):
+                targetObj = Training.gVariables.discrVars
+            if (num == 4):
+                targetObj = Training.gVariables.ocondVars
             fileToSave = open(nombr, "w+");
             fileToSave.write("#%s\n" % time.asctime( time.localtime(time.time()) ) ) ;
-            fileToSave.write("eventTime1_sound = %r\n" % Training.gVariables.eventTime1_sound);
-            fileToSave.write("eventTime1_movement_start = %r\n" % Training.gVariables.eventTime1_movement_start);
-            fileToSave.write("eventTime2_movement = %r\n" % Training.gVariables.eventTime2_movement);
-            fileToSave.write("eventTime3_trialEnd = %r\n" % Training.gVariables.eventTime3_trialEnd);
-            fileToSave.write("requireStillness = %r\n" % Training.gVariables.requireStillness);
-            fileToSave.write("interTrialRandom1Time = %r\n" % Training.gVariables.interTrialRandom1Time);
-            fileToSave.write("interTrialRandom2Time = %r\n" % Training.gVariables.interTrialRandom2Time);
-            fileToSave.write("maxMovementThreshold = %r\n" % Training.gVariables.maxMovementThreshold);
-            fileToSave.write("maxIdleTime = %r\n" % Training.gVariables.maxIdleTime);
-            fileToSave.write("movementTime = %r\n" % Training.gVariables.movementTime);
-            fileToSave.write("idleTime = %r\n" % Training.gVariables.idleTime);
-            fileToSave.write("soundGenDuration1 = %r\n" % Training.gVariables.soundGenDuration1);
-            fileToSave.write("soundGenDuration2 = %r\n" % Training.gVariables.soundGenDuration2);
-            fileToSave.write("soundGenFrequency1 = %r\n" % Training.gVariables.soundGenFrequency1);
-            fileToSave.write("soundGenFrequency2 = %r\n" % Training.gVariables.soundGenFrequency2);
-            fileToSave.write("toneOneProbability = %r\n" % Training.gVariables.toneOneProbability);
+            fileToSave.write("eventTime1_sound = %r\n" % targetObj.eventTime1_sound);
+            fileToSave.write("eventTime1_movement_start = %r\n" % targetObj.eventTime1_movement_start);
+            fileToSave.write("eventTime2_movement = %r\n" % targetObj.eventTime2_movement);
+            fileToSave.write("eventTime3_trialEnd = %r\n" % targetObj.eventTime3_trialEnd);
+            fileToSave.write("requireStillness = %r\n" % targetObj.requireStillness);
+            fileToSave.write("interTrialRandom1Time = %r\n" % targetObj.interTrialRandom1Time);
+            fileToSave.write("interTrialRandom2Time = %r\n" % targetObj.interTrialRandom2Time);
+            fileToSave.write("maxMovementThreshold = %r\n" % targetObj.maxMovementThreshold);
+            fileToSave.write("maxIdleTime = %r\n" % targetObj.maxIdleTime);
+            fileToSave.write("movementTime = %r\n" % targetObj.movementTime);
+            fileToSave.write("idleTime = %r\n" % targetObj.idleTime);
+            fileToSave.write("soundGenDuration1 = %r\n" % targetObj.soundGenDuration1);
+            fileToSave.write("soundGenDuration2 = %r\n" % targetObj.soundGenDuration2);
+            fileToSave.write("soundGenFrequency1 = %r\n" % targetObj.soundGenFrequency1);
+            fileToSave.write("soundGenFrequency2 = %r\n" % targetObj.soundGenFrequency2);
+            fileToSave.write("toneOneProbability = %r\n" % targetObj.toneOneProbability);
         
         @staticmethod
         def fn_giveReward():
@@ -473,11 +486,11 @@ class Training():
                     numParsed = int(numtype)
                 except:
                     return 1;
-                type_pavlov = 0;
-                type_skinner = 0;
-                type_ocond = 0;
-                type_discr = 0;
-                nothingToLoad = 0;
+                self.type_pavlov = 0;
+                self.type_skinner = 0;
+                self.type_ocond = 0;
+                self.type_discr = 0;
+                self.nothingToLoad = 0;
                 import os, sys, inspect
                 # use this if you want to include modules from a subfolder
                 cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile( inspect.currentframe() ))[0],"configs")))
@@ -495,7 +508,6 @@ class Training():
                         
                         
                         import config_Pavlov as cfg
-                        
                         self.eventTime1_sound = cfg.eventTime1_sound
                         self.eventTime1_movement_start = cfg.eventTime1_movement_start
                         self.eventTime2_movement = cfg.eventTime2_movement
@@ -622,26 +634,212 @@ class Training():
                         pass
                 
                 if (nothingToLoad == 1):
+                    import config_training as cfgtraining
                     #nothing to load. but as this hasn't loaded anything, its vars will be set to default vars
-                    eventTime1_sound = Training.gVariables.eventTime1_sound
-                    eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
-                    eventTime2_movement = Training.gVariables.eventTime2_movement
-                    eventTime3_trialEnd = Training.gVariables.eventTime3_trialEnd
-                    requireStillness = Training.gVariables.requireStillness
-                    interTrialRandom1Time = Training.gVariables.interTrialRandom1Time
-                    interTrialRandom2Time = Training.gVariables.interTrialRandom2Time
-                    maxMovementThreshold = Training.gVariables.maxMovementThreshold
-                    maxIdleTime = Training.gVariables.maxIdleTime
-                    movementTime = Training.gVariables.movementTime
-                    idleTime = Training.gVariables.idleTime
-                    soundGenDuration1 = Training.gVariables.soundGenDuration1
-                    soundGenDuration2 = Training.gVariables.soundGenDuration2
-                    soundGenFrequency1 = Training.gVariables.soundGenFrequency1
-                    soundGenFrequency2 = Training.gVariables.soundGenFrequency2
-                    toneOneProbability = Training.gVariables.toneOneProbability
+                    self.eventTime1_sound = cfgtraining.eventTime1_sound
+                    self.eventTime1_movement_start = cfgtraining.eventTime1_movement_start
+                    self.eventTime2_movement = cfgtraining.eventTime2_movement
+                    self.eventTime3_trialEnd = cfgtraining.eventTime3_trialEnd
+                    self.requireStillness = cfgtraining.requireStillness
+                    self.interTrialRandom1Time = cfgtraining.interTrialRandom1Time
+                    self.interTrialRandom2Time = cfgtraining.interTrialRandom2Time
+                    self.maxMovementThreshold = cfgtraining.maxMovementThreshold
+                    self.maxIdleTime = cfgtraining.maxIdleTime
+                    self.movementTime = cfgtraining.movementTime
+                    self.idleTime = cfgtraining.idleTime
+                    self.soundGenDuration1 = cfgtraining.soundGenDuration1
+                    self.soundGenDuration2 = cfgtraining.soundGenDuration2
+                    self.soundGenFrequency1 = cfgtraining.soundGenFrequency1
+                    self.soundGenFrequency2 = cfgtraining.soundGenFrequency2
+                    self.toneOneProbability = cfgtraining.toneOneProbability
                     print "Couldn't read config file for this type. Setting default variables."
                 pass
-        
+            
+            @staticmethod
+            def savePavlovVars():
+                    print "savePavlovVars"
+                    
+                    Training.gVariables.pavlovVars.eventTime1_sound = Training.gVariables.eventTime1_sound
+                    Training.gVariables.pavlovVars.eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
+                    Training.gVariables.pavlovVars.eventTime2_movement = Training.gVariables.eventTime2_movement
+                    Training.gVariables.pavlovVars.eventTime3_trialEnd = Training.gVariables.eventTime3_trialEnd
+                    Training.gVariables.pavlovVars.requireStillness = Training.gVariables.requireStillness
+                    Training.gVariables.pavlovVars.interTrialRandom1Time = Training.gVariables.interTrialRandom1Time
+                    Training.gVariables.pavlovVars.interTrialRandom2Time = Training.gVariables.interTrialRandom2Time
+                    Training.gVariables.pavlovVars.maxMovementThreshold = Training.gVariables.maxMovementThreshold
+                    Training.gVariables.pavlovVars.maxIdleTime = Training.gVariables.maxIdleTime
+                    Training.gVariables.pavlovVars.movementTime = Training.gVariables.movementTime
+                    Training.gVariables.pavlovVars.idleTime = Training.gVariables.idleTime
+                    Training.gVariables.pavlovVars.soundGenDuration1 = Training.gVariables.soundGenDuration1
+                    Training.gVariables.pavlovVars.soundGenDuration2 = Training.gVariables.soundGenDuration2
+                    Training.gVariables.pavlovVars.soundGenFrequency1 = Training.gVariables.soundGenFrequency1
+                    Training.gVariables.pavlovVars.soundGenFrequency2 = Training.gVariables.soundGenFrequency2
+                    Training.gVariables.pavlovVars.toneOneProbability = Training.gVariables.toneOneProbability
+                    
+                    pass
+            @staticmethod
+            def saveSkinnerVars():
+                    print "saveSkinnerVars"
+                    
+                    Training.gVariables.skinnerVars.eventTime1_sound = Training.gVariables.eventTime1_sound
+                    Training.gVariables.skinnerVars.eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
+                    Training.gVariables.skinnerVars.eventTime2_movement = Training.gVariables.eventTime2_movement
+                    Training.gVariables.skinnerVars.eventTime3_trialEnd = Training.gVariables.eventTime3_trialEnd
+                    Training.gVariables.skinnerVars.requireStillness = Training.gVariables.requireStillness
+                    Training.gVariables.skinnerVars.interTrialRandom1Time = Training.gVariables.interTrialRandom1Time
+                    Training.gVariables.skinnerVars.interTrialRandom2Time = Training.gVariables.interTrialRandom2Time
+                    Training.gVariables.skinnerVars.maxMovementThreshold = Training.gVariables.maxMovementThreshold
+                    Training.gVariables.skinnerVars.maxIdleTime = Training.gVariables.maxIdleTime
+                    Training.gVariables.skinnerVars.movementTime = Training.gVariables.movementTime
+                    Training.gVariables.skinnerVars.idleTime = Training.gVariables.idleTime
+                    Training.gVariables.skinnerVars.soundGenDuration1 = Training.gVariables.soundGenDuration1
+                    Training.gVariables.skinnerVars.soundGenDuration2 = Training.gVariables.soundGenDuration2
+                    Training.gVariables.skinnerVars.soundGenFrequency1 = Training.gVariables.soundGenFrequency1
+                    Training.gVariables.skinnerVars.soundGenFrequency2 = Training.gVariables.soundGenFrequency2
+                    Training.gVariables.skinnerVars.toneOneProbability = Training.gVariables.toneOneProbability
+                    
+                    pass
+            
+            @staticmethod
+            def saveOcondVars():
+                    print "saveOcondVars"
+                    
+                    Training.gVariables.ocondVars.eventTime1_sound = Training.gVariables.eventTime1_sound
+                    Training.gVariables.ocondVars.eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
+                    Training.gVariables.ocondVars.eventTime2_movement = Training.gVariables.eventTime2_movement
+                    Training.gVariables.ocondVars.eventTime3_trialEnd = Training.gVariables.eventTime3_trialEnd
+                    Training.gVariables.ocondVars.requireStillness = Training.gVariables.requireStillness
+                    Training.gVariables.ocondVars.interTrialRandom1Time = Training.gVariables.interTrialRandom1Time
+                    Training.gVariables.ocondVars.interTrialRandom2Time = Training.gVariables.interTrialRandom2Time
+                    Training.gVariables.ocondVars.maxMovementThreshold = Training.gVariables.maxMovementThreshold
+                    Training.gVariables.ocondVars.maxIdleTime = Training.gVariables.maxIdleTime
+                    Training.gVariables.ocondVars.movementTime = Training.gVariables.movementTime
+                    Training.gVariables.ocondVars.idleTime = Training.gVariables.idleTime
+                    Training.gVariables.ocondVars.soundGenDuration1 = Training.gVariables.soundGenDuration1
+                    Training.gVariables.ocondVars.soundGenDuration2 = Training.gVariables.soundGenDuration2
+                    Training.gVariables.ocondVars.soundGenFrequency1 = Training.gVariables.soundGenFrequency1
+                    Training.gVariables.ocondVars.soundGenFrequency2 = Training.gVariables.soundGenFrequency2
+                    Training.gVariables.ocondVars.toneOneProbability = Training.gVariables.toneOneProbability
+                    
+                    pass
+            
+            @staticmethod
+            def saveDiscrVars():
+                    print "saveDiscrVars"
+                    
+                    Training.gVariables.discrVars.eventTime1_sound = Training.gVariables.eventTime1_sound
+                    Training.gVariables.discrVars.eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
+                    Training.gVariables.discrVars.eventTime2_movement = Training.gVariables.eventTime2_movement
+                    Training.gVariables.discrVars.eventTime3_trialEnd = Training.gVariables.eventTime3_trialEnd
+                    Training.gVariables.discrVars.requireStillness = Training.gVariables.requireStillness
+                    Training.gVariables.discrVars.interTrialRandom1Time = Training.gVariables.interTrialRandom1Time
+                    Training.gVariables.discrVars.interTrialRandom2Time = Training.gVariables.interTrialRandom2Time
+                    Training.gVariables.discrVars.maxMovementThreshold = Training.gVariables.maxMovementThreshold
+                    Training.gVariables.discrVars.maxIdleTime = Training.gVariables.maxIdleTime
+                    Training.gVariables.discrVars.movementTime = Training.gVariables.movementTime
+                    Training.gVariables.discrVars.idleTime = Training.gVariables.idleTime
+                    Training.gVariables.discrVars.soundGenDuration1 = Training.gVariables.soundGenDuration1
+                    Training.gVariables.discrVars.soundGenDuration2 = Training.gVariables.soundGenDuration2
+                    Training.gVariables.discrVars.soundGenFrequency1 = Training.gVariables.soundGenFrequency1
+                    Training.gVariables.discrVars.soundGenFrequency2 = Training.gVariables.soundGenFrequency2
+                    Training.gVariables.discrVars.toneOneProbability = Training.gVariables.toneOneProbability
+                    
+                    pass
+            
+                        
+            @staticmethod
+            def loadPavlovVars():
+                    print "loadPavlovVars"
+                    
+                    Training.gVariables.eventTime1_sound = Training.gVariables.pavlovVars.eventTime1_sound
+                    Training.gVariables.eventTime1_movement_start = Training.gVariables.pavlovVars.eventTime1_movement_start
+                    Training.gVariables.eventTime2_movement = Training.gVariables.pavlovVars.eventTime2_movement
+                    Training.gVariables.eventTime3_trialEnd = Training.gVariables.pavlovVars.eventTime3_trialEnd
+                    Training.gVariables.requireStillness = Training.gVariables.pavlovVars.requireStillness
+                    Training.gVariables.interTrialRandom1Time = Training.gVariables.pavlovVars.interTrialRandom1Time
+                    Training.gVariables.interTrialRandom2Time = Training.gVariables.pavlovVars.interTrialRandom2Time
+                    Training.gVariables.maxMovementThreshold = Training.gVariables.pavlovVars.maxMovementThreshold
+                    Training.gVariables.maxIdleTime = Training.gVariables.pavlovVars.maxIdleTime
+                    Training.gVariables.movementTime = Training.gVariables.pavlovVars.movementTime
+                    Training.gVariables.idleTime = Training.gVariables.pavlovVars.idleTime
+                    Training.gVariables.soundGenDuration1 = Training.gVariables.pavlovVars.soundGenDuration1
+                    Training.gVariables.soundGenDuration2 = Training.gVariables.pavlovVars.soundGenDuration2
+                    Training.gVariables.soundGenFrequency1 = Training.gVariables.pavlovVars.soundGenFrequency1
+                    Training.gVariables.soundGenFrequency2 = Training.gVariables.pavlovVars.soundGenFrequency2
+                    Training.gVariables.toneOneProbability = Training.gVariables.pavlovVars.toneOneProbability
+                    
+                    pass
+            @staticmethod
+            def loadSkinnerVars():
+                    print "loadSkinnerVars"
+                    
+                    Training.gVariables.eventTime1_sound = Training.gVariables.skinnerVars.eventTime1_sound
+                    Training.gVariables.eventTime1_movement_start = Training.gVariables.skinnerVars.eventTime1_movement_start
+                    Training.gVariables.eventTime2_movement = Training.gVariables.skinnerVars.eventTime2_movement
+                    Training.gVariables.eventTime3_trialEnd = Training.gVariables.skinnerVars.eventTime3_trialEnd
+                    Training.gVariables.requireStillness = Training.gVariables.skinnerVars.requireStillness
+                    Training.gVariables.interTrialRandom1Time = Training.gVariables.skinnerVars.interTrialRandom1Time
+                    Training.gVariables.interTrialRandom2Time = Training.gVariables.skinnerVars.interTrialRandom2Time
+                    Training.gVariables.maxMovementThreshold = Training.gVariables.skinnerVars.maxMovementThreshold
+                    Training.gVariables.maxIdleTime = Training.gVariables.skinnerVars.maxIdleTime
+                    Training.gVariables.movementTime = Training.gVariables.skinnerVars.movementTime
+                    Training.gVariables.idleTime = Training.gVariables.skinnerVars.idleTime
+                    Training.gVariables.soundGenDuration1 = Training.gVariables.skinnerVars.soundGenDuration1
+                    Training.gVariables.soundGenDuration2 = Training.gVariables.skinnerVars.soundGenDuration2
+                    Training.gVariables.soundGenFrequency1 = Training.gVariables.skinnerVars.soundGenFrequency1
+                    Training.gVariables.soundGenFrequency2 = Training.gVariables.skinnerVars.soundGenFrequency2
+                    Training.gVariables.toneOneProbability = Training.gVariables.skinnerVars.toneOneProbability
+                    
+                    pass
+            
+            @staticmethod
+            def loadOcondVars():
+                    print "loadOcondVars"
+                    
+                    Training.gVariables.eventTime1_sound = Training.gVariables.ocondVars.eventTime1_sound
+                    Training.gVariables.eventTime1_movement_start = Training.gVariables.ocondVars.eventTime1_movement_start
+                    Training.gVariables.eventTime2_movement = Training.gVariables.ocondVars.eventTime2_movement
+                    Training.gVariables.eventTime3_trialEnd = Training.gVariables.ocondVars.eventTime3_trialEnd
+                    Training.gVariables.requireStillness = Training.gVariables.ocondVars.requireStillness
+                    Training.gVariables.interTrialRandom1Time = Training.gVariables.ocondVars.interTrialRandom1Time
+                    Training.gVariables.interTrialRandom2Time = Training.gVariables.ocondVars.interTrialRandom2Time
+                    Training.gVariables.maxMovementThreshold = Training.gVariables.ocondVars.maxMovementThreshold
+                    Training.gVariables.maxIdleTime = Training.gVariables.ocondVars.maxIdleTime
+                    Training.gVariables.movementTime = Training.gVariables.ocondVars.movementTime
+                    Training.gVariables.idleTime = Training.gVariables.ocondVars.idleTime
+                    Training.gVariables.soundGenDuration1 = Training.gVariables.ocondVars.soundGenDuration1
+                    Training.gVariables.soundGenDuration2 = Training.gVariables.ocondVars.soundGenDuration2
+                    Training.gVariables.soundGenFrequency1 = Training.gVariables.ocondVars.soundGenFrequency1
+                    Training.gVariables.soundGenFrequency2 = Training.gVariables.ocondVars.soundGenFrequency2
+                    Training.gVariables.toneOneProbability = Training.gVariables.ocondVars.toneOneProbability
+                    
+                    pass
+            
+            @staticmethod
+            def loadDiscrVars():
+                    print "loadDiscrVars"
+                    
+                    Training.gVariables.eventTime1_sound = Training.gVariables.discrVars.eventTime1_sound
+                    Training.gVariables.eventTime1_movement_start = Training.gVariables.discrVars.eventTime1_movement_start
+                    Training.gVariables.eventTime2_movement = Training.gVariables.discrVars.eventTime2_movement
+                    Training.gVariables.eventTime3_trialEnd = Training.gVariables.discrVars.eventTime3_trialEnd
+                    Training.gVariables.requireStillness = Training.gVariables.discrVars.requireStillness
+                    Training.gVariables.interTrialRandom1Time = Training.gVariables.discrVars.interTrialRandom1Time
+                    Training.gVariables.interTrialRandom2Time = Training.gVariables.discrVars.interTrialRandom2Time
+                    Training.gVariables.maxMovementThreshold = Training.gVariables.discrVars.maxMovementThreshold
+                    Training.gVariables.maxIdleTime = Training.gVariables.discrVars.maxIdleTime
+                    Training.gVariables.movementTime = Training.gVariables.discrVars.movementTime
+                    Training.gVariables.idleTime = Training.gVariables.discrVars.idleTime
+                    Training.gVariables.soundGenDuration1 = Training.gVariables.discrVars.soundGenDuration1
+                    Training.gVariables.soundGenDuration2 = Training.gVariables.discrVars.soundGenDuration2
+                    Training.gVariables.soundGenFrequency1 = Training.gVariables.discrVars.soundGenFrequency1
+                    Training.gVariables.soundGenFrequency2 = Training.gVariables.discrVars.soundGenFrequency2
+                    Training.gVariables.toneOneProbability = Training.gVariables.discrVars.toneOneProbability
+                    
+                    pass
+            
+            
+            
         pass
         __checkModules()
         __checkConfigFiles()
@@ -769,16 +967,68 @@ class Training():
             #get training variables ffrom skinnerVars object..
             if skinnerVars.nothingToLoad == 0:
                 #grabbing vars from object
+                eventTime1_sound = skinnerVars.eventTime1_sound
+                eventTime1_movement_start = skinnerVars.eventTime1_movement_start
+                eventTime2_movement = skinnerVars.eventTime2_movement
+                eventTime3_trialEnd = skinnerVars.eventTime3_trialEnd
+                requireStillness = skinnerVars.requireStillness
+                interTrialRandom1Time = skinnerVars.interTrialRandom1Time
+                interTrialRandom2Time = skinnerVars.interTrialRandom2Time
+                maxMovementThreshold = skinnerVars.maxMovementThreshold
+                maxIdleTime = skinnerVars.maxIdleTime
+                movementTime = skinnerVars.movementTime
+                idleTime = skinnerVars.idleTime
+                soundGenDuration1 = skinnerVars.soundGenDuration1
+                soundGenDuration2 = skinnerVars.soundGenDuration2
+                soundGenFrequency1 = skinnerVars.soundGenFrequency1
+                soundGenFrequency2 = skinnerVars.soundGenFrequency2
+                toneOneProbability = skinnerVars.toneOneProbability
+                print "grabbed from skinnerVars."
+                pass
                 pass
             pass
         elif type_ocond == 1:
             if ocondVars.nothingToLoad == 0:
                 #grabbing vars from object
+                eventTime1_sound = ocondVars.eventTime1_sound
+                eventTime1_movement_start = ocondVars.eventTime1_movement_start
+                eventTime2_movement = ocondVars.eventTime2_movement
+                eventTime3_trialEnd = ocondVars.eventTime3_trialEnd
+                requireStillness = ocondVars.requireStillness
+                interTrialRandom1Time = ocondVars.interTrialRandom1Time
+                interTrialRandom2Time = ocondVars.interTrialRandom2Time
+                maxMovementThreshold = ocondVars.maxMovementThreshold
+                maxIdleTime = ocondVars.maxIdleTime
+                movementTime = ocondVars.movementTime
+                idleTime = ocondVars.idleTime
+                soundGenDuration1 = ocondVars.soundGenDuration1
+                soundGenDuration2 = ocondVars.soundGenDuration2
+                soundGenFrequency1 = ocondVars.soundGenFrequency1
+                soundGenFrequency2 = ocondVars.soundGenFrequency2
+                toneOneProbability = ocondVars.toneOneProbability
+                print "grabbed from ocondVars."
                 pass
             pass
         elif type_discr == 1:
             if discrVars.nothingToLoad == 0:
                 #grabbing vars from object
+                eventTime1_sound = discrVars.eventTime1_sound
+                eventTime1_movement_start = discrVars.eventTime1_movement_start
+                eventTime2_movement = discrVars.eventTime2_movement
+                eventTime3_trialEnd = discrVars.eventTime3_trialEnd
+                requireStillness = discrVars.requireStillness
+                interTrialRandom1Time = discrVars.interTrialRandom1Time
+                interTrialRandom2Time = discrVars.interTrialRandom2Time
+                maxMovementThreshold = discrVars.maxMovementThreshold
+                maxIdleTime = discrVars.maxIdleTime
+                movementTime = discrVars.movementTime
+                idleTime = discrVars.idleTime
+                soundGenDuration1 = discrVars.soundGenDuration1
+                soundGenDuration2 = discrVars.soundGenDuration2
+                soundGenFrequency1 = discrVars.soundGenFrequency1
+                soundGenFrequency2 = discrVars.soundGenFrequency2
+                toneOneProbability = discrVars.toneOneProbability
+                print "grabbed from discrVars."
                 pass
             pass
         #fin Training.gVariables.
@@ -1039,8 +1289,8 @@ class Training():
         time.sleep(0.5)
         
         if (self.gVariables.GUIType != 2) :
-            self.gVariables.GUIProcess.terminate()
-            del self.gVariables.GUIProcess
+            #self.gVariables.currentGUI.exit(); #It is auto-executed on uiAPI , so it's not necessary here.
+            pass
         self.gVariables.valve1.exit()
         del self.gVariables.valve1
         if (self.gVariables.secondcam != -1):
@@ -1058,8 +1308,10 @@ class Training():
         #print "display exit"
         time.sleep(0.2)
         self.gVariables.s1.exit()
+        time.sleep(0.6)
         del self.gVariables.s1
         self.gVariables.s2.exit()
+        time.sleep(0.6)
         del self.gVariables.s2
         #print "sound exit"
         print "Exiting."
@@ -1126,7 +1378,7 @@ class Training():
         print "List of subjects: %r " % subj_list
         
         if (self.gVariables.GUIType != 2):
-            uiAPI = userInterfaceAPI.userInterface_API(False)
+            uiAPI = userInterfaceAPI.multiproc_userInterface_API(False)
             uiAPI.usingTK = self.gVariables.GUIType
             uiAPI.subj_list = subj_list;
             subj_name =  uiAPI.getSubjName();
@@ -1206,8 +1458,15 @@ class Training():
             self.gVariables.eventTime1_movement_start = self.gVariables.soundGenDuration1
         
         if (self.gVariables.GUIType != 2):
-            self.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(self.gVariables.jobList,))
-            self.gVariables.GUIProcess.start()
+            import userInterfaceAPI
+            print ".---------------------------"
+            print "import done for API"
+            print ".---------------------------"
+            self.gVariables.currentGUI = userInterfaceAPI.userInterface_API(False);
+            self.commitToCurrentGUI()
+            self.gVariables.currentGUI.launch_GUI()
+            #self.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(self.gVariables.jobList,))
+            #self.gVariables.GUIProcess.start()
             self.gVariables.logger.info('GUI Process started.')
         else:
             self.gVariables.fredInput = threading.Thread(target=self.noGUIInputLoop)
@@ -1241,40 +1500,43 @@ class Training():
         #    this function uses trainingAPI to handle graphical user interfaces
         import userInterfaceAPI
         currentGUI = userInterfaceAPI.userInterface_API(False)
-        currentGUI.setQueue(jobList)
-        import config_training as configs
+        #currentGUI.setQueue(jobList)
+        
         
         
         #currentGUI.jobList = jobList
         #print currentGUI.jobList
         #print ".."
-        currentGUI.toneStart = 0.0
-        currentGUI.toneEnd = self.gVariables.eventTime1_sound
-        currentGUI.movementWindowStart = self.gVariables.eventTime1_movement_start
-        currentGUI.movementWindowEnd = self.gVariables.eventTime2_movement
-        currentGUI.interTrialStart = self.gVariables.interTrialRandom1Time
-        currentGUI.interTrialEnd = self.gVariables.interTrialRandom2Time
-        currentGUI.probabilityToneOne = self.gVariables.toneOneProbability
-        currentGUI.frequencyTone1 = self.gVariables.soundGenFrequency1
-        currentGUI.frequencyTone2 = self.gVariables.soundGenFrequency2
-        
-        currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
-        currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
-        currentGUI.movementTime = self.gVariables.movementTime
-        currentGUI.idleTime = self.gVariables.idleTime
-        currentGUI.comment = configs.initialComment
-        
-        currentGUI.usingTK = configs.usingTK
-        
-        currentGUI.type_pavlov = self.gVariables.type_pavlov
-        currentGUI.type_skinner = self.gVariables.type_skinner
-        currentGUI.type_ocond = self.gVariables.type_ocond
-        currentGUI.type_discr = self.gVariables.type_discr
-        
-        currentGUI.requireStillnessVar = self.gVariables.requireStillness
+        self.commitToCurrentGUI()
         
         currentGUI.launch_GUI()
     
+    def commitToCurrentGUI(self):
+        import config_training as configs
+        self.gVariables.currentGUI.toneStart = 0.0
+        self.gVariables.currentGUI.toneEnd = self.gVariables.eventTime1_sound
+        self.gVariables.currentGUI.movementWindowStart = self.gVariables.eventTime1_movement_start
+        self.gVariables.currentGUI.movementWindowEnd = self.gVariables.eventTime2_movement
+        self.gVariables.currentGUI.interTrialStart = self.gVariables.interTrialRandom1Time
+        self.gVariables.currentGUI.interTrialEnd = self.gVariables.interTrialRandom2Time
+        self.gVariables.currentGUI.probabilityToneOne = self.gVariables.toneOneProbability
+        self.gVariables.currentGUI.frequencyTone1 = self.gVariables.soundGenFrequency1
+        self.gVariables.currentGUI.frequencyTone2 = self.gVariables.soundGenFrequency2
+        
+        self.gVariables.currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
+        self.gVariables.currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
+        self.gVariables.currentGUI.movementTime = self.gVariables.movementTime
+        self.gVariables.currentGUI.idleTime = self.gVariables.idleTime
+        self.gVariables.currentGUI.comment = configs.initialComment
+        
+        self.gVariables.currentGUI.usingTK = configs.usingTK
+        
+        self.gVariables.currentGUI.type_pavlov = self.gVariables.type_pavlov
+        self.gVariables.currentGUI.type_skinner = self.gVariables.type_skinner
+        self.gVariables.currentGUI.type_ocond = self.gVariables.type_ocond
+        self.gVariables.currentGUI.type_discr = self.gVariables.type_discr
+        
+        self.gVariables.currentGUI.requireStillnessVar = self.gVariables.requireStillness
     
     def trialLoop(self):
             # This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
@@ -1426,26 +1688,39 @@ class Training():
                 pass
     
     def GUICheck(self):
-            #GUICheck: this function is called once in every thread loop, and checks if
-            #    the shared variables between training_ and GUI Process contain new info.
-            #    If it does, checks which message type was sent, and it's argument (if any)            #    and executes the corresponding routine for that type of messag
-            
-            
-            
-            if (self.gVariables.jobList.qsize() > 0 or self.gVariables.jobList.empty() == False ):
+                #GUICheck: this function is called once in every thread loop, and checks if
+                #    the shared variables between training_ and GUI Process contain new info.
+                #    If it does, checks which message type was sent, and it's argument (if any)            #    and executes the corresponding routine for that type of messag
+                index = -1
+                argument = -1
                 try:
-                        tempvar = self.gVariables.jobList.get()
-                        self.gVariables.jobList.task_done()
+                    if ( int (self.gVariables.currentGUI.last_message) != -1):
+                        #print self.gVariables.currentGUI.last_message
+                        #print "received."
+                        #print self.gVariables.currentGUI.last_argument
+                        #print "received."
+                        index = self.gVariables.currentGUI.last_message
+                        argument = self.gVariables.currentGUI.last_argument
+                        self.gVariables.currentGUI.last_message = -1
+                        self.gVariables.currentGUI.last_argument = -1
                 except:
-                        return;
-                Training.gVariables.logger.debug( str("GUICheck: queue: " + str(tempvar) )  )
-                index = tempvar[0]
-                try:
-                    argument = tempvar[1]
-                except:
-                    argument = ""
-                    pass
-                pass
+                    return;
+#             return;
+#             
+#             if (self.gVariables.jobList.qsize() > 0 or self.gVariables.jobList.empty() == False ):
+#                 try:
+#                         tempvar = self.gVariables.jobList.get()
+#                         self.gVariables.jobList.task_done()
+#                 except:
+#                         return;
+#                 Training.gVariables.logger.debug( str("GUICheck: queue: " + str(tempvar) )  )
+#                 index = tempvar[0]
+#                 try:
+#                     argument = tempvar[1]
+#                 except:
+#                     argument = ""
+#                     pass
+#                 pass
                 #print "GUICheck: Got a Message:", index
                 Training.gVariables.logger.debug( str("GUICheck: Got a Message:" + str(index)) )
                 #print "GUICheck: Message's argument:", argument
@@ -1641,6 +1916,15 @@ class Training():
                     print "Current type: %s" % a
                     if ("pavlov" in a):
                         print "pavlov mode detected"
+                        if (Training.gVariables.type_pavlov == 1):
+                            print "Pavlov already set to 1. Saving Pavlov vars."
+                            Training.gVariables.saveVariables.savePavlovVars()
+                        else:
+                            print "Pavlov set. Not saving Pavlov variables. Loading GUI for previously loaded vars"
+                            Training.gVariables.saveVariables.loadPavlovVars()
+                            #acA hay que cargar variables desde training.py al GUI. Para eso, cambiar API a multiprocessing.
+                            
+                            
                         Training.gVariables.type_pavlov = 1
                         Training.gVariables.type_skinner = 0
                         Training.gVariables.type_discr = 0
@@ -1648,6 +1932,13 @@ class Training():
                         pass
                     if ("skinner") in a:
                         print "skinner detected"
+                        if (Training.gVariables.type_skinner == 1):
+                            print "Skinner already set to 1. Saving Skinner vars."
+                            Training.gVariables.saveVariables.saveSkinnerVars()
+                        else:
+                            print "Skinner set. Not saving Skinner variables. Loading GUI for previously loaded vars"
+                            Training.gVariables.saveVariables.loadSkinnerVars()
+                            #acA hay que cargar variables desde training.py al GUI. Para eso, cambiar API a multiprocessing.
                         Training.gVariables.type_pavlov = 0
                         Training.gVariables.type_skinner = 1
                         Training.gVariables.type_discr = 0
@@ -1655,6 +1946,13 @@ class Training():
                         pass
                     if ("oc") in a:
                         print "oc detected"
+                        if (Training.gVariables.type_ocond == 1):
+                            print "O.Cond. already set to 1. Saving O.Cond. vars."
+                            Training.gVariables.saveVariables.saveOcondVars()
+                        else:
+                            print "O.Cond. set. Not saving O.Cond. variables. Loading GUI for previously loaded vars"
+                            Training.gVariables.saveVariables.loadOcondVars()
+                            #acA hay que cargar variables desde training.py al GUI. Para eso, cambiar API a multiprocessing.
                         Training.gVariables.type_pavlov = 0
                         Training.gVariables.type_skinner = 0
                         Training.gVariables.type_discr = 0
@@ -1662,6 +1960,13 @@ class Training():
                         pass
                     if ("discr") in a:
                         print "discr detected"
+                        if (Training.gVariables.type_discr == 1):
+                            print "Discr. already set to 1. Saving Discr. vars."
+                            Training.gVariables.saveVariables.saveDiscrVars()
+                        else:
+                            print "Discr. set. Not saving Discr. variables. Loading GUI for previously loaded vars"
+                            Training.gVariables.saveVariables.loadDiscrVars()
+                            #acA hay que cargar variables desde training.py al GUI. Para eso, cambiar API a multiprocessing.
                         Training.gVariables.type_pavlov = 0
                         Training.gVariables.type_skinner = 0
                         Training.gVariables.type_discr = 1
