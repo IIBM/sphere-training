@@ -21,6 +21,7 @@ class GUIGTK_Class():
         
         orig_toneend = 0;
         orig_mvntwinend = 0;
+        running = True
         
         class Empty_cl():
             #Used to save our variables' previous states.
@@ -255,11 +256,20 @@ class GUIGTK_Class():
             
             pass
         
+        def exit(self):
+            self.running = False;
+            gtk.main_quit()
+        
         def startGUI(self):
             time.sleep(0.5)
             gtk.main_iteration_do()
             time.sleep(0.5)
-            gtk.main() #probably not launched before. Launching gtk.main
+            print "before main gtk:"
+            while self.running:
+                #gtk.main() #probably not launched before. Launching gtk.main
+                gtk.main_iteration_do()
+                time.sleep(0.001)
+            print "after main gtk:"
         
         def setPavlovVars(self):
             if (self.type_pavlov == 1):

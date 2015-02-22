@@ -1396,7 +1396,8 @@ class Training():
         #trainingInit : Called when the class is instantiated.
         print self.gVariables.trainingName
         #get subject name:
-        self.getSubjectName()
+        #self.getSubjectName()
+        self.gVariables.subject_name = "prueba"
         print "Subject's name: %s" % self.gVariables.subject_name
         #counting number of sessions
         session_files_count = 0
@@ -1494,22 +1495,6 @@ class Training():
         self.gVariables.fred1.start()
         self.gVariables.logger.debug('Training loop function started..')
         
-    
-    def initUserInputGUI(self,jobList):
-        #initialize user input GUI and associated variables.
-        #    this function uses trainingAPI to handle graphical user interfaces
-        import userInterfaceAPI
-        currentGUI = userInterfaceAPI.userInterface_API(False)
-        #currentGUI.setQueue(jobList)
-        
-        
-        
-        #currentGUI.jobList = jobList
-        #print currentGUI.jobList
-        #print ".."
-        self.commitToCurrentGUI()
-        
-        currentGUI.launch_GUI()
     
     def commitToCurrentGUI(self):
         import config_training as configs

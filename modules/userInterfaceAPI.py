@@ -10,12 +10,14 @@ class userInterface_API:
     last_message = -1; #to be accessed by training.py when it needs the var
     last_argument = -1; #to be accessed by training.py when it needs the var
     stopAll = False
+    usingTK = 0
     
     def launch_multiproc(self, jobl, apiToObj, toStart):
         a = multiproc_userInterface_API(jobl, apiToObj,  False)
         import threading
         #checkK = threading.Thread(target=self.checkOutJobContinuously, args=(a,) )
         #checkK.start()
+        a.usingTK = self.usingTK
         a.startCheckingInput()
         if (toStart):
             a.launch_GUI()
@@ -90,7 +92,7 @@ class userInterface_API:
 
 
 class multiproc_userInterface_API:
-    usingTK = 1 #0: using GTk;   1: using TK
+    usingTK = 0 #0: using GTk;   1: using TK
     jobList = 0 # message Job Queue between processes.
     ns = 0
     subj_list = [""]
@@ -130,7 +132,7 @@ class multiproc_userInterface_API:
         logger.debug( "subject name: %s" % self.subj_name )
         return self.subj_name
     
-    def __init__(self, jobl, inputMsg, toStart = False):
+    def __init__(self, jobl = None, inputMsg=None, toStart = False):
         logger.info( "initializing userInterfaceAPI" )
         #Variables: setting up to 0 before assigning any values.
         self.jobListOutput = jobl
@@ -602,6 +604,7 @@ class multiproc_userInterface_API:
         #print "API Namespace:", ns
         #logger.debug( "ns: ", str(ns) )
         logger.debug( "Default API: done." )
+        self.currentGUI.exit()
         try:
             os._exit(0)
         except:
