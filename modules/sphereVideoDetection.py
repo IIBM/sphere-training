@@ -25,6 +25,12 @@ import track_bola_utils
 
 
 class sphereVideoDetection():
+    calibratingMovementAmount = False;
+    NoiseFVars = track_bola_utils.dummyClass();
+    NoiseFVars.MAX_CIRCLE_MOVEMENT = -1;
+    NoiseFVars.MIN_CIRCLE_MOVEMENT = -1;
+    NoiseFVars.minRadius = -1;
+    
     
     def __init__ (self, videosource, width=640, height=480) :
         import track_bola_utils
@@ -185,7 +191,7 @@ class sphereVideoDetection():
         #return self.vectorInstantaneo.y
         return self.vectorPseudoInstantaneo.y
 
-    def calibrate(self):
+    def calibrateCircle(self):
         self.startCalibration = True
     
     def exit(self):
@@ -193,10 +199,19 @@ class sphereVideoDetection():
         self.mustquit = 1
         self.available = False
     
+    def calibrateMovementAmount(self):
+        print "calibrating movement amount."
+        self.calibratingMovementAmount= True
+        pass
+    
     def setNoiseFiltering(self, bool):
         # Set Noise FIltering: False if you DON'T want noise filtering , because you consider that your input video has no noise.
         self.noiseFiltering = bool
-
+        print "Noise Filtering now set to: %r" % self.noiseFiltering
+    
+    def getNoiseFiltering(self):
+        return self.noiseFiltering
+    
     def getMovementTime(self):
         # return the time in seconds that continuous movement was detected:
         # if it is moving, current time it is moving until now.
@@ -374,6 +389,9 @@ class sphereVideoDetection():
                            abs(self.getInstantY() * self.getInstantY()))
         # logger.debug( "Amount of movement: %d" % movementAmount)
         # if it surpasses threshold OR if it lost tracking (so it is moving quite fast..)
+        if (self.calibratingMovementAmount):
+            print "Calibrating.."
+        
         if (movementAmount >= self.movementThreshold or self.isTracking == False):
                     self.movementVector[self.movementVectorLength - 1] = 1
                     # print "1 appended   ", movementAmount ,"    Thres: ", self.movementThreshold

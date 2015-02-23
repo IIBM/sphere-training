@@ -389,14 +389,14 @@ class Training():
         @staticmethod
         def fn_calibrateNoiseFilteringOn():
             Training.gVariables.videoDet.setNoiseFiltering(True)
-            Training.gVariables.videoDet.calibrate()
+            Training.gVariables.videoDet.calibrateCircle()
             print "Calibrated. Noise Filtering is ON."
             Training.gVariables.logger.info( "Calibrated. Noise Filtering is ON." )
         
         @staticmethod
         def fn_calibrateNoiseFilteringOff():
             Training.gVariables.videoDet.setNoiseFiltering(False)
-            Training.gVariables.videoDet.calibrate()
+            Training.gVariables.videoDet.calibrateCircle()
             print "Calibrated. Noise Filtering is OFF."
             Training.gVariables.logger.info( "Calibrated. Noise Filtering is OFF." )
         
@@ -2072,7 +2072,7 @@ class Training():
                 elif (index == 30):
                     print "GUICheck: 'Recalibrate Camera' message"
                     Training.gVariables.logger.debug( "GUICheck: 'Recalibrate Camera' message" )
-                    Training.gVariables.videoDet.calibrate()
+                    Training.gVariables.videoDet.calibrateCircle()
                     pass
                 elif (index == 31):
                     print "GUICheck: 'Save State' message"
@@ -2091,6 +2091,15 @@ class Training():
                     Training.gVariables.current_mode = a
                     print "Current type: %s" % a
                     self.saveToInternalVars(a)
+                elif (index == 34):
+                    print "GUICheck: 'Noise Filtering' message"
+                    Training.gVariables.logger.debug( "GUICheck: 'Noise Filtering' message" )
+                    a = Training.gVariables.videoDet.getNoiseFiltering()
+                    if (a):
+                        Training.gVariables.videoDet.setNoiseFiltering(False)
+                    else:
+                        Training.gVariables.videoDet.setNoiseFiltering(True)
+                    pass
                 pass
                 #print "GUICheck: done."
                 Training.gVariables.logger.debug( "GUICheck: done." )

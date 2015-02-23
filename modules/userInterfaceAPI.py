@@ -773,6 +773,12 @@ class multiproc_userInterface_API:
         logger.debug( "Default API: done." )
         pass
     
+    def overrideaction_noisefiltering(self):
+        logger.debug( "Default API: Noise Filtering Camera" )
+        self.setNameSpaceMessage(34)
+        logger.debug( "Default API: done." )
+        pass
+    
     def action_drop(self):
         logger.debug( "API: Drop" )
         try:
@@ -1046,6 +1052,14 @@ class multiproc_userInterface_API:
         except:
             logger.warning( "API Recalibrate Camera: OverrideAction Error" )
     
+    
+    def action_noisefiltering(self):
+        logger.debug( "API: Recalibrate Camera" )
+        try:
+            self.overrideaction_noisefiltering()
+        except:
+            logger.warning( "API Recalibrate Camera: OverrideAction Error" )
+    
     def action_exit(self):
         logger.debug( "Default API: Exiting GUI from API." )
         #logger.debug( "ns: ", str(ns) )
@@ -1098,6 +1112,7 @@ class multiproc_userInterface_API:
         self.currentGUI.overrideaction_hidefeedback = self.action_hidefeedback
         self.currentGUI.overrideaction_hidetracking = self.action_hidetracking
         self.currentGUI.overrideaction_recalibratec = self.action_recalibratec
+        self.currentGUI.overrideaction_noisefiltering = self.action_noisefiltering
         #self.comment = ""
         #self.thread_function(
         #thread1 = threading.Thread(target=self.thread_function, name="glade_GUI")
@@ -1138,6 +1153,7 @@ class multiproc_userInterface_API:
         self.currentGUI.overrideaction_hidefeedback = self.action_hidefeedback
         self.currentGUI.overrideaction_hidetracking = self.action_hidetracking
         self.currentGUI.overrideaction_recalibratec = self.action_recalibratec
+        self.currentGUI.overrideaction_noisefiltering = self.action_noisefiltering
         self.currentGUI.overrideaction_exit = self.action_exit
         logger.debug( "message variables: "+ self.ns.__str__() )
         logger.info( str(self) +  "  Tkinter Interface Started" )

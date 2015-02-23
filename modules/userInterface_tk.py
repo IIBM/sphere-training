@@ -1114,6 +1114,20 @@ class GUIGTK_Class:
                                      " taking as sample the current video output.")
             
             
+            self.__Button5_5NoiseFiltering = Tkinter.Button(self.__Frame65
+                ,text='Noise Filtering')
+            self.__Button5_5NoiseFiltering.pack(side='top')
+            self.__Button5_5NoiseFiltering.bind('<ButtonRelease-1>' \
+                ,self.__on_Button5_5NoiseF_ButRel_1)
+            #
+            
+            
+            self.__tooltipTE7_NOISEF = GUIGTK_Class.ToolTip(self.__Button5_5NoiseFiltering, text=
+                                    "Noise Filtering:"+"\n"+
+                                     "NF Generates a new calibration file for the movement detection,"+
+                                     " taking as sample the current video output.")
+            
+            
             
             self.__Frame64 = Tkinter.Frame(self.__Frame30,width=39)
             self.__Frame64.pack(side='left')
@@ -1301,6 +1315,12 @@ class GUIGTK_Class:
         def __on_Button4_5recalibrate_ButRel_1(self, Event = None):
             self.reference.overrideaction_recalibratec()
             pass
+        
+        def __on_Button5_5NoiseF_ButRel_1(self, Event = None):
+            print "noise filtering."
+            self.reference.overrideaction_noisefiltering()
+            pass
+        
         
         def __on_Button1TestT1_ButRel_1(self,Event=None):
             print "Test Tone 1"
@@ -2587,6 +2607,10 @@ class GUIGTK_Class:
     
     def overrideaction_recalibratec(self):
             logger.info( "Default: recalibrate camera" )
+            pass
+    
+    def overrideaction_noisefiltering(self):
+            logger.info( "Default: set camera noise filtering" )
             pass
     
     def overrideaction_testT1(self):
