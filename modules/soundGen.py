@@ -1,5 +1,5 @@
 import pygame
-from pygame.locals import *
+#from pygame.locals import *
 import math
 import numpy
 import time
@@ -91,7 +91,9 @@ class multiproc_soundGen():
         self.toExit = 1;
         pygame.mixer.quit()
         pygame.quit()
-        #sys.exit()
+        time.sleep(0.2)
+        del self.toExit
+        sys.exit()
         pass
 
     def tone(self, duration=1.0, freq=1000.0) :
@@ -115,6 +117,7 @@ class multiproc_soundGen():
     #TODO add new waveforms
 
     def play(self):
+        print "playing tone %s" % self.freq
         logger.info('Tone freq = %s Hz, duration = %s s',self.freq,self.duration)
         if (float(self.duration)  < 0.000003571):
             #print "not played because duration is less than audible."
@@ -135,10 +138,11 @@ class soundGen():
     
     def launch_multiproc(self, jobl, freq, duration, sample_rate, bits):
         a = multiproc_soundGen(jobl, freq, duration, sample_rate, bits)
-        while(True):
+        while(a.toExit != 1):
             time.sleep(0.005)
             a.checkJobList()
             if (a.toExit == 1):
+                del a
                 logger.debug( "exiting launch_multiproc" )
                 return;
             #a.updateInfo("Other secondary information", var)
@@ -165,6 +169,10 @@ class soundGen():
         logger.debug("soundGen exit message.")
         time.sleep(0.5)
         self.displayProc.terminate()
+        del self.displayProc
+        del self.displayJobList
+        del self.freq
+        del self.duration
         #sys.exit()
         pass
 

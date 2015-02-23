@@ -68,9 +68,9 @@ class Training():
             if (num == 2):
                 targetObj = Training.gVariables.skinnerVars
             if (num == 3):
-                targetObj = Training.gVariables.discrVars
-            if (num == 4):
                 targetObj = Training.gVariables.ocondVars
+            if (num == 4):
+                targetObj = Training.gVariables.discrVars
             fileToSave = open(nombr, "w+");
             fileToSave.write("#%s\n" % time.asctime( time.localtime(time.time()) ) ) ;
             fileToSave.write("eventTime1_sound = %r\n" % targetObj.eventTime1_sound);
@@ -840,6 +840,98 @@ class Training():
             
             
             
+            
+            @staticmethod
+            def loadIntoAPIPavlovVars():
+                    print "loadIntoAPIPavlovVars"
+                    objc = Training.gVariables.currentGUI.pavlovVars
+                    objc.toneStart = 0;
+                    objc.toneEnd = Training.gVariables.pavlovVars.eventTime1_sound;
+                    objc.movementWindowStart = Training.gVariables.pavlovVars.eventTime1_movement_start;
+                    objc.movementWindowEnd = Training.gVariables.pavlovVars.eventTime2_movement;
+                    objc.interTrialStart = Training.gVariables.pavlovVars.interTrialRandom1Time;
+                    objc.interTrialEnd = Training.gVariables.pavlovVars.interTrialRandom2Time;
+                    objc.probabilityToneOne = Training.gVariables.pavlovVars.toneOneProbability;
+                    objc.frequencyTone1 = Training.gVariables.pavlovVars.soundGenFrequency1;
+                    objc.frequencyTone2 = Training.gVariables.pavlovVars.soundGenFrequency2;
+                    
+                    #objc.movementAmount = Training.gVariables.pavlovVars.?¡??????
+                    #objc.movementMethod = Training.gVariables.pavlovVars.??????????????????????????'
+                    objc.movementTime = Training.gVariables.pavlovVars.movementTime;
+                    objc.idleTime = Training.gVariables.pavlovVars.idleTime;
+                    objc.requireStillnessVar = Training.gVariables.pavlovVars.requireStillness;
+                    
+                    
+                    
+                    pass
+            @staticmethod
+            def loadIntoAPISkinnerVars():
+                    print "loadIntoAPISkinnerVars"
+                    objc = Training.gVariables.currentGUI.skinnerVars
+                    objc.toneStart = 0;
+                    objc.toneEnd = Training.gVariables.skinnerVars.eventTime1_sound;
+                    objc.movementWindowStart = Training.gVariables.skinnerVars.eventTime1_movement_start;
+                    objc.movementWindowEnd = Training.gVariables.skinnerVars.eventTime2_movement;
+                    objc.interTrialStart = Training.gVariables.skinnerVars.interTrialRandom1Time;
+                    objc.interTrialEnd = Training.gVariables.skinnerVars.interTrialRandom2Time;
+                    objc.probabilityToneOne = Training.gVariables.skinnerVars.toneOneProbability;
+                    objc.frequencyTone1 = Training.gVariables.skinnerVars.soundGenFrequency1;
+                    objc.frequencyTone2 = Training.gVariables.skinnerVars.soundGenFrequency2;
+                    
+                    #objc.movementAmount = Training.gVariables.skinnerVars.?¡??????
+                    #objc.movementMethod = Training.gVariables.skinnerVars.??????????????????????????'
+                    objc.movementTime = Training.gVariables.skinnerVars.movementTime;
+                    objc.idleTime = Training.gVariables.skinnerVars.idleTime;
+                    objc.requireStillnessVar = Training.gVariables.skinnerVars.requireStillness;
+                    
+                    pass
+            
+            @staticmethod
+            def loadIntoAPIOcondVars():
+                    print "loadIntoAPIOcondVars"
+                    objc = Training.gVariables.currentGUI.ocondVars
+                    objc.toneStart = 0;
+                    objc.toneEnd = Training.gVariables.ocondVars.eventTime1_sound;
+                    objc.movementWindowStart = Training.gVariables.ocondVars.eventTime1_movement_start;
+                    objc.movementWindowEnd = Training.gVariables.ocondVars.eventTime2_movement;
+                    objc.interTrialStart = Training.gVariables.ocondVars.interTrialRandom1Time;
+                    objc.interTrialEnd = Training.gVariables.ocondVars.interTrialRandom2Time;
+                    objc.probabilityToneOne = Training.gVariables.ocondVars.toneOneProbability;
+                    objc.frequencyTone1 = Training.gVariables.ocondVars.soundGenFrequency1;
+                    objc.frequencyTone2 = Training.gVariables.ocondVars.soundGenFrequency2;
+                    
+                    #objc.movementAmount = Training.gVariables.ocondVars.?¡??????
+                    #objc.movementMethod = Training.gVariables.ocondVars.??????????????????????????'
+                    objc.movementTime = Training.gVariables.ocondVars.movementTime;
+                    objc.idleTime = Training.gVariables.ocondVars.idleTime;
+                    objc.requireStillnessVar = Training.gVariables.ocondVars.requireStillness;
+                    
+                    pass
+            
+            @staticmethod
+            def loadIntoAPIDiscrVars():
+                    print "loadIntoAPIDiscrVars"
+                    objc = Training.gVariables.currentGUI.discrVars
+                    objc.toneStart = 0;
+                    objc.toneEnd = Training.gVariables.discrVars.eventTime1_sound;
+                    objc.movementWindowStart = Training.gVariables.discrVars.eventTime1_movement_start;
+                    objc.movementWindowEnd = Training.gVariables.discrVars.eventTime2_movement;
+                    objc.interTrialStart = Training.gVariables.discrVars.interTrialRandom1Time;
+                    objc.interTrialEnd = Training.gVariables.discrVars.interTrialRandom2Time;
+                    objc.probabilityToneOne = Training.gVariables.discrVars.toneOneProbability;
+                    objc.frequencyTone1 = Training.gVariables.discrVars.soundGenFrequency1;
+                    objc.frequencyTone2 = Training.gVariables.discrVars.soundGenFrequency2;
+                    
+                    #objc.movementAmount = Training.gVariables.discrVars.?¡??????
+                    #objc.movementMethod = Training.gVariables.discrVars.??????????????????????????'
+                    objc.movementTime = Training.gVariables.discrVars.movementTime;
+                    objc.idleTime = Training.gVariables.discrVars.idleTime;
+                    objc.requireStillnessVar = Training.gVariables.discrVars.requireStillness;
+                    
+                    pass
+            
+            
+            
         pass
         __checkModules()
         __checkConfigFiles()
@@ -896,6 +988,7 @@ class Training():
         
         #GUI Type:
         GUIType = cfgtraining.usingTK
+        currentGUI = None #user Interface API object.
         
         # video Detection:
         videoDet = 0  # video Detection object. initialized in the main.
@@ -1291,6 +1384,9 @@ class Training():
         if (self.gVariables.GUIType != 2) :
             #self.gVariables.currentGUI.exit(); #It is auto-executed on uiAPI , so it's not necessary here.
             pass
+        else:
+            time.sleep(0.2)
+            del self.gVariables.fredInput
         self.gVariables.valve1.exit()
         del self.gVariables.valve1
         if (self.gVariables.secondcam != -1):
@@ -1396,8 +1492,7 @@ class Training():
         #trainingInit : Called when the class is instantiated.
         print self.gVariables.trainingName
         #get subject name:
-        #self.getSubjectName()
-        self.gVariables.subject_name = "prueba"
+        self.getSubjectName()
         print "Subject's name: %s" % self.gVariables.subject_name
         #counting number of sessions
         session_files_count = 0
@@ -1521,7 +1616,29 @@ class Training():
         self.gVariables.currentGUI.type_ocond = self.gVariables.type_ocond
         self.gVariables.currentGUI.type_discr = self.gVariables.type_discr
         
+        self.gVariables.currentGUI.pavlovVars.interTrialStart = 1.11
+        self.gVariables.currentGUI.skinnerVars.interTrialStart = 2.22
+        self.gVariables.currentGUI.ocondVars.interTrialStart = 3.33
+        self.gVariables.currentGUI.discrVars.interTrialStart = 4.44
+        
+        Training.gVariables.saveVariables.loadIntoAPIPavlovVars()
+        Training.gVariables.saveVariables.loadIntoAPISkinnerVars()
+        Training.gVariables.saveVariables.loadIntoAPIOcondVars()
+        Training.gVariables.saveVariables.loadIntoAPIDiscrVars()
+        
+        if (self.gVariables.type_pavlov):
+            self.gVariables.currentGUI.current_type = "pavlov"
+        if (self.gVariables.type_skinner):
+            self.gVariables.currentGUI.current_type = "skinner"
+        if (self.gVariables.type_ocond):
+            self.gVariables.currentGUI.current_type = "ocond"
+        if (self.gVariables.type_discr):
+            self.gVariables.currentGUI.current_type = "discr"
+        
+        
+        
         self.gVariables.currentGUI.requireStillnessVar = self.gVariables.requireStillness
+        print "--%d" % self.gVariables.requireStillness
     
     def trialLoop(self):
             # This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
@@ -1996,7 +2113,7 @@ class Training():
             self.gVariables.logger.warning( "Error capturing input." )
         time.sleep(1.0)
         printInstructions()
-        while True:
+        while self.gVariables.programRunning == 1:
             try:
                 key = sys.stdin.read(1)#cv2.waitKey(100) #in miliseconds
                 if (key == 'd' or key == 'D'):
@@ -2036,6 +2153,7 @@ class Training():
                     termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
                     fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
                     self.exitTraining()
+                    return;
             except:
                 pass
     
@@ -2043,7 +2161,7 @@ class Training():
         DISPLAY_INTERVAL = 2
         counter_val = 0
         
-        while(True):
+        while(self.gVariables.programRunning == 1):
                     if (self.gVariables.programRunning == 0):
                         print "Exiting main loop."
                         return;

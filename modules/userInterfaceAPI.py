@@ -7,77 +7,365 @@ import track_bola_utils
 
 
 class userInterface_API:
+    #----------------------------------------------
+    #API that handles the user interface.
+    #it currently has two types: tkinter and GTK.
+    #This class receives multiprocessing messages from the currentGUI object
+    #   (in that strict order: the messages are from currentGUI to API)
+    #----------------------------------------------
+    pass
     last_message = -1; #to be accessed by training.py when it needs the var
     last_argument = -1; #to be accessed by training.py when it needs the var
     stopAll = False
     usingTK = 0
+    toneStart = 0
+    toneEnd = 0
+    movementWindowStart = 0
+    movementWindowEnd = 0
+    interTrialStart = 0
+    interTrialEnd = 0
+    probabilityToneOne = 0
+    frequencyTone1 = 0
+    frequencyTone2 = 0
+    movementAmount = 0
+    movementMethod = 0
+    movementTime = 0
+    idleTime = 0
+    comment = ""
     
-    def launch_multiproc(self, jobl, apiToObj, toStart):
-        a = multiproc_userInterface_API(jobl, apiToObj,  False)
+    current_type = 0
+    
+    type_pavlov = 0
+    type_skinner = 0;
+    type_ocond = 0;
+    type_discr = 0;
+    requireStillnessVar = 0;
+    
+    pavlovVars = track_bola_utils.dummyClass()
+    skinnerVars = track_bola_utils.dummyClass()
+    ocondVars = track_bola_utils.dummyClass()
+    discrVars = track_bola_utils.dummyClass()
+    
+    
+    pavlovVars.toneStart = 1
+    pavlovVars.toneEnd = 1
+    pavlovVars.movementWindowStart = 1
+    pavlovVars.movementWindowEnd = 1
+    pavlovVars.interTrialStart = 1
+    pavlovVars.interTrialEnd = 1
+    pavlovVars.probabilityToneOne = 1
+    pavlovVars.frequencyTone1 = 1
+    pavlovVars.frequencyTone2 = 1
+    pavlovVars.movementAmount = 1
+    pavlovVars.movementMethod = 1
+    pavlovVars.movementTime = 1
+    pavlovVars.idleTime = 1
+    pavlovVars.requireStillnessVar = 0;
+    
+    
+    
+    skinnerVars.toneStart = 1
+    skinnerVars.toneEnd = 1
+    skinnerVars.movementWindowStart = 1
+    skinnerVars.movementWindowEnd = 1
+    skinnerVars.interTrialStart = 1
+    skinnerVars.interTrialEnd = 1
+    skinnerVars.probabilityToneOne = 1
+    skinnerVars.frequencyTone1 = 1
+    skinnerVars.frequencyTone2 = 1
+    skinnerVars.movementAmount = 1
+    skinnerVars.movementMethod = 1
+    skinnerVars.movementTime = 1
+    skinnerVars.idleTime = 1
+    skinnerVars.requireStillnessVar = 0;
+    
+    ocondVars.toneStart = 1
+    ocondVars.toneEnd = 1
+    ocondVars.movementWindowStart = 1
+    ocondVars.movementWindowEnd = 1
+    ocondVars.interTrialStart = 1
+    ocondVars.interTrialEnd = 1
+    ocondVars.probabilityToneOne = 1
+    ocondVars.frequencyTone1 = 1
+    ocondVars.frequencyTone2 = 1
+    ocondVars.movementAmount = 1
+    ocondVars.movementMethod = 1
+    ocondVars.movementTime = 1
+    ocondVars.idleTime = 1
+    ocondVars.requireStillnessVar = 0;
+    
+    discrVars.toneStart = 1
+    discrVars.toneEnd = 1
+    discrVars.movementWindowStart = 1
+    discrVars.movementWindowEnd = 1
+    discrVars.interTrialStart = 1
+    discrVars.interTrialEnd = 1
+    discrVars.probabilityToneOne = 1
+    discrVars.frequencyTone1 = 1
+    discrVars.frequencyTone2 = 1
+    discrVars.movementAmount = 1
+    discrVars.movementMethod = 1
+    discrVars.movementTime = 1
+    discrVars.idleTime = 1
+    discrVars.requireStillnessVar = 0;
+    
+    def launch_multiproc(self, jobl, toStart):
+        multipUI = multiproc_userInterface_API(jobl,  False)
         import threading
         #checkK = threading.Thread(target=self.checkOutJobContinuously, args=(a,) )
         #checkK.start()
-        a.usingTK = self.usingTK
-        a.startCheckingInput()
+        #acA corresponde setear todas las configs del proceso
+        multipUI.usingTK = self.usingTK
+        multipUI.toneStart = self.toneStart
+        multipUI.toneEnd = self.toneEnd
+        multipUI.movementWindowStart = self.movementWindowStart
+        multipUI.movementWindowEnd = self.movementWindowEnd
+        multipUI.interTrialStart = self.interTrialStart
+        multipUI.interTrialEnd = self.interTrialEnd
+        multipUI.probabilityToneOne = self.probabilityToneOne
+        multipUI.frequencyTone1 = self.frequencyTone1
+        multipUI.frequencyTone2 = self.frequencyTone2
+        
+        multipUI.movementAmount = self.movementAmount
+        multipUI.movementMethod = self.movementMethod
+        multipUI.movementTime = self.movementTime
+        multipUI.idleTime = self.idleTime
+        multipUI.comment = self.comment
+        
+        
+        multipUI.type_pavlov = self.type_pavlov
+        multipUI.type_skinner = self.type_skinner
+        multipUI.type_ocond = self.type_ocond
+        multipUI.type_discr = self.type_discr
+        
+        multipUI.requireStillnessVar = self.requireStillnessVar
+        
+        multipUI.current_type = self.current_type
+        
+        
+        
+        
+        multipUI.pavlovVars.toneStart = self.pavlovVars.toneStart
+        multipUI.pavlovVars.toneEnd = self.pavlovVars.toneEnd
+        multipUI.pavlovVars.movementWindowStart = self.pavlovVars.movementWindowStart
+        multipUI.pavlovVars.movementWindowEnd = self.pavlovVars.movementWindowEnd
+        multipUI.pavlovVars.interTrialStart = self.pavlovVars.interTrialStart
+        multipUI.pavlovVars.interTrialEnd = self.pavlovVars.interTrialEnd
+        multipUI.pavlovVars.probabilityToneOne = self.pavlovVars.probabilityToneOne
+        multipUI.pavlovVars.frequencyTone1 = self.pavlovVars.frequencyTone1
+        multipUI.pavlovVars.frequencyTone2 = self.pavlovVars.frequencyTone2
+        
+        multipUI.pavlovVars.movementAmount = self.pavlovVars.movementAmount
+        multipUI.pavlovVars.movementMethod = self.pavlovVars.movementMethod
+        multipUI.pavlovVars.movementTime = self.pavlovVars.movementTime
+        multipUI.pavlovVars.idleTime = self.pavlovVars.idleTime
+        
+        multipUI.pavlovVars.requireStillnessVar = self.pavlovVars.requireStillnessVar
+        
+        if (self.current_type == "pavlov"):
+            #overwrite "default" vars
+            multipUI.toneStart = self.pavlovVars.toneStart
+            multipUI.toneEnd = self.pavlovVars.toneEnd
+            multipUI.movementWindowStart = self.pavlovVars.movementWindowStart
+            multipUI.movementWindowEnd = self.pavlovVars.movementWindowEnd
+            multipUI.interTrialStart = self.pavlovVars.interTrialStart
+            multipUI.interTrialEnd = self.pavlovVars.interTrialEnd
+            multipUI.probabilityToneOne = self.pavlovVars.probabilityToneOne
+            multipUI.frequencyTone1 = self.pavlovVars.frequencyTone1
+            multipUI.frequencyTone2 = self.pavlovVars.frequencyTone2
+            
+            multipUI.movementAmount = self.pavlovVars.movementAmount
+            multipUI.movementMethod = self.pavlovVars.movementMethod
+            multipUI.movementTime = self.pavlovVars.movementTime
+            multipUI.idleTime = self.pavlovVars.idleTime
+            
+            multipUI.requireStillnessVar = self.pavlovVars.requireStillnessVar
+        
+        #############################
+        
+        multipUI.skinnerVars.toneStart = self.skinnerVars.toneStart
+        multipUI.skinnerVars.toneEnd = self.skinnerVars.toneEnd
+        multipUI.skinnerVars.movementWindowStart = self.skinnerVars.movementWindowStart
+        multipUI.skinnerVars.movementWindowEnd = self.skinnerVars.movementWindowEnd
+        multipUI.skinnerVars.interTrialStart = self.skinnerVars.interTrialStart
+        multipUI.skinnerVars.interTrialEnd = self.skinnerVars.interTrialEnd
+        multipUI.skinnerVars.probabilityToneOne = self.skinnerVars.probabilityToneOne
+        multipUI.skinnerVars.frequencyTone1 = self.skinnerVars.frequencyTone1
+        multipUI.skinnerVars.frequencyTone2 = self.skinnerVars.frequencyTone2
+        
+        multipUI.skinnerVars.movementAmount = self.skinnerVars.movementAmount
+        multipUI.skinnerVars.movementMethod = self.skinnerVars.movementMethod
+        multipUI.skinnerVars.movementTime = self.skinnerVars.movementTime
+        multipUI.skinnerVars.idleTime = self.skinnerVars.idleTime
+        
+        multipUI.skinnerVars.requireStillnessVar = self.skinnerVars.requireStillnessVar
+        
+        if (self.current_type == "skinner"):
+            #overwrite "default" vars
+            multipUI.toneStart = self.skinnerVars.toneStart
+            multipUI.toneEnd = self.skinnerVars.toneEnd
+            multipUI.movementWindowStart = self.skinnerVars.movementWindowStart
+            multipUI.movementWindowEnd = self.skinnerVars.movementWindowEnd
+            multipUI.interTrialStart = self.skinnerVars.interTrialStart
+            multipUI.interTrialEnd = self.skinnerVars.interTrialEnd
+            multipUI.probabilityToneOne = self.skinnerVars.probabilityToneOne
+            multipUI.frequencyTone1 = self.skinnerVars.frequencyTone1
+            multipUI.frequencyTone2 = self.skinnerVars.frequencyTone2
+            
+            multipUI.movementAmount = self.skinnerVars.movementAmount
+            multipUI.movementMethod = self.skinnerVars.movementMethod
+            multipUI.movementTime = self.skinnerVars.movementTime
+            multipUI.idleTime = self.skinnerVars.idleTime
+            
+            multipUI.requireStillnessVar = self.skinnerVars.requireStillnessVar
+        
+        #############################
+        
+        
+        
+        
+        
+        multipUI.ocondVars.toneStart = self.ocondVars.toneStart
+        multipUI.ocondVars.toneEnd = self.ocondVars.toneEnd
+        multipUI.ocondVars.movementWindowStart = self.ocondVars.movementWindowStart
+        multipUI.ocondVars.movementWindowEnd = self.ocondVars.movementWindowEnd
+        multipUI.ocondVars.interTrialStart = self.ocondVars.interTrialStart
+        multipUI.ocondVars.interTrialEnd = self.ocondVars.interTrialEnd
+        multipUI.ocondVars.probabilityToneOne = self.ocondVars.probabilityToneOne
+        multipUI.ocondVars.frequencyTone1 = self.ocondVars.frequencyTone1
+        multipUI.ocondVars.frequencyTone2 = self.ocondVars.frequencyTone2
+        
+        multipUI.ocondVars.movementAmount = self.ocondVars.movementAmount
+        multipUI.ocondVars.movementMethod = self.ocondVars.movementMethod
+        multipUI.ocondVars.movementTime = self.ocondVars.movementTime
+        multipUI.ocondVars.idleTime = self.ocondVars.idleTime
+        
+        multipUI.ocondVars.requireStillnessVar = self.ocondVars.requireStillnessVar
+        
+        
+        if (self.current_type == "oc"):
+            #overwrite "default" vars
+            multipUI.toneStart = self.ocondVars.toneStart
+            multipUI.toneEnd = self.ocondVars.toneEnd
+            multipUI.movementWindowStart = self.ocondVars.movementWindowStart
+            multipUI.movementWindowEnd = self.ocondVars.movementWindowEnd
+            multipUI.interTrialStart = self.ocondVars.interTrialStart
+            multipUI.interTrialEnd = self.ocondVars.interTrialEnd
+            multipUI.probabilityToneOne = self.ocondVars.probabilityToneOne
+            multipUI.frequencyTone1 = self.ocondVars.frequencyTone1
+            multipUI.frequencyTone2 = self.ocondVars.frequencyTone2
+            
+            multipUI.movementAmount = self.ocondVars.movementAmount
+            multipUI.movementMethod = self.ocondVars.movementMethod
+            multipUI.movementTime = self.ocondVars.movementTime
+            multipUI.idleTime = self.ocondVars.idleTime
+            
+            multipUI.requireStillnessVar = self.ocondVars.requireStillnessVar
+        
+        #############################
+        
+        
+        multipUI.discrVars.toneStart = self.discrVars.toneStart
+        multipUI.discrVars.toneEnd = self.discrVars.toneEnd
+        multipUI.discrVars.movementWindowStart = self.discrVars.movementWindowStart
+        multipUI.discrVars.movementWindowEnd = self.discrVars.movementWindowEnd
+        multipUI.discrVars.interTrialStart = self.discrVars.interTrialStart
+        multipUI.discrVars.interTrialEnd = self.discrVars.interTrialEnd
+        multipUI.discrVars.probabilityToneOne = self.discrVars.probabilityToneOne
+        multipUI.discrVars.frequencyTone1 = self.discrVars.frequencyTone1
+        multipUI.discrVars.frequencyTone2 = self.discrVars.frequencyTone2
+        
+        multipUI.discrVars.movementAmount = self.discrVars.movementAmount
+        multipUI.discrVars.movementMethod = self.discrVars.movementMethod
+        multipUI.discrVars.movementTime = self.discrVars.movementTime
+        multipUI.discrVars.idleTime = self.discrVars.idleTime
+        
+        multipUI.discrVars.requireStillnessVar = self.discrVars.requireStillnessVar
+        
+        if (self.current_type == "discr"):
+            #overwrite "default" vars
+            multipUI.toneStart = self.discrVars.toneStart
+            multipUI.toneEnd = self.discrVars.toneEnd
+            multipUI.movementWindowStart = self.discrVars.movementWindowStart
+            multipUI.movementWindowEnd = self.discrVars.movementWindowEnd
+            multipUI.interTrialStart = self.discrVars.interTrialStart
+            multipUI.interTrialEnd = self.discrVars.interTrialEnd
+            multipUI.probabilityToneOne = self.discrVars.probabilityToneOne
+            multipUI.frequencyTone1 = self.discrVars.frequencyTone1
+            multipUI.frequencyTone2 = self.discrVars.frequencyTone2
+            
+            multipUI.movementAmount = self.discrVars.movementAmount
+            multipUI.movementMethod = self.discrVars.movementMethod
+            multipUI.movementTime = self.discrVars.movementTime
+            multipUI.idleTime = self.discrVars.idleTime
+            
+            multipUI.requireStillnessVar = self.discrVars.requireStillnessVar
+        
+        #############################
+        
+        
+        print ".- %d" % self.requireStillnessVar
+        print "all variables set."
         if (toStart):
-            a.launch_GUI()
+            multipUI.launch_GUI()
         
         
+    
+    def checkInputObjToApi(self):
+        if (self.messageObjToAPI.qsize() > 0 or self.messageObjToAPI.empty() == False ):
+                try:
+                        tempvar = self.messageObjToAPI.get()
+                        self.messageObjToAPI.task_done()
+                except:
+                        return;
+                #print str("checkJobList: queue: " + str(tempvar) )
+                index = tempvar[0]
+                try:
+                    argument = tempvar[1]
+                except:
+                    argument = ""
+                    pass
+                
+                #print "checkInputObjToApi: Got a Message:", index
+                #print "checkInputObjToApi: Message's argument:", argument
+                logger.debug("checkInputObjToApi: Got a Message: %s    %s" % (str( index) , str(argument) ) )
+                self.last_message = index
+                self.last_argument = argument
+                if (index == 9):
+                    print "Exiting GUI API"
+                    self.exit()
+    
+    def __launchProcess(self):
+        import multiprocessing
+        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.messageObjToAPI, True,) )
+        self.displayProc.start()
+        import threading
+        self.checkMsgThread = threading.Thread(target = self.iLoopCheckInputObjToAPI);
+        self.checkMsgThread.start()
+    
+    def iLoopCheckInputObjToAPI(self):
+        print "Thread started: iLoopCheckInputObjToAPI"
+        while self.stopAll == False:
+            self.checkInputObjToApi()
+            time.sleep(0.110) #warning: this time sleep should be at least bigger than frequency from main training.
+            #else there'll be unread messages.
+            pass
     
     def __init__(self, toStart = False):
         print "starting front end API process"
         import multiprocessing
         self.messageObjToAPI = multiprocessing.JoinableQueue()
-        self.messageAPIToObj = multiprocessing.JoinableQueue()
-        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.messageObjToAPI,self.messageAPIToObj, toStart,) )
-        self.displayProc.start()
+        if (toStart):
+            self.__launchProcess()
         print "process started."
-        import threading
-        self.checkJ = threading.Thread(target=self.checkJobContinuously)
-        print "thread starting.."
-        self.checkJ.start()
-        print "thread started."
         logger.debug("userInterface_API process Started.")
         pass
     
-    def checkJobContinuously(self):
-        while (self.stopAll == False):
-            self.checkJobList()
-            time.sleep(0.1)
-    
     def launch_GUI(self):
-        print "sending msg API to Process"
-        self.messageAPIToObj.put( (4, 4) )
-        print ".-"
-        self.messageAPIToObj.join()
-        print "finished sending msg API to Process"
+        print "launching GUI.."
+        self.__launchProcess()
         pass
     
-    def checkJobList(self):
-            if (self.messageObjToAPI.qsize() > 0 or self.messageObjToAPI.empty() == False ):
-                    try:
-                            tempvar = self.messageObjToAPI.get()
-                            self.messageObjToAPI.task_done()
-                    except:
-                            return;
-                    #print str("checkJobList: queue: " + str(tempvar) )
-                    index = tempvar[0]
-                    try:
-                        argument = tempvar[1]
-                    except:
-                        argument = ""
-                        pass
-                    
-                    print "checkJobList: Got a Message:", index
-                    print "checkJobList: Message's argument:", argument
-                    self.last_message = index
-                    self.last_argument = argument
-                    try:
-                        if int(index) == 9:
-                            print "index 9: exit"
-                            self.exit()
-                    except:
-                        pass
     def exit(self):
         time.sleep(1)
         self.displayProc.terminate()
@@ -103,6 +391,69 @@ class multiproc_userInterface_API:
     type_discr = 0;
     requireStillnessVar = 0;
     
+    current_type = 0;
+    
+    pavlovVars = track_bola_utils.dummyClass()
+    skinnerVars = track_bola_utils.dummyClass()
+    ocondVars = track_bola_utils.dummyClass()
+    discrVars = track_bola_utils.dummyClass()
+    
+    
+    pavlovVars.toneStart = 1
+    pavlovVars.toneEnd = 1
+    pavlovVars.movementWindowStart = 1
+    pavlovVars.movementWindowEnd = 1
+    pavlovVars.interTrialStart = 1
+    pavlovVars.interTrialEnd = 1
+    pavlovVars.probabilityToneOne = 1
+    pavlovVars.frequencyTone1 = 1
+    pavlovVars.frequencyTone2 = 1
+    pavlovVars.movementAmount = 1
+    pavlovVars.movementMethod = 1
+    pavlovVars.movementTime = 1
+    pavlovVars.idleTime = 1
+    
+    skinnerVars.toneStart = 1
+    skinnerVars.toneEnd = 1
+    skinnerVars.movementWindowStart = 1
+    skinnerVars.movementWindowEnd = 1
+    skinnerVars.interTrialStart = 1
+    skinnerVars.interTrialEnd = 1
+    skinnerVars.probabilityToneOne = 1
+    skinnerVars.frequencyTone1 = 1
+    skinnerVars.frequencyTone2 = 1
+    skinnerVars.movementAmount = 1
+    skinnerVars.movementMethod = 1
+    skinnerVars.movementTime = 1
+    skinnerVars.idleTime = 1
+    
+    ocondVars.toneStart = 1
+    ocondVars.toneEnd = 1
+    ocondVars.movementWindowStart = 1
+    ocondVars.movementWindowEnd = 1
+    ocondVars.interTrialStart = 1
+    ocondVars.interTrialEnd = 1
+    ocondVars.probabilityToneOne = 1
+    ocondVars.frequencyTone1 = 1
+    ocondVars.frequencyTone2 = 1
+    ocondVars.movementAmount = 1
+    ocondVars.movementMethod = 1
+    ocondVars.movementTime = 1
+    ocondVars.idleTime = 1
+    
+    discrVars.toneStart = 1
+    discrVars.toneEnd = 1
+    discrVars.movementWindowStart = 1
+    discrVars.movementWindowEnd = 1
+    discrVars.interTrialStart = 1
+    discrVars.interTrialEnd = 1
+    discrVars.probabilityToneOne = 1
+    discrVars.frequencyTone1 = 1
+    discrVars.frequencyTone2 = 1
+    discrVars.movementAmount = 1
+    discrVars.movementMethod = 1
+    discrVars.movementTime = 1
+    discrVars.idleTime = 1
     
     
     def getSubjName(self):
@@ -132,12 +483,10 @@ class multiproc_userInterface_API:
         logger.debug( "subject name: %s" % self.subj_name )
         return self.subj_name
     
-    def __init__(self, jobl = None, inputMsg=None, toStart = False):
+    def __init__(self, jobl = None, toStart = False):
         logger.info( "initializing userInterfaceAPI" )
         #Variables: setting up to 0 before assigning any values.
         self.jobListOutput = jobl
-        self.jobListInput = inputMsg
-        print self.jobListInput
         print self.jobListOutput
         print ";;"
         self.toneStart = 0
@@ -165,24 +514,6 @@ class multiproc_userInterface_API:
         #logger.info( "Queue set" )
         pass
     
-    def checkJobListInput(self):
-        print "checking input"
-        if (self.jobListInput.qsize() > 0 or self.jobListInput.empty() == False ):
-                    try:
-                            tempvar = self.jobListInput.get()
-                            self.jobListInput.task_done()
-                    except:
-                            return;
-                    #print str("checkJobList: queue: " + str(tempvar) )
-                    index = tempvar[0]
-                    try:
-                        argument = tempvar[1]
-                    except:
-                        argument = ""
-                        pass
-                    
-                    print "checkJobListInput: Got a Message:", index
-                    print "checkJobListInput: Message's argument:", argument
     
     def setInitialValues(self):
         #print "User Interface API: sending variables to GUI, with the purpose of setting up initial values."
@@ -541,6 +872,125 @@ class multiproc_userInterface_API:
         self.interTrialEnd = self.currentGUI.interTrialEnd
         self.probabilityToneOne = self.currentGUI.probabilityToneOne
         self.requireStillnessVar = self.currentGUI.requireStillnessVar;
+        if (self.current_type!= 0 and self.current_type != self.currentGUI.current_type):
+            self.current_type = self.currentGUI.current_type
+            
+            if (self.current_type == "pavlov"):
+                #pavlov
+                print "------------------------------------"
+                print "setting pavlov vars to currentGUI"
+                print "------------------------------------"
+                obj = self.pavlovVars
+                self.currentGUI.toneStart = obj.toneStart
+                self.currentGUI.toneEnd = obj.toneEnd
+                self.currentGUI.movementWindowStart = obj.movementWindowStart
+                self.currentGUI.movementWindowEnd = obj.movementWindowEnd
+                self.currentGUI.interTrialStart = obj.interTrialStart
+                self.currentGUI.interTrialEnd = obj.interTrialEnd
+                self.currentGUI.probabilityToneOne = obj.probabilityToneOne
+                self.currentGUI.frequencyTone1 = obj.frequencyTone1
+                self.currentGUI.frequencyTone2 = obj.frequencyTone2
+                self.currentGUI.movementAmount = obj.movementAmount
+                self.currentGUI.movementMethod = obj.movementMethod
+                self.currentGUI.movementTime = obj.movementTime
+                self.currentGUI.idleTime = obj.idleTime
+                self.currentGUI.type_pavlov = 1
+                self.currentGUI.type_skinner = 0
+                self.currentGUI.type_ocond = 0
+                self.currentGUI.type_discr = 0
+                self.currentGUI.requireStillnessVar = obj.requireStillnessVar;
+                print "..................-"
+                #print self.requireStillnessVar
+                self.currentGUI.commitInitialData()
+            
+            if (self.current_type == "skinner"):
+                #pavlov
+                print "------------------------------------"
+                print "setting skinner vars to currentGUI"
+                print "------------------------------------"
+                obj = self.skinnerVars
+                self.currentGUI.toneStart = obj.toneStart
+                self.currentGUI.toneEnd = obj.toneEnd
+                self.currentGUI.movementWindowStart = obj.movementWindowStart
+                self.currentGUI.movementWindowEnd = obj.movementWindowEnd
+                self.currentGUI.interTrialStart = obj.interTrialStart
+                self.currentGUI.interTrialEnd = obj.interTrialEnd
+                self.currentGUI.probabilityToneOne = obj.probabilityToneOne
+                self.currentGUI.frequencyTone1 = obj.frequencyTone1
+                self.currentGUI.frequencyTone2 = obj.frequencyTone2
+                self.currentGUI.movementAmount = obj.movementAmount
+                self.currentGUI.movementMethod = obj.movementMethod
+                self.currentGUI.movementTime = obj.movementTime
+                self.currentGUI.idleTime = obj.idleTime
+                self.currentGUI.type_pavlov = 0
+                self.currentGUI.type_skinner = 1
+                self.currentGUI.type_ocond = 0
+                self.currentGUI.type_discr = 0
+                self.currentGUI.requireStillnessVar = obj.requireStillnessVar;
+                print "..................-"
+                #print self.requireStillnessVar
+                self.currentGUI.commitInitialData()
+            
+            
+            if (self.current_type == "oc"):
+                #pavlov
+                print "------------------------------------"
+                print "setting oc vars to currentGUI"
+                print "------------------------------------"
+                obj = self.ocondVars
+                self.currentGUI.toneStart = obj.toneStart
+                self.currentGUI.toneEnd = obj.toneEnd
+                self.currentGUI.movementWindowStart = obj.movementWindowStart
+                self.currentGUI.movementWindowEnd = obj.movementWindowEnd
+                self.currentGUI.interTrialStart = obj.interTrialStart
+                self.currentGUI.interTrialEnd = obj.interTrialEnd
+                self.currentGUI.probabilityToneOne = obj.probabilityToneOne
+                self.currentGUI.frequencyTone1 = obj.frequencyTone1
+                self.currentGUI.frequencyTone2 = obj.frequencyTone2
+                self.currentGUI.movementAmount = obj.movementAmount
+                self.currentGUI.movementMethod = obj.movementMethod
+                self.currentGUI.movementTime = obj.movementTime
+                self.currentGUI.idleTime = obj.idleTime
+                self.currentGUI.type_pavlov = 0
+                self.currentGUI.type_skinner = 0
+                self.currentGUI.type_ocond = 1
+                self.currentGUI.type_discr = 0
+                self.currentGUI.requireStillnessVar = obj.requireStillnessVar;
+                print "..................-"
+                #print self.requireStillnessVar
+                self.currentGUI.commitInitialData()
+            
+            
+            if (self.current_type == "discr"):
+                #pavlov
+                print "------------------------------------"
+                print "setting discr vars to currentGUI"
+                print "------------------------------------"
+                obj = self.discrVars
+                self.currentGUI.toneStart = obj.toneStart
+                self.currentGUI.toneEnd = obj.toneEnd
+                self.currentGUI.movementWindowStart = obj.movementWindowStart
+                self.currentGUI.movementWindowEnd = obj.movementWindowEnd
+                self.currentGUI.interTrialStart = obj.interTrialStart
+                self.currentGUI.interTrialEnd = obj.interTrialEnd
+                self.currentGUI.probabilityToneOne = obj.probabilityToneOne
+                self.currentGUI.frequencyTone1 = obj.frequencyTone1
+                self.currentGUI.frequencyTone2 = obj.frequencyTone2
+                self.currentGUI.movementAmount = obj.movementAmount
+                self.currentGUI.movementMethod = obj.movementMethod
+                self.currentGUI.movementTime = obj.movementTime
+                self.currentGUI.idleTime = obj.idleTime
+                self.currentGUI.type_pavlov = 0
+                self.currentGUI.type_skinner = 0
+                self.currentGUI.type_ocond = 0
+                self.currentGUI.type_discr = 1
+                self.currentGUI.requireStillnessVar = obj.requireStillnessVar;
+                print "..................-"
+                #print self.requireStillnessVar
+                self.currentGUI.commitInitialData()
+            
+            print "change in trial type detected."
+        self.current_type = self.currentGUI.current_type
         logger.debug( "API: Apply Trial Events:" )
         try:
             self.overrideaction_applyTE()
@@ -611,15 +1061,6 @@ class multiproc_userInterface_API:
             pass
     
     
-    def startCheckingInput(self):
-        import threading
-        self.inputCheckThread = threading.Thread(target = self.checkInputContinuously);
-        self.inputCheckThread.start()
-    
-    def checkInputContinuously(self):
-        while (True):
-            time.sleep(0.1)
-            self.checkJobListInput()
     
     def launch_GUI(self):
         

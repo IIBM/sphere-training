@@ -1,6 +1,11 @@
 import logging
 import datetime
 
+class dummyClass:
+    #skeleton of a dummy class, to load variables into it, or other issues.
+    def __init__(self):
+        pass
+
 class vectorSimple:
     x=0;
     y=0;

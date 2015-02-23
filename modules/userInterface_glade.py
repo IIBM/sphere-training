@@ -90,8 +90,7 @@ class GUIGTK_Class():
                 
                 
                 if (self.startEv == True):
-                    print "gtk loop."
-                    gtk.main()
+                    self.startGUI()
 
         def on_mainWindow_delete_event(self, widget, event):
                 gtk.main_quit()
@@ -264,12 +263,9 @@ class GUIGTK_Class():
             time.sleep(0.5)
             gtk.main_iteration_do()
             time.sleep(0.5)
-            print "before main gtk:"
             while self.running:
                 #gtk.main() #probably not launched before. Launching gtk.main
-                gtk.main_iteration_do()
-                time.sleep(0.001)
-            print "after main gtk:"
+                gtk.main()
         
         def setPavlovVars(self):
             if (self.type_pavlov == 1):
@@ -719,6 +715,7 @@ class GUIGTK_Class():
                 #print self.type_discr
                 
                 if (self.modeHasChanged == 1):
+                    print "mode has changed."
                     self.resetGUIElements()
                     self.setPavlovVars()
                     self.setSkinnerVars()
