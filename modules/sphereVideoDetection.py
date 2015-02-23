@@ -1021,17 +1021,18 @@ class sphereVideoDetection():
                 self.isTrackingTemp = True
                 if (number_of_standing_vectors < len(Lnew) / 3 and number_of_moving_vectors < len(Lnew) / 3):  # see docs.
                     if (len(Lnew) > 2):  # else too few circles to determine loss of tracking
-                        self.isTrackingTemp = False
+                        self.isTrackingTemp = False #on this frame, the tracking has been lost.
                 
                 self.trackingVector[0:-1] = self.trackingVector[1:]
                 self.trackingVector[-1] = self.isTrackingTemp
-                cant_tracking = 0
+                cant_pastframes_tracking = 0
                 self.isTracking = True
                 for i in range(0, len(self.trackingVector)):
                     if self.trackingVector[i] == True:
-                        cant_tracking += 1
-                if (cant_tracking < 8):
-                    self.isTracking = False
+                        cant_pastframes_tracking += 1
+                if (cant_pastframes_tracking < 8): #from the past 10 tracking frames , 80% or less have lost tracking
+                    self.isTracking = False #so consider this as a current lost of track (movement with unknown direction)
+                # print cant_pastframes_tracking
                 # print self.trackingVector
                 # print "Standing vectors ", number_of_standing_vectors
                 # print "Moving vectors ", number_of_moving_vectors
