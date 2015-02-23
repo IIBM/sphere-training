@@ -1032,7 +1032,7 @@ class sphereVideoDetection():
                         cant_tracking += 1
                 if (cant_tracking < 8):
                     self.isTracking = False
-                print self.trackingVector
+                # print self.trackingVector
                 # print "Standing vectors ", number_of_standing_vectors
                 # print "Moving vectors ", number_of_moving_vectors
                 # print "circles " , len(Lnew)
