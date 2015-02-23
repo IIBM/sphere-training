@@ -25,7 +25,6 @@ import track_bola_utils
 
 
 class sphereVideoDetection():
-    calibratingMovementAmount = False;
     NoiseFilteringOffVars = track_bola_utils.dummyClass();
     NoiseFilteringOffVars.MAX_CIRCLE_MOVEMENT = -1;
     NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT = -1;
@@ -209,11 +208,6 @@ class sphereVideoDetection():
         # os._exit(0)
         self.mustquit = 1
         self.available = False
-    
-    def calibrateMovementAmount(self):
-        print "calibrating movement amount."
-        self.calibratingMovementAmount= True
-        pass
     
     def setNoiseFiltering(self, bool):
         # Set Noise FIltering: False if you DON'T want noise filtering , because you consider that your input video has no noise.
@@ -426,8 +420,6 @@ class sphereVideoDetection():
                            abs(self.getInstantY() * self.getInstantY()))
         # logger.debug( "Amount of movement: %d" % movementAmount)
         # if it surpasses threshold OR if it lost tracking (so it is moving quite fast..)
-        if (self.calibratingMovementAmount):
-            print "Calibrating.."
         
         if (movementAmount >= self.movementThreshold or self.isTracking == False):
                     self.movementVector[self.movementVectorLength - 1] = 1
@@ -1028,7 +1020,7 @@ class sphereVideoDetection():
                             number_of_standing_vectors += 1
                 self.isTrackingTemp = True
                 if (number_of_standing_vectors < len(Lnew) / 3 and number_of_moving_vectors < len(Lnew) / 3):  # see docs.
-                    if (len(Lnew) > 2):  # else too few circles to deatermine loss of tracking
+                    if (len(Lnew) > 2):  # else too few circles to determine loss of tracking
                         self.isTrackingTemp = False
                 
                 self.trackingVector[0:-1] = self.trackingVector[1:]
@@ -1040,6 +1032,7 @@ class sphereVideoDetection():
                         cant_tracking += 1
                 if (cant_tracking < 8):
                     self.isTracking = False
+                print self.trackingVector
                 # print "Standing vectors ", number_of_standing_vectors
                 # print "Moving vectors ", number_of_moving_vectors
                 # print "circles " , len(Lnew)
@@ -1073,7 +1066,7 @@ class sphereVideoDetection():
                 # #para finalizar programa, usuario presiona "Escape":
                 #===============================================================
                 key = cv2.waitKey(self.sleepTime)
-                if (key == 27 or key == 1048603 or self.mustquit == 1):  # escape pressed
+                if (key == 27 or key == 1048603 or self.mustquit == 1 or self.available != True):  # escape pressed
                     # end Program.
                     try:
                         cam.release()
