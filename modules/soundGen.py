@@ -117,13 +117,15 @@ class multiproc_soundGen():
     #TODO add new waveforms
 
     def play(self):
-        print "playing tone %s" % self.freq
+        
         logger.info('Tone freq = %s Hz, duration = %s s',self.freq,self.duration)
         if (float(self.duration)  < 0.000003571):
             #print "not played because duration is less than audible."
             logger.debug("Not played tone because duration is less than audible.")
         else:
             self.sound.play()
+            #print "playing tone %s" % self.freq
+            #print self.sound
             logger.debug("playing")
         pass
 
@@ -218,20 +220,20 @@ if __name__ == '__main__':
     logger.info('Start Sound Test')
     s1 = soundGen()
     duration = 3.0 # in seconds
-    freq1 = 440
-    freq2 = 550
+    freq1 = 1440
+    freq2 = 1550
 
     s1.tone(duration, freq1)
     s1.play()
     time.sleep(duration)
 
-    time.sleep(1)
+    time.sleep(4)
 
     s1.tone(duration, freq2)
     s1.play()
     time.sleep(duration)
 
-    time.sleep(1)
+    time.sleep(4)
 
 
     s2 = soundGen(3*freq1,2*duration)
