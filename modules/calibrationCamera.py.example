@@ -1,7 +1,14 @@
 #This file has calibration variables for the camera 
 #if this file exists, these values will be used in execution. Else, a new file 
 #with calibration variables will be created and used. 
-MAX_CIRCLE_MOVEMENT = 22 
-MIN_CIRCLE_MOVEMENT = 3 
-WORKING_MIN_CONTOUR_AREA = 265 
-WORKING_MAX_CONTOUR_AREA = 1474 
+# 
+MAX_CIRCLE_MOVEMENT = 24 
+MIN_CIRCLE_MOVEMENT = 2 
+WORKING_MIN_CONTOUR_AREA = 307 
+WORKING_MAX_CONTOUR_AREA = 1323 
+# 
+# Noise Filtering variables 
+NF_MAX_CIRCLE_MOVEMENT = 32 
+NF_MIN_CIRCLE_MOVEMENT = 2 
+NF_WORKING_MIN_CONTOUR_AREA = 1 
+NF_WORKING_MAX_CONTOUR_AREA = 1323 

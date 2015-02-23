@@ -52,6 +52,7 @@ class GUIGTK_Class():
                             "clicked_shfeedback": self.action_shfeedback,
                             "clicked_shtracking": self.action_shtracking,
                             "clicked_recalibratec": self.action_recalibratec,
+                            "clicked_noisefiltering": self.action_noisefiltering,
                             "clicked_testT1": self.action_testT1,
                             "clicked_testT2": self.action_testT2,
                             "clicked_applyC": self.action_applyC,
@@ -165,6 +166,10 @@ class GUIGTK_Class():
         
         def overrideaction_recalibratec(self):
             logger.info( "Default: recalibrate camera" )
+            pass
+        
+        def overrideaction_noisefiltering(self):
+            logger.info( "Default: set camera noise filtering" )
             pass
         
         def overrideaction_testT1(self):
@@ -903,6 +908,14 @@ class GUIGTK_Class():
                     self.overrideaction_recalibratec()
                 except:
                     logger.info( "Recalibrate Camera: An error ocurred." )
+        
+        def action_noisefiltering(self, button):
+                try:
+                    self.overrideaction_noisefiltering()
+                except:
+                    logger.info( "Recalibrate Camera: An error ocurred." )
+        
+        
         
         def action_testT1(self, button):
                 #print "Test T1"

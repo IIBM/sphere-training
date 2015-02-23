@@ -293,15 +293,15 @@ class sphereVideoDetection():
                     text_file.write("#This file has calibration variables for the camera \n")
                     text_file.write("#if this file exists, these values will be used in execution. Else, a new file \n")
                     text_file.write("#with calibration variables will be created and used. \n")
-                    text_file.write("# ")
+                    text_file.write("# \n")
                     
                     text_file.write("MAX_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOnVars.MAX_CIRCLE_MOVEMENT))
                     text_file.write("MIN_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT))
                     text_file.write("WORKING_MIN_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOnVars.WORKING_MIN_CONTOUR_AREA))
                     text_file.write("WORKING_MAX_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOnVars.WORKING_MAX_CONTOUR_AREA))
                     
-                    text_file.write("# ")
-                    text_file.write("# Noise Filtering variables")
+                    text_file.write("# \n")
+                    text_file.write("# Noise Filtering variables \n")
                     
                     text_file.write("NF_MAX_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOffVars.MAX_CIRCLE_MOVEMENT))
                     text_file.write("NF_MIN_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT))
