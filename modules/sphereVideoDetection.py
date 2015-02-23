@@ -1046,6 +1046,11 @@ if __name__ == '__main__':
         print "Error with configVideo"
         logger.info("Error with configVideo")
     
+    print VIDEOSOURCE
+    print VIDEOSOURCE
+    print VIDEOSOURCE
+    print VIDEOSOURCE
+    print VIDEOSOURCE
     videoDet = sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
     videoDet.setNoiseFiltering(True)
     import time

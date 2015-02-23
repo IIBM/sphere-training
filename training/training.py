@@ -22,11 +22,136 @@ import time
 import timeit
 import logging
 import threading
-try:
-    from configvideo import *
-except:
-    print "Error importing configvideo. will generate a new one"
-    sys.exit(1)
+
+def __checkConfigFiles():
+                #checks if the config files needed for training_ exist. If not, generates them.
+                import os
+                
+                try:
+                    import configvideo
+                except ImportError:
+                    print "File configvideo.py not found. Generating a new copy..."
+                    a = (os.getcwd().split("/training") [0]) + "/modules/"
+                    import shutil
+                    shutil.copyfile(a+"configvideo.py.example", a+"configvideo.py")
+                    import configvideo
+                    print "configvideo.py copied and imported successfully."
+                except:
+                    print "Error importing configvideo."
+                    os._exit(1)
+                
+                if 'configvideo' in sys.modules:  
+                    del(sys.modules["configvideo"]) 
+                
+                
+                try:
+                    import configSphereVideoDetection
+                except ImportError:
+                    print "File configSphereVideoDetection.py not found. Generating a new copy..."
+                    a = (os.getcwd().split("/training") [0]) + "/modules/"
+                    import shutil
+                    shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
+                    import configvideo
+                    print "configSphereVideoDetection.py copied and imported successfully."
+                except:
+                    print "Error importing configSphereVideoDetection."
+                    os._exit(1)
+                
+                if 'configSphereVideoDetection' in sys.modules:  
+                    del(sys.modules["configSphereVideoDetection"]) 
+                
+                try:
+                    import configCamera
+                except ImportError:
+                    print "File configCamera.py not found. Generating a new copy..."
+                    a = (os.getcwd().split("/training") [0]) + "/modules/"
+                    import shutil
+                    shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
+                    import configvideo
+                    print "configCamera.py copied and imported successfully."
+                except:
+                    print "Error importing configCamera."
+                    os._exit(1)
+                
+                if 'configCamera' in sys.modules:  
+                    del(sys.modules["configCamera"]) 
+                
+                try:
+                    import config_training as cfgtraining
+                except ImportError:
+                    print "File config_training.py not found. Generating a new copy..."
+                    a = os.getcwd() + "/"
+                    print a
+                    import shutil
+                    shutil.copyfile(a+"config_training.py.example", a+"config_training.py")
+                    import config_training as cfgtraining
+                    print "config_training.py copied and imported successfully."
+                except:
+                    print "Error importing config_training."
+                    os._exit(1)
+                
+                if 'config_training' in sys.modules:  
+                    del(sys.modules["config_training"]) 
+                
+                ####
+                # End of checking existance of config files.
+                
+                pass
+                ####
+                #training init: check for modules and dependencies. Copy from '*.py.example' if needed
+                ####
+        
+def __checkModules():
+            def __checkOneModule(arg):
+                #checks if one module passed as arg , exists in the system.
+                import imp
+                try:
+                    imp.find_module( str(arg) )
+                    found = True
+                except ImportError:
+                    found = False
+                if (found == False):
+                    print "Module %r not found" % (str(arg))
+                return found
+            
+            print "Checking modules."
+            if (__checkOneModule("cv") == False):
+                print "Exiting because of missing import: "+ "cv"
+                sys.exit(1)
+                pass
+            if (__checkOneModule("cv2")  == False):
+                print "Exiting because of missing import: "+ "cv2"
+                sys.exit(1)
+                pass
+            if (__checkOneModule("timeit")  == False):
+                print "Exiting because of missing import: "+ "timeit"
+                sys.exit(1)
+                pass
+            if (__checkOneModule("numpy")  == False):
+                print "Exiting because of missing import: "+ "numpy"
+                sys.exit(1)
+                pass
+            if (__checkOneModule("pygame")  == False):
+                print "Exiting because of missing import: "+ "pygame"
+                sys.exit(1)
+                pass
+            if (__checkOneModule("parallel")  == False):
+                print "Missing import: " + "parallel"
+                pass
+            if (__checkOneModule("Tkinter")  == False):
+                print "Missing import: " + "Tkinter"
+                pass
+            if (__checkOneModule("gtk")  == False):
+                print "Missing import: " + "gtk"
+                pass
+            pass
+        
+__checkModules()
+__checkConfigFiles()
+
+
+
+import configvideo
 import track_bola_utils
 
 class Training():
@@ -327,130 +452,6 @@ class Training():
         @staticmethod
         def fn_hideUserFeedback():
             Training.gVariables.videoDet.setUserFeedback(False)
-            pass
-        
-        def __checkConfigFiles():
-                #checks if the config files needed for training_ exist. If not, generates them.
-                import os
-                
-                try:
-                    import configvideo
-                except ImportError:
-                    print "File configvideo.py not found. Generating a new copy..."
-                    a = (os.getcwd().split("/training") [0]) + "/modules/"
-                    import shutil
-                    shutil.copyfile(a+"configvideo.py.example", a+"configvideo.py")
-                    import configvideo
-                    print "configvideo.py copied and imported successfully."
-                except:
-                    print "Error importing configvideo."
-                    os._exit(1)
-                
-                if 'configvideo' in sys.modules:  
-                    del(sys.modules["configvideo"]) 
-                
-                
-                try:
-                    import configSphereVideoDetection
-                except ImportError:
-                    print "File configSphereVideoDetection.py not found. Generating a new copy..."
-                    a = (os.getcwd().split("/training") [0]) + "/modules/"
-                    import shutil
-                    shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
-                    import configvideo
-                    print "configSphereVideoDetection.py copied and imported successfully."
-                except:
-                    print "Error importing configSphereVideoDetection."
-                    os._exit(1)
-                
-                if 'configSphereVideoDetection' in sys.modules:  
-                    del(sys.modules["configSphereVideoDetection"]) 
-                
-                try:
-                    import configCamera
-                except ImportError:
-                    print "File configCamera.py not found. Generating a new copy..."
-                    a = (os.getcwd().split("/training") [0]) + "/modules/"
-                    import shutil
-                    shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
-                    import configvideo
-                    print "configCamera.py copied and imported successfully."
-                except:
-                    print "Error importing configCamera."
-                    os._exit(1)
-                
-                if 'configCamera' in sys.modules:  
-                    del(sys.modules["configCamera"]) 
-                
-                try:
-                    import config_training as cfgtraining
-                except ImportError:
-                    print "File config_training.py not found. Generating a new copy..."
-                    a = os.getcwd() + "/"
-                    print a
-                    import shutil
-                    shutil.copyfile(a+"config_training.py.example", a+"config_training.py")
-                    import config_training as cfgtraining
-                    print "config_training.py copied and imported successfully."
-                except:
-                    print "Error importing config_training."
-                    os._exit(1)
-                
-                if 'config_training' in sys.modules:  
-                    del(sys.modules["config_training"]) 
-                
-                ####
-                # End of checking existance of config files.
-                
-                pass
-                ####
-                #training init: check for modules and dependencies. Copy from '*.py.example' if needed
-                ####
-        
-        
-        def __checkModules():
-            def __checkOneModule(arg):
-                #checks if one module passed as arg , exists in the system.
-                import imp
-                try:
-                    imp.find_module( str(arg) )
-                    found = True
-                except ImportError:
-                    found = False
-                if (found == False):
-                    print "Module %r not found" % (str(arg))
-                return found
-            
-            print "Checking modules."
-            if (__checkOneModule("cv") == False):
-                print "Exiting because of missing import: "+ "cv"
-                sys.exit(1)
-                pass
-            if (__checkOneModule("cv2")  == False):
-                print "Exiting because of missing import: "+ "cv2"
-                sys.exit(1)
-                pass
-            if (__checkOneModule("timeit")  == False):
-                print "Exiting because of missing import: "+ "timeit"
-                sys.exit(1)
-                pass
-            if (__checkOneModule("numpy")  == False):
-                print "Exiting because of missing import: "+ "numpy"
-                sys.exit(1)
-                pass
-            if (__checkOneModule("pygame")  == False):
-                print "Exiting because of missing import: "+ "pygame"
-                sys.exit(1)
-                pass
-            if (__checkOneModule("parallel")  == False):
-                print "Missing import: " + "parallel"
-                pass
-            if (__checkOneModule("Tkinter")  == False):
-                print "Missing import: " + "Tkinter"
-                pass
-            if (__checkOneModule("gtk")  == False):
-                print "Missing import: " + "gtk"
-                pass
             pass
         
         @staticmethod
@@ -937,8 +938,6 @@ class Training():
             
             
         pass
-        __checkModules()
-        __checkConfigFiles()
         
         
         import config_training as cfgtraining
@@ -1579,7 +1578,7 @@ class Training():
             pass
         #Sphere Video Detection:
         import sphereVideoDetection
-        self.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
+        self.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(configvideo.VIDEOSOURCE, configvideo.CAM_WIDTH, configvideo.CAM_HEIGHT)
         self.gVariables.videoDet.setMovementTimeWindow(self.gVariables.movementTime)  # seconds that should be moving.
         self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
         self.gVariables.logger.debug('sphereVideoDetection started.')
