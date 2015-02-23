@@ -26,11 +26,20 @@ import track_bola_utils
 
 class sphereVideoDetection():
     calibratingMovementAmount = False;
-    NoiseFVars = track_bola_utils.dummyClass();
-    NoiseFVars.MAX_CIRCLE_MOVEMENT = -1;
-    NoiseFVars.MIN_CIRCLE_MOVEMENT = -1;
-    NoiseFVars.minRadius = -1;
+    NoiseFilteringOffVars = track_bola_utils.dummyClass();
+    NoiseFilteringOffVars.MAX_CIRCLE_MOVEMENT = -1;
+    NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT = -1;
+    NoiseFilteringOffVars.WORKING_MIN_CONTOUR_AREA = -1;
+    NoiseFilteringOffVars.WORKING_MAX_CONTOUR_AREA = -1;
+    NoiseFilteringOffVars.minRadius = -1;
     
+    
+    NoiseFilteringOnVars = track_bola_utils.dummyClass();
+    NoiseFilteringOnVars.MAX_CIRCLE_MOVEMENT = -1;
+    NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT = -1;
+    NoiseFilteringOnVars.WORKING_MIN_CONTOUR_AREA = -1;
+    NoiseFilteringOnVars.WORKING_MAX_CONTOUR_AREA = -1;
+    NoiseFilteringOnVars.minRadius = -1;
     
     def __init__ (self, videosource, width=640, height=480) :
         import track_bola_utils
@@ -157,6 +166,8 @@ class sphereVideoDetection():
         self.CAM_GAIN_VALUE = configCamera.CAM_GAIN_VALUE
         self.CAM_EXPOSURE_VALUE = configCamera.CAM_EXPOSURE_VALUE
         logger.info("Initial config done. Starting loop function...")
+    
+    def initAll(self):
         import threading
         # Create one non-blocking thread for capturing video Stream
         self.fred1 = threading.Thread(target=self.mainVideoDetection, name="VideoDetection")
@@ -207,6 +218,16 @@ class sphereVideoDetection():
     def setNoiseFiltering(self, bool):
         # Set Noise FIltering: False if you DON'T want noise filtering , because you consider that your input video has no noise.
         self.noiseFiltering = bool
+        if (bool):
+            self.MAX_CIRCLE_MOVEMENT = self.NoiseFilteringOnVars.MAX_CIRCLE_MOVEMENT
+            self.MIN_CIRCLE_MOVEMENT = self.NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT
+            self.WORKING_MAX_CONTOUR_AREA = self.NoiseFilteringOnVars.WORKING_MAX_CONTOUR_AREA
+            self.WORKING_MIN_CONTOUR_AREA = self.NoiseFilteringOnVars.WORKING_MIN_CONTOUR_AREA
+        else:
+            self.MAX_CIRCLE_MOVEMENT = self.NoiseFilteringOffVars.MAX_CIRCLE_MOVEMENT
+            self.MIN_CIRCLE_MOVEMENT = self.NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT
+            self.WORKING_MAX_CONTOUR_AREA = self.NoiseFilteringOffVars.WORKING_MAX_CONTOUR_AREA
+            self.WORKING_MIN_CONTOUR_AREA = self.NoiseFilteringOffVars.WORKING_MIN_CONTOUR_AREA
         print "Noise Filtering now set to: %r" % self.noiseFiltering
     
     def getNoiseFiltering(self):
@@ -240,11 +261,17 @@ class sphereVideoDetection():
             # Flag 0: Check whether calibration file exists or not.
             try:
                 import calibrationCamera
-                self.MIN_CIRCLE_MOVEMENT = calibrationCamera.MIN_CIRCLE_MOVEMENT
-                self.MAX_CIRCLE_MOVEMENT = calibrationCamera.MAX_CIRCLE_MOVEMENT
-                self.WORKING_MIN_CONTOUR_AREA = calibrationCamera.WORKING_MIN_CONTOUR_AREA
-                self.WORKING_MAX_CONTOUR_AREA = calibrationCamera.WORKING_MAX_CONTOUR_AREA
-                return True  # True, calibration file was there.
+                self.NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT = calibrationCamera.MIN_CIRCLE_MOVEMENT
+                self.NoiseFilteringOnVars.MAX_CIRCLE_MOVEMENT = calibrationCamera.MAX_CIRCLE_MOVEMENT
+                self.NoiseFilteringOnVars.WORKING_MIN_CONTOUR_AREA = calibrationCamera.WORKING_MIN_CONTOUR_AREA
+                self.NoiseFilteringOnVars.WORKING_MAX_CONTOUR_AREA = calibrationCamera.WORKING_MAX_CONTOUR_AREA
+                
+                self.NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT = calibrationCamera.NF_MIN_CIRCLE_MOVEMENT
+                self.NoiseFilteringOffVars.MAX_CIRCLE_MOVEMENT = calibrationCamera.NF_MAX_CIRCLE_MOVEMENT
+                self.NoiseFilteringOffVars.WORKING_MIN_CONTOUR_AREA = calibrationCamera.NF_WORKING_MIN_CONTOUR_AREA
+                self.NoiseFilteringOffVars.WORKING_MAX_CONTOUR_AREA = calibrationCamera.NF_WORKING_MAX_CONTOUR_AREA
+                self.setNoiseFiltering(self.getNoiseFiltering()) #to apply changes.
+                return True  # True, calibration file was there (and i already loaded all vars..
             except:
                 # probably: file doesn't exist.
                 return False  # False, calibration file was not there. A new one will be created AFTER calib. variables are determined"
@@ -258,18 +285,28 @@ class sphereVideoDetection():
                 print "Previous calibrationCamera file exists. File erased."
                 logger.info("Previous calibrationCamera file exists. File erased.")
             except:
-                print "Error creating / erasing previous calibration file. Probably file does not exist."
-                logger.error("Error creating / erasing previous calibration file. Probably file does not exist.")
-                
+                print "Error erasing previous calibration file. Probably file does not exist."
+                logger.error("Error erasing previous calibration file. Probably file does not exist.")
+            
+            print "Creating new calibration file"
             with open("../modules/calibrationCamera.py", "w") as text_file:
                     text_file.write("#This file has calibration variables for the camera \n")
                     text_file.write("#if this file exists, these values will be used in execution. Else, a new file \n")
                     text_file.write("#with calibration variables will be created and used. \n")
+                    text_file.write("# ")
                     
-                    text_file.write("MAX_CIRCLE_MOVEMENT = %d \n" % int(self.MAX_CIRCLE_MOVEMENT))
-                    text_file.write("MIN_CIRCLE_MOVEMENT = %d \n" % int(self.MIN_CIRCLE_MOVEMENT))
-                    text_file.write("WORKING_MIN_CONTOUR_AREA = %d \n" % int(self.WORKING_MIN_CONTOUR_AREA))
-                    text_file.write("WORKING_MAX_CONTOUR_AREA = %d \n" % int(self.WORKING_MAX_CONTOUR_AREA))
+                    text_file.write("MAX_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOnVars.MAX_CIRCLE_MOVEMENT))
+                    text_file.write("MIN_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT))
+                    text_file.write("WORKING_MIN_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOnVars.WORKING_MIN_CONTOUR_AREA))
+                    text_file.write("WORKING_MAX_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOnVars.WORKING_MAX_CONTOUR_AREA))
+                    
+                    text_file.write("# ")
+                    text_file.write("# Noise Filtering variables")
+                    
+                    text_file.write("NF_MAX_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOffVars.MAX_CIRCLE_MOVEMENT))
+                    text_file.write("NF_MIN_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT))
+                    text_file.write("NF_WORKING_MIN_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOffVars.WORKING_MIN_CONTOUR_AREA))
+                    text_file.write("NF_WORKING_MAX_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOffVars.WORKING_MAX_CONTOUR_AREA))
                     
                     print self.MAX_CIRCLE_MOVEMENT
                     logger.info(str(self.MAX_CIRCLE_MOVEMENT))
@@ -677,6 +714,46 @@ class sphereVideoDetection():
     def getMovementMethod(self):
         return self.movementMethod
     
+    def setCalibrationVariables(self, minRadius, maxRadius, expectedValue):
+        #setting first "noise filtering on" variables:
+        self.NoiseFilteringOnVars.MAX_CIRCLE_MOVEMENT = expectedValue * 1.5
+        self.NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT = expectedValue / 5
+        if (self.NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+            self.NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT = 2
+        pass
+        self.NoiseFilteringOnVars.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
+        self.NoiseFilteringOnVars.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
+        pass
+        #now setting "noise filtering off" variables:
+        print "No noise filtering set."
+        logger.info("No noise filtering set.")
+        self.NoiseFilteringOffVars.MAX_CIRCLE_MOVEMENT = expectedValue * 2
+        self.NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT = expectedValue / 8
+        self.NoiseFilteringOffVars.minRadius = 1
+        minRadius = 1
+        if (self.NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+            self.NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT = 2
+        pass
+        self.NoiseFilteringOffVars.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
+        self.NoiseFilteringOffVars.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
+#         if (self.noiseFiltering == False):
+#                             print "No noise filtering set."
+#                             logger.info("No noise filtering set.")
+#                             self.MAX_CIRCLE_MOVEMENT = expectedValue * 2
+#                             self.MIN_CIRCLE_MOVEMENT = expectedValue / 8
+#                             minRadius = 1
+#                             if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+#                                 self.MIN_CIRCLE_MOVEMENT = 2
+#         else:
+#                              self.MAX_CIRCLE_MOVEMENT = expectedValue * 1.5
+#                              self.MIN_CIRCLE_MOVEMENT = expectedValue / 5
+#                              if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
+#                                  self.MIN_CIRCLE_MOVEMENT = 2
+#         self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
+#         self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
+        pass
+        self.setNoiseFiltering(self.getNoiseFiltering()) #to apply changes.
+    
     def mainVideoDetection(self):
     
         """
@@ -777,6 +854,7 @@ class sphereVideoDetection():
         time.sleep(0.1)
 
         self.startCalibration = True
+        print "Starting video detection main loop."
         Lnew = []
         while (self.available == True):
                 #===============================================================
@@ -823,22 +901,8 @@ class sphereVideoDetection():
                             if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue) < expectedValue / 2):
                                 minRadius = circleRadius[i]
                         
-                        if (self.noiseFiltering == False):
-                            print "No noise filtering set."
-                            logger.info("No noise filtering set.")
-                            self.MAX_CIRCLE_MOVEMENT = expectedValue * 2
-                            self.MIN_CIRCLE_MOVEMENT = expectedValue / 8
-                            minRadius = 1
-                            if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-                                self.MIN_CIRCLE_MOVEMENT = 2
-                        else:
-                             self.MAX_CIRCLE_MOVEMENT = expectedValue * 1.5
-                             self.MIN_CIRCLE_MOVEMENT = expectedValue / 5
-                             if (self.MIN_CIRCLE_MOVEMENT > 2 and expectedValue > 15 and expectedValue < 35):
-                                 self.MIN_CIRCLE_MOVEMENT = 2
-
-                        self.WORKING_MIN_CONTOUR_AREA = minRadius * minRadius * 3.142 * 0.5
-                        self.WORKING_MAX_CONTOUR_AREA = maxRadius * maxRadius * 3.142 * 1.3
+                        # variables regarding noise filtering will be created wether nf is on or off:
+                        self.setCalibrationVariables(minRadius, maxRadius, expectedValue)
                         
                         print "Number of samples: %d" % len(circleCenters)
                         logger.info(str("Number of samples: %d" % len(circleCenters)))
@@ -868,7 +932,7 @@ class sphereVideoDetection():
                         self.startCalibration = False
                     else:
                         # Calibration file exists, there is no need to calibrate.
-                        # print " - Calibration file exists. Using calibration file. - "
+                        print " - Calibration file exists. Using calibration file. - "
                         logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
                         # print "Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)
                         logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
@@ -1071,6 +1135,7 @@ if __name__ == '__main__':
     print VIDEOSOURCE
     videoDet = sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
     videoDet.setNoiseFiltering(True)
+    videoDet.initAll()
     import time
     # time.sleep(2)
     # videoDet.setNoiseFiltering(False)
