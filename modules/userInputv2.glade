@@ -1466,6 +1466,11 @@ Generates a new calibration file for the movement detection taking as sample the
                           <object class="GtkLabel" id="label7">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup">Test Tone 1</property>
+                            <property name="tooltip_text" translatable="yes">Movement Amount
+                            Sets the movement threshold to consider a given frame as 'moving'. (see sphereVideoDetection docs)
+                            </property>
                             <property name="label" translatable="yes">Movement Amount:</property>
                           </object>
                           <packing>
@@ -1508,6 +1513,15 @@ Generates a new calibration file for the movement detection taking as sample the
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Method Used</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup">Test Tone 1</property>
+                            <property name="tooltip_text" translatable="yes">Method Used
+    Establishes the method to use for the movement detection (see sphereVideoDetection docs).
+    Valid current methods are:
+        0 : Accumulate Time
+        1 : Movement Vector
+        2 : Movement Vector - Binary (default)
+                            </property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -2195,6 +2209,10 @@ The remaining probability is that of the Tone 2 playing.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Apply</property>
+                    <property name="tooltip_text" translatable="yes">Apply
+Applies and saves all changes made to the Trial Events.</property>
                     <signal name="clicked" handler="clicked_applyTE" swapped="no"/>
                   </object>
                   <packing>
