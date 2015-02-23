@@ -22,7 +22,11 @@ import time
 import timeit
 import logging
 import threading
-from configvideo import *
+try:
+    from configvideo import *
+except:
+    print "Error importing configvideo. will generate a new one"
+    sys.exit(1)
 import track_bola_utils
 
 class Training():
