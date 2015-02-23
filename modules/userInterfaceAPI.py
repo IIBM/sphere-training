@@ -56,8 +56,8 @@ class userInterface_API:
     pavlovVars.probabilityToneOne = 1
     pavlovVars.frequencyTone1 = 1
     pavlovVars.frequencyTone2 = 1
-    pavlovVars.movementAmount = 1
-    pavlovVars.movementMethod = 1
+    #pavlovVars.movementAmount = 1
+    #pavlovVars.movementMethod = 1
     pavlovVars.movementTime = 1
     pavlovVars.idleTime = 1
     pavlovVars.requireStillnessVar = 0;
@@ -73,8 +73,8 @@ class userInterface_API:
     skinnerVars.probabilityToneOne = 1
     skinnerVars.frequencyTone1 = 1
     skinnerVars.frequencyTone2 = 1
-    skinnerVars.movementAmount = 1
-    skinnerVars.movementMethod = 1
+    #skinnerVars.movementAmount = 1
+    #skinnerVars.movementMethod = 1
     skinnerVars.movementTime = 1
     skinnerVars.idleTime = 1
     skinnerVars.requireStillnessVar = 0;
@@ -88,8 +88,8 @@ class userInterface_API:
     ocondVars.probabilityToneOne = 1
     ocondVars.frequencyTone1 = 1
     ocondVars.frequencyTone2 = 1
-    ocondVars.movementAmount = 1
-    ocondVars.movementMethod = 1
+    #ocondVars.movementAmount = 1
+    #ocondVars.movementMethod = 1
     ocondVars.movementTime = 1
     ocondVars.idleTime = 1
     ocondVars.requireStillnessVar = 0;
@@ -103,8 +103,8 @@ class userInterface_API:
     discrVars.probabilityToneOne = 1
     discrVars.frequencyTone1 = 1
     discrVars.frequencyTone2 = 1
-    discrVars.movementAmount = 1
-    discrVars.movementMethod = 1
+    #discrVars.movementAmount = 1
+    #discrVars.movementMethod = 1
     discrVars.movementTime = 1
     discrVars.idleTime = 1
     discrVars.requireStillnessVar = 0;
@@ -155,8 +155,8 @@ class userInterface_API:
         multipUI.pavlovVars.frequencyTone1 = self.pavlovVars.frequencyTone1
         multipUI.pavlovVars.frequencyTone2 = self.pavlovVars.frequencyTone2
         
-        multipUI.pavlovVars.movementAmount = self.pavlovVars.movementAmount
-        multipUI.pavlovVars.movementMethod = self.pavlovVars.movementMethod
+        #multipUI.pavlovVars.movementAmount = self.pavlovVars.movementAmount
+        #multipUI.pavlovVars.movementMethod = self.pavlovVars.movementMethod
         multipUI.pavlovVars.movementTime = self.pavlovVars.movementTime
         multipUI.pavlovVars.idleTime = self.pavlovVars.idleTime
         
@@ -174,8 +174,8 @@ class userInterface_API:
             multipUI.frequencyTone1 = self.pavlovVars.frequencyTone1
             multipUI.frequencyTone2 = self.pavlovVars.frequencyTone2
             
-            multipUI.movementAmount = self.pavlovVars.movementAmount
-            multipUI.movementMethod = self.pavlovVars.movementMethod
+            #multipUI.movementAmount = self.pavlovVars.movementAmount
+            #multipUI.movementMethod = self.pavlovVars.movementMethod
             multipUI.movementTime = self.pavlovVars.movementTime
             multipUI.idleTime = self.pavlovVars.idleTime
             
@@ -193,8 +193,8 @@ class userInterface_API:
         multipUI.skinnerVars.frequencyTone1 = self.skinnerVars.frequencyTone1
         multipUI.skinnerVars.frequencyTone2 = self.skinnerVars.frequencyTone2
         
-        multipUI.skinnerVars.movementAmount = self.skinnerVars.movementAmount
-        multipUI.skinnerVars.movementMethod = self.skinnerVars.movementMethod
+        #multipUI.skinnerVars.movementAmount = self.skinnerVars.movementAmount
+        #multipUI.skinnerVars.movementMethod = self.skinnerVars.movementMethod
         multipUI.skinnerVars.movementTime = self.skinnerVars.movementTime
         multipUI.skinnerVars.idleTime = self.skinnerVars.idleTime
         
@@ -212,8 +212,8 @@ class userInterface_API:
             multipUI.frequencyTone1 = self.skinnerVars.frequencyTone1
             multipUI.frequencyTone2 = self.skinnerVars.frequencyTone2
             
-            multipUI.movementAmount = self.skinnerVars.movementAmount
-            multipUI.movementMethod = self.skinnerVars.movementMethod
+            #multipUI.movementAmount = self.skinnerVars.movementAmount
+            #multipUI.movementMethod = self.skinnerVars.movementMethod
             multipUI.movementTime = self.skinnerVars.movementTime
             multipUI.idleTime = self.skinnerVars.idleTime
             
@@ -235,8 +235,8 @@ class userInterface_API:
         multipUI.ocondVars.frequencyTone1 = self.ocondVars.frequencyTone1
         multipUI.ocondVars.frequencyTone2 = self.ocondVars.frequencyTone2
         
-        multipUI.ocondVars.movementAmount = self.ocondVars.movementAmount
-        multipUI.ocondVars.movementMethod = self.ocondVars.movementMethod
+        #multipUI.ocondVars.movementAmount = self.ocondVars.movementAmount
+        #multipUI.ocondVars.movementMethod = self.ocondVars.movementMethod
         multipUI.ocondVars.movementTime = self.ocondVars.movementTime
         multipUI.ocondVars.idleTime = self.ocondVars.idleTime
         
@@ -255,8 +255,8 @@ class userInterface_API:
             multipUI.frequencyTone1 = self.ocondVars.frequencyTone1
             multipUI.frequencyTone2 = self.ocondVars.frequencyTone2
             
-            multipUI.movementAmount = self.ocondVars.movementAmount
-            multipUI.movementMethod = self.ocondVars.movementMethod
+            #multipUI.movementAmount = self.ocondVars.movementAmount
+            #multipUI.movementMethod = self.ocondVars.movementMethod
             multipUI.movementTime = self.ocondVars.movementTime
             multipUI.idleTime = self.ocondVars.idleTime
             
@@ -275,8 +275,8 @@ class userInterface_API:
         multipUI.discrVars.frequencyTone1 = self.discrVars.frequencyTone1
         multipUI.discrVars.frequencyTone2 = self.discrVars.frequencyTone2
         
-        multipUI.discrVars.movementAmount = self.discrVars.movementAmount
-        multipUI.discrVars.movementMethod = self.discrVars.movementMethod
+        #multipUI.discrVars.movementAmount = self.discrVars.movementAmount
+        #multipUI.discrVars.movementMethod = self.discrVars.movementMethod
         multipUI.discrVars.movementTime = self.discrVars.movementTime
         multipUI.discrVars.idleTime = self.discrVars.idleTime
         
@@ -294,8 +294,8 @@ class userInterface_API:
             multipUI.frequencyTone1 = self.discrVars.frequencyTone1
             multipUI.frequencyTone2 = self.discrVars.frequencyTone2
             
-            multipUI.movementAmount = self.discrVars.movementAmount
-            multipUI.movementMethod = self.discrVars.movementMethod
+            #multipUI.movementAmount = self.discrVars.movementAmount
+            #multipUI.movementMethod = self.discrVars.movementMethod
             multipUI.movementTime = self.discrVars.movementTime
             multipUI.idleTime = self.discrVars.idleTime
             
@@ -408,8 +408,8 @@ class multiproc_userInterface_API:
     pavlovVars.probabilityToneOne = 1
     pavlovVars.frequencyTone1 = 1
     pavlovVars.frequencyTone2 = 1
-    pavlovVars.movementAmount = 1
-    pavlovVars.movementMethod = 1
+    #pavlovVars.movementAmount = 1
+    #pavlovVars.movementMethod = 1
     pavlovVars.movementTime = 1
     pavlovVars.idleTime = 1
     
@@ -422,8 +422,8 @@ class multiproc_userInterface_API:
     skinnerVars.probabilityToneOne = 1
     skinnerVars.frequencyTone1 = 1
     skinnerVars.frequencyTone2 = 1
-    skinnerVars.movementAmount = 1
-    skinnerVars.movementMethod = 1
+    #skinnerVars.movementAmount = 1
+    #skinnerVars.movementMethod = 1
     skinnerVars.movementTime = 1
     skinnerVars.idleTime = 1
     
@@ -436,8 +436,8 @@ class multiproc_userInterface_API:
     ocondVars.probabilityToneOne = 1
     ocondVars.frequencyTone1 = 1
     ocondVars.frequencyTone2 = 1
-    ocondVars.movementAmount = 1
-    ocondVars.movementMethod = 1
+    #ocondVars.movementAmount = 1
+    #ocondVars.movementMethod = 1
     ocondVars.movementTime = 1
     ocondVars.idleTime = 1
     
@@ -450,8 +450,8 @@ class multiproc_userInterface_API:
     discrVars.probabilityToneOne = 1
     discrVars.frequencyTone1 = 1
     discrVars.frequencyTone2 = 1
-    discrVars.movementAmount = 1
-    discrVars.movementMethod = 1
+    #discrVars.movementAmount = 1
+    #discrVars.movementMethod = 1
     discrVars.movementTime = 1
     discrVars.idleTime = 1
     
@@ -890,8 +890,8 @@ class multiproc_userInterface_API:
                 self.currentGUI.probabilityToneOne = obj.probabilityToneOne
                 self.currentGUI.frequencyTone1 = obj.frequencyTone1
                 self.currentGUI.frequencyTone2 = obj.frequencyTone2
-                self.currentGUI.movementAmount = obj.movementAmount
-                self.currentGUI.movementMethod = obj.movementMethod
+                #self.currentGUI.movementAmount = obj.movementAmount
+                #self.currentGUI.movementMethod = obj.movementMethod
                 self.currentGUI.movementTime = obj.movementTime
                 self.currentGUI.idleTime = obj.idleTime
                 self.currentGUI.type_pavlov = 1
@@ -918,8 +918,8 @@ class multiproc_userInterface_API:
                 self.currentGUI.probabilityToneOne = obj.probabilityToneOne
                 self.currentGUI.frequencyTone1 = obj.frequencyTone1
                 self.currentGUI.frequencyTone2 = obj.frequencyTone2
-                self.currentGUI.movementAmount = obj.movementAmount
-                self.currentGUI.movementMethod = obj.movementMethod
+                #self.currentGUI.movementAmount = obj.movementAmount
+                #self.currentGUI.movementMethod = obj.movementMethod
                 self.currentGUI.movementTime = obj.movementTime
                 self.currentGUI.idleTime = obj.idleTime
                 self.currentGUI.type_pavlov = 0
@@ -947,8 +947,8 @@ class multiproc_userInterface_API:
                 self.currentGUI.probabilityToneOne = obj.probabilityToneOne
                 self.currentGUI.frequencyTone1 = obj.frequencyTone1
                 self.currentGUI.frequencyTone2 = obj.frequencyTone2
-                self.currentGUI.movementAmount = obj.movementAmount
-                self.currentGUI.movementMethod = obj.movementMethod
+                #self.currentGUI.movementAmount = obj.movementAmount
+                #self.currentGUI.movementMethod = obj.movementMethod
                 self.currentGUI.movementTime = obj.movementTime
                 self.currentGUI.idleTime = obj.idleTime
                 self.currentGUI.type_pavlov = 0
@@ -976,8 +976,8 @@ class multiproc_userInterface_API:
                 self.currentGUI.probabilityToneOne = obj.probabilityToneOne
                 self.currentGUI.frequencyTone1 = obj.frequencyTone1
                 self.currentGUI.frequencyTone2 = obj.frequencyTone2
-                self.currentGUI.movementAmount = obj.movementAmount
-                self.currentGUI.movementMethod = obj.movementMethod
+                #self.currentGUI.movementAmount = obj.movementAmount
+                #self.currentGUI.movementMethod = obj.movementMethod
                 self.currentGUI.movementTime = obj.movementTime
                 self.currentGUI.idleTime = obj.idleTime
                 self.currentGUI.type_pavlov = 0

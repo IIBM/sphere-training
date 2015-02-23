@@ -989,6 +989,7 @@ class Training():
         #GUI Type:
         GUIType = cfgtraining.usingTK
         currentGUI = None #user Interface API object.
+        current_mode=""
         
         # video Detection:
         videoDet = 0  # video Detection object. initialized in the main.
@@ -1053,6 +1054,7 @@ class Training():
                 soundGenFrequency1 = pavlovVars.soundGenFrequency1
                 soundGenFrequency2 = pavlovVars.soundGenFrequency2
                 toneOneProbability = pavlovVars.toneOneProbability
+                current_mode = "pavlov"
                 print "grabbed from pavlovVars."
                 pass
             pass
@@ -1076,6 +1078,7 @@ class Training():
                 soundGenFrequency1 = skinnerVars.soundGenFrequency1
                 soundGenFrequency2 = skinnerVars.soundGenFrequency2
                 toneOneProbability = skinnerVars.toneOneProbability
+                current_mode = "skinner"
                 print "grabbed from skinnerVars."
                 pass
                 pass
@@ -1099,6 +1102,7 @@ class Training():
                 soundGenFrequency1 = ocondVars.soundGenFrequency1
                 soundGenFrequency2 = ocondVars.soundGenFrequency2
                 toneOneProbability = ocondVars.toneOneProbability
+                current_mode = "oc"
                 print "grabbed from ocondVars."
                 pass
             pass
@@ -1121,6 +1125,7 @@ class Training():
                 soundGenFrequency1 = discrVars.soundGenFrequency1
                 soundGenFrequency2 = discrVars.soundGenFrequency2
                 toneOneProbability = discrVars.toneOneProbability
+                current_mode = "discr"
                 print "grabbed from discrVars."
                 pass
             pass
@@ -1789,6 +1794,66 @@ class Training():
                 #trial not executing or tr.stage not 1, so it is unnecessary to check if should give reward..
                 pass
     
+    def saveToInternalVars(self, a):
+                    if ("pavlov" in a):
+                        print "pavlov mode detected"
+                        if (Training.gVariables.type_pavlov == 1):
+                            print "Pavlov already set to 1. Saving Pavlov vars."
+                            Training.gVariables.saveVariables.savePavlovVars()
+                        else:
+                            print "Pavlov set. Not saving Pavlov variables. Loading GUI for previously loaded vars"
+                            Training.gVariables.saveVariables.loadPavlovVars()
+                            
+                            
+                        Training.gVariables.type_pavlov = 1
+                        Training.gVariables.type_skinner = 0
+                        Training.gVariables.type_discr = 0
+                        Training.gVariables.type_ocond = 0
+                        pass
+                    if ("skinner") in a:
+                        print "skinner detected"
+                        if (Training.gVariables.type_skinner == 1):
+                            print "Skinner already set to 1. Saving Skinner vars."
+                            Training.gVariables.saveVariables.saveSkinnerVars()
+                        else:
+                            print "Skinner set. Not saving Skinner variables. Loading GUI for previously loaded vars"
+                            Training.gVariables.saveVariables.loadSkinnerVars()
+                        Training.gVariables.type_pavlov = 0
+                        Training.gVariables.type_skinner = 1
+                        Training.gVariables.type_discr = 0
+                        Training.gVariables.type_ocond = 0
+                        pass
+                    if ("oc") in a:
+                        print "oc detected"
+                        if (Training.gVariables.type_ocond == 1):
+                            print "O.Cond. already set to 1. Saving O.Cond. vars."
+                            Training.gVariables.saveVariables.saveOcondVars()
+                        else:
+                            print "O.Cond. set. Not saving O.Cond. variables. Loading GUI for previously loaded vars"
+                            Training.gVariables.saveVariables.loadOcondVars()
+                        Training.gVariables.type_pavlov = 0
+                        Training.gVariables.type_skinner = 0
+                        Training.gVariables.type_discr = 0
+                        Training.gVariables.type_ocond = 1
+                        pass
+                    if ("discr") in a:
+                        print "discr detected"
+                        if (Training.gVariables.type_discr == 1):
+                            print "..................................................................."
+                            print "Discr. already set to 1. Saving Discr. vars."
+                            print "..................................................................."
+                            Training.gVariables.saveVariables.saveDiscrVars()
+                        else:
+                            print "..................................................................."
+                            print "Discr. set. Not saving Discr. variables. Loading GUI for previously loaded vars"
+                            print "..................................................................."
+                            Training.gVariables.saveVariables.loadDiscrVars()
+                        Training.gVariables.type_pavlov = 0
+                        Training.gVariables.type_skinner = 0
+                        Training.gVariables.type_discr = 1
+                        Training.gVariables.type_ocond = 0
+                        pass
+    
     def GUICheck(self):
                 #GUICheck: this function is called once in every thread loop, and checks if
                 #    the shared variables between training_ and GUI Process contain new info.
@@ -1949,6 +2014,12 @@ class Training():
                     print "GUICheck: 'Variable to change: Idle Time' message"
                     Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Idle Time' message" )
                     Training.gVariables.fn_idleTimeSet(argument)
+                    ############################################################
+                    # Saving to internal vars here because of lack of a better place to put them.
+                    ############################################################
+                    print "Parameters: saving to internal vars."
+                    self.saveToInternalVars(Training.gVariables.current_mode)
+                    
                     print "GUICheck: Argument value read from Queue: ", argument
                     Training.gVariables.logger.debug( str("GUICheck: Argument value read from Queue: " + str(argument)) )
                 elif (index == 23):
@@ -2016,64 +2087,7 @@ class Training():
                     Training.gVariables.logger.debug( "GUICheck: 'current_type' message" )
                     Training.gVariables.current_mode = a
                     print "Current type: %s" % a
-                    if ("pavlov" in a):
-                        print "pavlov mode detected"
-                        if (Training.gVariables.type_pavlov == 1):
-                            print "Pavlov already set to 1. Saving Pavlov vars."
-                            Training.gVariables.saveVariables.savePavlovVars()
-                        else:
-                            print "Pavlov set. Not saving Pavlov variables. Loading GUI for previously loaded vars"
-                            Training.gVariables.saveVariables.loadPavlovVars()
-                            #acA hay que cargar variables desde training.py al GUI. Para eso, cambiar API a multiprocessing.
-                            
-                            
-                        Training.gVariables.type_pavlov = 1
-                        Training.gVariables.type_skinner = 0
-                        Training.gVariables.type_discr = 0
-                        Training.gVariables.type_ocond = 0
-                        pass
-                    if ("skinner") in a:
-                        print "skinner detected"
-                        if (Training.gVariables.type_skinner == 1):
-                            print "Skinner already set to 1. Saving Skinner vars."
-                            Training.gVariables.saveVariables.saveSkinnerVars()
-                        else:
-                            print "Skinner set. Not saving Skinner variables. Loading GUI for previously loaded vars"
-                            Training.gVariables.saveVariables.loadSkinnerVars()
-                            #acA hay que cargar variables desde training.py al GUI. Para eso, cambiar API a multiprocessing.
-                        Training.gVariables.type_pavlov = 0
-                        Training.gVariables.type_skinner = 1
-                        Training.gVariables.type_discr = 0
-                        Training.gVariables.type_ocond = 0
-                        pass
-                    if ("oc") in a:
-                        print "oc detected"
-                        if (Training.gVariables.type_ocond == 1):
-                            print "O.Cond. already set to 1. Saving O.Cond. vars."
-                            Training.gVariables.saveVariables.saveOcondVars()
-                        else:
-                            print "O.Cond. set. Not saving O.Cond. variables. Loading GUI for previously loaded vars"
-                            Training.gVariables.saveVariables.loadOcondVars()
-                            #acA hay que cargar variables desde training.py al GUI. Para eso, cambiar API a multiprocessing.
-                        Training.gVariables.type_pavlov = 0
-                        Training.gVariables.type_skinner = 0
-                        Training.gVariables.type_discr = 0
-                        Training.gVariables.type_ocond = 1
-                        pass
-                    if ("discr") in a:
-                        print "discr detected"
-                        if (Training.gVariables.type_discr == 1):
-                            print "Discr. already set to 1. Saving Discr. vars."
-                            Training.gVariables.saveVariables.saveDiscrVars()
-                        else:
-                            print "Discr. set. Not saving Discr. variables. Loading GUI for previously loaded vars"
-                            Training.gVariables.saveVariables.loadDiscrVars()
-                            #acA hay que cargar variables desde training.py al GUI. Para eso, cambiar API a multiprocessing.
-                        Training.gVariables.type_pavlov = 0
-                        Training.gVariables.type_skinner = 0
-                        Training.gVariables.type_discr = 1
-                        Training.gVariables.type_ocond = 0
-                        pass
+                    self.saveToInternalVars(a)
                 pass
                 #print "GUICheck: done."
                 Training.gVariables.logger.debug( "GUICheck: done." )
