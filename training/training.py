@@ -950,7 +950,7 @@ class Training():
         minIdleIntertrialTime = cfgtraining.minIdleIntertrialTime  # no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
         
         requireStillness = cfgtraining.requireStillness # require to stay idle to end trial and start next one.
-        
+        numberOfRewardDrops = cfgtraining.numberOfRewardDrops #number of drops to give as reward when trial successful
         interTrialRandom1Time = cfgtraining.interTrialRandom1Time  # intertrial time is random between this value and the random2 value
         interTrialRandom2Time = cfgtraining.interTrialRandom2Time  # intertrial time is random between previous value and this value. This
         # is also the max duration of a trial.
@@ -1372,8 +1372,12 @@ class Training():
     def giveReward():
         if (Training.gVariables.dropReleased == 0 and Training.gVariables.trialExecuting == True):
                 # print "Release drop of water."
-                Training.gVariables.valve1.drop()
-                Training.gVariables.logger.debug("Drop of water released.")
+                for i in range(0, Training.gVariables.numberOfRewardDrops):
+                    Training.gVariables.valve1.drop()
+		    #print "drop"
+                    if (Training.gVariables.numberOfRewardDrops > 1):
+                         time.sleep(0.15)
+                    Training.gVariables.logger.debug("Drop of water released.")
                 Training.gVariables.successTrialCount += 1
                 Training.gVariables.dropReleased = 1
                 if (Training.gVariables.current_trial_type == 1) :
