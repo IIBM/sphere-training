@@ -45,6 +45,7 @@ class sphereVideoDetection():
     number_of_moving_vectors = 0;
     number_of_standing_vectors = 0;
     sum_of_areas = 0;
+    losing_track_cause = ""
     
     MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = 0 ;
     
@@ -793,22 +794,32 @@ class sphereVideoDetection():
         textRect1.centery = textRect1.centery + 80;
         self.windowSurface.blit(text1, textRect1)
         
-        text1 = self.smallFont.render('Moving circles: %r' % self.number_of_moving_vectors, True, (255,255,255))
+        text1 = self.smallFont.render('Cause for losing track: %r' % self.losing_track_cause, True, (255,255,255))
         textRect1 = text1.get_rect()
         textRect1.centery = textRect1.centery + 120;
         self.windowSurface.blit(text1, textRect1)
         
-        text1 = self.smallFont.render('Standing circles: %r' % self.number_of_standing_vectors, True, (255,255,255))
+        text1 = self.smallFont.render('Moving circles: %r' % self.number_of_moving_vectors, True, (255,255,255))
         textRect1 = text1.get_rect()
         textRect1.centery = textRect1.centery + 160;
+        self.windowSurface.blit(text1, textRect1)
+        
+        text1 = self.smallFont.render('Standing circles: %r' % self.number_of_standing_vectors, True, (255,255,255))
+        textRect1 = text1.get_rect()
+        textRect1.centery = textRect1.centery + 200;
         self.windowSurface.blit(text1, textRect1)
         
         strAreas = ""
         for i in range (0, len(self.areasVector)):
             strAreas += "%.2f , " % (self.areasVector[i]/10000.0)
-        text1 = self.smallFont.render("Circle's area: %r" % (strAreas), True, (255,255,255))
+        text1 = self.smallFont.render("total area of circles/10000: %r" % (strAreas), True, (255,255,255))
         textRect1 = text1.get_rect()
-        textRect1.centery = textRect1.centery + 200;
+        textRect1.centery = textRect1.centery + 240;
+        self.windowSurface.blit(text1, textRect1)
+        
+        text1 = self.smallFont.render("Current area of circles: %.2f" % (self.sum_of_areas), True, (255,255,255))
+        textRect1 = text1.get_rect()
+        textRect1.centery = textRect1.centery + 280;
         self.windowSurface.blit(text1, textRect1)
         
         pygame.display.update()
@@ -1092,13 +1103,16 @@ class sphereVideoDetection():
                             # están muy cerca, son probablemente el mismo.
                             self.number_of_standing_vectors += 1
                 self.isTrackingTemp = True
+                self.losing_track_cause = ""
                 if (self.number_of_standing_vectors < len(Lnew) / 3 and self.number_of_moving_vectors < len(Lnew) / 3):  # see docs.
                     if (len(Lnew) > 2):  # else too few circles to determine loss of tracking
                         self.isTrackingTemp = False #on this frame, the tracking has been lost.
-                
-                # lost of track associated with area of circles
-                if (self.sum_of_areas < self.MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING):
-                    self.isTrackingTemp = False #less area than expected, it has lost movement tracking
+                        self.losing_track_cause = "standing_vs_moving_vectors"
+                if self.isTrackingTemp == True:
+                    # studying lose of track associated with area of circles
+                    if (self.sum_of_areas < self.MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING):
+                            self.isTrackingTemp = False #less area than expected, it has lost movement tracking
+                            self.losing_track_cause = "small_area"
                 
                 self.trackingVector[0:-1] = self.trackingVector[1:]
                 self.trackingVector[-1] = self.isTrackingTemp
@@ -1227,7 +1241,7 @@ if __name__ == '__main__':
         a = str("Continuous movement time: %r    Idle movement time: %r   IsMoving: %r" % 
                  (videoDet.getMovementTime() , videoDet.getIdleTime(), videoDet.getMovementStatus()))
         logger.info(a)
-        print videoDet.movementVector
+        #print videoDet.movementVector
         time.sleep(0.3)
 
 """
