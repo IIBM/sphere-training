@@ -1,5 +1,5 @@
 #This configuration file has initial values for the module: sphereVideoDetection.py
-WINDOW_TITLE = "Track-bola - Video Detection"
+WINDOW_TITLE = "Sphere Movement detection"
 
 CV2_THRESHOLD = 160 #CV2 Pixel threshold. If the pixel is darker than this, it is considered "black"
 NOISE_FILTERING_INITIAL_VALUE = True #enable or disable noise filtering at startup (can be changed during runtime)

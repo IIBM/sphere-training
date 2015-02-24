@@ -1141,7 +1141,7 @@ class Training():
     
     def initDisplay(self):
         import trainingDisplay  # display for showing different variables of interest
-        Training.gVariables.display = trainingDisplay.trainingDisplay()
+        Training.gVariables.display = trainingDisplay.trainingDisplay("Training variables for: " + self.gVariables.subject_name)
         Training.gVariables.display.addImportantInfo(("Trials", 0))
         Training.gVariables.display.addImportantInfo(("Successful Trials", 0))
         Training.gVariables.display.addImportantInfo(("Successful Trials mvnt", 0))

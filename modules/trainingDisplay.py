@@ -14,7 +14,7 @@ class multiproc_trainingDisplay():
     #This class is a WIP.>< 
     
     
-    def __init__(self, jobl):
+    def __init__(self, jobl, caption="Variables"):
         self.displayJobList = jobl
         
         
@@ -31,7 +31,7 @@ class multiproc_trainingDisplay():
         self.TEXT_1_2_SEPARATION = 25 #separation between the two texts
         self.INITIAL_SEPARATION = 25 #separation between top of the window and text1
         self.isUserWriting = False
-        pygame.display.set_caption('Variables')
+        pygame.display.set_caption(caption)
         self.basicFont = pygame.font.SysFont(None, 48)
         self.secondaryFont = pygame.font.SysFont(None, 36)
         #time.sleep(0.5)
@@ -173,8 +173,8 @@ class trainingDisplay() :
     #This class relays information to the multiproc_trainingDisplay class..
     #check that class for information about trainingDisplay functionality.>< 
     
-    def launch_multiproc(self, jobl):
-        a = multiproc_trainingDisplay(jobl)
+    def launch_multiproc(self, jobl, caption):
+        a = multiproc_trainingDisplay(jobl, caption)
         while(True):
             time.sleep(0.005)
             a.checkJobList()
@@ -183,11 +183,11 @@ class trainingDisplay() :
             #        if event.type == pygame.QUIT: sys.exit()
             pass
     
-    def __init__(self):
+    def __init__(self, caption="Variables"):
         import multiprocessing
         self.displayJobList = multiprocessing.JoinableQueue()
         
-        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList,) )
+        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList, caption,) )
         self.displayProc.start()
         
         logger.debug("trainingDisplay process Started.")
@@ -242,17 +242,17 @@ if __name__ == '__main__':
     #===========================================================================
     
     print "Start trainingDisplay Test"
-    a = trainingDisplay()
+    a = trainingDisplay("Custom Test Caption")
     a.addImportantInfo(("Trials", 300))
     a.addImportantInfo(("Succesful Trials", 200))
     a.addSecondaryInfo(("Time: 00:22::33", 0))
     a.addSecondaryInfo(("% s/t", 45.0))
     a.addSecondaryInfo(("Other secondary information", 45.5))
     a.renderAgain()
-    b = trainingDisplay()
+    b = trainingDisplay("Only Trials: ")
     b.addImportantInfo(("Trials", 300))
     b.renderAgain()
-    c = trainingDisplay()
+    c = trainingDisplay("Other info displayed:")
     c.addImportantInfo(("other", 222))
     c.renderAgain()
     var = 0
