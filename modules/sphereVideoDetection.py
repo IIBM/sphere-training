@@ -10,6 +10,7 @@
 
 
 import timeit
+import pygame
 import math
 import threading
 import time
@@ -39,6 +40,11 @@ class sphereVideoDetection():
     NoiseFilteringOnVars.WORKING_MIN_CONTOUR_AREA = -1;
     NoiseFilteringOnVars.WORKING_MAX_CONTOUR_AREA = -1;
     NoiseFilteringOnVars.minRadius = -1;
+    
+    usingPygameDisplay = False;
+    number_of_moving_vectors = 0;
+    number_of_standing_vectors = 0;
+    sum_of_areas = 0;
     
     def __init__ (self, videosource, width=640, height=480) :
         import track_bola_utils
@@ -95,7 +101,7 @@ class sphereVideoDetection():
         self.CAM_WIDTH = width
         self.CAM_HEIGHT = height
         
-        
+        self.usingPygameDisplay = configSphereVideoDetection.pygameDisplay
         self.CV2THRESHOLD = configSphereVideoDetection.CV2_THRESHOLD  # binary threshold. A black pixel is only considered if its color is greater than 160
         
         # variables for keeping track of continuous movement.
@@ -117,6 +123,7 @@ class sphereVideoDetection():
         self.isTrackingTemp = True  # temp, very instantaneous tracking boolean.
         self.isTracking = True  # True: is tracking correctly. False: could not keep up with the circles movement
         self.trackingVector = [True, True, True, True, True, True, True, True, True, True]
+        self.areasVector = [0,0,0,0,0,0,0,0,0,0]
         
         self.showTrackingFeedback = True  # circles, dots and lines for the user
         self.showUserFeedback = True  # show or hide video window.
@@ -165,8 +172,23 @@ class sphereVideoDetection():
         self.CAM_GAIN_VALUE = configCamera.CAM_GAIN_VALUE
         self.CAM_EXPOSURE_VALUE = configCamera.CAM_EXPOSURE_VALUE
         logger.info("Initial config done. Starting loop function...")
+        
     
     def initAll(self):
+        if self.usingPygameDisplay:
+            #pygame init
+            pygame.init()
+            self.windowWidth = 450
+            self.windowHeight = 350
+            self.windowSurface = pygame.display.set_mode((self.windowWidth, self.windowHeight), 0, 32)
+            pygame.display.set_caption('sphereVideoDetection variables:')
+            self.secondaryFont = pygame.font.SysFont(None, 36)
+            self.smallFont = pygame.font.SysFont(None, 20)
+            self.smallestFont = pygame.font.SysFont(None, 12)
+            text1 = self.secondaryFont.render('_', True, (255,255,255))
+            textRect1 = text1.get_rect()
+            self.windowSurface.blit(text1, textRect1)
+            pygame.display.update()
         import threading
         # Create one non-blocking thread for capturing video Stream
         self.fred1 = threading.Thread(target=self.mainVideoDetection, name="VideoDetection")
@@ -746,6 +768,49 @@ class sphereVideoDetection():
         pass
         self.setNoiseFiltering(self.getNoiseFiltering()) #to apply changes.
     
+    def pygameVisualizationTools(self):
+        #visualization tools for helping calibrate camera.
+        self.windowSurface.fill((0,0,0))   
+        text1 = self.secondaryFont.render('mvnt: %r' % self.getMovementTime(), True, (255,255,255))
+        textRect1 = text1.get_rect()
+        self.windowSurface.blit(text1, textRect1)
+        
+        text1 = self.secondaryFont.render('idle: %r' % self.getIdleTime(), True, (255,255,255))
+        textRect1 = text1.get_rect()
+        textRect1.centerx = textRect1.centerx + 150;
+        self.windowSurface.blit(text1, textRect1)
+        
+        text1 = self.smallFont.render('tracking: %r' % self.trackingVector, True, (255,255,255))
+        textRect1 = text1.get_rect()
+        textRect1.centery = textRect1.centery + 40;
+        self.windowSurface.blit(text1, textRect1)
+        
+        text1 = self.smallFont.render('Is Tracking: %r' % self.isTracking, True, (255,255,255))
+        textRect1 = text1.get_rect()
+        textRect1.centery = textRect1.centery + 80;
+        self.windowSurface.blit(text1, textRect1)
+        
+        text1 = self.smallFont.render('Moving circles: %r' % self.number_of_moving_vectors, True, (255,255,255))
+        textRect1 = text1.get_rect()
+        textRect1.centery = textRect1.centery + 120;
+        self.windowSurface.blit(text1, textRect1)
+        
+        text1 = self.smallFont.render('Standing circles: %r' % self.number_of_standing_vectors, True, (255,255,255))
+        textRect1 = text1.get_rect()
+        textRect1.centery = textRect1.centery + 160;
+        self.windowSurface.blit(text1, textRect1)
+        
+        strAreas = ""
+        for i in range (0, len(self.areasVector)):
+            strAreas += "%.2f , " % (self.areasVector[i]/10000.0)
+        text1 = self.smallFont.render("Circle's area: %r" % (strAreas), True, (255,255,255))
+        textRect1 = text1.get_rect()
+        textRect1.centery = textRect1.centery + 200;
+        self.windowSurface.blit(text1, textRect1)
+        
+        pygame.display.update()
+        pass
+    
     def mainVideoDetection(self):
     
         """
@@ -982,6 +1047,8 @@ class sphereVideoDetection():
                 #===============================================================
                 # recorro los contornos para el frame actual, capturando centros.
                 Lnew = []
+                self.sum_of_areas = 0; #cantidad de área cubierta por todos los círculos siendo trackeados
+                # si el área es muy chica respecto de lo que es normal, probablemente ha perdido tracking.
                 for cnt in contours:
                     (x, y), radius = cv2.minEnclosingCircle(cnt)
                     center = (int(x), int(y))
@@ -992,6 +1059,9 @@ class sphereVideoDetection():
                         if (self.showTrackingFeedback):
                             cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)  # visual feedback to user.
                         Lnew.append(center)
+                        self.sum_of_areas+= 3.1415 * radius*radius;
+                self.areasVector[0:-1] = self.areasVector[1:]
+                self.areasVector[-1] = self.sum_of_areas
                 #===============================================================
                 # #analizo si hay colisiones en el espacio 2D-tiempo
                 #===============================================================
@@ -999,8 +1069,8 @@ class sphereVideoDetection():
                 # Se analizan ambos versores del vector en el plano bidireccional:
                 self.movEjeX = 0
                 self.movEjeY = 0
-                number_of_moving_vectors = 0
-                number_of_standing_vectors = 0
+                self.number_of_moving_vectors = 0
+                self.number_of_standing_vectors = 0
                 
                 for index in range(len(Lnew)):
                     for jndex in range(index, len(Lbefore)):
@@ -1014,12 +1084,12 @@ class sphereVideoDetection():
                                 # se suma a todos los desplazamientos (en x, en y).
                                 self.movEjeX += Lnew[index][0] - Lbefore[jndex][0]
                                 self.movEjeY += Lnew[index][1] - Lbefore[jndex][1]
-                                number_of_moving_vectors += 1
+                                self.number_of_moving_vectors += 1
                         else:
                             # están muy cerca, son probablemente el mismo.
-                            number_of_standing_vectors += 1
+                            self.number_of_standing_vectors += 1
                 self.isTrackingTemp = True
-                if (number_of_standing_vectors < len(Lnew) / 3 and number_of_moving_vectors < len(Lnew) / 3):  # see docs.
+                if (self.number_of_standing_vectors < len(Lnew) / 3 and self.number_of_moving_vectors < len(Lnew) / 3):  # see docs.
                     if (len(Lnew) > 2):  # else too few circles to determine loss of tracking
                         self.isTrackingTemp = False #on this frame, the tracking has been lost.
                 
@@ -1032,6 +1102,9 @@ class sphereVideoDetection():
                         cant_pastframes_tracking += 1
                 if (cant_pastframes_tracking < 8): #from the past 10 tracking frames , 80% or less have lost tracking
                     self.isTracking = False #so consider this as a current lost of track (movement with unknown direction)
+                
+                
+                
                 # print cant_pastframes_tracking
                 # print self.trackingVector
                 # print "Standing vectors ", number_of_standing_vectors
@@ -1041,11 +1114,11 @@ class sphereVideoDetection():
                 # print "----"
                 
                 # we divide each instant vector components by N, to obtain average instant vector.
-                if (number_of_moving_vectors == 0):
-                    number_of_moving_vectors = 1
+                if (self.number_of_moving_vectors == 0):
+                    self.number_of_moving_vectors = 1
                 
-                self.movEjeX /= number_of_moving_vectors  # movimiento x promedio, ponderación de todos los movimientos en x.
-                self.movEjeY /= number_of_moving_vectors  # movimiento y promedio, ponderación de todos los movimientos en y.
+                self.movEjeX /= self.number_of_moving_vectors  # movimiento x promedio, ponderación de todos los movimientos en x.
+                self.movEjeY /= self.number_of_moving_vectors  # movimiento y promedio, ponderación de todos los movimientos en y.
                 
                 self.vectorAcumulado.x += self.movEjeX
                 self.vectorAcumulado.y += self.movEjeY
@@ -1055,6 +1128,10 @@ class sphereVideoDetection():
                 
                 # se analiza continuidad de movimiento en función:
                 self.continuousMovementAnalysis()
+                
+                # se ejecutan visualization tools de pygame (es opcional)
+                if self.usingPygameDisplay:
+                    self.pygameVisualizationTools()
                 
                 #===============================================================
                 # se "muestra" el resultado al usuario (feedback)
@@ -1129,6 +1206,7 @@ if __name__ == '__main__':
     print VIDEOSOURCE
     videoDet = sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
     videoDet.setNoiseFiltering(True)
+    videoDet.setMovementTimeWindow(1.6);
     videoDet.initAll()
     import time
     # time.sleep(2)

@@ -1581,6 +1581,7 @@ class Training():
         self.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(configvideo.VIDEOSOURCE, configvideo.CAM_WIDTH, configvideo.CAM_HEIGHT)
         self.gVariables.videoDet.setMovementTimeWindow(self.gVariables.movementTime)  # seconds that should be moving.
         self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
+        self.gVariables.videoDet.usingPygameDisplay = False; #to prevent launching pygame visualization tools for vd.
         self.gVariables.videoDet.initAll()
         self.gVariables.logger.debug('sphereVideoDetection started.')
         #second cam:
