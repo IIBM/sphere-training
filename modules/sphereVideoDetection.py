@@ -46,6 +46,8 @@ class sphereVideoDetection():
     number_of_standing_vectors = 0;
     sum_of_areas = 0;
     
+    MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = 0 ;
+    
     def __init__ (self, videosource, width=640, height=480) :
         import track_bola_utils
         import os
@@ -146,6 +148,7 @@ class sphereVideoDetection():
         self.VECTOR_COUNT_PERCENTAGE_MOVEMENT = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE_MOVEMENT  #
         self.VECTOR_COUNT_PERCENTAGE_IDLE = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE_IDLE 
         
+        self.MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = configSphereVideoDetection.MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING
         
         for i in range (0, self.movementVectorLength):
             self.movementVector.append(0)
@@ -1092,6 +1095,10 @@ class sphereVideoDetection():
                 if (self.number_of_standing_vectors < len(Lnew) / 3 and self.number_of_moving_vectors < len(Lnew) / 3):  # see docs.
                     if (len(Lnew) > 2):  # else too few circles to determine loss of tracking
                         self.isTrackingTemp = False #on this frame, the tracking has been lost.
+                
+                # lost of track associated with area of circles
+                if (self.sum_of_areas < self.MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING):
+                    self.isTrackingTemp = False #less area than expected, it has lost movement tracking
                 
                 self.trackingVector[0:-1] = self.trackingVector[1:]
                 self.trackingVector[-1] = self.isTrackingTemp

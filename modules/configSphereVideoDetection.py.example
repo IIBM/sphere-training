@@ -13,5 +13,5 @@ VECTOR_COUNT_PERCENTAGE_IDLE = 80 #
 
 VECTOR_COUNT_PERCENTAGE = 80
 
-
+MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = 1500 # below this area, it is considered that tracking has been lost.
 pygameDisplay = True #display visualization for helping calibration (only works when using the module independently).
