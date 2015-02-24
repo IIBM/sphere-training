@@ -46,6 +46,9 @@ class sphereVideoDetection():
     number_of_standing_vectors = 0;
     sum_of_areas = 0;
     losing_track_cause = ""
+    capturedImageWidth = 0;
+    capturedImageHeight = 0;
+    capturedImageSize = 0;
     
     MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = 0 ;
     
@@ -382,6 +385,16 @@ class sphereVideoDetection():
             #cv2.destroyWindow(self.winName)
             # currently, it is unstable to destroy window as it will generate errors on the processing of the movement
             # So this function will stop feedback and you can minimize the window manually.
+            try:
+                cv2.resizeWindow(self.winName, 0, 0);
+            except:
+                pass
+            pass
+        else:
+            try:
+                cv2.resizeWindow(self.winName, self.capturedImageWidth, self.capturedImageHeight);
+            except:
+                pass
             pass
     
     def getTrackingStatus(self):
@@ -925,6 +938,14 @@ class sphereVideoDetection():
         t_before = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
         t_now = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
         capturedImage = cam.read()[1]
+        
+        
+        self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
+        self.capturedImageSize = capturedImage.size
+        print self.capturedImageSize
+        print self.capturedImageWidth
+        print self.capturedImageHeight
+        
         time.sleep(0.1)
 
         self.startCalibration = True
