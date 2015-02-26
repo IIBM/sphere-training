@@ -142,7 +142,7 @@ class multiproc_soundGen():
          WAVEDATA = WAVEDATA+chr(128)
         
         self.WAVEDATA = WAVEDATA
-        self.stream.write(self.WAVEDATA)
+        #self.stream.write(self.WAVEDATA) #does not play tone when calling tone function by default..
         
         logger.debug(str(self.soundp))
         #return self.sound
