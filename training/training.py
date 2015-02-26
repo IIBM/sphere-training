@@ -337,7 +337,8 @@ class Training():
                 print a
                 Training.gVariables.logger.info(a)
                 Training.gVariables.soundGenFrequency1 = int(freq)
-                Training.gVariables.s1 = soundGen.soundGen(Training.gVariables.soundGenFrequency1, Training.gVariables.soundGenDuration1)
+                Training.gVariables.s1.tone(Training.gVariables.soundGenDuration1, Training.gVariables.soundGenFrequency1)
+                #Training.gVariables.s1 = soundGen.soundGen(Training.gVariables.soundGenFrequency1, Training.gVariables.soundGenDuration1)
             else:
                 print "frequency for Tone 1 already set at ", freq
                 Training.gVariables.logger.info("frequency for Tone 1 already set at " + str(freq) )
@@ -350,21 +351,24 @@ class Training():
                 print a
                 Training.gVariables.logger.info(a)
                 Training.gVariables.soundGenFrequency2 = int(freq)
-                Training.gVariables.s2 = soundGen.soundGen(Training.gVariables.soundGenFrequency2, Training.gVariables.soundGenDuration2)
+                Training.gVariables.s2.tone(Training.gVariables.soundGenDuration2, Training.gVariables.soundGenFrequency2)
+                #Training.gVariables.s2 = soundGen.soundGen(Training.gVariables.soundGenFrequency2, Training.gVariables.soundGenDuration2)
             else:
                 print "frequency for Tone 2 already set at ", freq
                 Training.gVariables.logger.info("frequency for Tone 2 already set at " + str(freq) )
         
         @staticmethod
         def fn_recreateTone1():
-            import soundGen
-            Training.gVariables.s1 = soundGen.soundGen(Training.gVariables.soundGenFrequency1, Training.gVariables.soundGenDuration1)
+            #Training.gVariables.s1 = soundGen.soundGen(Training.gVariables.soundGenFrequency1, Training.gVariables.soundGenDuration1)
+            #recreating tone is too unstable. Better to configure tone
+            Training.gVariables.s1.tone(Training.gVariables.soundGenDuration1, Training.gVariables.soundGenFrequency1)
             pass
         
         @staticmethod
         def fn_recreateTone2():
-            import soundGen
-            Training.gVariables.s2 = soundGen.soundGen(Training.gVariables.soundGenFrequency2, Training.gVariables.soundGenDuration2)
+            #Training.gVariables.s2 = soundGen.soundGen(Training.gVariables.soundGenFrequency2, Training.gVariables.soundGenDuration2)
+            #recreating tone is too unstable. Better to configure tone
+            Training.gVariables.s2.tone(Training.gVariables.soundGenDuration2, Training.gVariables.soundGenFrequency2)
             pass
         
         @staticmethod

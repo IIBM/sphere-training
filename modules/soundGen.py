@@ -133,14 +133,20 @@ class soundGen():
     
     def launch_multiproc(self, jobl, freq, duration, sample_rate, bits):
         a = multiproc_soundGen(jobl, freq, duration, sample_rate, bits)
+        time.sleep(0.5)
         while(a.toExit != 1):
-            time.sleep(0.005)
+            
             a.checkJobList()
             if (a.toExit == 1):
-                del a
+                #del a
+                print "Exiting soundGen class."
+                a.toExit = 1;
                 logger.debug( "exiting launch_multiproc" )
-                return;
+                #self.exit()
+                break;
             pass
+            #print "loop. %s %d" % (str(a), a.toExit)
+            time.sleep(0.030)
     
     def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16):
         
@@ -170,6 +176,7 @@ class soundGen():
 
     def tone(self, duration=1.0, freq=1000.0) :
         self.soundGenJobList.put( ( "tone" , duration, freq ) )
+
 
     #TODO add new waveforms
 
