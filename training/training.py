@@ -1384,7 +1384,7 @@ class Training():
                     Training.gVariables.valve1.drop()
 		    #print "drop"
                     if (Training.gVariables.numberOfRewardDrops > 1):
-                         time.sleep(0.15)
+                         time.sleep(0.45)
                     Training.gVariables.logger.debug("Drop of water released.")
                 Training.gVariables.successTrialCount += 1
                 Training.gVariables.dropReleased = 1
