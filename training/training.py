@@ -769,11 +769,21 @@ class Training():
                     Training.gVariables.maxIdleTime = Training.gVariables.pavlovVars.maxIdleTime
                     Training.gVariables.movementTime = Training.gVariables.pavlovVars.movementTime
                     Training.gVariables.idleTime = Training.gVariables.pavlovVars.idleTime
-                    Training.gVariables.soundGenDuration1 = Training.gVariables.pavlovVars.soundGenDuration1
-                    Training.gVariables.soundGenDuration2 = Training.gVariables.pavlovVars.soundGenDuration2
-                    Training.gVariables.soundGenFrequency1 = Training.gVariables.pavlovVars.soundGenFrequency1
-                    Training.gVariables.soundGenFrequency2 = Training.gVariables.pavlovVars.soundGenFrequency2
+                    #Training.gVariables.soundGenDuration1 = Training.gVariables.pavlovVars.soundGenDuration1
+                    #fn_setTone1Duration
+                    Training.gVariables.fn_setTone1Duration(Training.gVariables.pavlovVars.soundGenDuration1)
+                    #fn_setTone2Duration
+                    #Training.gVariables.soundGenDuration2 = Training.gVariables.pavlovVars.soundGenDuration2
+                    Training.gVariables.fn_setTone2Duration(Training.gVariables.pavlovVars.soundGenDuration2)
+                    ##
+                    Training.gVariables.fn_setFrequencyT1(Training.gVariables.pavlovVars.soundGenFrequency1)
+                    #Training.gVariables.soundGenFrequency1 = Training.gVariables.pavlovVars.soundGenFrequency1
+                    Training.gVariables.fn_setFrequencyT2(Training.gVariables.pavlovVars.soundGenFrequency2)
+                    #Training.gVariables.soundGenFrequency2 = Training.gVariables.pavlovVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.pavlovVars.toneOneProbability
+                    
+                    
+                    
                     
                     pass
             @staticmethod
@@ -791,10 +801,17 @@ class Training():
                     Training.gVariables.maxIdleTime = Training.gVariables.skinnerVars.maxIdleTime
                     Training.gVariables.movementTime = Training.gVariables.skinnerVars.movementTime
                     Training.gVariables.idleTime = Training.gVariables.skinnerVars.idleTime
-                    Training.gVariables.soundGenDuration1 = Training.gVariables.skinnerVars.soundGenDuration1
-                    Training.gVariables.soundGenDuration2 = Training.gVariables.skinnerVars.soundGenDuration2
-                    Training.gVariables.soundGenFrequency1 = Training.gVariables.skinnerVars.soundGenFrequency1
-                    Training.gVariables.soundGenFrequency2 = Training.gVariables.skinnerVars.soundGenFrequency2
+                    #Training.gVariables.soundGenDuration1 = Training.gVariables.skinnerVars.soundGenDuration1
+                    #fn_setTone1Duration
+                    Training.gVariables.fn_setTone1Duration(Training.gVariables.skinnerVars.soundGenDuration1)
+                    #fn_setTone2Duration
+                    #Training.gVariables.soundGenDuration2 = Training.gVariables.skinnerVars.soundGenDuration2
+                    Training.gVariables.fn_setTone2Duration(Training.gVariables.skinnerVars.soundGenDuration2)
+                    ##
+                    Training.gVariables.fn_setFrequencyT1(Training.gVariables.skinnerVars.soundGenFrequency1)
+                    #Training.gVariables.soundGenFrequency1 = Training.gVariables.skinnerVars.soundGenFrequency1
+                    Training.gVariables.fn_setFrequencyT2(Training.gVariables.skinnerVars.soundGenFrequency2)
+                    #Training.gVariables.soundGenFrequency2 = Training.gVariables.skinnerVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.skinnerVars.toneOneProbability
                     
                     pass
@@ -814,10 +831,17 @@ class Training():
                     Training.gVariables.maxIdleTime = Training.gVariables.ocondVars.maxIdleTime
                     Training.gVariables.movementTime = Training.gVariables.ocondVars.movementTime
                     Training.gVariables.idleTime = Training.gVariables.ocondVars.idleTime
-                    Training.gVariables.soundGenDuration1 = Training.gVariables.ocondVars.soundGenDuration1
-                    Training.gVariables.soundGenDuration2 = Training.gVariables.ocondVars.soundGenDuration2
-                    Training.gVariables.soundGenFrequency1 = Training.gVariables.ocondVars.soundGenFrequency1
-                    Training.gVariables.soundGenFrequency2 = Training.gVariables.ocondVars.soundGenFrequency2
+                    #Training.gVariables.soundGenDuration1 = Training.gVariables.ocondVars.soundGenDuration1
+                    #fn_setTone1Duration
+                    Training.gVariables.fn_setTone1Duration(Training.gVariables.ocondVars.soundGenDuration1)
+                    #fn_setTone2Duration
+                    #Training.gVariables.soundGenDuration2 = Training.gVariables.ocondVars.soundGenDuration2
+                    Training.gVariables.fn_setTone2Duration(Training.gVariables.ocondVars.soundGenDuration2)
+                    ##
+                    Training.gVariables.fn_setFrequencyT1(Training.gVariables.ocondVars.soundGenFrequency1)
+                    #Training.gVariables.soundGenFrequency1 = Training.gVariables.ocondVars.soundGenFrequency1
+                    Training.gVariables.fn_setFrequencyT2(Training.gVariables.ocondVars.soundGenFrequency2)
+                    #Training.gVariables.soundGenFrequency2 = Training.gVariables.ocondVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.ocondVars.toneOneProbability
                     
                     pass
@@ -837,10 +861,17 @@ class Training():
                     Training.gVariables.maxIdleTime = Training.gVariables.discrVars.maxIdleTime
                     Training.gVariables.movementTime = Training.gVariables.discrVars.movementTime
                     Training.gVariables.idleTime = Training.gVariables.discrVars.idleTime
-                    Training.gVariables.soundGenDuration1 = Training.gVariables.discrVars.soundGenDuration1
-                    Training.gVariables.soundGenDuration2 = Training.gVariables.discrVars.soundGenDuration2
-                    Training.gVariables.soundGenFrequency1 = Training.gVariables.discrVars.soundGenFrequency1
-                    Training.gVariables.soundGenFrequency2 = Training.gVariables.discrVars.soundGenFrequency2
+                    #Training.gVariables.soundGenDuration1 = Training.gVariables.discrVars.soundGenDuration1
+                    #fn_setTone1Duration
+                    Training.gVariables.fn_setTone1Duration(Training.gVariables.discrVars.soundGenDuration1)
+                    #fn_setTone2Duration
+                    #Training.gVariables.soundGenDuration2 = Training.gVariables.discrVars.soundGenDuration2
+                    Training.gVariables.fn_setTone2Duration(Training.gVariables.discrVars.soundGenDuration2)
+                    ##
+                    Training.gVariables.fn_setFrequencyT1(Training.gVariables.discrVars.soundGenFrequency1)
+                    #Training.gVariables.soundGenFrequency1 = Training.gVariables.discrVars.soundGenFrequency1
+                    Training.gVariables.fn_setFrequencyT2(Training.gVariables.discrVars.soundGenFrequency2)
+                    #Training.gVariables.soundGenFrequency2 = Training.gVariables.discrVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.discrVars.toneOneProbability
                     
                     pass
