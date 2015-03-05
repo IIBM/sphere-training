@@ -1192,76 +1192,73 @@ class Training():
         time.sleep(0.5)
         Training.gVariables.display.renderAgain()
     
-    @staticmethod
-    def internal_updateDisplayInfoForce():
-        if (True):
-                        now = timeit.default_timer()
-                        b = Training.gVariables.getFormattedTime(int(now - Training.gVariables.start_time))
-                        Training.gVariables.display.updateInfo("Time", b)
-                        if (Training.gVariables.current_trial_type == 1):
-                            sttrial = "move"
-                        elif (Training.gVariables.current_trial_type == 2):
-                            sttrial = "still"
-                        else:
-                            sttrial = ""
-                        Training.gVariables.current_trial_type_str = sttrial
-                        if (Training.gVariables.current_trial_time < Training.gVariables.eventTime2_movement):
-                            Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "running")
-                        else:
-                            if Training.gVariables.dropReleased == 1:
-                                 Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "SUCCESS")
-                            else:
-                                Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "FAIL")
-                        Training.gVariables.display.updateInfo("Trials", Training.gVariables.trialCount)
-                        Training.gVariables.display.updateInfo("Successful Trials", Training.gVariables.successTrialCount)
-        
-        # stmvnt = str(Training.gVariables.successMovementTrialCount) + " / " + str(Training.gVariables.movementTrialCount )
-        # stidle = str(Training.gVariables.successIdleTrialCount) + " / " + str(Training.gVariables.idleTrialCount )
-        
-        
-        if (Training.gVariables.trialCount > 0):
-                        if (Training.gVariables.movementTrialCount > 0):
-                            temp1 = (1.0 * Training.gVariables.successMovementTrialCount / Training.gVariables.movementTrialCount)
-                            tempH1 = temp1 * 100.0
-                            tempString1 = str(tempH1)
-                            if (len(tempString1) > 3):
-                                tempS1 = str(tempH1)[:4]
-                            else:
-                                tempS1 = str(tempH1)[:3]
-                            Training.gVariables.display.updateInfo("Successful Trials mvnt", tempS1)
-                        else:
-                            Training.gVariables.display.updateInfo("Successful Trials mvnt", "0.0")
-                        
-                        if (Training.gVariables.idleTrialCount > 0):
-                            temp2 = (1.0 * Training.gVariables.successIdleTrialCount / Training.gVariables.idleTrialCount)
-                            tempH2 = temp2 * 100.0
-                            tempString2 = str(tempH2)
-                            if (len(tempString2) > 3):
-                                 tempS2 = str(tempH2)[:4]
-                            else:
-                                 tempS2 = str(tempH2)[:3]
-                            Training.gVariables.display.updateInfo("Successful Trials idle", tempS2)
-                        else:
-                            Training.gVariables.display.updateInfo("Successful Trials idle", "0.0")
-                        ########
-                        temp = (1.0 * Training.gVariables.successTrialCount / Training.gVariables.trialCount)
-                        tempH = temp * 100.0
-                        tempString = str(tempH)
-                        if (len(tempString) > 3):
-                            tempS = str(tempH)[:4]
-                        else:
-                            tempS = str(tempH)[:3]
-                        Training.gVariables.successRate = tempS
-                        Training.gVariables.display.updateInfo("% s/t", Training.gVariables.successRate)
-                        a = str(Training.gVariables.current_trial_time)[:4] + " - " + str(Training.gVariables.eventTime3_trialEnd)
-                        Training.gVariables.display.updateInfo("Trial Time", a)
-        #Training.gVariables.display.renderAgain() # not necessary since the update info calls renderAgain
-        pass
-        pass
     
-    def updateDisplayInfo(self):
+    @staticmethod
+    def updateDisplayInfo():
         if (Training.gVariables.trialExecuting == True):
-            self.internal_updateDisplayInfoForce();
+                now = timeit.default_timer()
+                b = Training.gVariables.getFormattedTime(int(now - Training.gVariables.start_time))
+                Training.gVariables.display.updateInfo("Time", b)
+                if (Training.gVariables.current_trial_type == 1):
+                    sttrial = "move"
+                elif (Training.gVariables.current_trial_type == 2):
+                    sttrial = "still"
+                else:
+                    sttrial = ""
+                Training.gVariables.current_trial_type_str = sttrial
+                if (Training.gVariables.current_trial_time < Training.gVariables.eventTime2_movement):
+                    Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "running")
+                else:
+                    if Training.gVariables.dropReleased == 1:
+                         Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "SUCCESS")
+                    else:
+                        Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "FAIL")
+                Training.gVariables.display.updateInfo("Trials", Training.gVariables.trialCount)
+                Training.gVariables.display.updateInfo("Successful Trials", Training.gVariables.successTrialCount)
+                
+                # stmvnt = str(Training.gVariables.successMovementTrialCount) + " / " + str(Training.gVariables.movementTrialCount )
+                # stidle = str(Training.gVariables.successIdleTrialCount) + " / " + str(Training.gVariables.idleTrialCount )
+                
+                
+                if (Training.gVariables.trialCount > 0):
+                                if (Training.gVariables.movementTrialCount > 0):
+                                    temp1 = (1.0 * Training.gVariables.successMovementTrialCount / Training.gVariables.movementTrialCount)
+                                    tempH1 = temp1 * 100.0
+                                    tempString1 = str(tempH1)
+                                    if (len(tempString1) > 3):
+                                        tempS1 = str(tempH1)[:4]
+                                    else:
+                                        tempS1 = str(tempH1)[:3]
+                                    Training.gVariables.display.updateInfo("Successful Trials mvnt", tempS1)
+                                else:
+                                    Training.gVariables.display.updateInfo("Successful Trials mvnt", "0.0")
+                                
+                                if (Training.gVariables.idleTrialCount > 0):
+                                    temp2 = (1.0 * Training.gVariables.successIdleTrialCount / Training.gVariables.idleTrialCount)
+                                    tempH2 = temp2 * 100.0
+                                    tempString2 = str(tempH2)
+                                    if (len(tempString2) > 3):
+                                         tempS2 = str(tempH2)[:4]
+                                    else:
+                                         tempS2 = str(tempH2)[:3]
+                                    Training.gVariables.display.updateInfo("Successful Trials idle", tempS2)
+                                else:
+                                    Training.gVariables.display.updateInfo("Successful Trials idle", "0.0")
+                                ########
+                                temp = (1.0 * Training.gVariables.successTrialCount / Training.gVariables.trialCount)
+                                tempH = temp * 100.0
+                                tempString = str(tempH)
+                                if (len(tempString) > 3):
+                                    tempS = str(tempH)[:4]
+                                else:
+                                    tempS = str(tempH)[:3]
+                                Training.gVariables.successRate = tempS
+                                Training.gVariables.display.updateInfo("% s/t", Training.gVariables.successRate)
+                                a = str(Training.gVariables.current_trial_time)[:4] + " - " + str(Training.gVariables.eventTime3_trialEnd)
+                                Training.gVariables.display.updateInfo("Trial Time", a)
+                pass
+                #Training.gVariables.display.renderAgain() # not necessary since the update info calls renderAgain
+                pass
     
     @staticmethod
     def restartTraining():
@@ -1380,8 +1377,8 @@ class Training():
                     Training.gVariables.idleTrialCount -= 1;
                     #print "Restado idle por trial trunco"
                     pass
-                
-            Training.internal_updateDisplayInfoForce();
+            
+            Training.updateDisplayInfo()
             Training.gVariables.logger.info('%s stopped.' % Training.gVariables.trainingName)
             Training.gVariables.logger.info('Success rate: %s' % Training.gVariables.successRate)
             Training.gVariables.logger.info('Movement trials: %d / %d' % (Training.gVariables.successMovementTrialCount, Training.gVariables.movementTrialCount))
@@ -1951,6 +1948,7 @@ class Training():
                     Training.gVariables.logger.debug( str("GUICheck: Message's argument:" + a ) )
                 except:
                     Training.gVariables.logger.warning( str("GUICheck: Message's received argument cannot be parsed to string" ) )
+                    a = "__"
                     pass
                 
                 if (index == 0):

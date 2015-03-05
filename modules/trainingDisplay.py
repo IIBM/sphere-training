@@ -22,7 +22,11 @@ class multiproc_trainingDisplay():
         self.available = True
         self.displayText1 = [] #important text to display in a relatively big font
         self.displayText2 = [] #less important text to display in a smaller font
-        pygame.init()
+        try:
+            pygame.init()
+        except:
+            #print "pygame already initialized."
+            pass
         self.windowWidth = 500
         self.windowHeight = 200
         self.windowSurface = pygame.display.set_mode((self.windowWidth, self.windowHeight), 0, 32)
@@ -46,11 +50,14 @@ class multiproc_trainingDisplay():
                 except:
                         return;
                 #print str("checkJobList: queue: " + str(tempvar) )
-                index = tempvar[0]
+                try:
+                    index = tempvar[0]
+                except:
+                    return; #probably ill-formed message
                 try:
                     argument = tempvar[1]
                 except:
-                    argument = ""
+                    argument = "__" #two chars to prevent error in updateInfo if above try fails..
                     pass
                 
                 #print "checkJobList: Got a Message:", index
@@ -176,7 +183,7 @@ class trainingDisplay() :
     def launch_multiproc(self, jobl, caption):
         a = multiproc_trainingDisplay(jobl, caption)
         while(True):
-            time.sleep(0.005)
+            time.sleep(0.010)
             a.checkJobList()
             #a.updateInfo("Other secondary information", var)
             #for event in pygame.event.get():
@@ -262,5 +269,10 @@ if __name__ == '__main__':
         b.updateInfo("Trials", 100+var)
         c.updateInfo("other", 222+var)
         var+=1
+        c.updateInfo("other", 222+var)
+        var+=1
+        c.updateInfo("other", 222+var)
+        var+=1
+        c.updateInfo("other", 222+var)
         print "loop: " , var
         logger.info( str("loop: " + str(var) ) )
