@@ -16,7 +16,6 @@ import threading
 import time
 import os
 import signal
-import cv as cv
 import cv2
 import logging
 import sys
@@ -200,6 +199,9 @@ class sphereVideoDetection():
         # Create one non-blocking thread for capturing video Stream
         self.fred1 = threading.Thread(target=self.mainVideoDetection, name="VideoDetection")
         self.fred1.start()
+    
+    def cv_size(self, img):
+        return tuple(img.shape[1::-1])
     
     def getAccumulatedVector(self):
         return [self.vectorAcumulado.x, self.vectorAcumulado.y]
@@ -940,11 +942,12 @@ class sphereVideoDetection():
         capturedImage = cam.read()[1]
         
         
-        self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
+        #self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
+        self.capturedImageWidth, self.capturedImageHeight = self.cv_size( capturedImage )
         self.capturedImageSize = capturedImage.size
-        print self.capturedImageSize
-        print self.capturedImageWidth
-        print self.capturedImageHeight
+        print "Size: %r " % self.capturedImageSize
+        print "Width: %r " %  self.capturedImageWidth
+        print "Height: %r " %  self.capturedImageHeight
         
         time.sleep(0.1)
 
@@ -960,7 +963,8 @@ class sphereVideoDetection():
                         print "Calibration file missing. A new calibration file will be created.."
                         logger.info("Calibration file missing. A new calibration file will be created..")
                         t_calib = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)
-                        cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
+                        #cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
+                        t_calib = cv2.medianBlur(t_calib, 3)
                         ret, thresh = cv2.threshold(t_calib, self.CV2THRESHOLD, 255, cv2.THRESH_BINARY)
                         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
                         # recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
@@ -1049,8 +1053,8 @@ class sphereVideoDetection():
                 if (type(capturedImage) == type(None)):
                     logger.info("sphereVideoDetection reached END OF VIDEO . Seeking to the start...")
                     #cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_POS_FRAMES, 0)
-                    cam.set(cv.CV_CAP_PROP_POS_MSEC, 0)
-                    cam.set(cv.CV_CAP_PROP_POS_MSEC, 0)
+                    cam.set( cv2.cv.CV_CAP_PROP_POS_MSEC , 0)
+                    cam.set( cv2.cv.CV_CAP_PROP_POS_MSEC , 0)
                     capturedImage = cam.read()[1]
                     #break
                     pass
@@ -1058,8 +1062,8 @@ class sphereVideoDetection():
                 if capturedImage.size == 0:
                     logger.info("sphereVideoDetection reached END OF VIDEO . Seeking to the start...")
                     #cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_POS_FRAMES, 0)
-                    cam.set(cv.CV_CAP_PROP_POS_MSEC, 0)
-                    cam.set(cv.CV_CAP_PROP_POS_MSEC, 0)
+                    cam.set(cv2.cv.CV_CAP_PROP_POS_MSEC, 0)
+                    cam.set(cv2.cv.CV_CAP_PROP_POS_MSEC, 0)
                     capturedImage = cam.read()[1]
                     #break;
                     pass
@@ -1069,7 +1073,8 @@ class sphereVideoDetection():
                 # t_before = t_now #saves old matrix; unnecessary since what is important from old matrix is the circle and point matrix
                 t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
                 
-                cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
+                #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
+                t_now = cv2.medianBlur(t_now, 3)
                 # cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_GAUSSIAN, 3, 0);
                 #===============================================================
                 # Se guarda la matriz utilizada en el ciclo anterior.

@@ -9,7 +9,7 @@ import sys
 
 logger = logging.getLogger('soundGen')
 
-
+PROCESS_SLEEP_TIME = 0.035 #in seconds
 
 
 class multiproc_soundGen():
@@ -146,7 +146,7 @@ class soundGen():
                 break;
             pass
             #print "loop. %s %d" % (str(a), a.toExit)
-            time.sleep(0.030)
+            time.sleep(PROCESS_SLEEP_TIME)
     
     def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16):
         

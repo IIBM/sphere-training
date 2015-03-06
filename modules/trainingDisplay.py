@@ -6,6 +6,9 @@ logger = logging.getLogger('trainingDisplay')
 import track_bola_utils
 import multiprocessing
 
+
+PROCESS_SLEEP_TIME = 0.010 #in seconds
+
 class multiproc_trainingDisplay():
     #Class that renders relevant text added by the user, lets you update its information.
     #Created because the need of showing Trials and Successful trials to the user on a regular training.
@@ -182,8 +185,9 @@ class trainingDisplay() :
     
     def launch_multiproc(self, jobl, caption):
         a = multiproc_trainingDisplay(jobl, caption)
+        time.sleep(0.5)
         while(True):
-            time.sleep(0.010)
+            time.sleep(PROCESS_SLEEP_TIME)
             a.checkJobList()
             #a.updateInfo("Other secondary information", var)
             #for event in pygame.event.get():

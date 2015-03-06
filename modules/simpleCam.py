@@ -5,7 +5,9 @@ import track_bola_utils
 import logging
 logger = logging.getLogger('simpleCam')
 import time
-#PASAR ESTA CLASE A MULTIPROCESSING. Ya que es unidireccional el flujo de información.
+
+PROCESS_SLEEP_TIME = 70 #in miliseconds
+
 
 class multiproc_simpleCam():
     
@@ -27,7 +29,7 @@ class multiproc_simpleCam():
         time.sleep(1)
         logger.debug("namedWindow created. About to enter loop")
         while(True):
-            if (cv2.waitKey(60) == 27):
+            if (cv2.waitKey(PROCESS_SLEEP_TIME) == 27):
                 break
             ret, frame = cap.read()
             cv2.imshow(window_name, frame)

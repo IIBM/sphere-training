@@ -111,6 +111,7 @@ class userInterface_API:
     
     def launch_multiproc(self, jobl, toStart):
         multipUI = multiproc_userInterface_API(jobl,  False)
+        time.sleep(0.5)
         import threading
         #checkK = threading.Thread(target=self.checkOutJobContinuously, args=(a,) )
         #checkK.start()
