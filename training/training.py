@@ -1618,9 +1618,6 @@ class Training():
             Training.gVariables.soundGenDuration1 = subjectConfig.soundGenDuration1
             Training.gVariables.soundGenDuration2 = subjectConfig.soundGenDuration2
             Training.gVariables.soundGenFrequency1 = subjectConfig.soundGenFrequency1
-            print "-.-.-.-."
-            print Training.gVariables.soundGenFrequency1
-            print "-.-.-.-."
             Training.gVariables.soundGenFrequency2 = subjectConfig.soundGenFrequency2
             Training.gVariables.toneOneProbability = subjectConfig.toneOneProbability
             Training.gVariables.usingTK = subjectConfig.usingTK
@@ -1730,9 +1727,6 @@ class Training():
         self.gVariables.currentGUI.probabilityToneOne = self.gVariables.toneOneProbability
         self.gVariables.currentGUI.frequencyTone1 = self.gVariables.soundGenFrequency1
         self.gVariables.currentGUI.frequencyTone2 = self.gVariables.soundGenFrequency2
-        print "-.-.-.-."
-        print self.gVariables.currentGUI.frequencyTone1
-        print "-.-.-.-."
         self.gVariables.currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
         self.gVariables.currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
         self.gVariables.currentGUI.movementTime = self.gVariables.movementTime
@@ -1748,7 +1742,6 @@ class Training():
         
         
         if (Training.gVariables.override_training_types == 0):
-            print "loading into API"
             Training.gVariables.saveVariables.loadIntoAPIPavlovVars()
             Training.gVariables.saveVariables.loadIntoAPISkinnerVars()
             Training.gVariables.saveVariables.loadIntoAPIOcondVars()
@@ -1777,7 +1770,8 @@ class Training():
         
         
         self.gVariables.currentGUI.requireStillnessVar = self.gVariables.requireStillness
-        print "--%d" % self.gVariables.requireStillness
+        #print "--%d" % self.gVariables.requireStillness
+        pass
     
     def trialLoop(self):
             # This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
