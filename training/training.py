@@ -1192,13 +1192,19 @@ class Training():
         time.sleep(0.5)
         Training.gVariables.display.renderAgain()
     
+    @staticmethod
+    def internal_updateDisplayInfoWithSleep(argument1, argument2):
+        Training.gVariables.display.updateInfo(argument1, argument2)
+        pass
     
     @staticmethod
     def updateDisplayInfo():
         if (Training.gVariables.trialExecuting == True):
+                UpdList = []
                 now = timeit.default_timer()
                 b = Training.gVariables.getFormattedTime(int(now - Training.gVariables.start_time))
-                Training.gVariables.display.updateInfo("Time", b)
+                #Training.gVariables.display.updateInfo("Time", b)
+                UpdList.append(("Time", b))
                 if (Training.gVariables.current_trial_type == 1):
                     sttrial = "move"
                 elif (Training.gVariables.current_trial_type == 2):
@@ -1207,15 +1213,19 @@ class Training():
                     sttrial = ""
                 Training.gVariables.current_trial_type_str = sttrial
                 if (Training.gVariables.current_trial_time < Training.gVariables.eventTime2_movement):
-                    Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "running")
+                    #Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "running")
+                    UpdList.append( ("Trial status", sttrial + " - " + "running") )
                 else:
                     if Training.gVariables.dropReleased == 1:
-                         Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "SUCCESS")
+                        #Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "SUCCESS")
+                        UpdList.append( ("Trial status", sttrial + " - " + "SUCCESS") )
                     else:
-                        Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "FAIL")
-                Training.gVariables.display.updateInfo("Trials", Training.gVariables.trialCount)
-                Training.gVariables.display.updateInfo("Successful Trials", Training.gVariables.successTrialCount)
-                
+                        #Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "FAIL")
+                        UpdList.append( ("Trial status", sttrial + " - " + "FAIL") )
+                #Training.gVariables.display.updateInfo("Trials", Training.gVariables.trialCount)
+                UpdList.append( ("Trials", Training.gVariables.trialCount) )
+                #Training.gVariables.display.updateInfo("Successful Trials", Training.gVariables.successTrialCount)
+                UpdList.append( ("Successful Trials", Training.gVariables.successTrialCount) )
                 # stmvnt = str(Training.gVariables.successMovementTrialCount) + " / " + str(Training.gVariables.movementTrialCount )
                 # stidle = str(Training.gVariables.successIdleTrialCount) + " / " + str(Training.gVariables.idleTrialCount )
                 
@@ -1229,9 +1239,11 @@ class Training():
                                         tempS1 = str(tempH1)[:4]
                                     else:
                                         tempS1 = str(tempH1)[:3]
-                                    Training.gVariables.display.updateInfo("Successful Trials mvnt", tempS1)
+                                    #Training.gVariables.display.updateInfo("Successful Trials mvnt", tempS1)
+                                    UpdList.append( ("Successful Trials mvnt", tempS1) )
                                 else:
-                                    Training.gVariables.display.updateInfo("Successful Trials mvnt", "0.0")
+                                    #Training.gVariables.display.updateInfo("Successful Trials mvnt", "0.0")
+                                    UpdList.append( ("Successful Trials mvnt", "0.0") )
                                 
                                 if (Training.gVariables.idleTrialCount > 0):
                                     temp2 = (1.0 * Training.gVariables.successIdleTrialCount / Training.gVariables.idleTrialCount)
@@ -1241,9 +1253,11 @@ class Training():
                                          tempS2 = str(tempH2)[:4]
                                     else:
                                          tempS2 = str(tempH2)[:3]
-                                    Training.gVariables.display.updateInfo("Successful Trials idle", tempS2)
+                                    #Training.gVariables.display.updateInfo("Successful Trials idle", tempS2)
+                                    UpdList.append( ("Successful Trials idle", tempS2) )
                                 else:
-                                    Training.gVariables.display.updateInfo("Successful Trials idle", "0.0")
+                                    #Training.gVariables.display.updateInfo("Successful Trials idle", "0.0")
+                                    UpdList.append( ("Successful Trials idle", "0.0") )
                                 ########
                                 temp = (1.0 * Training.gVariables.successTrialCount / Training.gVariables.trialCount)
                                 tempH = temp * 100.0
@@ -1253,9 +1267,12 @@ class Training():
                                 else:
                                     tempS = str(tempH)[:3]
                                 Training.gVariables.successRate = tempS
-                                Training.gVariables.display.updateInfo("% s/t", Training.gVariables.successRate)
+                                #Training.gVariables.display.updateInfo("% s/t", Training.gVariables.successRate)
+                                UpdList.append( ("% s/t", Training.gVariables.successRate) )
                                 a = str(Training.gVariables.current_trial_time)[:4] + " - " + str(Training.gVariables.eventTime3_trialEnd)
-                                Training.gVariables.display.updateInfo("Trial Time", a)
+                                #Training.gVariables.display.updateInfo("Trial Time", a)
+                                UpdList.append( ("Trial Time", a) )
+                                Training.gVariables.display.updateMultipleInfo( UpdList )
                 pass
                 #Training.gVariables.display.renderAgain() # not necessary since the update info calls renderAgain
                 pass

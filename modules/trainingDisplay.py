@@ -45,6 +45,15 @@ class multiproc_trainingDisplay():
         #self.renderAgain()
         pass
 
+
+    def discardOldJobList(self):
+        if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
+            try:
+                            tempvar = self.displayJobList.get()
+                            self.displayJobList.task_done()
+            except:
+                            return;
+
     def checkJobList(self):
         if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
                 try:
@@ -74,6 +83,13 @@ class multiproc_trainingDisplay():
                 if (index == "updateInfo"):
                     #print "Command updateInfo received."
                     self.updateInfo(argument[0], argument[1])
+                if (index == "cleanInfo"):
+                    self.discardOldJobList()
+                    pass
+                if (index == "multipleUpdateInfo"):
+                    for i in range (0, len(argument)):
+                        self.updateInfo(argument[i][0], argument[i][1])
+                    pass
                 elif (index == "importantInfo"):
                     #print "Command importantInfo received."
                     self.addImportantInfo(argument)
@@ -188,6 +204,7 @@ class trainingDisplay() :
         time.sleep(0.5)
         while(True):
             time.sleep(PROCESS_SLEEP_TIME)
+            
             a.checkJobList()
             #a.updateInfo("Other secondary information", var)
             #for event in pygame.event.get():
@@ -203,12 +220,17 @@ class trainingDisplay() :
         
         logger.debug("trainingDisplay process Started.")
 
+    def getSleepTime(self):
+        return PROCESS_SLEEP_TIME
 
     def renderAgain(self):
         #render things in pygame again.
         self.displayJobList.put( ("renderAgain", "") )
         pass
 
+    def removeOldInfo(self):
+        self.displayJobList.put( ("cleanInfo", ("") ) );
+        pass
     
     def askUserInput(self, texts):
         self.displayJobList.put( ("askUserInput", texts) )
@@ -228,8 +250,13 @@ class trainingDisplay() :
         #sys.exit()
         pass
     
+    def updateMultipleInfo(self, lista):
+        self.displayJobList.put( ("multipleUpdateInfo", lista ) );
+        pass
+    
     def updateInfo(self, text, newValue):
-        self.displayJobList.put( ("updateInfo", (text, newValue)) );
+        self.displayJobList.put( ("updateInfo", (text, newValue)) , timeout=PROCESS_SLEEP_TIME+0.001);
+        pass
 
 if __name__ == '__main__':
     # create a logging format
