@@ -125,6 +125,9 @@ class userInterface_API:
         multipUI.interTrialEnd = self.interTrialEnd
         multipUI.probabilityToneOne = self.probabilityToneOne
         multipUI.frequencyTone1 = self.frequencyTone1
+        print "-.-.-.MULTIP"
+        print multipUI.frequencyTone1
+        print ".-.-.-.-"
         multipUI.frequencyTone2 = self.frequencyTone2
         
         multipUI.movementAmount = self.movementAmount
@@ -154,6 +157,9 @@ class userInterface_API:
         multipUI.pavlovVars.interTrialEnd = self.pavlovVars.interTrialEnd
         multipUI.pavlovVars.probabilityToneOne = self.pavlovVars.probabilityToneOne
         multipUI.pavlovVars.frequencyTone1 = self.pavlovVars.frequencyTone1
+        print ".-.-.-.160"
+        print self.pavlovVars.frequencyTone1
+        print ".-.-.-.-"
         multipUI.pavlovVars.frequencyTone2 = self.pavlovVars.frequencyTone2
         
         #multipUI.pavlovVars.movementAmount = self.pavlovVars.movementAmount
@@ -303,6 +309,12 @@ class userInterface_API:
             multipUI.requireStillnessVar = self.discrVars.requireStillnessVar
         
         #############################
+        
+        
+        print "-.-.-.after314"
+        print multipUI.frequencyTone1
+        print ".-.-.-.-"
+        
         
         
         print ".- %d" % self.requireStillnessVar
@@ -528,6 +540,9 @@ class multiproc_userInterface_API:
         self.currentGUI.interTrialEnd = self.interTrialEnd
         self.currentGUI.probabilityToneOne = self.probabilityToneOne
         self.currentGUI.frequencyTone1 = self.frequencyTone1
+        print ".-.-.-.-.setinitialvalues"
+        print self.currentGUI.frequencyTone1
+        print ".-.-.-.-.-.-"
         self.currentGUI.frequencyTone2 = self.frequencyTone2
         self.currentGUI.movementAmount = self.movementAmount
         self.currentGUI.movementMethod = self.movementMethod

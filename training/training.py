@@ -1054,6 +1054,7 @@ class Training():
         
         trial_comment = "" #comment about this training session.
         
+        override_training_types = 0; #if 1, all training types configs will be ommited.
         type_pavlov = cfgtraining.type_pavlov;
         type_skinner = cfgtraining.type_skinner;
         type_ocond = cfgtraining.type_ocond;
@@ -1593,6 +1594,62 @@ class Training():
         self.gVariables.logger.addHandler(console)
         #===========================================================================
         
+        pass
+        #setting training configs per subject; if exists, has priority over previous configs. Check docs.
+        subj_config_file = Training.gVariables.subject_name + "_config_training"
+        try:
+            import importlib
+            subj_config_file = Training.gVariables.subject_name + "_config_training"
+            subjectConfig = importlib.import_module(subj_config_file);
+            Training.gVariables.trainingName = subjectConfig.trainingName
+            Training.gVariables.eventTime1_sound = subjectConfig.eventTime1_sound
+            Training.gVariables.eventTime1_movement_start = subjectConfig.eventTime1_movement_start
+            Training.gVariables.eventTime2_movement = subjectConfig.eventTime2_movement
+            Training.gVariables.eventTime3_trialEnd = subjectConfig.eventTime3_trialEnd
+            Training.gVariables.minIdleIntertrialTime = subjectConfig.minIdleIntertrialTime
+            Training.gVariables.requireStillness = subjectConfig.requireStillness
+            Training.gVariables.interTrialRandom1Time = subjectConfig.interTrialRandom1Time
+            Training.gVariables.interTrialRandom2Time = subjectConfig.interTrialRandom2Time
+            Training.gVariables.maxMovementThreshold = subjectConfig.maxMovementThreshold
+            Training.gVariables.movementTime = subjectConfig.movementTime
+            Training.gVariables.idleTime = subjectConfig.idleTime
+            Training.gVariables.maxIdleTime = subjectConfig.maxIdleTime
+            Training.gVariables.secondcam = subjectConfig.secondcam
+            Training.gVariables.soundGenDuration1 = subjectConfig.soundGenDuration1
+            Training.gVariables.soundGenDuration2 = subjectConfig.soundGenDuration2
+            Training.gVariables.soundGenFrequency1 = subjectConfig.soundGenFrequency1
+            print "-.-.-.-."
+            print Training.gVariables.soundGenFrequency1
+            print "-.-.-.-."
+            Training.gVariables.soundGenFrequency2 = subjectConfig.soundGenFrequency2
+            Training.gVariables.toneOneProbability = subjectConfig.toneOneProbability
+            Training.gVariables.usingTK = subjectConfig.usingTK
+            Training.gVariables.initialComment = subjectConfig.initialComment
+            Training.gVariables.type_pavlov = subjectConfig.type_pavlov
+            Training.gVariables.type_skinner = subjectConfig.type_skinner
+            Training.gVariables.type_ocond = subjectConfig.type_ocond
+            Training.gVariables.type_discr = subjectConfig.type_discr
+            #movement threshold and method: edit sphereVideoDetection config files (check docs.)
+            Training.gVariables.numberOfRewardDrops = subjectConfig.numberOfRewardDrops
+            Training.gVariables.usePyaudio = subjectConfig.usePyaudio
+            Training.gVariables.override_training_types = 1;
+            print "Configurations loaded from %s.py" % subj_config_file
+            self.gVariables.logger.info("Configurations loaded from %s.py" % subj_config_file)
+        except:
+            print "File %s.py doesn't exist. Will be using general configuration variables instead." % subj_config_file
+            self.gVariables.logger.info("File %s.py doesn't exist. Will be using general configuration variables instead." % subj_config_file)
+        #adjusting trial types and modes:
+        if (self.gVariables.type_pavlov == 1):
+            #movement starts and ceases to be detected just after the tone ends. Basically, there's no movement window when Pavlov mode is enabled.
+            self.gVariables.eventTime2_movement = self.gVariables.soundGenDuration1
+            self.gVariables.eventTime1_movement_start = self.gVariables.soundGenDuration1
+        
+        if (self.gVariables.type_skinner == 1):
+            #there are no tones, so setting their duration to 0
+            Training.gVariables.soundGenDuration1 = 0.0
+            Training.gVariables.soundGenDuration2 = 0.0
+        
+        
         self.gVariables.trialExecuting = False  # boolean, if a 8 second with tone trial is wanted, this shoulb be set to 1
         self.gVariables.logger.info('===============================================')
         self.gVariables.logger.info('Start %s' % self.gVariables.trainingName)
@@ -1601,8 +1658,9 @@ class Training():
         import valve
         self.gVariables.valve1 = valve.Valve()
         self.gVariables.logger.debug('Valve created.')
-        # soundGen:
         
+        
+        # soundGen:
         if (self.gVariables.usePyaudio == 1):
             print "importing pyaudio"
             import pyaudio_soundGen
@@ -1618,12 +1676,8 @@ class Training():
         import multiprocessing
         self.gVariables.jobList = multiprocessing.JoinableQueue()
         #self.gVariables.jobList.put_nowait((0, 0))
+        pass
         
-        #adjusting trial types and modes:
-        if (self.gVariables.type_pavlov == 1):
-            #movement starts and ceases to be detected just after the tone ends. Basically, there's no movement window when Pavlov mode is enabled.
-            self.gVariables.eventTime2_movement = self.gVariables.soundGenDuration1
-            self.gVariables.eventTime1_movement_start = self.gVariables.soundGenDuration1
         
         if (self.gVariables.GUIType != 2):
             import userInterfaceAPI
@@ -1676,29 +1730,40 @@ class Training():
         self.gVariables.currentGUI.probabilityToneOne = self.gVariables.toneOneProbability
         self.gVariables.currentGUI.frequencyTone1 = self.gVariables.soundGenFrequency1
         self.gVariables.currentGUI.frequencyTone2 = self.gVariables.soundGenFrequency2
-        
+        print "-.-.-.-."
+        print self.gVariables.currentGUI.frequencyTone1
+        print "-.-.-.-."
         self.gVariables.currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
         self.gVariables.currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
         self.gVariables.currentGUI.movementTime = self.gVariables.movementTime
         self.gVariables.currentGUI.idleTime = self.gVariables.idleTime
         self.gVariables.currentGUI.comment = configs.initialComment
         
-        self.gVariables.currentGUI.usingTK = configs.usingTK
+        self.gVariables.currentGUI.usingTK = self.gVariables.GUIType
         
         self.gVariables.currentGUI.type_pavlov = self.gVariables.type_pavlov
         self.gVariables.currentGUI.type_skinner = self.gVariables.type_skinner
         self.gVariables.currentGUI.type_ocond = self.gVariables.type_ocond
         self.gVariables.currentGUI.type_discr = self.gVariables.type_discr
         
-        self.gVariables.currentGUI.pavlovVars.interTrialStart = 1.11
-        self.gVariables.currentGUI.skinnerVars.interTrialStart = 2.22
-        self.gVariables.currentGUI.ocondVars.interTrialStart = 3.33
-        self.gVariables.currentGUI.discrVars.interTrialStart = 4.44
         
-        Training.gVariables.saveVariables.loadIntoAPIPavlovVars()
-        Training.gVariables.saveVariables.loadIntoAPISkinnerVars()
-        Training.gVariables.saveVariables.loadIntoAPIOcondVars()
-        Training.gVariables.saveVariables.loadIntoAPIDiscrVars()
+        if (Training.gVariables.override_training_types == 0):
+            print "loading into API"
+            Training.gVariables.saveVariables.loadIntoAPIPavlovVars()
+            Training.gVariables.saveVariables.loadIntoAPISkinnerVars()
+            Training.gVariables.saveVariables.loadIntoAPIOcondVars()
+            Training.gVariables.saveVariables.loadIntoAPIDiscrVars()
+        else:
+            #instead, save into pavlov, skinner, etc. Because we are assuming the SUBJ_config_training
+            #has been edited to have priority over other configs.
+            Training.gVariables.saveVariables.saveDiscrVars()
+            Training.gVariables.saveVariables.saveOcondVars()
+            Training.gVariables.saveVariables.savePavlovVars()
+            Training.gVariables.saveVariables.saveSkinnerVars()
+            Training.gVariables.saveVariables.loadIntoAPIPavlovVars()
+            Training.gVariables.saveVariables.loadIntoAPISkinnerVars()
+            Training.gVariables.saveVariables.loadIntoAPIOcondVars()
+            Training.gVariables.saveVariables.loadIntoAPIDiscrVars()
         
         if (self.gVariables.type_pavlov):
             self.gVariables.currentGUI.current_type = "pavlov"
