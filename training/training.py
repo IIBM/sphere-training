@@ -984,6 +984,8 @@ class Training():
         
         requireStillness = cfgtraining.requireStillness # require to stay idle to end trial and start next one.
         numberOfRewardDrops = cfgtraining.numberOfRewardDrops #number of drops to give as reward when trial successful
+        numberOfRewardDropsIdle = cfgtraining.numberOfRewardDropsIdle #number of drops to give as reward when trial successful
+        
         interTrialRandom1Time = cfgtraining.interTrialRandom1Time  # intertrial time is random between this value and the random2 value
         interTrialRandom2Time = cfgtraining.interTrialRandom2Time  # intertrial time is random between previous value and this value. This
         # is also the max duration of a trial.
@@ -1425,19 +1427,27 @@ class Training():
     @staticmethod
     def giveReward():
         if (Training.gVariables.dropReleased == 0 and Training.gVariables.trialExecuting == True):
-                # print "Release drop of water."
-                for i in range(0, Training.gVariables.numberOfRewardDrops):
-                    Training.gVariables.valve1.drop()
-		    #print "drop"
-                    if (Training.gVariables.numberOfRewardDrops > 1):
-                         time.sleep(0.45)
-                    Training.gVariables.logger.debug("Drop of water released.")
+                
                 Training.gVariables.successTrialCount += 1
                 Training.gVariables.dropReleased = 1
                 if (Training.gVariables.current_trial_type == 1) :
                     Training.gVariables.successMovementTrialCount += 1
+                    # print "Release drop of water."
+                    for i in range(0, Training.gVariables.numberOfRewardDrops):
+                        Training.gVariables.valve1.drop()
+                        #print "drop"
+                        if (Training.gVariables.numberOfRewardDrops > 1):
+                             time.sleep(0.45)
+                        Training.gVariables.logger.debug("Drop of water released.")
                 else:
                     Training.gVariables.successIdleTrialCount += 1
+                    # print "Release drop of water."
+                    for i in range(0, Training.gVariables.numberOfRewardDropsIdle):
+                        Training.gVariables.valve1.drop()
+                        #print "drop"
+                        if (Training.gVariables.numberOfRewardDropsIdle > 1):
+                             time.sleep(0.45)
+                        Training.gVariables.logger.debug("Drop of water released.")
     
     def exitTraining(self):
         # Finalize this training and exits.
@@ -1628,6 +1638,7 @@ class Training():
             Training.gVariables.type_discr = subjectConfig.type_discr
             #movement threshold and method: edit sphereVideoDetection config files (check docs.)
             Training.gVariables.numberOfRewardDrops = subjectConfig.numberOfRewardDrops
+            Training.gVariables.numberOfRewardDropsIdle = subjectConfig.numberOfRewardDropsIdle
             Training.gVariables.usePyaudio = subjectConfig.usePyaudio
             Training.gVariables.override_training_types = 1;
             print "Configurations loaded from %s.py" % subj_config_file
