@@ -38,7 +38,8 @@ MOVEMENT_THRESHOLD_INITIAL_VALUE = 30 #initial movement threshold value (amount 
 MOVEMENT_METHOD_INITIAL_VALUE = 2 #Type of movement analysis method used initially.
 
 
-numberOfRewardDrops = 1; #Number of reward drops to give when the trial is successful.
+numberOfRewardDrops = 1; #Number of reward drops to give when the trial is successful (for go trials).
+numberOfRewardDropsIdle = 1; #Number of reward drops to give when the trial is successful (for no-go trials).
 
 usePyaudio = 0; # use the alternate pyaudio sound generation ( sudo apt-get install python-pyaudio ) instead of default pygame audio. Check docs.
 
