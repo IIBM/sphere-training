@@ -86,6 +86,9 @@ def __checkConfigFiles():
                     shutil.copyfile(a+"config_training.py.example", a+"config_training.py")
                     import config_training as cfgtraining
                     print "config_training.py copied and imported successfully."
+                    print ""
+                    print "To create a custom configuration file for a given subject, copy this file into SUBJNAME_config_training.py"
+                    print ""
                 except:
                     print "Error importing config_training."
                     os._exit(1)
@@ -1005,6 +1008,17 @@ class Training():
         else:
             print "Using pygame audio"
         
+        valveType = cfgtraining.valveType
+        if (valveType == 0):
+            print "Using USB valve"
+        elif (valveType == 1):
+            print "Using Serial device valve"
+        elif (valveType == 2):
+            print "Using Parallel port device valve"
+        else:
+            print "Valve type undefined. Using default USB valve."
+            valveType = 0;
+        
         soundGenDuration1 = cfgtraining.soundGenDuration1
         soundGenDuration2 = cfgtraining.soundGenDuration2
         soundGenFrequency1 = cfgtraining.soundGenFrequency1  # in Hz
@@ -1663,8 +1677,15 @@ class Training():
         self.gVariables.logger.info('Start %s' % self.gVariables.trainingName)
         self.gVariables.logger.info('Subject name: %s' % self.gVariables.subject_name)
         # valve:
-        import valve
-        self.gVariables.valve1 = valve.Valve()
+        if (self.gVariables.valveType == 0):
+            import valve_usb as vlv
+        elif (self.gVariables.valveType == 1):
+            import valve_serial as vlv
+        elif (self.gVariables.valveType == 2):
+            import valve_parallel as vlv 
+        
+        self.gVariables.valve1 = vlv.Valve()
+        
         self.gVariables.logger.debug('Valve created.')
         
         

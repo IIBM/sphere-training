@@ -42,5 +42,7 @@ numberOfRewardDrops = 1; #Number of reward drops to give when the trial is succe
 numberOfRewardDropsIdle = 1; #Number of reward drops to give when the trial is successful (for no-go trials).
 
 usePyaudio = 0; # use the alternate pyaudio sound generation ( sudo apt-get install python-pyaudio ) instead of default pygame audio. Check docs.
+valveType = 0; #0: valve usb  ;  1: valve serial  ;  2: valve parallel
+
 
 
