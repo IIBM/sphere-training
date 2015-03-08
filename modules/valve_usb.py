@@ -121,13 +121,14 @@ class Valve(object):
   ### singleton inner class: valve.
   class __Valve:
     def __init__(self):
+        self.val = None
         import multiprocessing
         self.displayJobList = multiprocessing.JoinableQueue()
         
         self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList,) )
         self.displayProc.start()
         
-        logger.debug("trainingDisplay process Started.")
+        logger.debug("valve_usb process Started.")
         pass
     def __str__(self):
       return repr(self)

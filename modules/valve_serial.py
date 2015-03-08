@@ -20,21 +20,51 @@ class dummypp () :
   
 
 
-
-class Valve(object):
-  ### singleton inner class: valve.
-  class __Valve:
-    def __init__(self):
-      self.val = None
-      #print "init valve."
-      try :
+class multiproc_Valve():
+    def __init__(self, jobl):
+        self.displayJobList = jobl
+        self.val = None
+        self.using_dev = 0;
+        #print "init valve."
+        try :
            logger.info('New instance of valve')
            self.p = Serial(DEVICE, BAUDRATE, timeout=1.0, stopbits=1)
-      except :
+        except :
            logger.warning('Could not find any serial port. Using dummy parallel port')
            self.p = dummypp()
-    def __str__(self):
-      return repr(self)
+        
+    
+    def checkJobList(self):
+        if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
+                try:
+                        tempvar = self.displayJobList.get()
+                        self.displayJobList.task_done()
+                except:
+                        return;
+                #print str("checkJobList: queue: " + str(tempvar) )
+                index = tempvar[0]
+                try:
+                    argument = tempvar[1]
+                except:
+                    argument = ""
+                    pass
+                
+                #print "checkJobList: Got a Message:", index
+                #print "checkJobList: Message's argument:", argument
+#                 try:
+#                     a = str(argument)
+#                     print "Argument: %s" %a
+#                 except:
+#                     print "Message's argument cannot be parsed to str."
+#                     pass
+                if (index == "open"):
+                    self.open()
+                elif (index == "drop"):
+                    self.drop()
+                elif (index == "close"):
+                    self.close()
+    
+    
     def open(self) :
          logger.debug('Valve opened')
          return self.p.write('o')
@@ -47,10 +77,48 @@ class Valve(object):
          logger.debug('Valve drop')
          return self.p.write('d')
      
+
+
+class Valve(object):
+  ### singleton inner class: valve.
+  class __Valve:
+    def __init__(self):
+        self.val = None
+        import multiprocessing
+        self.displayJobList = multiprocessing.JoinableQueue()
+        
+        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList,) )
+        self.displayProc.start()
+        
+        logger.debug("valve_serial process Started.")
+    def __str__(self):
+      return repr(self)
+    
+    def open(self):
+        self.displayJobList.put( ("open", "") )
+    
+    def drop(self):
+        self.displayJobList.put( ("drop", "") )
+    
+    def close(self):
+        self.displayJobList.put( ("close", "") )
+    
     def exit(self):
-        logger.debug("Exiting");
-        del self.p
-        pass
+        self.displayProc.terminate()
+        del self.displayProc
+        
+        self.displayJobList.close()
+        del self.displayJobList
+    
+    def launch_multiproc(self, jobl):
+        a = multiproc_Valve(jobl)
+        while(True):
+            time.sleep(0.010)
+            a.checkJobList()
+            #a.updateInfo("Other secondary information", var)
+            #for event in pygame.event.get():
+            #        if event.type == pygame.QUIT: sys.exit()
+            pass
   ###
   instance = None
   def __new__(cls): # __new__ always a classmethod
@@ -125,11 +193,11 @@ if __name__ == '__main__':
     v1.drop()
     time.sleep(2)
     print v1
-#    v2 = Valve()
-#    v2.open()
-#    time.sleep(2)
-#    v2.close()
-#    print v2
+    v2 = Valve()
+    v2.open()
+    time.sleep(2)
+    v2.close()
+    print v2
     
     logger.info('End Valve Test')
-
+    v1.exit()
