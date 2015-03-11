@@ -1095,7 +1095,7 @@ class GUIGTK_Class:
             
             self.__tooltipTE6_SHF = GUIGTK_Class.ToolTip(self.__Button4SHFeedback, text=
                                     "Show / Hide Feedback:"+"\n"+
-                                     "Shows / hides the feedback window."
+                                     "Shows / hides the feedback window (the video or camera input)."
                                      +"\n"+"Note that hiding the feedback will not affect the movement detection modules."
                                      )
             
@@ -1124,8 +1124,8 @@ class GUIGTK_Class:
             
             self.__tooltipTE7_NOISEF = GUIGTK_Class.ToolTip(self.__Button5_5NoiseFiltering, text=
                                     "Noise Filtering:"+"\n"+
-                                     "NF Generates a new calibration file for the movement detection,"+
-                                     " taking as sample the current video output.")
+                                     "If Noise Filtering is enabled, the minimum allowed radius will be the smallest possible,"+
+                                     "therefore allowing more precise movement detection.")
             
             
             
@@ -1611,14 +1611,35 @@ class GUIGTK_Class:
             self.__CheckPavlov = Tkinter.Checkbutton(self.__FrameCHEBKBTNS,text='Pavlov mode', variable=self.pavlov)
             self.__CheckPavlov.pack(side='top')
             
+            self.__tooltipMODE_P = GUIGTK_Class.ToolTip(self.__CheckPavlov, text=
+                                    "Pavlov mode"+"\n"+
+                                     "Sets the training as a Pavlov training mode. (for more info check documentation)"+
+                                     "")
+            
             self.__CheckSkinner = Tkinter.Checkbutton(self.__FrameCHEBKBTNS,text='Skinner mode', variable=self.skinner)
             self.__CheckSkinner.pack(side='top')
+            
+            self.__tooltipMODE_S = GUIGTK_Class.ToolTip(self.__CheckSkinner, text=
+                                    "Skinner mode"+"\n"+
+                                     "Sets the training as a Skinner training mode. (for more info check documentation)"+
+                                     "")
             
             self.__CheckOC = Tkinter.Checkbutton(self.__FrameCHEBKBTNS,text='Operant Conditioning mode', variable=self.oc)
             self.__CheckOC.pack(side='top')
             
+            self.__tooltipMODE_OC = GUIGTK_Class.ToolTip(self.__CheckOC, text=
+                                    "Operant Conditioning mode"+"\n"+
+                                     "Sets the training as an Operant Conditioning training mode. (for more info check documentation)"+
+                                     "")
+            
             self.__CheckDiscrimination = Tkinter.Checkbutton(self.__FrameCHEBKBTNS,text='Discrimination mode', variable=self.discr)
             self.__CheckDiscrimination.pack(side='top')
+            
+            self.__tooltipMODE_D = GUIGTK_Class.ToolTip(self.__CheckDiscrimination, text=
+                                    "Discrimination mode"+"\n"+
+                                     "Sets the training as a Discrimination training mode. (for more info check documentation)"+
+                                     "")
+            
             
             self.__Label1 = Tkinter.Label(self.__Frame24,text='Tone Start:')
             self.__Label1.pack(side='top')
@@ -1729,6 +1750,13 @@ class GUIGTK_Class:
             self.__CheckRequireStillness = Tkinter.Checkbutton(self.__Frame38,text='Require stillness to end trial.',
                                                        variable=self.requireStillness);
             self.__CheckRequireStillness.pack(side='top')
+            
+            
+            self.__tooltipREQSTILL = GUIGTK_Class.ToolTip(self.__CheckRequireStillness, text=
+                                    "Require stillness to end trial"+"\n"+
+                                     "If checked, it is required to stay still (with no movement) a certain amount of time (default: 1 sec) "+
+                                     "to end the trial and start the next one.")
+            
             
             self.__CheckRequireStillness.select(); #pending get this from config.
             
@@ -2234,7 +2262,52 @@ class GUIGTK_Class:
       
       After the movement window ends, there is an 'Intertrial' gap, during
       which no tone or drop is given (unless given manually).
-      This gap's duration is controlled by two variables, and is random between these 2 values."""
+      This gap's duration is controlled by two variables, and is random between these 2 values.
+      
+      For additional help regarding the types of modes, and other topics, please consult the project's webpage:
+        https://github.com/yagui/sphere-training
+    """
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+                        #----
+            rowcount += 2
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Pavlov Mode:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Pavlov Mode: </b> Configures all training variables to set a Pavlov mode trial.
+This mode generates a tone and gives a reward, regardless of the subject's performance."""
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 2
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Skinner Mode:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Skinner Mode: </b> Configures all training variables to set a Skinner mode trial.
+This mode waits for the subject to make the desired response (go type) and gives a reward when it is done."""
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 2
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Operant Conditioning Mode:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Operant Conditioning Mode: </b> Configures all training variables to set an Operant Conditioning mode trial.
+This mode has trials consisting of: one tone, an opportunity window time where the subject can perform a go-type
+response, and a reward is given at the end of this window if the trial was successful. An intertrial follows, before
+the start of a new trial."""
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 2
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Discrimination Mode:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Discrimination Mode: </b> Configures all training variables to set a Discrimination mode trial.
+This mode has trials consisting of: one tone (of two possible, one for go and other for no-go), an opportunity window time
+where the subject can perform a go-type response for go-trials or no-go type response for nogo-trials,
+and a reward is given at the end of this window if the trial was successful. An intertrial follows, before
+the start of a new trial."""
             Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
@@ -2302,6 +2375,15 @@ class GUIGTK_Class:
     By default, a given trial will play Tone 1 or Tone 2, so this variable sets the Tone 2
     probability.
     Note that all trials will always play at least one of the two tones."""
+            Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
+            #----
+            rowcount += 2
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=0) #empty space 0
+            Tkinter.Label(self.frame, text="", background=self.DefClr).grid(row=rowcount-1, column=1) #empty space 1
+            Tkinter.Label(self.frame, text="Require Stillness to end trial:", borderwidth="1", 
+                         relief="solid").grid(row=rowcount, column=0)
+            TEXTO = """<b>Require Stillness to end trial: </b> If checked, it is required to stay still a certain amount of time (default: 1 sec) 
+to end the trial and start the next one."""
             Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
@@ -2408,8 +2490,12 @@ class GUIGTK_Class:
             Tkinter.Label(self.frame, text="Recalibrate Camera:", borderwidth="1", 
                          relief="solid").grid(row=rowcount, column=0)
             TEXTO = """<b>Recalibrate Camera: </b> Grabs current video sample and uses it to adjust maximum and minimum
-    values for the tracking function according to this new sample.
-    This will also overwrite previous calibration file with the new values."""
+values for the tracking function according to this new sample.
+The calibration file is used to determine maximum and minimum radius allowed for valid circles.
+If Noise Filtering is enabled, the minimum allowed radius will be the smallest possible,
+therefore allowing more precise movement detection.
+(enable noise filtering only if your video input has no or very little noise)
+This will also overwrite previous calibration file with the new values."""
             Tkinter.Label(self.frame, text=TEXTO).grid(row=rowcount, column=1)
             #----
             rowcount += 2
