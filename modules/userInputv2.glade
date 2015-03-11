@@ -733,6 +733,10 @@ Note that hiding the Feedback window won't affect movement detection functionali
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">&lt;b&gt;Recalibrate Camera: &lt;/b&gt; Grabs current video sample and uses it to adjust maximum and minimum
 values for the tracking function according to this new sample.
+The calibration file is used to determine maximum and minimum radius allowed for valid circles.
+If Noise Filtering is enabled, the minimum allowed radius will be the smallest possible,
+therefore allowing more precise movement detection.
+(enable noise filtering only if your video input has no or very little noise)
 This will also overwrite previous calibration file with the new values.</property>
                             <property name="use_markup">True</property>
                           </object>
@@ -1485,7 +1489,7 @@ Shows / hides computer-generated tracking lines and circles on the display.</pro
                         <property name="has_tooltip">True</property>
                         <property name="tooltip_markup">Test Tone 1</property>
                         <property name="tooltip_text" translatable="yes">Show / Hide Feedback
-Show / Hide Feedback.
+Shows / Hides the feedback window (the video or camera input).
 Note that hiding the feedback will not affect the movement detection modules.</property>
                         <signal name="clicked" handler="clicked_shfeedback" swapped="no"/>
                       </object>
@@ -1518,6 +1522,11 @@ Generates a new calibration file for the movement detection taking as sample the
                         <property name="label" translatable="yes">Noise Filtering</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup">Noise Filtering</property>
+                        <property name="tooltip_text" translatable="yes">Noise Filtering
+If Noise Filtering is enabled, the minimum allowed radius will be the smallest possible,
+therefore allowing more precise movement detection.</property>
                         <property name="receives_default">True</property>
                         <signal name="clicked" handler="clicked_noisefiltering" swapped="no"/>
                       </object>
@@ -1847,6 +1856,10 @@ Applies and saves all changes made to the Parameters.</property>
                     <property name="label" translatable="yes">Pavlov mode</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Pavlov mode</property>
+                    <property name="tooltip_text" translatable="yes">Pavlov mode
+Sets the training as a Pavlov training mode. (for more info check documentation)</property>
                     <property name="receives_default">False</property>
                     <property name="draw_indicator">True</property>
                   </object>
@@ -1862,6 +1875,10 @@ Applies and saves all changes made to the Parameters.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Skinner mode</property>
+                    <property name="tooltip_text" translatable="yes">Skinner mode
+Sets the training as a Skinner training mode. (for more info check documentation)</property>
                     <property name="draw_indicator">True</property>
                   </object>
                   <packing>
@@ -1876,6 +1893,10 @@ Applies and saves all changes made to the Parameters.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Operant Conditioning mode</property>
+                    <property name="tooltip_text" translatable="yes">Operant Conditioning mode
+Sets the training as an Operant Conditioning training mode. (for more info check documentation)</property>
                     <property name="draw_indicator">True</property>
                   </object>
                   <packing>
@@ -1890,6 +1911,10 @@ Applies and saves all changes made to the Parameters.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Discrimination mode</property>
+                    <property name="tooltip_text" translatable="yes">Discrimination mode
+Sets the training as a Discrimination training mode. (for more info check documentation)</property>
                     <property name="draw_indicator">True</property>
                   </object>
                   <packing>
@@ -2260,6 +2285,11 @@ The remaining probability is that of the Tone 2 playing.</property>
                     <property name="label" translatable="yes">Require stillness to end trial.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup">Apply</property>
+                    <property name="tooltip_text" translatable="yes">Require stillness to end trial
+If checked, it is required to stay still (with no movement) a certain amount of time (default: 1 sec) 
+to end the trial and start the next one.</property>
                     <property name="receives_default">False</property>
                     <property name="draw_indicator">True</property>
                   </object>
