@@ -2286,7 +2286,7 @@ The remaining probability is that of the Tone 2 playing.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="has_tooltip">True</property>
-                    <property name="tooltip_markup">Apply</property>
+                    <property name="tooltip_markup">Require stillness to end trial</property>
                     <property name="tooltip_text" translatable="yes">Require stillness to end trial
 If checked, it is required to stay still (with no movement) a certain amount of time (default: 1 sec) 
 to end the trial and start the next one.</property>
