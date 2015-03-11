@@ -325,7 +325,10 @@ This includes tone frequencies, video options and movement detection variables.<
   
   After the movement window ends, there is an 'Intertrial' gap, during
   which no tone or drop is given (unless given manually).
-  This gap's duration is controlled by two variables, and is random between these 2 values.</property>
+  This gap's duration is controlled by two variables, and is random between these 2 values.
+
+For additional help regarding the types of modes, and other topics, please consult the project's webpage:
+https://github.com/yagui/sphere-training</property>
                             <property name="use_markup">True</property>
                           </object>
                           <packing>
@@ -349,6 +352,71 @@ This includes tone frequencies, video options and movement detection variables.<
                           </packing>
                         </child>
                         <child>
+                          <object class="GtkLabel" id="label64">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Pavlov Mode: &lt;/b&gt; Configures all training variables to set a Pavlov mode trial.
+This mode generates a tone and gives a reward, regardless of the subject's performance.</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label65">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Skinner Mode: &lt;/b&gt; Configures all training variables to set a Skinner mode trial.
+This mode waits for the subject to make the desired response (go type) and gives a reward when it is done.</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label66">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Operant Conditioning Mode: &lt;/b&gt; Configures all training variables to set an Operant Conditioning mode trial.
+This mode has trials consisting of: one tone, an opportunity window time where the subject can perform a go-type
+response, and a reward is given at the end of this window if the trial was successful. An intertrial follows, before
+the start of a new trial.</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label67">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Discrimination Mode: &lt;/b&gt; Configures all training variables to set a Discrimination mode trial.
+This mode has trials consisting of: one tone (of two possible, one for go and other for no-go), an opportunity window time
+where the subject can perform a go-type response for go-trials or no-go type response for nogo-trials,
+and a reward is given at the end of this window if the trial was successful. An intertrial follows, before
+the start of a new trial.</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">5</property>
+                          </packing>
+                        </child>
+                        <child>
                           <object class="GtkLabel" id="label40">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -360,7 +428,7 @@ By the definition of a trial, tt is always 0 and cannot be changed.</property>
                           <packing>
                             <property name="expand">True</property>
                             <property name="fill">True</property>
-                            <property name="position">2</property>
+                            <property name="position">6</property>
                           </packing>
                         </child>
                         <child>
@@ -375,7 +443,7 @@ This variable defines the duration of the Tone, and should be less than Intertri
                           <packing>
                             <property name="expand">True</property>
                             <property name="fill">True</property>
-                            <property name="position">3</property>
+                            <property name="position">7</property>
                           </packing>
                         </child>
                         <child>
@@ -390,7 +458,7 @@ This value should be greater than 0 and less than Intertrial Start</property>
                           <packing>
                             <property name="expand">True</property>
                             <property name="fill">True</property>
-                            <property name="position">4</property>
+                            <property name="position">8</property>
                           </packing>
                         </child>
                         <child>
@@ -406,7 +474,7 @@ When the trial time passes this value, the system will check if the trial was su
                           <packing>
                             <property name="expand">True</property>
                             <property name="fill">True</property>
-                            <property name="position">5</property>
+                            <property name="position">9</property>
                           </packing>
                         </child>
                         <child>
@@ -421,7 +489,7 @@ The drop (if trial was successfull) will be given in this instant of the trial t
                           <packing>
                             <property name="expand">True</property>
                             <property name="fill">True</property>
-                            <property name="position">6</property>
+                            <property name="position">10</property>
                           </packing>
                         </child>
                         <child>
@@ -436,7 +504,7 @@ The 'Intertrial Duration' is a random value between Intertrial Start and Intertr
                           <packing>
                             <property name="expand">True</property>
                             <property name="fill">True</property>
-                            <property name="position">7</property>
+                            <property name="position">11</property>
                           </packing>
                         </child>
                         <child>
@@ -454,7 +522,23 @@ Note that all trials will always play at least one of the two tones.</property>
                           <packing>
                             <property name="expand">True</property>
                             <property name="fill">True</property>
-                            <property name="position">8</property>
+                            <property name="position">12</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label63">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
+                            <property name="yalign">0.54000002145767212</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Require Stillness to end trial:&lt;/b&gt; If checked, it is required to stay still a certain amount of time (default: 1 sec) 
+to end the trial and start the next one.</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">13</property>
                           </packing>
                         </child>
                         <child>
@@ -468,23 +552,8 @@ Note that all trials will always play at least one of the two tones.</property>
                           <packing>
                             <property name="expand">True</property>
                             <property name="fill">True</property>
-                            <property name="position">9</property>
+                            <property name="position">14</property>
                           </packing>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -1512,7 +1581,6 @@ Generates a new calibration file for the movement detection taking as sample the
                           <object class="GtkLabel" id="label8">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Method Used</property>
                             <property name="has_tooltip">True</property>
                             <property name="tooltip_markup">Test Tone 1</property>
                             <property name="tooltip_text" translatable="yes">Method Used
@@ -1522,6 +1590,7 @@ Generates a new calibration file for the movement detection taking as sample the
         1 : Movement Vector
         2 : Movement Vector - Binary (default)
                             </property>
+                            <property name="label" translatable="yes">Method Used</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
