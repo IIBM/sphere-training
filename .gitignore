@@ -50,3 +50,4 @@ modules/configSphereVideoDetection.py
 training/config_training_two_tones.py
 
 
+*.prefs

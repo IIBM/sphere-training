@@ -17,7 +17,7 @@ class userInterface_API:
     last_message = -1; #to be accessed by training.py when it needs the var
     last_argument = -1; #to be accessed by training.py when it needs the var
     stopAll = False
-    usingTK = 0
+    usingTK = 1
     toneStart = 0
     toneEnd = 0
     movementWindowStart = 0
@@ -112,7 +112,6 @@ class userInterface_API:
     def launch_multiproc(self, jobl, toStart):
         multipUI = multiproc_userInterface_API(jobl,  False)
         time.sleep(0.5)
-        import threading
         #checkK = threading.Thread(target=self.checkOutJobContinuously, args=(a,) )
         #checkK.start()
         #acA corresponde setear todas las configs del proceso
@@ -342,6 +341,8 @@ class userInterface_API:
     def __launchProcess(self):
         import multiprocessing
         self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.messageObjToAPI, True,) )
+        time.sleep(0.5)
+        #print "post display defined: %r" % self.displayProc
         self.displayProc.start()
         import threading
         self.checkMsgThread = threading.Thread(target = self.iLoopCheckInputObjToAPI);
@@ -1192,10 +1193,5 @@ if __name__ == '__main__':
     a = userInterface_API(True);
     logger.info('End userInterfaceAPI Test')
     time.sleep(5)
-    a.launch_GUI()
-    time.sleep(5)
-    a.launch_GUI()
-    time.sleep(5)
-    a.launch_GUI()
-    time.sleep(5)
+    print "about to launch GUI"
     a.launch_GUI()

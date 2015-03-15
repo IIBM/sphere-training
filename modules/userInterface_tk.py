@@ -3,7 +3,6 @@
 import Tkinter
 #from Tkinter import *
 import time
-import sys
 import os
 import logging
 logger = logging.getLogger('userInterface_tk')
@@ -26,26 +25,37 @@ class GUIGTK_Class:
     
     def initAll(self):
             self.customVariablesInit()
-            import threading
             #print "Initializing GUI GTK class."
-            self.thread0 = threading.Thread(target=self.startFrame0 , name="Frame0")
-            self.thread0.start()
-            time.sleep(0.25)
+            #self.thread0 = threading.Thread(target=self.startFrame0 , name="Frame0")
+            #self.thread0.start()
+            self.startFrame0()
+            time.sleep(4.25)
             
-            while True:
-                if (self.allowGUIContinue == 1):
-                    self.thread1 = threading.Thread(target=self.startFrame1 , name="Frame1")
-                    time.sleep(0.25)
-                    self.thread1.start()
-                    
-                    self.thread3 = threading.Thread(target=self.startFrame3 , name="Frame3")
-                    time.sleep(0.25)
-                    self.thread3.start()
-                    
-                    self.thread5 = threading.Thread(target=self.startFrame5 , name="Frame5")
-                    time.sleep(0.25) #i can swear without this delay it won't work properly
-                    self.thread5.start()
-                    break;
+            #self.thread1 = threading.Thread(target=self.startFrame1 , name="Frame1")
+            #time.sleep(0.25)
+            #self.thread1.start()
+            self.startFrame1()
+            
+            self.startFrame3()
+            print ".-"
+            time.sleep(1)
+            self.startFrame5()
+
+#             while True:
+#                 #print ""
+#                 if (self.allowGUIContinue == 1):
+#                     self.thread1 = threading.Thread(target=self.startFrame1 , name="Frame1")
+#                     time.sleep(0.25)
+#                     self.thread1.start()
+#                     
+#                     self.thread3 = threading.Thread(target=self.startFrame3 , name="Frame3")
+#                     time.sleep(0.25)
+#                     self.thread3.start()
+#                     
+#                     self.thread5 = threading.Thread(target=self.startFrame5 , name="Frame5")
+#                     time.sleep(0.25) #i can swear without this delay it won't work properly
+#                     self.thread5.start()
+#                     break;
             
             
             #print "GUI GTK class initialized."
@@ -107,44 +117,60 @@ class GUIGTK_Class:
         self.App.pack() #was forgotten previously to avoid flickering of appfrm1-5
     
     def startFrame0(self):
+        print "frame0 starting."
         Rootn = Tkinter.Tk()
+        print "frame0 starting1."
         Rootn.withdraw() #to prevent user from touching vars before initialization
         self.App = self.userInput(Rootn)
         self.App.pack(expand='yes',fill='both')
         self.App.reference = self
-        
+        print "frame0 starting2."
         Rootn.geometry('440x240+10+10')
         Rootn.title('Main Form (TK)')
-        
+        print "frame0 starting3."
         self.allowGUIContinue = 1;
         time.sleep(2.5) #to prevent user from touching GUI before the other frames are well-displayed.
         Rootn.deiconify()
-        Rootn.mainloop()
-        while True:
-            time.sleep(1.0)
+        print "frame0 starting4."
+        #self.App.mainloop()
+        #print "frame0 started."
+        
+        
+        
+        
+        
+        
+        #while True:
+        #    time.sleep(1.0)
         pass
     
     def startFrame1(self):
+        print "Starting frame1"
+        print ""
         Root2 = Tkinter.Tk()
         Root2.withdraw()
-        
+        print "frame1 starting0."
         self.AppFrm1 = self.Form1(Root2)
         
         self.AppFrm1.reference = self
+        print "frame1 starting1."
         self.AppFrm1.initAll()
+        print "frame1 starting2."
         #AppFrm1.gVariables = gVariables
         #AppFrm1.configureData()
         #App.pack(expand='yes', fill='both')
         #App.gVariables = gVariables
         self.AppFrm1.protocol('WM_DELETE_WINDOW', self.App.hideForm1)
         
-        
+        print "frame1 starting3."
         #gVariables.AppFrm1.geometry('640x480+10+10')
         self.AppFrm1.title('Trial Events.')
         self.AppFrm1.withdraw()
-        self.AppFrm1.mainloop()
-        while True:
-            time.sleep(1.0)
+        print "frame1 starting4."
+        #self.AppFrm1.mainloop()
+        #print "frame1 started."
+        #while True:
+        #    time.sleep(1.0)
         pass
     
     def startFrame3(self):
@@ -164,9 +190,9 @@ class GUIGTK_Class:
         #gVariables.AppFrm1.geometry('640x480+10+10')
         self.AppFrm3.title('Parameters.')
         self.AppFrm3.withdraw()
-        self.AppFrm3.mainloop()
-        while True:
-            time.sleep(1.0)
+        #self.AppFrm3.mainloop()
+        #while True:
+        #    time.sleep(1.0)
         pass
     
     def startFrame5(self):
@@ -186,8 +212,8 @@ class GUIGTK_Class:
         self.AppFrm5.title('Comment.')
         self.AppFrm5.withdraw()
         self.AppFrm5.mainloop()
-        while True:
-            time.sleep(1.0)
+        #while True:
+        #    time.sleep(1.0)
         pass
     
     def exit_all(self):
@@ -358,15 +384,16 @@ class GUIGTK_Class:
                                      "Saves current state, including trial variables and parameters.")
             
             #find working directory, replace training with modules , to handle case where it is executed from training
-            if ("/training" in os.getcwd()):
-                a = (os.getcwd().split("/training") [0]) + "/modules/"
+            if (os.sep +"training" in os.getcwd()):
+                executingPath = (os.getcwd().split(os.sep + "training") [0]) + os.sep + "modules"+os.sep 
             else:
-                a = os.getcwd() + "/";
+                executingPath = os.getcwd() + os.sep;
             try:
-                photoLocation = a+"res/saveBtn.png"
+                photoLocation = executingPath+"res"+os.sep +"savebtn.gif"
                 logger.debug("Location: %s" % photoLocation)
-                #print "Location: %s" % photoLocation
-                self.photo=Tkinter.PhotoImage(file=photoLocation);
+                print "Location: %s" % photoLocation
+                imgf = Tkinter.PhotoImage(file=photoLocation);
+                self.photo=imgf
                 self.__btnSaveState.config(image=self.photo);
             except:
                 logger.warning("Couldn't set saveBtn.png image.");
@@ -2715,7 +2742,7 @@ if __name__ == '__main__':
     # create a logging format
     dateformat = '%Y/%m/%d %H:%M:%S'
     formatter_str = '%(asctime)s.%(msecs)d - %(name)s - %(levelname)s - %(message)s'
-    filename_to_log='logs/userInterface_tk.log'
+    filename_to_log='logs'+os.sep+'userInterface_tk.log'
     
     
     logging.basicConfig(filename=filename_to_log, filemode='w+',
@@ -2733,6 +2760,7 @@ if __name__ == '__main__':
     #===========================================================================
     
     logger.info('Start userInterface_tk Test')
-    a = GUIGTK_Class()
-    a.initAll()
+    gtkobj = GUIGTK_Class()
+    print "tk class instantiated."
+    gtkobj.initAll()
     print "Tk interface started."
