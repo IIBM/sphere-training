@@ -386,6 +386,7 @@ class userInterface_API:
 
 class multiproc_userInterface_API:
     usingTK = 0 #0: using GTk;   1: using TK
+    multiProcSubjectNameQuery = 1 #if 0, use non-multiprocessing autocompleteentry. if 1, use multiprocessing. def 1
     jobList = 0 # message Job Queue between processes.
     ns = 0
     subj_list = [""]
@@ -466,23 +467,41 @@ class multiproc_userInterface_API:
         
         if (self.usingTK == 0):
             logger.debug("GTK GUI Subject List started.")
-            import autoCompleteEntry_gtk
-            app = autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list);
-            app.initAll()
-            self.subj_name = app.getSubjectName()
-            app.exit()
-            del app
+            if (self.multiProcSubjectNameQuery == 1):
+                logger.debug("Using multiprocessing for Subject Name query.")
+                print "Using multiprocessing for Subject Name query."
+                import autoCompleteEntry_gtk
+                app = autoCompleteEntry_gtk.autoCompleteDialog(self.subj_list);
+                app.initAll()
+                self.subj_name = app.getSubjectName()
+                app.exit()
+                del app
+            elif (self.multiProcSubjectNameQuery == 0):
+                logger.debug("Not using multiprocessing for Subject Name query.")
+                print "Not using  multiprocessing for Subject Name query."
+                import autoCompleteEntry_gtk
+                a = autoCompleteEntry_gtk.multiproc_autoCompleteDialog(self.subj_list, None)
+                self.subj_name = a.subj_name
             logger.debug("GUI Job ended.")
             logger.debug("GTK GUI Subject List ended.")
             pass
         elif (self.usingTK == 1):
             logger.debug("TK GUI Subject List started.")
-            import autoCompleteEntry_tk
-            app3 =  autoCompleteEntry_tk.autoCompleteEntry_tk(self.subj_list)
-            app3.initAll()
-            self.subj_name = app3.getSubjectName()
-            app3.exit()
-            del app3 #.
+            if (self.multiProcSubjectNameQuery == 1):
+                logger.debug("Using multiprocessing for Subject Name query.")
+                print "Using multiprocessing for Subject Name query."
+                import autoCompleteEntry_tk
+                app3 =  autoCompleteEntry_tk.autoCompleteEntry_tk(self.subj_list)
+                app3.initAll()
+                self.subj_name = app3.getSubjectName()
+                app3.exit()
+                del app3 #.
+            elif (self.multiProcSubjectNameQuery == 0):
+                logger.debug("Not using multiprocessing for Subject Name query.")
+                print "Not using  multiprocessing for Subject Name query."
+                import autoCompleteEntry_tk
+                a = autoCompleteEntry_tk.multiproc_autoCompleteDialog(self.subj_list, None)
+                self.subj_name = a.subj_name
             logger.debug("TK GUI Subject List ended.")
         #print "API subj_name %s" % self.subj_name
         logger.debug( "subject name: %s" % self.subj_name )

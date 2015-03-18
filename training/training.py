@@ -146,6 +146,11 @@ def __checkModules():
                 pass
             if (__checkOneModule("gtk")  == False):
                 print "Missing import: " + "gtk"
+                print ""
+                print ""
+                print "If you are using default configurations, install gtk for python or change configuration variable usingTk to the value 1"
+                print ""
+                print ""
                 pass
             pass
         
@@ -1046,6 +1051,7 @@ class Training():
         
         #GUI Type:
         GUIType = cfgtraining.usingTK
+        multiProcSubjectNameQuery = cfgtraining.multiProcSubjectNameQuery
         currentGUI = None #user Interface API object.
         current_mode=""
         
@@ -1566,6 +1572,7 @@ class Training():
         if (self.gVariables.GUIType != 2):
             uiAPI = userInterfaceAPI.multiproc_userInterface_API(False)
             uiAPI.usingTK = self.gVariables.GUIType
+            uiAPI.multiProcSubjectNameQuery = self.gVariables.multiProcSubjectNameQuery
             uiAPI.subj_list = subj_list;
             subj_name =  uiAPI.getSubjName();
             del uiAPI

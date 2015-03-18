@@ -25,6 +25,7 @@ soundGenFrequency1 = 1000  # in Hz
 soundGenFrequency2 = 8000  # in Hz
 
 toneOneProbability = 0.5
+multiProcSubjectNameQuery = 1 ; #0: don't use multiprocessing for Subject Name query    1: Use multiprocessing for Subject Name query (def.:1)
 usingTK = 0 #0: using Glade GTk;   1: using TKinter   2: non-GUI mode
 initialComment = "" #Training comment initial value.
 
