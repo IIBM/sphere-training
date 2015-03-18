@@ -23,13 +23,17 @@ class GUIGTK_Class:
             #object created. Pending initialization..
             pass
     
-    def initAll(self):
+    def launchMainLoop(self):
+        print "launching main loop"
+        self.AppFrm5.mainloop()
+    
+    def initAll(self, launchMainLoop = False):
             self.customVariablesInit()
-            #print "Initializing GUI GTK class."
+            print "Initializing GUI GTK class."
             #self.thread0 = threading.Thread(target=self.startFrame0 , name="Frame0")
             #self.thread0.start()
             self.startFrame0()
-            time.sleep(4.25)
+            time.sleep(2.25)
             
             #self.thread1 = threading.Thread(target=self.startFrame1 , name="Frame1")
             #time.sleep(0.25)
@@ -37,9 +41,9 @@ class GUIGTK_Class:
             self.startFrame1()
             
             self.startFrame3()
-            print ".-"
+            print ".---------"
             time.sleep(1)
-            self.startFrame5()
+            self.startFrame5(launchMainLoop)
 
 #             while True:
 #                 #print ""
@@ -129,7 +133,7 @@ class GUIGTK_Class:
         Rootn.title('Main Form (TK)')
         print "frame0 starting3."
         self.allowGUIContinue = 1;
-        time.sleep(2.5) #to prevent user from touching GUI before the other frames are well-displayed.
+        time.sleep(0.5) #to prevent user from touching GUI before the other frames are well-displayed.
         Rootn.deiconify()
         print "frame0 starting4."
         #self.App.mainloop()
@@ -195,7 +199,7 @@ class GUIGTK_Class:
         #    time.sleep(1.0)
         pass
     
-    def startFrame5(self):
+    def startFrame5(self, launchMainLoop=False):
         Root = Tkinter.Tk()
         Root.withdraw()
         
@@ -211,7 +215,8 @@ class GUIGTK_Class:
         #gVariables.AppFrm1.geometry('640x480+10+10')
         self.AppFrm5.title('Comment.')
         self.AppFrm5.withdraw()
-        self.AppFrm5.mainloop()
+        if (launchMainLoop):
+            self.AppFrm5.mainloop()
         #while True:
         #    time.sleep(1.0)
         pass

@@ -17,7 +17,7 @@ class userInterface_API:
     last_message = -1; #to be accessed by training.py when it needs the var
     last_argument = -1; #to be accessed by training.py when it needs the var
     stopAll = False
-    usingTK = 1
+    usingTK = 0
     toneStart = 0
     toneEnd = 0
     movementWindowStart = 0
@@ -546,7 +546,7 @@ class multiproc_userInterface_API:
         print "..................-"
         #print self.requireStillnessVar
         self.currentGUI.commitInitialData()
-        self.currentGUI.startGUI()
+        #self.currentGUI.startGUI()
         
         pass
     
@@ -1080,7 +1080,6 @@ class multiproc_userInterface_API:
             pass
     
     
-    
     def launch_GUI(self):
         
         
@@ -1126,6 +1125,8 @@ class multiproc_userInterface_API:
         logger.info( str(self) +  "  Glade Interface Started" )
         print "Glade interface started."
         self.setInitialValues() #loops in this function infinitely
+        #self.currentGUI.launchMainLoop()
+        self.currentGUI.startGUI()
         #while True:
         #    time.sleep(1.0)
         pass
@@ -1134,10 +1135,11 @@ class multiproc_userInterface_API:
     def launch_tkinter(self):
         import userInterface_tk
         self.currentGUI = userInterface_tk.GUIGTK_Class()
-        self.currentGUI.initAll();
-        #print "Overriding functions:"
-        time.sleep(0.5)
-        time.sleep(0.5)
+        
+        print "Overriding functions:"
+        
+        print "-,"
+        self.currentGUI.initAll(False);
         logger.info( str(self) +  "Launching Tkinter Interface" )
         self.currentGUI.overrideaction_drop = self.action_drop
         self.currentGUI.overrideaction_savestate = self.action_savestate
@@ -1164,6 +1166,8 @@ class multiproc_userInterface_API:
         logger.info( str(self) +  "  Tkinter Interface Started" )
         print "Tkinter Interface Started"
         self.setInitialValues()
+        #self.currentGUI.initAll();
+        self.currentGUI.launchMainLoop()
         while True:
             time.sleep(1.0)
         pass
@@ -1192,6 +1196,4 @@ if __name__ == '__main__':
     logger.info('Start userInterfaceAPI Test')
     a = userInterface_API(True);
     logger.info('End userInterfaceAPI Test')
-    time.sleep(5)
-    print "about to launch GUI"
-    a.launch_GUI()
+    #a.launch_GUI() #redundant because it was instantiated API with value True
