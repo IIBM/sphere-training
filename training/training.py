@@ -119,8 +119,8 @@ def __checkModules():
             
             print "Checking modules."
             if (__checkOneModule("cv") == False):
-                print "Exiting because of missing import: "+ "cv"
-                sys.exit(1)
+                print "Warning: missing module: "+ "cv"
+                #sys.exit(1)
                 pass
             if (__checkOneModule("cv2")  == False):
                 print "Exiting because of missing import: "+ "cv2"
@@ -139,13 +139,13 @@ def __checkModules():
                 sys.exit(1)
                 pass
             if (__checkOneModule("parallel")  == False):
-                print "Missing import: " + "parallel"
+                print "Warning: missing module: " + "parallel"
                 pass
             if (__checkOneModule("Tkinter")  == False):
-                print "Missing import: " + "Tkinter"
+                print "Warning: missing module: " + "Tkinter"
                 pass
             if (__checkOneModule("gtk")  == False):
-                print "Missing import: " + "gtk"
+                print "Warning: missing module: " + "gtk"
                 print ""
                 print ""
                 print "If you are using default configurations, install gtk for python or change configuration variable usingTk to the value 1"
