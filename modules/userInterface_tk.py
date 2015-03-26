@@ -2767,5 +2767,5 @@ if __name__ == '__main__':
     logger.info('Start userInterface_tk Test')
     gtkobj = GUIGTK_Class()
     print "tk class instantiated."
-    gtkobj.initAll()
+    gtkobj.initAll(True)
     print "Tk interface started."
