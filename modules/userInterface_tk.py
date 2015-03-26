@@ -25,7 +25,8 @@ class GUIGTK_Class:
     
     def launchMainLoop(self):
         print "launching main loop"
-        self.AppFrm5.mainloop()
+        self.App.mainloop()
+        return
     
     def initAll(self, launchMainLoop = False):
             self.customVariablesInit()
@@ -43,8 +44,9 @@ class GUIGTK_Class:
             self.startFrame3()
             print ".---------"
             time.sleep(1)
-            self.startFrame5(launchMainLoop)
-
+            self.startFrame5()
+            if (launchMainLoop):
+                self.App.mainloop()
 #             while True:
 #                 #print ""
 #                 if (self.allowGUIContinue == 1):
@@ -126,15 +128,16 @@ class GUIGTK_Class:
         print "frame0 starting1."
         Rootn.withdraw() #to prevent user from touching vars before initialization
         self.App = self.userInput(Rootn)
-        self.App.pack(expand='yes',fill='both')
+        #self.App.pack(expand='yes',fill='both')
         self.App.reference = self
+        self.App.initAll()
         print "frame0 starting2."
-        Rootn.geometry('440x240+10+10')
-        Rootn.title('Main Form (TK)')
+        self.App.geometry('440x240+10+10')
+        self.App.title('Main Form (TK)')
         print "frame0 starting3."
         self.allowGUIContinue = 1;
         time.sleep(0.5) #to prevent user from touching GUI before the other frames are well-displayed.
-        Rootn.deiconify()
+        self.App.deiconify()
         print "frame0 starting4."
         #self.App.mainloop()
         #print "frame0 started."
@@ -199,7 +202,7 @@ class GUIGTK_Class:
         #    time.sleep(1.0)
         pass
     
-    def startFrame5(self, launchMainLoop=False):
+    def startFrame5(self):
         Root = Tkinter.Tk()
         Root.withdraw()
         
@@ -215,8 +218,7 @@ class GUIGTK_Class:
         #gVariables.AppFrm1.geometry('640x480+10+10')
         self.AppFrm5.title('Comment.')
         self.AppFrm5.withdraw()
-        if (launchMainLoop):
-            self.AppFrm5.mainloop()
+        
         #while True:
         #    time.sleep(1.0)
         pass
@@ -342,7 +344,7 @@ class GUIGTK_Class:
             label = Tkinter.Label(self._tipwindow, **opts)
             label.pack()
     
-    class userInput(Tkinter.Frame):
+    class userInput(Tkinter.Toplevel):
     #------------------------------------------------------------------------------#
     #                                                                              #
     #                                  userInput                                   #
@@ -350,10 +352,11 @@ class GUIGTK_Class:
     #------------------------------------------------------------------------------#
         def __init__(self,Master=None,**kw):
             kw['takefocus'] = None
-            #
-            #Your code here
-            #
-            apply(Tkinter.Frame.__init__,(self,Master),kw)
+            kw['class_'] = 'Toplevel'
+            apply(Tkinter.Toplevel.__init__,(self,Master),kw)
+            
+        
+        def initAll(self):
             self.bind('<Destroy>',self.__on_userInput_Dstry)
             self.__Frame25 = Tkinter.Frame(self)
             self.__Frame25.pack(side='top')
@@ -569,7 +572,6 @@ class GUIGTK_Class:
             #print "Main User Input Form loaded"
             logger.info("Main User Input Form loaded")
             pass
-        
         
         def hideForm1(self, toHide = True):
             logger.debug("Hide Form 1.")
@@ -833,10 +835,7 @@ class GUIGTK_Class:
         commentStr = ""
         
         def __init__(self,Master=None,**kw):
-            kw['class_'] = 'Frame'
-            #
-            #Your code here
-            #
+            kw['class_'] = 'Toplevel'
             apply(Tkinter.Toplevel.__init__,(self,Master),kw)
             
         
@@ -910,10 +909,7 @@ class GUIGTK_Class:
         #                                                                              #
         #------------------------------------------------------------------------------#
         def __init__(self,Master=None,**kw):
-            kw['class_'] = 'Frame'
-            #
-            #Your code here
-            #FORM: Parameters
+            kw['class_'] = 'Toplevel'
             apply(Tkinter.Toplevel.__init__,(self,Master),kw)
         
         def initAll(self):
@@ -1547,10 +1543,7 @@ class GUIGTK_Class:
         orig_mvntwinend = 0;
         
         def __init__(self,Master=None,**kw):
-            kw['class_'] = 'Frame'
-            #
-            #Your code here
-            #FORM: Trial Events
+            kw['class_'] = 'Toplevel'
             apply(Tkinter.Toplevel.__init__,(self,Master),kw)
         
         def initAll(self):
