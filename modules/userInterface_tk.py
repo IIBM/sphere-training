@@ -24,12 +24,12 @@ class GUIGTK_Class:
             pass
     
     def launchMainLoop(self):
-        print "launching main loop"
+        print "Tk main loop"
         self.App.deiconify()
         self.App.mainloop()
         return
     
-    def initAll(self, launchMainLoop = False):
+    def initAll(self, toLaunchMain = False):
             self.customVariablesInit()
             print "Initializing GUI GTK class."
             #self.thread0 = threading.Thread(target=self.startFrame0 , name="Frame0")
@@ -46,9 +46,8 @@ class GUIGTK_Class:
             print ".---------"
             time.sleep(1)
             self.startFrame5()
-            if (launchMainLoop):
-                self.App.deiconify()
-                self.App.mainloop()
+            if (toLaunchMain):
+                self.launchMainLoop()
 #             while True:
 #                 #print ""
 #                 if (self.allowGUIContinue == 1):
