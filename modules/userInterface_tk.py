@@ -25,6 +25,7 @@ class GUIGTK_Class:
     
     def launchMainLoop(self):
         print "launching main loop"
+        self.App.deiconify()
         self.App.mainloop()
         return
     
@@ -46,6 +47,7 @@ class GUIGTK_Class:
             time.sleep(1)
             self.startFrame5()
             if (launchMainLoop):
+                self.App.deiconify()
                 self.App.mainloop()
 #             while True:
 #                 #print ""
@@ -137,7 +139,7 @@ class GUIGTK_Class:
         print "frame0 starting3."
         self.allowGUIContinue = 1;
         time.sleep(0.5) #to prevent user from touching GUI before the other frames are well-displayed.
-        self.App.deiconify()
+        
         print "frame0 starting4."
         #self.App.mainloop()
         #print "frame0 started."
