@@ -24,9 +24,12 @@ class GUIGTK_Class:
             pass
     
     def launchMainLoop(self):
-        print "Tk main loop"
+        print "   Tk main loop"
         self.App.deiconify()
         self.App.mainloop()
+        print "   Entering Tk manual loop"
+        while True:
+            self.App.update()
         return
     
     def initAll(self, toLaunchMain = False):
