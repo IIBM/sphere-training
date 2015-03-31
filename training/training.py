@@ -1570,12 +1570,14 @@ class Training():
         print "List of subjects: %r " % subj_list
         
         if (self.gVariables.GUIType != 2):
-            uiAPI = userInterfaceAPI.multiproc_userInterface_API(False)
+            uiAPI = userInterfaceAPI.userInterface_API(False);
+            #uiAPI = userInterfaceAPI.multiproc_userInterface_API(False)
             uiAPI.usingTK = self.gVariables.GUIType
             uiAPI.multiProcSubjectNameQuery = self.gVariables.multiProcSubjectNameQuery
             uiAPI.subj_list = subj_list;
             subj_name =  uiAPI.getSubjName();
-            del uiAPI
+            #del uiAPI
+            self.gVariables.currentGUI = uiAPI;
         else:
             #non-gui mode: ask for name with CL input
             subj_name = str(raw_input("Please enter subject name: "))
@@ -1716,11 +1718,11 @@ class Training():
         
         
         if (self.gVariables.GUIType != 2):
-            import userInterfaceAPI
+            #import userInterfaceAPI
             print ".---------------------------"
             print "import done for API"
             print ".---------------------------"
-            self.gVariables.currentGUI = userInterfaceAPI.userInterface_API(False);
+            #self.gVariables.currentGUI = userInterfaceAPI.userInterface_API(False);
             self.commitToCurrentGUI()
             self.gVariables.currentGUI.launch_GUI()
             #self.gVariables.GUIProcess = multiprocessing.Process(target=self.initUserInputGUI, args=(self.gVariables.jobList,))

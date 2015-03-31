@@ -17,6 +17,9 @@ class userInterface_API:
     last_message = -1; #to be accessed by training.py when it needs the var
     last_argument = -1; #to be accessed by training.py when it needs the var
     stopAll = False
+    subj_list = [""]
+    multiProcSubjectNameQuery = 1 #if 0, use non-multiprocessing autocompleteentry. if 1, use multiprocessing. def 1
+    subj_name = ""
     usingTK = 0
     toneStart = 0
     toneEnd = 0
@@ -312,7 +315,12 @@ class userInterface_API:
         if (toStart):
             multipUI.launch_GUI()
         
-        
+    def getSubjName(self):
+        a = multiproc_userInterface_API()
+        a.usingTK = self.usingTK
+        a.subj_list = self.subj_list
+        a.multiProcSubjectNameQuery = self.multiProcSubjectNameQuery
+        return a.getSubjName()
     
     def checkInputObjToApi(self):
         if (self.messageObjToAPI.qsize() > 0 or self.messageObjToAPI.empty() == False ):
