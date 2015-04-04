@@ -217,8 +217,6 @@ class Training():
             fileToSave.write("requireStillness = %r\n" % targetObj.requireStillness);
             fileToSave.write("interTrialRandom1Time = %r\n" % targetObj.interTrialRandom1Time);
             fileToSave.write("interTrialRandom2Time = %r\n" % targetObj.interTrialRandom2Time);
-            fileToSave.write("maxMovementThreshold = %r\n" % targetObj.maxMovementThreshold);
-            fileToSave.write("maxIdleTime = %r\n" % targetObj.maxIdleTime);
             fileToSave.write("movementTime = %r\n" % targetObj.movementTime);
             fileToSave.write("idleTime = %r\n" % targetObj.idleTime);
             fileToSave.write("soundGenDuration1 = %r\n" % targetObj.soundGenDuration1);
@@ -530,8 +528,6 @@ class Training():
                         self.requireStillness = cfg.requireStillness
                         self.interTrialRandom1Time = cfg.interTrialRandom1Time
                         self.interTrialRandom2Time = cfg.interTrialRandom2Time
-                        self.maxMovementThreshold = cfg.maxMovementThreshold
-                        self.maxIdleTime = cfg.maxIdleTime
                         self.movementTime = cfg.movementTime
                         self.idleTime = cfg.idleTime
                         self.soundGenDuration1 = cfg.soundGenDuration1
@@ -564,8 +560,6 @@ class Training():
                         self.requireStillness = cfg.requireStillness
                         self.interTrialRandom1Time = cfg.interTrialRandom1Time
                         self.interTrialRandom2Time = cfg.interTrialRandom2Time
-                        self.maxMovementThreshold = cfg.maxMovementThreshold
-                        self.maxIdleTime = cfg.maxIdleTime
                         self.movementTime = cfg.movementTime
                         self.idleTime = cfg.idleTime
                         self.soundGenDuration1 = cfg.soundGenDuration1
@@ -598,8 +592,6 @@ class Training():
                         self.requireStillness = cfg.requireStillness
                         self.interTrialRandom1Time = cfg.interTrialRandom1Time
                         self.interTrialRandom2Time = cfg.interTrialRandom2Time
-                        self.maxMovementThreshold = cfg.maxMovementThreshold
-                        self.maxIdleTime = cfg.maxIdleTime
                         self.movementTime = cfg.movementTime
                         self.idleTime = cfg.idleTime
                         self.soundGenDuration1 = cfg.soundGenDuration1
@@ -632,8 +624,6 @@ class Training():
                         self.requireStillness = cfg.requireStillness
                         self.interTrialRandom1Time = cfg.interTrialRandom1Time
                         self.interTrialRandom2Time = cfg.interTrialRandom2Time
-                        self.maxMovementThreshold = cfg.maxMovementThreshold
-                        self.maxIdleTime = cfg.maxIdleTime
                         self.movementTime = cfg.movementTime
                         self.idleTime = cfg.idleTime
                         self.soundGenDuration1 = cfg.soundGenDuration1
@@ -658,8 +648,6 @@ class Training():
                     self.requireStillness = cfgtraining.requireStillness
                     self.interTrialRandom1Time = cfgtraining.interTrialRandom1Time
                     self.interTrialRandom2Time = cfgtraining.interTrialRandom2Time
-                    self.maxMovementThreshold = cfgtraining.maxMovementThreshold
-                    self.maxIdleTime = cfgtraining.maxIdleTime
                     self.movementTime = cfgtraining.movementTime
                     self.idleTime = cfgtraining.idleTime
                     self.soundGenDuration1 = cfgtraining.soundGenDuration1
@@ -681,8 +669,6 @@ class Training():
                     Training.gVariables.pavlovVars.requireStillness = Training.gVariables.requireStillness
                     Training.gVariables.pavlovVars.interTrialRandom1Time = Training.gVariables.interTrialRandom1Time
                     Training.gVariables.pavlovVars.interTrialRandom2Time = Training.gVariables.interTrialRandom2Time
-                    Training.gVariables.pavlovVars.maxMovementThreshold = Training.gVariables.maxMovementThreshold
-                    Training.gVariables.pavlovVars.maxIdleTime = Training.gVariables.maxIdleTime
                     Training.gVariables.pavlovVars.movementTime = Training.gVariables.movementTime
                     Training.gVariables.pavlovVars.idleTime = Training.gVariables.idleTime
                     Training.gVariables.pavlovVars.soundGenDuration1 = Training.gVariables.soundGenDuration1
@@ -703,8 +689,6 @@ class Training():
                     Training.gVariables.skinnerVars.requireStillness = Training.gVariables.requireStillness
                     Training.gVariables.skinnerVars.interTrialRandom1Time = Training.gVariables.interTrialRandom1Time
                     Training.gVariables.skinnerVars.interTrialRandom2Time = Training.gVariables.interTrialRandom2Time
-                    Training.gVariables.skinnerVars.maxMovementThreshold = Training.gVariables.maxMovementThreshold
-                    Training.gVariables.skinnerVars.maxIdleTime = Training.gVariables.maxIdleTime
                     Training.gVariables.skinnerVars.movementTime = Training.gVariables.movementTime
                     Training.gVariables.skinnerVars.idleTime = Training.gVariables.idleTime
                     Training.gVariables.skinnerVars.soundGenDuration1 = Training.gVariables.soundGenDuration1
@@ -726,8 +710,6 @@ class Training():
                     Training.gVariables.ocondVars.requireStillness = Training.gVariables.requireStillness
                     Training.gVariables.ocondVars.interTrialRandom1Time = Training.gVariables.interTrialRandom1Time
                     Training.gVariables.ocondVars.interTrialRandom2Time = Training.gVariables.interTrialRandom2Time
-                    Training.gVariables.ocondVars.maxMovementThreshold = Training.gVariables.maxMovementThreshold
-                    Training.gVariables.ocondVars.maxIdleTime = Training.gVariables.maxIdleTime
                     Training.gVariables.ocondVars.movementTime = Training.gVariables.movementTime
                     Training.gVariables.ocondVars.idleTime = Training.gVariables.idleTime
                     Training.gVariables.ocondVars.soundGenDuration1 = Training.gVariables.soundGenDuration1
@@ -749,8 +731,6 @@ class Training():
                     Training.gVariables.discrVars.requireStillness = Training.gVariables.requireStillness
                     Training.gVariables.discrVars.interTrialRandom1Time = Training.gVariables.interTrialRandom1Time
                     Training.gVariables.discrVars.interTrialRandom2Time = Training.gVariables.interTrialRandom2Time
-                    Training.gVariables.discrVars.maxMovementThreshold = Training.gVariables.maxMovementThreshold
-                    Training.gVariables.discrVars.maxIdleTime = Training.gVariables.maxIdleTime
                     Training.gVariables.discrVars.movementTime = Training.gVariables.movementTime
                     Training.gVariables.discrVars.idleTime = Training.gVariables.idleTime
                     Training.gVariables.discrVars.soundGenDuration1 = Training.gVariables.soundGenDuration1
@@ -773,8 +753,6 @@ class Training():
                     Training.gVariables.requireStillness = Training.gVariables.pavlovVars.requireStillness
                     Training.gVariables.interTrialRandom1Time = Training.gVariables.pavlovVars.interTrialRandom1Time
                     Training.gVariables.interTrialRandom2Time = Training.gVariables.pavlovVars.interTrialRandom2Time
-                    Training.gVariables.maxMovementThreshold = Training.gVariables.pavlovVars.maxMovementThreshold
-                    Training.gVariables.maxIdleTime = Training.gVariables.pavlovVars.maxIdleTime
                     Training.gVariables.movementTime = Training.gVariables.pavlovVars.movementTime
                     Training.gVariables.idleTime = Training.gVariables.pavlovVars.idleTime
                     #Training.gVariables.soundGenDuration1 = Training.gVariables.pavlovVars.soundGenDuration1
@@ -805,8 +783,6 @@ class Training():
                     Training.gVariables.requireStillness = Training.gVariables.skinnerVars.requireStillness
                     Training.gVariables.interTrialRandom1Time = Training.gVariables.skinnerVars.interTrialRandom1Time
                     Training.gVariables.interTrialRandom2Time = Training.gVariables.skinnerVars.interTrialRandom2Time
-                    Training.gVariables.maxMovementThreshold = Training.gVariables.skinnerVars.maxMovementThreshold
-                    Training.gVariables.maxIdleTime = Training.gVariables.skinnerVars.maxIdleTime
                     Training.gVariables.movementTime = Training.gVariables.skinnerVars.movementTime
                     Training.gVariables.idleTime = Training.gVariables.skinnerVars.idleTime
                     #Training.gVariables.soundGenDuration1 = Training.gVariables.skinnerVars.soundGenDuration1
@@ -835,8 +811,6 @@ class Training():
                     Training.gVariables.requireStillness = Training.gVariables.ocondVars.requireStillness
                     Training.gVariables.interTrialRandom1Time = Training.gVariables.ocondVars.interTrialRandom1Time
                     Training.gVariables.interTrialRandom2Time = Training.gVariables.ocondVars.interTrialRandom2Time
-                    Training.gVariables.maxMovementThreshold = Training.gVariables.ocondVars.maxMovementThreshold
-                    Training.gVariables.maxIdleTime = Training.gVariables.ocondVars.maxIdleTime
                     Training.gVariables.movementTime = Training.gVariables.ocondVars.movementTime
                     Training.gVariables.idleTime = Training.gVariables.ocondVars.idleTime
                     #Training.gVariables.soundGenDuration1 = Training.gVariables.ocondVars.soundGenDuration1
@@ -865,8 +839,6 @@ class Training():
                     Training.gVariables.requireStillness = Training.gVariables.discrVars.requireStillness
                     Training.gVariables.interTrialRandom1Time = Training.gVariables.discrVars.interTrialRandom1Time
                     Training.gVariables.interTrialRandom2Time = Training.gVariables.discrVars.interTrialRandom2Time
-                    Training.gVariables.maxMovementThreshold = Training.gVariables.discrVars.maxMovementThreshold
-                    Training.gVariables.maxIdleTime = Training.gVariables.discrVars.maxIdleTime
                     Training.gVariables.movementTime = Training.gVariables.discrVars.movementTime
                     Training.gVariables.idleTime = Training.gVariables.discrVars.idleTime
                     #Training.gVariables.soundGenDuration1 = Training.gVariables.discrVars.soundGenDuration1
@@ -998,9 +970,7 @@ class Training():
         interTrialRandom2Time = cfgtraining.interTrialRandom2Time  # intertrial time is random between previous value and this value. This
         # is also the max duration of a trial.
         
-        maxMovementThreshold = cfgtraining.maxMovementThreshold
         #maxMovementTime = cfgtraining.maxMovementTime  # max amount of movement time (10 means 1000 ms) to give reward. SHould be less than the opportunity duration
-        maxIdleTime = cfgtraining.maxIdleTime
         movementTime = cfgtraining.movementTime  # continuous moving time that should be reached to give reward. 0.5 = 500 ms
         # ex.: movementTime = 0.5 means that there should be movement detected over 500 ms at least
         idleTime = cfgtraining.idleTime  # continuous idle time that should be reached to give reward. 10= 1000 ms
@@ -1110,8 +1080,6 @@ class Training():
                 requireStillness = pavlovVars.requireStillness
                 interTrialRandom1Time = pavlovVars.interTrialRandom1Time
                 interTrialRandom2Time = pavlovVars.interTrialRandom2Time
-                maxMovementThreshold = pavlovVars.maxMovementThreshold
-                maxIdleTime = pavlovVars.maxIdleTime
                 movementTime = pavlovVars.movementTime
                 idleTime = pavlovVars.idleTime
                 soundGenDuration1 = pavlovVars.soundGenDuration1
@@ -1134,8 +1102,6 @@ class Training():
                 requireStillness = skinnerVars.requireStillness
                 interTrialRandom1Time = skinnerVars.interTrialRandom1Time
                 interTrialRandom2Time = skinnerVars.interTrialRandom2Time
-                maxMovementThreshold = skinnerVars.maxMovementThreshold
-                maxIdleTime = skinnerVars.maxIdleTime
                 movementTime = skinnerVars.movementTime
                 idleTime = skinnerVars.idleTime
                 soundGenDuration1 = skinnerVars.soundGenDuration1
@@ -1158,8 +1124,6 @@ class Training():
                 requireStillness = ocondVars.requireStillness
                 interTrialRandom1Time = ocondVars.interTrialRandom1Time
                 interTrialRandom2Time = ocondVars.interTrialRandom2Time
-                maxMovementThreshold = ocondVars.maxMovementThreshold
-                maxIdleTime = ocondVars.maxIdleTime
                 movementTime = ocondVars.movementTime
                 idleTime = ocondVars.idleTime
                 soundGenDuration1 = ocondVars.soundGenDuration1
@@ -1181,8 +1145,6 @@ class Training():
                 requireStillness = discrVars.requireStillness
                 interTrialRandom1Time = discrVars.interTrialRandom1Time
                 interTrialRandom2Time = discrVars.interTrialRandom2Time
-                maxMovementThreshold = discrVars.maxMovementThreshold
-                maxIdleTime = discrVars.maxIdleTime
                 movementTime = discrVars.movementTime
                 idleTime = discrVars.idleTime
                 soundGenDuration1 = discrVars.soundGenDuration1
@@ -1340,9 +1302,7 @@ class Training():
             Training.gVariables.logger.debug("minIdleIntertrialTime %s" % str(Training.gVariables.minIdleIntertrialTime))
             Training.gVariables.logger.debug("interTrialRandom1Time %s" % str(Training.gVariables.interTrialRandom1Time))
             Training.gVariables.logger.debug("interTrialRandom2Time %s" % str(Training.gVariables.interTrialRandom2Time))
-            Training.gVariables.logger.debug("maxMovementThreshold %s" % str(Training.gVariables.maxMovementThreshold))
             #Training.gVariables.logger.debug("maxMovementTime %s" % str(Training.gVariables.maxMovementTime))
-            Training.gVariables.logger.debug("maxIdleTime %s" % str(Training.gVariables.maxIdleTime))
             Training.gVariables.logger.debug("movementTime %s" % str(Training.gVariables.movementTime))
             Training.gVariables.logger.debug("idleTime %s" % str(Training.gVariables.idleTime))
             Training.gVariables.logger.debug("soundGenDuration1 %s" % str(Training.gVariables.soundGenDuration1))
@@ -1643,10 +1603,8 @@ class Training():
             Training.gVariables.requireStillness = subjectConfig.requireStillness
             Training.gVariables.interTrialRandom1Time = subjectConfig.interTrialRandom1Time
             Training.gVariables.interTrialRandom2Time = subjectConfig.interTrialRandom2Time
-            Training.gVariables.maxMovementThreshold = subjectConfig.maxMovementThreshold
             Training.gVariables.movementTime = subjectConfig.movementTime
             Training.gVariables.idleTime = subjectConfig.idleTime
-            Training.gVariables.maxIdleTime = subjectConfig.maxIdleTime
             Training.gVariables.secondcam = subjectConfig.secondcam
             Training.gVariables.soundGenDuration1 = subjectConfig.soundGenDuration1
             Training.gVariables.soundGenDuration2 = subjectConfig.soundGenDuration2
