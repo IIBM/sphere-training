@@ -1999,6 +1999,8 @@ class Training():
                         self.gVariables.currentGUI.last_argument = -1
                 except:
                     return;
+                if (index == -1):
+                    return
 #             return;
 #             
 #             if (self.gVariables.jobList.qsize() > 0 or self.gVariables.jobList.empty() == False ):

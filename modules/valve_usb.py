@@ -22,13 +22,15 @@ class multiproc_Valve():
     def __init__(self, jobl):
         self.displayJobList = jobl
         self.val = None
-        self.using_dev = 0;
+        self.using_dev = 0; #if 1, currently using device and it is working
+        self.using_dummy = 0 #if 1, using dummy device and will never use a hardware device.
         #print "init valve."
         try :
           self.createUSBDevice()
         except :
           logger.warning('Device idVendor = ' + str(hex(IDVendor)) + ' and idProduct = ' + str(hex(IDProduct)) + ' not found. Using dummy device')
           self.p = dummydev()
+          self.using_dummy = 1
     def createUSBDevice(self):
         logger.info('createUSBDevice: New instance of valve')
         self.using_dev = 0;
@@ -40,7 +42,7 @@ class multiproc_Valve():
         logger.debug("createUSBDevice: find done successfully.");
         # was it found?
         if self.p is None:
-            raise ValueError(msg)
+            raise ValueError("Error creating USB device.")
         # set the active configuration. With no arguments, the first
         # configuration will be the active one
         self.p.set_configuration()
@@ -63,14 +65,18 @@ class multiproc_Valve():
                      logger.debug('About to recreate device.')
                      self.createUSBDevice()
                      logger.debug('About to re-send control transfer.')
-                     a = self.p.ctrl_transfer(num1, num2, num3, num4)
+                     a = self.p.ctrl_transfer(num1, num2, num3, num4) #this might fail, leaving next ctrltransf in a p=None state
                      logger.debug('Done re-send control transfer.')
                  except:
                      a = -1
                      logger.debug('Error recreating or re-sending control transfer.')
             return a
         else:
-            a = self.p.ctrl_transfer(num1, num2, num3, num4)
+            if (self.using_dummy == 1 ):
+                a = self.p.ctrl_transfer(num1, num2, num3, num4)
+            else:
+                #using_dev = 0 AND using_dummy = 0 : so it is using dev but it has disconnected and not reconnected correctly.
+                logger.debug("Tried to send a message to the device but it was disconnected and couldn't recreate it: %r %r %r %r" % (num1, num2, num3, num4) );
     
     def checkJobList(self):
         if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
