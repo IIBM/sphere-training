@@ -17,8 +17,8 @@ import time
 import os
 import signal
 import cv2
-import logging
 import sys
+import logging
 logger = logging.getLogger('sphereVideoDetection')
 import track_bola_utils
 
