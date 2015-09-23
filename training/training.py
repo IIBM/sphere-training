@@ -1657,15 +1657,19 @@ class Training():
         
         
         # soundGen:
-        if (self.gVariables.usePyaudio == 1):
-            print "importing pyaudio"
-            import pyaudio_soundGen
-            self.gVariables.s1 = pyaudio_soundGen.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
-            self.gVariables.s2 = pyaudio_soundGen.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
-        else:
-            import soundGen
-            self.gVariables.s1 = soundGen.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
-            self.gVariables.s2 = soundGen.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
+        # La configuración es a nivel de módulo, no en el entrenamiento principal.
+        import soundGenerator
+        self.gVariables.s1 = soundGenerator.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
+        self.gVariables.s2 = soundGenerator.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
+        #if (self.gVariables.usePyaudio == 1):
+        #    print "importing pyaudio"
+        #    import pyaudio_soundGen
+        #    self.gVariables.s1 = pyaudio_soundGen.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
+        #    self.gVariables.s2 = pyaudio_soundGen.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
+        #else:
+        #    import soundGen
+        #    self.gVariables.s1 = soundGen.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
+        #    self.gVariables.s2 = soundGen.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
         
         self.gVariables.logger.debug('Soundgen init started..')
         #GUI:
