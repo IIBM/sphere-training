@@ -37,16 +37,18 @@ class soundGen():
         
         self.freq = freq
         self.duration = duration
-        self.generation_method = 1; #0: pygame ; 1: pyaudio #SE DEBE TOMAR DE UN ARCHIVO DE CONFIGURACIÓN
+        
+        import configsoundgen
+        self.generation_method = configsoundgen.generation_method; #0: pygame ; 1: pyaudio
         
         if (self.generation_method == 0):
-            import soundGen as soundGenMethod
+            import soundGen_pygame as soundGenMethod
         else:
-            import pyaudio_soundGen as soundGenMethod
+            import soundGen_pyaudio as soundGenMethod
         import multiprocessing
         self.soundGenJobList = multiprocessing.JoinableQueue()
         
-        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList,soundGenMethod, freq,duration,sample_rate, bits,) )
+        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, soundGenMethod, freq,duration,sample_rate, bits,) )
         self.soundGenProc.start()
         
         logger.debug('soundGen process started')
