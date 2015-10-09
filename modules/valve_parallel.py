@@ -6,10 +6,17 @@ logger = logging.getLogger('valve')
 ValvePinMask = 0x04
 DropTime = .1
 
-class dummypp () :
+class dummydevice () :
     def __init__(self) :
         self.data = 0
-
+    def ctrl_transfer(self, num1, num2, num3, num4):
+        print "dummy control transfer: %r %r %r %r" % (num1, num2, num3, num4);
+        pass
+        
+    def write(self,data) :
+        self.data = data
+        return self.data
+    
     def getData(self):
         return self.data
 
@@ -31,7 +38,7 @@ class multiproc_Valve():
            self.p = parallel.Parallel()
         except :
            logger.warning('Could not find any parallel port. Using dummy parallel port')
-           self.p = dummypp()
+           self.p = dummydevice()
         
     
     def checkJobList(self):
@@ -82,90 +89,6 @@ class multiproc_Valve():
      
 
 
-class Valve(object):
-  ### singleton inner class: valve.
-  class __Valve:
-    def __init__(self):
-        self.val = None
-        import multiprocessing
-        self.displayJobList = multiprocessing.JoinableQueue()
-        
-        self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList,) )
-        self.displayProc.start()
-        
-        logger.debug("valve_parallel process Started.")
-        pass
-    def __str__(self):
-      return repr(self)
-    
-    def open(self):
-        self.displayJobList.put( ("open", "") )
-    
-    def drop(self):
-        self.displayJobList.put( ("drop", "") )
-    
-    def close(self):
-        self.displayJobList.put( ("close", "") )
-    
-    def launch_multiproc(self, jobl):
-        a = multiproc_Valve(jobl)
-        while(True):
-            time.sleep(0.010)
-            a.checkJobList()
-            #a.updateInfo("Other secondary information", var)
-            #for event in pygame.event.get():
-            #        if event.type == pygame.QUIT: sys.exit()
-            pass
-    
-    def exit(self):
-        self.displayProc.terminate()
-        del self.displayProc
-        
-        self.displayJobList.close()
-        del self.displayJobList
-        pass
-  ###
-  instance = None
-  def __new__(cls): # __new__ always a classmethod
-    if not Valve.instance:
-      Valve.instance = Valve.__Valve()
-    return Valve.instance
-  def __getattr__(self, name):
-    return getattr(self.instance, name)
-  def __setattr__(self, name):
-    return setattr(self.instance, name)
-
-
-
-
-
-#===============================================================================
-# class Valve() :
-#     def __init__(self) :
-#         try :
-#           logger.info('New instance of valve')
-#           import parallel
-#           self.p = parallel.Parallel()
-#         except :
-#           logger.warning('Could not find any parallel port. Using dummy parallel port')
-#           self.p = dummypp()
-# 
-#     def open(self) :
-#         logger.info('Valve opened')
-#         a = self.p.getData()
-#         return self.p.setData(a|ValvePinMask)
-# 
-#     def close(self) :
-#         logger.info('Valve closed')
-#         a = self.p.getData()
-#         return self.p.setData(a&(~ValvePinMask))
-#     
-#     def drop(self) :
-#         logger.info('Valve drop')
-#         self.open()
-#         time.sleep(DropTime)
-#         self.close()
-#===============================================================================
 
 if __name__ == '__main__':
     # create a logging format
