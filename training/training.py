@@ -977,11 +977,6 @@ class Training():
         
         secondcam = cfgtraining.secondcam; #device number to use as second camera. Set -1 to disable this feature.
         
-        usePyaudio = cfgtraining.usePyaudio; #if 1, using pyaudio instead of pygame audio. ( default 0 . check docs)
-        if (usePyaudio):
-            print "Using pyaudio instead of pygame"
-        else:
-            print "Using pygame audio"
         
         valveType = cfgtraining.valveType
         if (valveType == 0):
@@ -1620,7 +1615,6 @@ class Training():
             #movement threshold and method: edit sphereVideoDetection config files (check docs.)
             Training.gVariables.numberOfRewardDrops = subjectConfig.numberOfRewardDrops
             Training.gVariables.numberOfRewardDropsIdle = subjectConfig.numberOfRewardDropsIdle
-            Training.gVariables.usePyaudio = subjectConfig.usePyaudio
             Training.gVariables.override_training_types = 1;
             print "Configurations loaded from %s.py" % subj_config_file
             self.gVariables.logger.info("Configurations loaded from %s.py" % subj_config_file)
@@ -1661,15 +1655,6 @@ class Training():
         import soundGenerator
         self.gVariables.s1 = soundGenerator.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
         self.gVariables.s2 = soundGenerator.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
-        #if (self.gVariables.usePyaudio == 1):
-        #    print "importing pyaudio"
-        #    import pyaudio_soundGen
-        #    self.gVariables.s1 = pyaudio_soundGen.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
-        #    self.gVariables.s2 = pyaudio_soundGen.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
-        #else:
-        #    import soundGen
-        #    self.gVariables.s1 = soundGen.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
-        #    self.gVariables.s2 = soundGen.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
         
         self.gVariables.logger.debug('Soundgen init started..')
         #GUI:
