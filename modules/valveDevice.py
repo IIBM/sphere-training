@@ -1,7 +1,7 @@
 import time
 import track_bola_utils
 import logging
-logger = logging.getLogger('valve')
+logger = logging.getLogger('valvedevice')
 
 ValvePinMask = 0x04
 DropTime = .1

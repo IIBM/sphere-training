@@ -24,3 +24,22 @@ class formatterWithMillis(logging.Formatter):
             t = ct.strftime("%Y-%m-%d %H:%M:%S")
             s = "%s,%03d" % (t, record.msecs)
         return s
+
+
+class dummydevice () :
+    def __init__(self) :
+        self.data = 0
+    def ctrl_transfer(self, num1, num2, num3, num4):
+        print "dummy control transfer: %r %r %r %r" % (num1, num2, num3, num4);
+        pass
+        
+    def write(self,data) :
+        self.data = data
+        return self.data
+    
+    def getData(self):
+        return self.data
+
+    def setData(self,data) :
+        self.data = data
+        return self.data
