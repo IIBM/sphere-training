@@ -4,45 +4,25 @@ import track_bola_utils
 import logging
 logger = logging.getLogger('valveserial')
 
-ValvePinMask = 0x04
 DropTime = .1
-
-DEVICE = '/dev/ttyUSB0'
-BAUDRATE = 115200
-
-class dummydevice () :
-    def __init__(self) :
-        self.data = 0
-    def ctrl_transfer(self, num1, num2, num3, num4):
-        print "dummy control transfer: %r %r %r %r" % (num1, num2, num3, num4);
-        pass
-        
-    def write(self,data) :
-        self.data = data
-        return self.data
-    
-    def getData(self):
-        return self.data
-
-    def setData(self,data) :
-        self.data = data
-        return self.data
-  
 
 
 class multiproc_Valve():
     def __init__(self, jobl):
         self.displayJobList = jobl
-        self.val = None
-        self.using_dev = 0;
-        #print "init valve."
-        try :
-           logger.info('New instance of valve')
-           self.p = Serial(DEVICE, BAUDRATE, timeout=1.0, stopbits=1)
-        except :
-           logger.warning('Could not find any serial port. Using dummy parallel port')
-           self.p = dummydevice()
         
+        import deviceSerial
+        self.innerDeviceSerial = deviceSerial.deviceSerial();
+        if (self.innerDeviceSerial.using_dummy):
+            #using dummy, means that it was not well initialized. Retrying:
+            print "retrying1"
+            time.sleep(0.5)
+            self.innerDeviceSerial.initDevice()
+            if (self.innerDeviceSerial.using_dummy):
+                print "retrying2"
+                time.sleep(0.5)
+                self.innerDeviceSerial.initDevice()
+        print "OK"
     
     def checkJobList(self):
         if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
@@ -73,19 +53,24 @@ class multiproc_Valve():
                     self.drop()
                 elif (index == "close"):
                     self.close()
-    
+        pass
     
     def open(self) :
          logger.debug('Valve opened')
-         return self.p.write('o')
+         retmsg = self.innerDeviceSerial.writeToSerial('o')
+         return retmsg
 
     def close(self) :
          logger.debug('Valve closed')
-         return self.p.write('c')
+         retmsg = self.innerDeviceSerial.writeToSerial('c')
+         return retmsg
 
     def drop(self) :
          logger.debug('Valve drop')
-         return self.p.write('d')
+         retmsg = self.innerDeviceSerial.writeToSerial('o')
+         time.sleep(DropTime)
+         retmsg = self.innerDeviceSerial.writeToSerial('c')
+         return retmsg
      
 
 

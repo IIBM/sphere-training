@@ -7,12 +7,7 @@ logger = logging.getLogger('deviceusb')
 IDVendor = 0x16c0
 IDProduct = 0x05dc
 
-
-  
-
 class deviceUSB(object):
-  ### singleton inner class: deviceUSB.
-  class __deviceUSB:
     def __init__(self):
         self.val = None
         self.using_dev = 0; #if 1, currently using device and it is working
@@ -92,16 +87,6 @@ class deviceUSB(object):
     def exit(self):
         
         pass
-  ###
-  instance = None
-  def __new__(cls): # __new__ always a classmethod
-    if not deviceUSB.instance:
-      deviceUSB.instance = deviceUSB.__deviceUSB()
-    return deviceUSB.instance
-  def __getattr__(self, name):
-    return getattr(self.instance, name)
-  def __setattr__(self, name):
-    return setattr(self.instance, name)
 
 
 

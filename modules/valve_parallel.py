@@ -6,26 +6,7 @@ logger = logging.getLogger('valveparallel')
 ValvePinMask = 0x04
 DropTime = .1
 
-class dummydevice () :
-    def __init__(self) :
-        self.data = 0
-    def ctrl_transfer(self, num1, num2, num3, num4):
-        print "dummy control transfer: %r %r %r %r" % (num1, num2, num3, num4);
-        pass
-        
-    def write(self,data) :
-        self.data = data
-        return self.data
-    
-    def getData(self):
-        return self.data
-
-    def setData(self,data) :
-        self.data = data
-        return self.data
-  
-
-
+#esta clase requiere refactoring (para que su estructura sea parecida a deviceUSB , valve_usb )
 
 class multiproc_Valve():
     def __init__(self, jobl):
@@ -86,7 +67,7 @@ class multiproc_Valve():
          self.open()
          time.sleep(DropTime)
          self.close()
-     
+
 
 
 

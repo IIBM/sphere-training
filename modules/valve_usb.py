@@ -8,7 +8,6 @@ IDVendor = 0x16c0
 IDProduct = 0x05dc
 
 
-  
 
 class multiproc_Valve():
     def __init__(self, jobl):
@@ -26,7 +25,7 @@ class multiproc_Valve():
                 time.sleep(0.5)
                 self.innerDeviceUSB.initDevice()
         print "OK"
-        
+    
     def checkJobList(self):
         if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
                 try:
