@@ -19,10 +19,14 @@ class Valve(object):
         
         if self.valve_type == 0:
             import valve_parallel as valve_generic
+            logger.info( "Using parallel valve" );
         if self.valve_type == 1:
             import valve_serial as valve_generic
+            logger.info( "Using serial valve" );
         if self.valve_type == 2:
             import valve_usb as valve_generic
+            logger.info( "Using USB valve" );
+        
         
         
         self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList,valve_generic,) )

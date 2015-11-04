@@ -42,7 +42,5 @@ MOVEMENT_METHOD_INITIAL_VALUE = 2 #Type of movement analysis method used initial
 numberOfRewardDrops = 1; #Number of reward drops to give when the trial is successful (for go trials).
 numberOfRewardDropsIdle = 1; #Number of reward drops to give when the trial is successful (for no-go trials).
 
-valveType = 0; #0: valve usb  ;  1: valve serial  ;  2: valve parallel
-
 
 
