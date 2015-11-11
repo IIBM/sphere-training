@@ -50,7 +50,7 @@ class sphereVideoDetection():
     
     MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = 0 ;
     
-    def __init__ (self, videosource, width=640, height=480) :
+    def __init__ (self) :
         import track_bola_utils
         import os
         logger.info("Initializing sphereVideoDetection")
@@ -72,23 +72,7 @@ class sphereVideoDetection():
             os._exit(1)
         # import configSphereVideoDetection
         
-        try:
-            import configCamera
-        except ImportError:
-            print "File configCamera.py not found. Generating a new copy..."
-            logger.info("File configCamera.py not found. Generating a new copy...")
-            a = os.getcwd() + "/"
-            print a
-            import shutil
-            shutil.copyfile(a + "configCamera.py.example", a + "configCamera.py")
-            import configCamera
-            print "configCamera.py copied and imported successfully."
-            logger.info("configCamera.py copied and imported successfully.")
-        except:
-            print "Error importing configCamera."
-            logger.error("Error importing configCamera.")
-            os._exit(1)
-        # import configCamera
+
         
         self.winName = configSphereVideoDetection.WINDOW_TITLE
         # declare self variables to use.
@@ -101,9 +85,6 @@ class sphereVideoDetection():
         
         self.firstCalibration = False  # if True, a first calibration was performed.
         
-        self.VIDEOSOURCE = videosource
-        self.CAM_WIDTH = width
-        self.CAM_HEIGHT = height
         
         self.usingPygameDisplay = configSphereVideoDetection.pygameDisplay
         self.CV2THRESHOLD = configSphereVideoDetection.CV2_THRESHOLD  # binary threshold. A black pixel is only considered if its color is greater than 160
@@ -162,21 +143,6 @@ class sphereVideoDetection():
         self.last_saved_time_movement = timeit.default_timer()  # will be used to check differences in time (determine mvnt time)
         self.last_saved_time_gp = timeit.default_timer()  # general purpose time counter
         
-        # import camera parameters from file:
-        self.CAM_BRIGHTNESS_VAR = configCamera.CAM_BRIGHTNESS_VAR
-        self.CAM_CONTRAST_VAR = configCamera.CAM_CONTRAST_VAR
-        self.CAM_SATURATION_VAR = configCamera.CAM_SATURATION_VAR
-        self.CAM_HUE_VAR = configCamera.CAM_HUE_VAR
-        self.CAM_GAIN_VAR = configCamera.CAM_GAIN_VAR
-        self.CAM_EXPOSURE_VAR = configCamera.CAM_EXPOSURE_VAR
-        
-        self.CAM_BRIGHTNESS_VALUE = configCamera.CAM_BRIGHTNESS_VALUE
-        self.CAM_CONTRAST_VALUE = configCamera.CAM_CONTRAST_VALUE
-        self.CAM_SATURATION_VALUE = configCamera.CAM_SATURATION_VALUE
-        self.CAM_HUE_VALUE = configCamera.CAM_HUE_VALUE
-        self.CAM_GAIN_VALUE = configCamera.CAM_GAIN_VALUE
-        self.CAM_EXPOSURE_VALUE = configCamera.CAM_EXPOSURE_VALUE
-        logger.info("Initial config done. Starting loop function...")
         
     
     def initAll(self):
@@ -868,70 +834,13 @@ class sphereVideoDetection():
         self.MIN_CIRCLE_MOVEMENT = 3  # mínima diferencia en movimiento del círculo para considerarlo como movimiento
         self.MAX_CIRCLE_MOVEMENT = 35  # máx diferencia en movimiento del círculo para considerarlo como movimiento
         
-        # Inicio de programa: se declara como se captura video.
-        strtmp = "Video Source: " + str(self.VIDEOSOURCE)
-        print strtmp
-        logger.info(strtmp)
-        cam = cv2.VideoCapture(self.VIDEOSOURCE)
-        
-        # Opciones de ejecuciOn: 640x480 => 60 fps.
-        cam.set(3, self.CAM_WIDTH)
-        cam.set(4, self.CAM_HEIGHT)
-        
-        # set camera properties: this configuration is very dependent on the type and model of camera.
-        
-        cam.set(self.CAM_BRIGHTNESS_VAR, self.CAM_BRIGHTNESS_VALUE)
-        cam.set(self.CAM_CONTRAST_VAR, self.CAM_CONTRAST_VALUE)
-        cam.set(self.CAM_SATURATION_VAR, self.CAM_SATURATION_VALUE)
-        cam.set(self.CAM_HUE_VAR, self.CAM_HUE_VALUE)
-        cam.set(self.CAM_GAIN_VAR, self.CAM_GAIN_VALUE)
-        cam.set(self.CAM_EXPOSURE_VAR, self.CAM_EXPOSURE_VALUE)
-        print "camera: Width %r" % cam.get(3)
-        logger.info(str("camera: Width %r" % cam.get(3)))
-        print "camera: Height %r" % cam.get(4)
-        logger.info(str("camera: Height %r" % cam.get(4)))
-        # print "camera: FPS %r" % cam.get(5) #prints error for most cameras.
-        print "camera: Brightness %r" % cam.get(self.CAM_BRIGHTNESS_VAR)
-        logger.info(str("camera: Brightness %r" % cam.get(self.CAM_BRIGHTNESS_VAR)))
-        print "camera: Contrast %r" % cam.get(self.CAM_CONTRAST_VAR)
-        logger.info(str("camera: Contrast %r" % cam.get(self.CAM_CONTRAST_VAR)))
-        print "camera: Saturation %r" % cam.get(self.CAM_SATURATION_VAR)
-        logger.info(str("camera: Saturation %r" % cam.get(self.CAM_SATURATION_VAR)))
-        print "camera: Hue %r" % cam.get(self.CAM_HUE_VAR)
-        logger.info(str("camera: Hue %r" % cam.get(self.CAM_HUE_VAR)))
-        print "camera: Gain %r" % cam.get(self.CAM_GAIN_VAR)
-        logger.info(str("camera: Gain %r" % cam.get(self.CAM_GAIN_VAR)))
-        print "camera: Exposure %r" % cam.get(self.CAM_EXPOSURE_VAR)
-        logger.info(str("camera: Exposure %r" % cam.get(self.CAM_EXPOSURE_VAR)))
+        # Inicio de programa: se instancia videoSource
+        import videoSource
+        vs = videoSource.videoSource();
+        cam = vs.getVideoSource();
         
         
-        time.sleep(0.2)
-        """
-        1-CV_CAP_PROP_POS_MSEC Current position of the video file in milliseconds.
-        2-CV_CAP_PROP_POS_FRAMES 0-based index of the frame to be decoded/captured next.
-        3-CV_CAP_PROP_POS_AVI_RATIO Relative position of the video file
-        4-CV_CAP_PROP_FRAME_WIDTH Width of the frames in the video stream.
-        5-CV_CAP_PROP_FRAME_HEIGHT Height of the frames in the video stream.
-        6-CV_CAP_PROP_FPS Frame rate.
-        7-CV_CAP_PROP_FOURCC 4-character code of codec.
-        8-CV_CAP_PROP_FRAME_COUNT Number of frames in the video file.
-        9-CV_CAP_PROP_FORMAT Format of the Mat objects returned by retrieve() .
-        10-CV_CAP_PROP_MODE Backend-specific value indicating the current capture mode.
-        11-CV_CAP_PROP_BRIGHTNESS Brightness of the image (only for cameras).
-        12-CV_CAP_PROP_CONTRAST Contrast of the image (only for cameras).
-        13-CV_CAP_PROP_SATURATION Saturation of the image (only for cameras).
-        14-CV_CAP_PROP_HUE Hue of the image (only for cameras).
-        15-CV_CAP_PROP_GAIN Gain of the image (only for cameras).
-        16-CV_CAP_PROP_EXPOSURE Exposure (only for cameras).
-        17-CV_CAP_PROP_CONVERT_RGB Boolean flags indicating whether images should be converted to RGB.
-        18-CV_CAP_PROP_WHITE_BALANCE Currently unsupported
-        19-CV_CAP_PROP_RECTIFICATION Rectification flag for stereo cameras (note: only supported by DC1394 v 2.x backend currently)
-        """
         
-        if not cam:
-            print "Error opening capture device"
-            logger.error("Error opening capture device")
-            sys.exit(1)
         
         
         cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
@@ -1241,21 +1150,7 @@ if __name__ == '__main__':
     
     logger.info('Start sphereVideoDetection Test')
     # Crea un objeto de captura de video, imprime tiempo de movimiento continuo o tiempo que permanece quieto.
-    try:
-        from configvideo import *
-    except ImportError:
-        print "File configvideo.py doesn't exist"
-        logger.info("File configvideo.py doesn't exist")
-    except:
-        print "Error with configVideo"
-        logger.info("Error with configVideo")
-    
-    print VIDEOSOURCE
-    print VIDEOSOURCE
-    print VIDEOSOURCE
-    print VIDEOSOURCE
-    print VIDEOSOURCE
-    videoDet = sphereVideoDetection(VIDEOSOURCE, CAM_WIDTH, CAM_HEIGHT)
+    videoDet = sphereVideoDetection( )
     videoDet.setNoiseFiltering(True)
     videoDet.setMovementTimeWindow(1.6);
     videoDet.initAll()
