@@ -1630,7 +1630,6 @@ class Training():
         
         # valve:
         self.gVariables.valve1 = vlv.Valve()
-        
         self.gVariables.logger.debug('Valve created.')
         
         
