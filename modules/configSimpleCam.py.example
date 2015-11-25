@@ -1,11 +1,14 @@
-CAM_NUMBER = 0 #cam number, 0 for integrated webcam, 1 for the next detected camera.
+CAM_NUMBER = 0 #cam number, 0 for integrated webcam, 1 for the next detected camera; -1 to disable this module completely.
     
-PATH = "path/to/videofile/"
-FILE = "videoFile.avi"
+PATH = "../../../Labyrinth/files_movement/videos_prueba/"
+FILE = "capture_bola_prueba_humano.mkv"
 
 VIDEOSOURCE = PATH + FILE
 # or
 #VIDEOSOURCE = CAM_NUMBER
+
+# VIDEOSOURCE will be called as 
+# cv2.VideoCapture(videosource)
 
 CAM_WIDTH = 640
 CAM_HEIGHT = 480

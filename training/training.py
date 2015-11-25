@@ -975,10 +975,6 @@ class Training():
         # ex.: movementTime = 0.5 means that there should be movement detected over 500 ms at least
         idleTime = cfgtraining.idleTime  # continuous idle time that should be reached to give reward. 10= 1000 ms
         
-        secondcam = cfgtraining.secondcam; #device number to use as second camera. Set -1 to disable this feature.
-        
-        
-        
         soundGenDuration1 = cfgtraining.soundGenDuration1
         soundGenDuration2 = cfgtraining.soundGenDuration2
         soundGenFrequency1 = cfgtraining.soundGenFrequency1  # in Hz
@@ -1590,7 +1586,6 @@ class Training():
             Training.gVariables.interTrialRandom2Time = subjectConfig.interTrialRandom2Time
             Training.gVariables.movementTime = subjectConfig.movementTime
             Training.gVariables.idleTime = subjectConfig.idleTime
-            Training.gVariables.secondcam = subjectConfig.secondcam
             Training.gVariables.soundGenDuration1 = subjectConfig.soundGenDuration1
             Training.gVariables.soundGenDuration2 = subjectConfig.soundGenDuration2
             Training.gVariables.soundGenFrequency1 = subjectConfig.soundGenFrequency1
@@ -1671,14 +1666,9 @@ class Training():
         self.gVariables.videoDet.initAll()
         self.gVariables.logger.debug('sphereVideoDetection started.')
         #second cam:
-        if (self.gVariables.secondcam >= 0):
-            numseccam = int(self.gVariables.secondcam)
-            import simpleCam
-            self.gVariables.videoSecond = simpleCam.simpleCam(numseccam);
-            self.gVariables.logger.debug('secondCam started with cam number: %d' % self.gVariables.secondcam);
-        else:
-            self.gVariables.logger.debug('secondCam was not started (configuration file has -1 as value)' );
-            print 'secondCam was not started (configuration file has -1 as value)'
+        import simpleCam
+        self.gVariables.videoSecond = simpleCam.simpleCam();
+        self.gVariables.logger.debug('secondCam started.');
         #Display:
         self.initDisplay()
         #main Program Loop

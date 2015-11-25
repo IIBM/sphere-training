@@ -11,31 +11,50 @@ PROCESS_SLEEP_TIME = 70 #in miliseconds
 
 class multiproc_simpleCam():
     
-    def __init__(self, devnum):
+    def __init__(self, devnum=-1):
         time.sleep(4)
         CAM_WIDTH = 320;
         CAM_HEIGHT = 240;
         import cv2
         time.sleep(1)
-        cap = cv2.VideoCapture(devnum)
-        print cap
-        cap.set(3, CAM_WIDTH);
-        cap.set(4, CAM_HEIGHT);
-        time.sleep(1)
-        print "starting"
-        logger.debug("simpleCam starting.")
-        window_name = "Device: %d" % devnum
-        cv2.namedWindow(window_name)
-        time.sleep(1)
-        logger.debug("namedWindow created. About to enter loop")
+        if (devnum == -1):
+            try:
+                import configSimpleCam
+                devnum = configSimpleCam.VIDEOSOURCE
+            except:
+                devnum = 0
+        else:
+            pass    #use devnum passed through argument
+        if (devnum == -1):
+            #disable module completely:
+            pass
+        else:
+            cap = cv2.VideoCapture(devnum)
+            print cap
+            cap.set(3, CAM_WIDTH);
+            cap.set(4, CAM_HEIGHT);
+            time.sleep(1)
+            print "starting"
+            logger.debug("simpleCam starting.")
+            window_name = "Device: %s" % str(devnum)
+            cv2.namedWindow(window_name)
+            time.sleep(1)
+            logger.debug("namedWindow created. About to enter loop")
         while(True):
-            if (cv2.waitKey(PROCESS_SLEEP_TIME) == 27):
-                break
-            ret, frame = cap.read()
-            cv2.imshow(window_name, frame)
-        print "Exiting.-"
-        cap.release()
-        cv2.destroyWindow(window_name)
+            if (devnum == -1):
+                time.sleep(0.1);
+            else:
+                if (cv2.waitKey(PROCESS_SLEEP_TIME) == 27):
+                    break
+                ret, frame = cap.read()
+                cv2.imshow(window_name, frame)
+        if (devnum == -1):
+            #disable module completely:
+            pass
+        else:
+            print "Exiting.-"
+            cap.release()
+            cv2.destroyWindow(window_name)
 
 
 
@@ -45,7 +64,7 @@ class simpleCam():
     def launch_multiproc(self, devnum):
         a = multiproc_simpleCam(devnum)
     
-    def __init__(self, devnum):
+    def __init__(self, devnum=-1):
         import multiprocessing
         self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(devnum,) )
         self.displayProc.start()
@@ -75,6 +94,7 @@ if __name__ == '__main__':
     console.setFormatter(formatter)
     logger.addHandler(console)
     #===========================================================================
-    a = simpleCam(0);
+    a = simpleCam();
+    #b = simpleCam(0); #it is possible to execute both simultaneously.
     time.sleep(14)
     a.exit()

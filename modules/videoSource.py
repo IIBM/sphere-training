@@ -14,6 +14,10 @@ logger = logging.getLogger('videosource')
 WIDTH_INDEX_CAMERA = 3
 HEIGHT_INDEX_CAMERA = 4
 
+"""
+videoSource: This class creates a VideoCapture, sets its values (brightness, etc.).
+"""
+
 class videoSource() :
     def __init__(self) :
         
