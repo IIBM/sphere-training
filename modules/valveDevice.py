@@ -14,8 +14,26 @@ class Valve(object):
         self.val = None
         import multiprocessing
         self.displayJobList = multiprocessing.JoinableQueue()
-        import configvalve
-        self.valve_type = configvalve.valve_type; #0: valve_parallel ; 1: valve_serial ; 2: valve_usb
+        
+        try:
+            import configValve
+        except ImportError:
+            print "File configValve.py not found. Generating a new copy..."
+            logger.info("File configValve.py not found. Generating a new copy...")
+            a = os.getcwd() + "/"
+            print a
+            import shutil
+            shutil.copyfile(a + "configValve.py.example", a + "configValve.py")
+            import configValve
+            print "configValve.py copied and imported successfully."
+            logger.info("configValve.py copied and imported successfully.")
+        except:
+            print "Error importing configValve."
+            logger.error("Error importing configValve.")
+            os._exit(1)
+        
+        import configValve
+        self.valve_type = configValve.valve_type; #0: valve_parallel ; 1: valve_serial ; 2: valve_usb
         
         if self.valve_type == 0:
             import valve_parallel as valve_generic

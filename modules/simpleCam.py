@@ -12,6 +12,27 @@ PROCESS_SLEEP_TIME = 70 #in miliseconds
 class multiproc_simpleCam():
     
     def __init__(self, devnum=-1):
+        
+        import os
+        logger.info("Initializing simpleCam")
+        try:
+            import configSimpleCam
+        except ImportError:
+            print "File configSimpleCam.py not found. Generating a new copy..."
+            logger.info("File configSimpleCam.py not found. Generating a new copy...")
+            a = os.getcwd() + "/"
+            print a
+            import shutil
+            shutil.copyfile(a + "configSimpleCam.py.example", a + "configSimpleCam.py")
+            import configSimpleCam
+            print "configSimpleCam.py copied and imported successfully."
+            logger.info("configSimpleCam.py copied and imported successfully.")
+        except:
+            print "Error importing configSimpleCam."
+            logger.error("Error importing configSimpleCam.")
+            os._exit(1)
+        
+        
         time.sleep(4)
         CAM_WIDTH = 320;
         CAM_HEIGHT = 240;

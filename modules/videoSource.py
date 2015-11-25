@@ -30,7 +30,7 @@ class videoSource() :
             print a
             import shutil
             shutil.copyfile(a + "configVideoSource.py.example", a + "configVideoSource.py")
-            import configCamera
+            import configVideoSource
             print "configVideoSource.py copied and imported successfully."
             logger.info("configVideoSource.py copied and imported successfully.")
         except:
