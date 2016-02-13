@@ -117,5 +117,5 @@ if __name__ == '__main__':
     #===========================================================================
     a = simpleCam();
     #b = simpleCam(0); #it is possible to execute both simultaneously.
-    time.sleep(14)
+    time.sleep(30)
     a.exit()
