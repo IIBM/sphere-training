@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger('simpleCam')
 import time
 
-PROCESS_SLEEP_TIME = 70 #in miliseconds
+PROCESS_SLEEP_TIME = 70 #in milliseconds
 
 
 class multiproc_simpleCam():

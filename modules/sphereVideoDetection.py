@@ -843,8 +843,8 @@ class sphereVideoDetection():
         
         
         
-        cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
-        
+        #cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
+        cv2.namedWindow(self.winName, cv2.WINDOW_AUTOSIZE)
         
         # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
         t_before = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
@@ -963,8 +963,10 @@ class sphereVideoDetection():
                 if (type(capturedImage) == type(None)):
                     logger.info("sphereVideoDetection reached END OF VIDEO . Seeking to the start...")
                     #cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_POS_FRAMES, 0)
-                    cam.set( cv2.cv.CV_CAP_PROP_POS_MSEC , 0)
-                    cam.set( cv2.cv.CV_CAP_PROP_POS_MSEC , 0)
+                    #cam.set( cv2.cv.CV_CAP_PROP_POS_MSEC , 0)
+                    #cam.set( cv2.cv.CV_CAP_PROP_POS_MSEC , 0)
+                    cam.set( cv2.CAP_PROP_POS_MSEC , 0)
+                    cam.set( cv2.CAP_PROP_POS_MSEC , 0)
                     capturedImage = cam.read()[1]
                     #break
                     pass
@@ -972,8 +974,10 @@ class sphereVideoDetection():
                 if capturedImage.size == 0:
                     logger.info("sphereVideoDetection reached END OF VIDEO . Seeking to the start...")
                     #cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_POS_FRAMES, 0)
-                    cam.set(cv2.cv.CV_CAP_PROP_POS_MSEC, 0)
-                    cam.set(cv2.cv.CV_CAP_PROP_POS_MSEC, 0)
+                    #cam.set(cv2.cv.CV_CAP_PROP_POS_MSEC, 0)
+                    #cam.set(cv2.cv.CV_CAP_PROP_POS_MSEC, 0)
+                    cam.set(cv2.CAP_PROP_POS_MSEC, 0)
+                    cam.set(cv2.CAP_PROP_POS_MSEC, 0)
                     capturedImage = cam.read()[1]
                     #break;
                     pass
@@ -994,7 +998,8 @@ class sphereVideoDetection():
                 # #Proceso la imagen actual: t_now
                 #===============================================================
                 ret, thresh = cv2.threshold(t_now, self.CV2THRESHOLD, 255, cv2.THRESH_BINARY)
-                contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                #contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                img2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
                 #===============================================================
                 # #Recorrido de frame actual:
                 #===============================================================
