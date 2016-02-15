@@ -27,54 +27,54 @@ def __checkConfigFiles():
                 #checks if the config files needed for training_ exist. If not, generates them.
                 import os
                 
-                try:
-                    import configvideo
-                except ImportError:
-                    print "File configvideo.py not found. Generating a new copy..."
-                    a = (os.getcwd().split("/training") [0]) + "/modules/"
-                    import shutil
-                    shutil.copyfile(a+"configvideo.py.example", a+"configvideo.py")
-                    import configvideo
-                    print "configvideo.py copied and imported successfully."
-                except:
-                    print "Error importing configvideo."
-                    os._exit(1)
-                
-                if 'configvideo' in sys.modules:  
-                    del(sys.modules["configvideo"]) 
-                
-                
-                try:
-                    import configSphereVideoDetection
-                except ImportError:
-                    print "File configSphereVideoDetection.py not found. Generating a new copy..."
-                    a = (os.getcwd().split("/training") [0]) + "/modules/"
-                    import shutil
-                    shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
-                    import configvideo
-                    print "configSphereVideoDetection.py copied and imported successfully."
-                except:
-                    print "Error importing configSphereVideoDetection."
-                    os._exit(1)
-                
-                if 'configSphereVideoDetection' in sys.modules:  
-                    del(sys.modules["configSphereVideoDetection"]) 
-                
-                try:
-                    import configCamera
-                except ImportError:
-                    print "File configCamera.py not found. Generating a new copy..."
-                    a = (os.getcwd().split("/training") [0]) + "/modules/"
-                    import shutil
-                    shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
-                    import configvideo
-                    print "configCamera.py copied and imported successfully."
-                except:
-                    print "Error importing configCamera."
-                    os._exit(1)
-                
-                if 'configCamera' in sys.modules:  
-                    del(sys.modules["configCamera"]) 
+#                 try:
+#                     import configvideo
+#                 except ImportError:
+#                     print "File configvideo.py not found. Generating a new copy..."
+#                     a = (os.getcwd().split("/training") [0]) + "/modules/"
+#                     import shutil
+#                     shutil.copyfile(a+"configvideo.py.example", a+"configvideo.py")
+#                     import configvideo
+#                     print "configvideo.py copied and imported successfully."
+#                 except:
+#                     print "Error importing configvideo."
+#                     os._exit(1)
+#                 
+#                 if 'configvideo' in sys.modules:  
+#                     del(sys.modules["configvideo"]) 
+#                 
+#                 
+#                 try:
+#                     import configSphereVideoDetection
+#                 except ImportError:
+#                     print "File configSphereVideoDetection.py not found. Generating a new copy..."
+#                     a = (os.getcwd().split("/training") [0]) + "/modules/"
+#                     import shutil
+#                     shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
+#                     import configvideo
+#                     print "configSphereVideoDetection.py copied and imported successfully."
+#                 except:
+#                     print "Error importing configSphereVideoDetection."
+#                     os._exit(1)
+#                 
+#                 if 'configSphereVideoDetection' in sys.modules:  
+#                     del(sys.modules["configSphereVideoDetection"]) 
+#                 
+#                 try:
+#                     import configCamera
+#                 except ImportError:
+#                     print "File configCamera.py not found. Generating a new copy..."
+#                     a = (os.getcwd().split("/training") [0]) + "/modules/"
+#                     import shutil
+#                     shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
+#                     import configvideo
+#                     print "configCamera.py copied and imported successfully."
+#                 except:
+#                     print "Error importing configCamera."
+#                     os._exit(1)
+#                 
+#                 if 'configCamera' in sys.modules:  
+#                     del(sys.modules["configCamera"]) 
                 
                 try:
                     import config_training as cfgtraining
@@ -159,7 +159,7 @@ __checkConfigFiles()
 
 
 
-import configvideo
+import configVideoSource
 import track_bola_utils
 
 class Training():
@@ -1624,6 +1624,7 @@ class Training():
         self.gVariables.logger.info('Subject name: %s' % self.gVariables.subject_name)
         
         # valve:
+        import valveDevice as vlv
         self.gVariables.valve1 = vlv.Valve()
         self.gVariables.logger.debug('Valve created.')
         
@@ -1659,7 +1660,7 @@ class Training():
             pass
         #Sphere Video Detection:
         import sphereVideoDetection
-        self.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection(configvideo.VIDEOSOURCE, configvideo.CAM_WIDTH, configvideo.CAM_HEIGHT)
+        self.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection()
         self.gVariables.videoDet.setMovementTimeWindow(self.gVariables.movementTime)  # seconds that should be moving.
         self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
         self.gVariables.videoDet.usingPygameDisplay = False; #to prevent launching pygame visualization tools for vd.

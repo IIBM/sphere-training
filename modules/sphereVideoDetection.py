@@ -60,6 +60,8 @@ class sphereVideoDetection():
             print "File configSphereVideoDetection.py not found. Generating a new copy..."
             logger.info("File configSphereVideoDetection.py not found. Generating a new copy...")
             a = os.getcwd() + "/"
+            if (a.endswith("training/")):
+                a = (os.getcwd().split("/training/") [0][:-8]) + "modules/"
             print a
             import shutil
             shutil.copyfile(a + "configSphereVideoDetection.py.example", a + "configSphereVideoDetection.py")
@@ -70,6 +72,26 @@ class sphereVideoDetection():
             print "Error importing configSphereVideoDetection."
             logger.error("Error importing configSphereVideoDetection.")
             os._exit(1)
+        
+        try:
+            import calibrationCamera
+        except ImportError:
+            print "File calibrationCamera.py not found. Generating a new copy..."
+            logger.info("File calibrationCamera.py not found. Generating a new copy...")
+            a = os.getcwd() + "/"
+            if (a.endswith("training/")):
+                a = (os.getcwd().split("/training/") [0][:-8]) + "modules/"
+            print a
+            import shutil
+            shutil.copyfile(a + "calibrationCamera.py.example", a + "calibrationCamera.py")
+            import calibrationCamera
+            print "calibrationCamera.py copied and imported successfully."
+            logger.info("calibrationCamera.py copied and imported successfully.")
+        except:
+            print "Error importing calibrationCamera."
+            logger.error("Error importing calibrationCamera.")
+            os._exit(1)
+        
         # import configSphereVideoDetection
         
 

@@ -7,6 +7,7 @@ import time
 import logging
 import track_bola_utils
 import sys
+import os
 
 logger = logging.getLogger('soundGen')
 
@@ -37,6 +38,28 @@ class soundGen():
         
         self.freq = freq
         self.duration = duration
+        
+        
+        
+        try:
+            import configSoundGenerator
+        except ImportError:
+            print "File configSoundGenerator.py not found. Generating a new copy..."
+            logger.info("File configSoundGenerator.py not found. Generating a new copy...")
+            a = os.getcwd() + "/"
+            if (a.endswith("training/")):
+                a = (os.getcwd().split("/training/") [0][:-8]) + "modules/"
+            print a
+            import shutil
+            shutil.copyfile(a + "configSoundGenerator.py.example", a + "configSoundGenerator.py")
+            import configSoundGenerator
+            print "configSoundGenerator.py copied and imported successfully."
+            logger.info("configSoundGenerator.py copied and imported successfully.")
+        except:
+            print "Error importing configSoundGenerator."
+            logger.error("Error importing configSoundGenerator.")
+            os._exit(1)
+        
         
         import configSoundGenerator
         self.generation_method = configSoundGenerator.generation_method; #0: pygame ; 1: pyaudio

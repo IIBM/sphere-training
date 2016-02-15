@@ -1,6 +1,8 @@
 import time
 import track_bola_utils
 import logging
+import os
+
 logger = logging.getLogger('valvedevice')
 
 ValvePinMask = 0x04
@@ -21,6 +23,8 @@ class Valve(object):
             print "File configValve.py not found. Generating a new copy..."
             logger.info("File configValve.py not found. Generating a new copy...")
             a = os.getcwd() + "/"
+            if (a.endswith("training/")):
+                a = (os.getcwd().split("/training/") [0][:-8]) + "modules/"
             print a
             import shutil
             shutil.copyfile(a + "configValve.py.example", a + "configValve.py")

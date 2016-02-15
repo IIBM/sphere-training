@@ -27,6 +27,8 @@ class videoSource() :
             print "File configVideoSource.py not found. Generating a new copy..."
             logger.info("File configVideoSource.py not found. Generating a new copy...")
             a = os.getcwd() + "/"
+            if (a.endswith("training/")):
+                a = (os.getcwd().split("/training/") [0][:-8]) + "modules/"
             print a
             import shutil
             shutil.copyfile(a + "configVideoSource.py.example", a + "configVideoSource.py")

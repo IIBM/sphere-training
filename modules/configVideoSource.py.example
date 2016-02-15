@@ -3,9 +3,9 @@ CAM_NUMBER = 0 #cam number, 0 for integrated webcam, 1 for the next detected cam
 PATH = "path/to/videofile/"
 FILE = "videoFile.avi"
 
-VIDEOSOURCE = PATH + FILE
+#VIDEOSOURCE = PATH + FILE
 # or
-#VIDEOSOURCE = CAM_NUMBER
+VIDEOSOURCE = CAM_NUMBER
 
 CAM_WIDTH = 640
 CAM_HEIGHT = 480
