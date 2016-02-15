@@ -38,8 +38,8 @@ class soundGen():
         self.freq = freq
         self.duration = duration
         
-        import configsoundgen
-        self.generation_method = configsoundgen.generation_method; #0: pygame ; 1: pyaudio
+        import configSoundGenerator
+        self.generation_method = configSoundGenerator.generation_method; #0: pygame ; 1: pyaudio
         
         if (self.generation_method == 0):
             import soundGen_pygame as soundGenMethod
