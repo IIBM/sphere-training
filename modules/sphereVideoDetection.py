@@ -40,10 +40,10 @@ class sphereVideoDetection():
     NoiseFilteringOnVars.minRadius = -1;
     
     usingPygameDisplay = False;
-    number_of_moving_vectors = 0;
-    number_of_standing_vectors = 0;
-    sum_of_areas = 0;
-    losing_track_cause = ""
+    movingVectorsCount = 0;
+    standingVectorsCount = 0;
+    totalCirclesArea = 0;
+    losingTrackCause = ""
     capturedImageWidth = 0;
     capturedImageHeight = 0;
     capturedImageSize = 0;
@@ -263,7 +263,7 @@ class sphereVideoDetection():
         
         if (self.firstCalibration == True):
             # A first calibration was executed. So the user is asking for a re-calibration, which means
-            # that the calibration file shouldn' be used.
+            # that the calibration file shouldn't be used.
             if (flag == 0):
                 return False
         
@@ -291,7 +291,6 @@ class sphereVideoDetection():
         if (flag == 1):
             # flag 1: A new calibration file should be created. It will have the calibrated variables just determined.
             try:
-                import os
                 os.remove("../modules/calibrationCamera.py")
                 os.remove("../modules/calibrationCamera.pyc")
                 print "Previous calibrationCamera file exists. File erased."
@@ -801,17 +800,17 @@ class sphereVideoDetection():
         textRect1.centery = textRect1.centery + 80;
         self.windowSurface.blit(text1, textRect1)
         
-        text1 = self.smallFont.render('Cause for losing track: %r' % self.losing_track_cause, True, (255,255,255))
+        text1 = self.smallFont.render('Cause for losing track: %r' % self.losingTrackCause, True, (255,255,255))
         textRect1 = text1.get_rect()
         textRect1.centery = textRect1.centery + 120;
         self.windowSurface.blit(text1, textRect1)
         
-        text1 = self.smallFont.render('Moving circles: %r' % self.number_of_moving_vectors, True, (255,255,255))
+        text1 = self.smallFont.render('Moving circles: %r' % self.movingVectorsCount, True, (255,255,255))
         textRect1 = text1.get_rect()
         textRect1.centery = textRect1.centery + 160;
         self.windowSurface.blit(text1, textRect1)
         
-        text1 = self.smallFont.render('Standing circles: %r' % self.number_of_standing_vectors, True, (255,255,255))
+        text1 = self.smallFont.render('Standing circles: %r' % self.standingVectorsCount, True, (255,255,255))
         textRect1 = text1.get_rect()
         textRect1.centery = textRect1.centery + 200;
         self.windowSurface.blit(text1, textRect1)
@@ -824,7 +823,7 @@ class sphereVideoDetection():
         textRect1.centery = textRect1.centery + 240;
         self.windowSurface.blit(text1, textRect1)
         
-        text1 = self.smallFont.render("Current area of circles: %.2f" % (self.sum_of_areas), True, (255,255,255))
+        text1 = self.smallFont.render("Current area of circles: %.2f" % (self.totalCirclesArea), True, (255,255,255))
         textRect1 = text1.get_rect()
         textRect1.centery = textRect1.centery + 280;
         self.windowSurface.blit(text1, textRect1)
@@ -841,7 +840,7 @@ class sphereVideoDetection():
                 Si hay diferencias en el movimiento de un círculo particular (comparando
                 si son iguales por el hecho de que hay colisión en el espacio 2D-tiempo)
                 entonces añadir valor en el vector en el que este círculo se movió.
-    """    
+        """    
         CAM_NUMBER = 0  # cam number, 0 for integrated webcam, 1 for the next detected camera.
         
         # TCP_IP = 'localhost' #ip a donde conecto a socket
@@ -849,8 +848,8 @@ class sphereVideoDetection():
         # variables "de movimiento":
         # CAM_WIDTH = 640
         # CAM_HEIGHT = 480
-        MIN_CONTOUR_AREA = 60  # min contour area to be valid, used in calibration
-        MAX_CONTOUR_AREA = 2600  # max contour area to be valid , used in calibration
+        ABSOLUTEMIN_CONTOUR_AREA = 60  # min contour area to be valid, used in calibration
+        ABSOLUTEMAX_CONTOUR_AREA = 2600  # max contour area to be valid , used in calibration
         self.WORKING_MIN_CONTOUR_AREA = 9999  # min contour area to be valid, used in every main loop
         self.WORKING_MAX_CONTOUR_AREA = 0  # max contour area to be valid, used in every main loop
         self.MIN_CIRCLE_MOVEMENT = 3  # mínima diferencia en movimiento del círculo para considerarlo como movimiento
@@ -898,7 +897,8 @@ class sphereVideoDetection():
                         #cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
                         t_calib = cv2.medianBlur(t_calib, 3)
                         ret, thresh = cv2.threshold(t_calib, self.CV2THRESHOLD, 255, cv2.THRESH_BINARY)
-                        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                        #contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                        img2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
                         # recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
                         circleCenters = []
                         circleRadius = []
@@ -906,7 +906,7 @@ class sphereVideoDetection():
                             (x, y), radius = cv2.minEnclosingCircle(cnt)
                             center = (int(x), int(y))
                             radius = int(radius)
-                            if cv2.contourArea(cnt) > MIN_CONTOUR_AREA and cv2.contourArea(cnt) < MAX_CONTOUR_AREA: 
+                            if cv2.contourArea(cnt) > ABSOLUTEMIN_CONTOUR_AREA and cv2.contourArea(cnt) < ABSOLUTEMAX_CONTOUR_AREA: 
                                 # áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
                                 cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)
                                 circleCenters.append(center)
@@ -1027,7 +1027,7 @@ class sphereVideoDetection():
                 #===============================================================
                 # recorro los contornos para el frame actual, capturando centros.
                 Lnew = []
-                self.sum_of_areas = 0; #cantidad de área cubierta por todos los círculos siendo trackeados
+                self.totalCirclesArea = 0; #cantidad de área cubierta por todos los círculos siendo trackeados
                 # si el área es muy chica respecto de lo que es normal, probablemente ha perdido tracking.
                 for cnt in contours:
                     (x, y), radius = cv2.minEnclosingCircle(cnt)
@@ -1039,9 +1039,9 @@ class sphereVideoDetection():
                         if (self.showTrackingFeedback):
                             cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)  # visual feedback to user.
                         Lnew.append(center)
-                        self.sum_of_areas+= 3.1415 * radius*radius;
+                        self.totalCirclesArea+= 3.1415 * radius*radius;
                 self.areasVector[0:-1] = self.areasVector[1:]
-                self.areasVector[-1] = self.sum_of_areas
+                self.areasVector[-1] = self.totalCirclesArea
                 #===============================================================
                 # #analizo si hay colisiones en el espacio 2D-tiempo
                 #===============================================================
@@ -1049,8 +1049,8 @@ class sphereVideoDetection():
                 # Se analizan ambos versores del vector en el plano bidireccional:
                 self.movEjeX = 0
                 self.movEjeY = 0
-                self.number_of_moving_vectors = 0
-                self.number_of_standing_vectors = 0
+                self.movingVectorsCount = 0
+                self.standingVectorsCount = 0
                 
                 for index in range(len(Lnew)):
                     for jndex in range(index, len(Lbefore)):
@@ -1064,21 +1064,21 @@ class sphereVideoDetection():
                                 # se suma a todos los desplazamientos (en x, en y).
                                 self.movEjeX += Lnew[index][0] - Lbefore[jndex][0]
                                 self.movEjeY += Lnew[index][1] - Lbefore[jndex][1]
-                                self.number_of_moving_vectors += 1
+                                self.movingVectorsCount += 1
                         else:
                             # están muy cerca, son probablemente el mismo.
-                            self.number_of_standing_vectors += 1
+                            self.standingVectorsCount += 1
                 self.isTrackingTemp = True
-                self.losing_track_cause = ""
-                if (self.number_of_standing_vectors < len(Lnew) / 3 and self.number_of_moving_vectors < len(Lnew) / 3):  # see docs.
+                self.losingTrackCause = ""
+                if (self.standingVectorsCount < len(Lnew) / 3 and self.movingVectorsCount < len(Lnew) / 3):  # see docs.
                     if (len(Lnew) > 2):  # else too few circles to determine loss of tracking
                         self.isTrackingTemp = False #on this frame, the tracking has been lost.
-                        self.losing_track_cause = "standing_vs_moving_vectors"
+                        self.losingTrackCause = "standing_vs_moving_vectors"
                 if self.isTrackingTemp == True:
                     # studying lose of track associated with area of circles
-                    if (self.sum_of_areas < self.MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING):
+                    if (self.totalCirclesArea < self.MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING):
                             self.isTrackingTemp = False #less area than expected, it has lost movement tracking
-                            self.losing_track_cause = "small_area"
+                            self.losingTrackCause = "small_area"
                 
                 self.trackingVector[0:-1] = self.trackingVector[1:]
                 self.trackingVector[-1] = self.isTrackingTemp
@@ -1094,18 +1094,18 @@ class sphereVideoDetection():
                 
                 # print cant_pastframes_tracking
                 # print self.trackingVector
-                # print "Standing vectors ", number_of_standing_vectors
-                # print "Moving vectors ", number_of_moving_vectors
+                # print "Standing vectors ", standingVectorsCount
+                # print "Moving vectors ", movingVectorsCount
                 # print "circles " , len(Lnew)
                 # print "Tracking : " , self.isTracking
                 # print "----"
                 
                 # we divide each instant vector components by N, to obtain average instant vector.
-                if (self.number_of_moving_vectors == 0):
-                    self.number_of_moving_vectors = 1
+                if (self.movingVectorsCount == 0):
+                    self.movingVectorsCount = 1
                 
-                self.movEjeX /= self.number_of_moving_vectors  # movimiento x promedio, ponderación de todos los movimientos en x.
-                self.movEjeY /= self.number_of_moving_vectors  # movimiento y promedio, ponderación de todos los movimientos en y.
+                self.movEjeX /= self.movingVectorsCount  # movimiento x promedio, ponderación de todos los movimientos en x.
+                self.movEjeY /= self.movingVectorsCount  # movimiento y promedio, ponderación de todos los movimientos en y.
                 
                 self.vectorAcumulado.x += self.movEjeX
                 self.vectorAcumulado.y += self.movEjeY
