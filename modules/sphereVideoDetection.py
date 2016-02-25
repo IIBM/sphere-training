@@ -18,6 +18,7 @@ import signal
 import cv2
 import sys
 import logging
+import numpy
 logger = logging.getLogger('sphereVideoDetection')
 import track_bola_utils
 
@@ -838,92 +839,113 @@ class sphereVideoDetection():
         pass
     
     def doCalibration(self, capturedImage):
-                    if (self.manageCalibrationVariables(0) == False):
-                        print "Calibration file missing. A new calibration file will be created.."
-                        logger.info("Calibration file missing. A new calibration file will be created..")
-                        t_calib = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)
-                        #cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
-                        t_calib = cv2.medianBlur(t_calib, 3)
-                        ret, thresh = cv2.threshold(t_calib, self.CV2THRESHOLD, 255, cv2.THRESH_BINARY)
-                        #contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-                        img2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-                        # recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
-                        circleCenters = []
-                        circleRadius = []
-                        for cnt in contours:
-                            (x, y), radius = cv2.minEnclosingCircle(cnt)
-                            center = (int(x), int(y))
-                            radius = int(radius)
-                            if cv2.contourArea(cnt) > self.ABSOLUTEMIN_CONTOUR_AREA and cv2.contourArea(cnt) < self.ABSOLUTEMAX_CONTOUR_AREA: 
-                                # áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
-                                cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)
-                                circleCenters.append(center)
-                                circleRadius.append(radius)
-                        expectedValue = 0
-                        minRadius = 9999
-                        maxRadius = 0
-                        for i in range (0, 10):
-                            cv2.imshow(self.winName , capturedImage)
-                            time.sleep(0.01)
-                            key = cv2.waitKey(10)
-                        for i in range(0, len(circleRadius)):
-                            expectedValue += circleRadius[i]
-                        
-                        if len(circleCenters) > 0:
-                          expectedValue /= len(circleCenters)
-                        else:
-                          expectedValue = 1
-                        
-                        for i in range (0, len(circleCenters)):
-                            if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue) < expectedValue / 2):
-                                maxRadius = circleRadius[i]
-                            if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue) < expectedValue / 2):
-                                minRadius = circleRadius[i]
-                        
-                        # variables regarding noise filtering will be created wether nf is on or off:
-                        self.setCalibrationVariables(minRadius, maxRadius, expectedValue)
-                        
-                        print "Number of samples: %d" % len(circleCenters)
-                        logger.info(str("Number of samples: %d" % len(circleCenters)))
-                        print "Radius expected value: %d" % expectedValue
-                        logger.info(str("Radius expected value: %d" % expectedValue))
-                        print "Minor Radius: %d" % minRadius
-                        logger.info(str("Minor Radius: %d" % minRadius))
-                        print "Major Radius: %d" % maxRadius
-                        logger.info(str("Major Radius: %d" % maxRadius))
-                        print "Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)
-                        logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
-                        print "Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)
-                        logger.info(str("Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)))
-                        print "Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)
-                        logger.info(str("Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)))
-                        print "Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)
-                        logger.info(str("Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)))
-                        
-                        if (self.manageCalibrationVariables(1) == False):
-                            print "Error writing and saving calibration file."
-                            logger.warning("Error writing and saving calibration file.")
-                        else:
-                            print "Calibration file saved."
-                            logger.info("Calibration file saved.")
-                        if (self.showUserFeedback == False):
-                            cv2.destroyWindow(self.winName)
-                        self.startCalibration = False
-                    else:
-                        pass
-                        # Calibration file exists, there is no need to calibrate.
-                        print " - Calibration file exists. Using calibration file. - "
-                        logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
-                        # print "Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)
-                        logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
-                        # print "Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)
-                        logger.info(str("Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)))
-                        # print "Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)
-                        logger.info(str("Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)))
-                        # print "Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)
-                        logger.info(str("Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)))
-                        self.startCalibration = False
-                        pass
+        if (self.manageCalibrationVariables(0) == False):
+            print "Calibration file missing. A new calibration file will be created.."
+            logger.info("Calibration file missing. A new calibration file will be created..")
+            t_calib = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)
+            #cv.Smooth(cv.fromarray(t_calib), cv.fromarray(t_calib), cv.CV_BLUR, 3);
+            t_calib = cv2.medianBlur(t_calib, 3)
+            ret, thresh = cv2.threshold(t_calib, self.CV2THRESHOLD, 255, cv2.THRESH_BINARY)
+            #contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            img2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            # recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
+            circleCenters = []
+            circleRadius = []
+            for cnt in contours:
+                (x, y), radius = cv2.minEnclosingCircle(cnt)
+                center = (int(x), int(y))
+                radius = int(radius)
+                if cv2.contourArea(cnt) > self.ABSOLUTEMIN_CONTOUR_AREA and cv2.contourArea(cnt) < self.ABSOLUTEMAX_CONTOUR_AREA: 
+                    # áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
+                    cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)
+                    circleCenters.append(center)
+                    circleRadius.append(radius)
+            expectedValue = 0
+            minRadius = 9999
+            maxRadius = 0
+            for i in range (0, 10):
+                cv2.imshow(self.winName , capturedImage)
+                time.sleep(0.01)
+                key = cv2.waitKey(10)
+            for i in range(0, len(circleRadius)):
+                expectedValue += circleRadius[i]
+            
+            if len(circleCenters) > 0:
+                expectedValue /= len(circleCenters)
+                for i in range (0, len(circleCenters)):
+                    if (circleRadius[i] > maxRadius and abs(circleRadius[i] - expectedValue) < expectedValue / 2):
+                        maxRadius = circleRadius[i]
+                    if (circleRadius[i] < minRadius and abs(circleRadius[i] - expectedValue) < expectedValue / 2):
+                        minRadius = circleRadius[i]
+                            # variables regarding noise filtering will be created wether nf is on or off:
+                self.setCalibrationVariables(minRadius, maxRadius, expectedValue)
+                
+                print "Number of samples: %d" % len(circleCenters)
+                logger.info(str("Number of samples: %d" % len(circleCenters)))
+                print "Radius expected value: %d" % expectedValue
+                logger.info(str("Radius expected value: %d" % expectedValue))
+                print "Minor Radius: %d" % minRadius
+                logger.info(str("Minor Radius: %d" % minRadius))
+                print "Major Radius: %d" % maxRadius
+                logger.info(str("Major Radius: %d" % maxRadius))
+                print "Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)
+                logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
+                print "Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)
+                logger.info(str("Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)))
+                print "Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)
+                logger.info(str("Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)))
+                print "Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)
+                logger.info(str("Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)))
+                
+                if (self.manageCalibrationVariables(1) == False):
+                    print "Error writing and saving calibration file."
+                    logger.warning("Error writing and saving calibration file.")
+                else:
+                    print "Calibration file saved."
+                    logger.info("Calibration file saved.")
+            else:
+                expectedValue = 1
+                print "CV2 failed to find suitable circles with the function cv2.circle"
+                logger.info(str("CV2 failed to find suitable circles with the function cv2.circle") )
+                pass
+            #whether cv2.circle succeded or not, we get out of the calibration state, and back to tracking.
+            if (self.showUserFeedback == False):
+                cv2.destroyWindow(self.winName)
+            self.startCalibration = False
+        else:
+            pass
+            # Calibration file exists, there is no need to calibrate.
+            print " - Calibration file exists. Using existing calibration file. - "
+            logger.info(" - Calibration file exists. Using existing calibration file. - ")
+            logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
+            # print "Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)
+            logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
+            # print "Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)
+            logger.info(str("Min Circle Movement: %d" % int(self.MIN_CIRCLE_MOVEMENT)))
+            # print "Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)
+            logger.info(str("Min contour area: %d" % int(self.WORKING_MIN_CONTOUR_AREA)))
+            # print "Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)
+            logger.info(str("Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)))
+            self.startCalibration = False
+            pass
+        pass
+    
+    
+    def draw_arrow(self, image, p, q, color, arrow_magnitude=9, thickness=1, line_type=8, shift=0):        
+        # draw arrow tail
+        cv2.line(image, p, q, color, thickness, line_type, shift)
+        # calc angle of the arrow
+        angle = numpy.arctan2(p[1]-q[1], p[0]-q[0])
+        # starting point of first line of arrow head
+        p = (int(q[0] + arrow_magnitude * numpy.cos(angle + numpy.pi/4)),
+        int(q[1] + arrow_magnitude * numpy.sin(angle + numpy.pi/4)))
+        # draw first half of arrow head
+        cv2.line(image, p, q, color, thickness, line_type, shift)
+        # starting point of second line of arrow head
+        p = (int(q[0] + arrow_magnitude * numpy.cos(angle - numpy.pi/4)),
+        int(q[1] + arrow_magnitude * numpy.sin(angle - numpy.pi/4)))
+        # draw second half of arrow head
+        cv2.line(image, p, q, color, thickness, line_type, shift)
     
     def mainVideoDetection(self):
     
@@ -945,17 +967,12 @@ class sphereVideoDetection():
         vs = videoSource.videoSource();
         cam = vs.getVideoSource();
         
-        
-        
-        
-        
         #cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
         cv2.namedWindow( self.winName , cv2.WINDOW_AUTOSIZE )
         
         # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
         t_now = cv2.cvtColor( cam.read()[1], cv2.COLOR_RGB2GRAY )
         capturedImage = cam.read()[1]
-        
         
         #self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
         self.capturedImageWidth, self.capturedImageHeight = self.cv_size( capturedImage )
@@ -965,7 +982,7 @@ class sphereVideoDetection():
         print "Height: %r " %  self.capturedImageHeight
         
         time.sleep(0.1)
-
+        
         self.startCalibration = True
         print "Starting video detection main loop."
         Lnew = []
@@ -981,25 +998,18 @@ class sphereVideoDetection():
                 # capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
                 capturedImage = cam.read()[1]
                 #lo primero que se hace es verificar que se haya podido leer algo. Caso contrario, end of video..
-                if (type(capturedImage) == type(None)):
-                    logger.info("sphereVideoDetection reached END OF VIDEO . Seeking to the start...")
-                    #cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_POS_FRAMES, 0)
-                    #cam.set( cv2.cv.CV_CAP_PROP_POS_MSEC , 0)
-                    #cam.set( cv2.cv.CV_CAP_PROP_POS_MSEC , 0)
-                    cam.set( cv2.CAP_PROP_POS_MSEC , 0)
-                    cam.set( cv2.CAP_PROP_POS_MSEC , 0)
-                    capturedImage = cam.read()[1]
-                    #break
-                    pass
-                
-                if capturedImage.size == 0:
-                    logger.info("sphereVideoDetection reached END OF VIDEO . Seeking to the start...")
+                if (capturedImage.size == 0) or (type(capturedImage) == type(None)):
+                    logger.info("sphereVideoDetection detected empty image. If video, will try to seek to the start. Then will try to capture another frame");
                     #cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_POS_FRAMES, 0)
                     #cam.set(cv2.cv.CV_CAP_PROP_POS_MSEC, 0)
                     #cam.set(cv2.cv.CV_CAP_PROP_POS_MSEC, 0)
-                    cam.set(cv2.CAP_PROP_POS_MSEC, 0)
-                    cam.set(cv2.CAP_PROP_POS_MSEC, 0)
-                    capturedImage = cam.read()[1]
+                    try:
+                        cam.set(cv2.CAP_PROP_POS_MSEC, 0)
+                        cam.set(cv2.CAP_PROP_POS_MSEC, 0)
+                        capturedImage = cam.read()[1]
+                    except:
+                        logger.info("sphereVideoDetection failed to recover from \"empty image\" error.");
+                        continue;
                     #break;
                     pass
                 pass
@@ -1036,7 +1046,7 @@ class sphereVideoDetection():
                         if (self.showTrackingFeedback):
                             cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)  # visual feedback to user.
                         Lnew.append(center)
-                        self.totalCirclesArea+= 3.1415 * radius*radius;
+                        self.totalCirclesArea+= 3.1415926 * radius*radius;
                 self.areasVector[0:-1] = self.areasVector[1:]
                 self.areasVector[-1] = self.totalCirclesArea
                 #===============================================================
@@ -1054,10 +1064,9 @@ class sphereVideoDetection():
                         movement_difference = (Lnew[index][0] - Lbefore[jndex][0]) ** 2 + (Lnew[index][1] - Lbefore[jndex][1]) ** 2
                         if (math.sqrt(movement_difference) >= self.MIN_CIRCLE_MOVEMENT):
                             if (math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
-                                # print "Hay colisión: %d %d" % (index,jndex)
                                 # cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
                                 if (self.showTrackingFeedback):
-                                    cv2.line(capturedImage, (Lnew[index][0], Lnew[index][1]), (Lbefore[jndex][0], Lbefore[jndex][1]), (255, 0, 0), 5)  # user feedback
+                                    self.draw_arrow(capturedImage, (Lbefore[jndex][0], Lbefore[jndex][1]) , (Lnew[index][0], Lnew[index][1]) , (255, 0, 0) );
                                 # se suma a todos los desplazamientos (en x, en y).
                                 self.movEjeX += Lnew[index][0] - Lbefore[jndex][0]
                                 self.movEjeY += Lnew[index][1] - Lbefore[jndex][1]
@@ -1081,37 +1090,27 @@ class sphereVideoDetection():
                 self.trackingVector[-1] = self.isTrackingTemp
                 cant_pastframes_tracking = 0
                 self.isTracking = True
-                for i in range(0, len(self.trackingVector)):
+                for i in range( 0, len(self.trackingVector) ):
                     if self.trackingVector[i] == True:
                         cant_pastframes_tracking += 1
-                if (cant_pastframes_tracking < 8): #from the past 10 tracking frames , 80% or less have lost tracking
-                    self.isTracking = False #so consider this as a current lost of track (movement with unknown direction)
-                
-                
-                
-                # print cant_pastframes_tracking
-                # print self.trackingVector
-                # print "Standing vectors ", standingVectorsCount
-                # print "Moving vectors ", movingVectorsCount
-                # print "circles " , len(Lnew)
-                # print "Tracking : " , self.isTracking
-                # print "----"
+                if (cant_pastframes_tracking < int( 0.8 * len(self.trackingVector) ) ): # from the past LEN tracking frames , 80% or less have lost tracking
+                    self.isTracking = False # so consider this as a current track loss (movement with unknown direction)
                 
                 # we divide each instant vector components by N, to obtain average instant vector.
                 if (self.movingVectorsCount == 0):
-                    self.movingVectorsCount = 1
-                
-                self.movEjeX /= self.movingVectorsCount  # movimiento x promedio, ponderación de todos los movimientos en x.
-                self.movEjeY /= self.movingVectorsCount  # movimiento y promedio, ponderación de todos los movimientos en y.
-                
-                self.vectorAcumulado.x += self.movEjeX
-                self.vectorAcumulado.y += self.movEjeY
-                
-                self.vectorInstantaneo.x += self.movEjeX  # suma contrib. x en este ciclo (se establece a 0 en otro método)
-                self.vectorInstantaneo.y += self.movEjeY  # suma contrib. y en este ciclo (se establece a 0 en otro método)
-                
-                # se analiza continuidad de movimiento en función:
-                self.continuousMovementAnalysis()
+                    pass # no moving vectors, so we don't need to calculate current movement.
+                else:
+                    self.movEjeX /= self.movingVectorsCount  # movimiento x promedio, ponderación de todos los movimientos en x.
+                    self.movEjeY /= self.movingVectorsCount  # movimiento y promedio, ponderación de todos los movimientos en y.
+                    
+                    self.vectorAcumulado.x += self.movEjeX
+                    self.vectorAcumulado.y += self.movEjeY
+                    
+                    self.vectorInstantaneo.x += self.movEjeX  # suma contrib. x en este ciclo (se establece a 0 en otro método)
+                    self.vectorInstantaneo.y += self.movEjeY  # suma contrib. y en este ciclo (se establece a 0 en otro método)
+                    
+                    # se analiza continuidad de movimiento en función:
+                    self.continuousMovementAnalysis()
                 
                 # se ejecutan visualization tools de pygame (es opcional)
                 if self.usingPygameDisplay:
@@ -1121,9 +1120,7 @@ class sphereVideoDetection():
                 # se "muestra" el resultado al usuario (feedback)
                 #===============================================================
                 if (self.showUserFeedback):
-                    cv2.imshow(self.winName , capturedImage)  # obs.: NO es estrictamente necesario mostrar la ventana para que funcione
-                # (imshow se puede sacar si el CPU es un problema.)
-                
+                    cv2.imshow(self.winName , capturedImage)  # obs.: NO es estrictamente necesario mostrar la ventana para que funcione, podría comentarse.
                 #===============================================================
                 # #para finalizar programa, usuario presiona "Escape":
                 #===============================================================
@@ -1143,7 +1140,6 @@ class sphereVideoDetection():
                     if (self.mustquit == 0):
                         os._exit(0)
                     return
-
 
 ""
 #
@@ -1192,47 +1188,3 @@ if __name__ == '__main__':
         logger.info(a)
         #print videoDet.movementVector
         time.sleep(0.3)
-
-"""
-if __name__ == '__main__':
-    #ver http://stackoverflow.com/questions/12376224/python-threading-running-2-different-functions-simultaneously
-    #import threading
-    #import threading
-    # Create two threads, one for video Detection, the other with the game per se.
-    #fred1 = threading.Thread(target=mainFunction)
-    #fred1.start()
-    
-    #fred2 = threading.Thread(target=mainVideoDetection)
-    #fred2.start()
-    print "prueba ejecutada."
-    try:
-        from configvideo import *
-    except ImportError:
-        print "No existe el archivo configvideo.py"
-    except:
-        print "otro error"
-    videoDet = sphereVideoDetection(VIDEOSOURCE,CAM_WIDTH, CAM_HEIGHT)
-    
-    
-    import time
-    try:
-    import valve
-    except:
-    print "error importing Valve"
-    while(True):
-    time.sleep(2)
-    print "x:  "+str(videoDet.getAccumX())
-    print "y:  "+str(videoDet.getAccumY()) #<>
-    if (abs(videoDet.getAccumX()) > 100  or abs(videoDet.getAccumY()) > 100):
-        #resetear lo acumulado:
-        videoDet.resetX()
-        videoDet.resetY()
-        #abrir la válvula
-        print "abro VAlvula"
-        val1 = valve.Valve()
-        val1.open()
-        time.sleep(0.2)
-        val1.close()
-        time.sleep(0.2)
-        print "fin apertura vAlvula"
-"""
