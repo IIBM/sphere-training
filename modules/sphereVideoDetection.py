@@ -149,6 +149,9 @@ class sphereVideoDetection():
         
         self.movementTimeWindow = 0.5  # 0.5 seconds for the method movementVector_Binary
         
+        self.ABSOLUTEMIN_CONTOUR_AREA = 60  # min contour area to be valid, used in calibration
+        self.ABSOLUTEMAX_CONTOUR_AREA = 2600  # max contour area to be valid , used in calibration
+        
         self.VECTOR_COUNT_PERCENTAGE = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE  # percentage of 1's needed for the mvnt.vector. method to consider it "moving"
         self.VECTOR_COUNT_PERCENTAGE_MOVEMENT = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE_MOVEMENT  #
         self.VECTOR_COUNT_PERCENTAGE_IDLE = configSphereVideoDetection.VECTOR_COUNT_PERCENTAGE_IDLE 
@@ -265,12 +268,14 @@ class sphereVideoDetection():
             # A first calibration was executed. So the user is asking for a re-calibration, which means
             # that the calibration file shouldn't be used.
             if (flag == 0):
+                logger.info("Returning false for recalibration.")
+                print "Returning false for recalibration."
                 return False
         
         self.firstCalibration = True
         
         if (flag == 0):
-            # Flag 0: Check whether calibration file exists or not.
+            # Flag 0: Check whether calibration file exists or not. If exists, load vars and return True ; if it doesn't, return False.
             try:
                 import calibrationCamera
                 self.NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT = calibrationCamera.MIN_CIRCLE_MOVEMENT
@@ -283,13 +288,13 @@ class sphereVideoDetection():
                 self.NoiseFilteringOffVars.WORKING_MIN_CONTOUR_AREA = calibrationCamera.NF_WORKING_MIN_CONTOUR_AREA
                 self.NoiseFilteringOffVars.WORKING_MAX_CONTOUR_AREA = calibrationCamera.NF_WORKING_MAX_CONTOUR_AREA
                 self.setNoiseFiltering(self.getNoiseFiltering()) #to apply changes.
-                return True  # True, calibration file was there (and i already loaded all vars..
+                return True  # True, calibration file was there (and i already loaded all vars..)
             except:
                 # probably: file doesn't exist.
                 return False  # False, calibration file was not there. A new one will be created AFTER calib. variables are determined"
 
         if (flag == 1):
-            # flag 1: A new calibration file should be created. It will have the calibrated variables just determined.
+            # flag 1: A new calibration file should be created. It will have the new calibrated variables just obtained.
             try:
                 os.remove("../modules/calibrationCamera.py")
                 os.remove("../modules/calibrationCamera.pyc")
@@ -299,25 +304,26 @@ class sphereVideoDetection():
                 print "Error erasing previous calibration file. Probably file does not exist."
                 logger.error("Error erasing previous calibration file. Probably file does not exist.")
             
-            print "Creating new calibration file"
-            with open("../modules/calibrationCamera.py", "w") as text_file:
-                    text_file.write("#This file has calibration variables for the camera \n")
-                    text_file.write("#if this file exists, these values will be used in execution. Else, a new file \n")
-                    text_file.write("#with calibration variables will be created and used. \n")
-                    text_file.write("# \n")
+            logger.info("Creating new calibration file.")
+            print "Creating new calibration file."
+            with open("../modules/calibrationCamera.py", "w") as newCalibrationFile:
+                    newCalibrationFile.write("#This file has calibration variables for the camera \n")
+                    newCalibrationFile.write("#if this file exists, these values will be used in execution. Else, a new file \n")
+                    newCalibrationFile.write("#with calibration variables will be created and used. \n")
+                    newCalibrationFile.write("# \n")
                     
-                    text_file.write("MAX_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOnVars.MAX_CIRCLE_MOVEMENT))
-                    text_file.write("MIN_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT))
-                    text_file.write("WORKING_MIN_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOnVars.WORKING_MIN_CONTOUR_AREA))
-                    text_file.write("WORKING_MAX_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOnVars.WORKING_MAX_CONTOUR_AREA))
+                    newCalibrationFile.write("MAX_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOnVars.MAX_CIRCLE_MOVEMENT))
+                    newCalibrationFile.write("MIN_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOnVars.MIN_CIRCLE_MOVEMENT))
+                    newCalibrationFile.write("WORKING_MIN_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOnVars.WORKING_MIN_CONTOUR_AREA))
+                    newCalibrationFile.write("WORKING_MAX_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOnVars.WORKING_MAX_CONTOUR_AREA))
                     
-                    text_file.write("# \n")
-                    text_file.write("# Noise Filtering variables \n")
+                    newCalibrationFile.write("# \n")
+                    newCalibrationFile.write("# Noise Filtering variables \n")
                     
-                    text_file.write("NF_MAX_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOffVars.MAX_CIRCLE_MOVEMENT))
-                    text_file.write("NF_MIN_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT))
-                    text_file.write("NF_WORKING_MIN_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOffVars.WORKING_MIN_CONTOUR_AREA))
-                    text_file.write("NF_WORKING_MAX_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOffVars.WORKING_MAX_CONTOUR_AREA))
+                    newCalibrationFile.write("NF_MAX_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOffVars.MAX_CIRCLE_MOVEMENT))
+                    newCalibrationFile.write("NF_MIN_CIRCLE_MOVEMENT = %d \n" % int(self.NoiseFilteringOffVars.MIN_CIRCLE_MOVEMENT))
+                    newCalibrationFile.write("NF_WORKING_MIN_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOffVars.WORKING_MIN_CONTOUR_AREA))
+                    newCalibrationFile.write("NF_WORKING_MAX_CONTOUR_AREA = %d \n" % int(self.NoiseFilteringOffVars.WORKING_MAX_CONTOUR_AREA))
                     
                     print self.MAX_CIRCLE_MOVEMENT
                     logger.info(str(self.MAX_CIRCLE_MOVEMENT))
@@ -831,65 +837,7 @@ class sphereVideoDetection():
         pygame.display.update()
         pass
     
-    def mainVideoDetection(self):
-    
-        """
-            Programa de detección de movimiento:
-            Se enciende y configura cámara.
-            Por cada ciclo de programa, se compara el fotograma actual con el anterior.
-                Si hay diferencias en el movimiento de un círculo particular (comparando
-                si son iguales por el hecho de que hay colisión en el espacio 2D-tiempo)
-                entonces añadir valor en el vector en el que este círculo se movió.
-        """    
-        CAM_NUMBER = 0  # cam number, 0 for integrated webcam, 1 for the next detected camera.
-        
-        # TCP_IP = 'localhost' #ip a donde conecto a socket
-        # TCP_PORT = 50007 #puerto del socket
-        # variables "de movimiento":
-        # CAM_WIDTH = 640
-        # CAM_HEIGHT = 480
-        ABSOLUTEMIN_CONTOUR_AREA = 60  # min contour area to be valid, used in calibration
-        ABSOLUTEMAX_CONTOUR_AREA = 2600  # max contour area to be valid , used in calibration
-        self.WORKING_MIN_CONTOUR_AREA = 9999  # min contour area to be valid, used in every main loop
-        self.WORKING_MAX_CONTOUR_AREA = 0  # max contour area to be valid, used in every main loop
-        self.MIN_CIRCLE_MOVEMENT = 3  # mínima diferencia en movimiento del círculo para considerarlo como movimiento
-        self.MAX_CIRCLE_MOVEMENT = 35  # máx diferencia en movimiento del círculo para considerarlo como movimiento
-        
-        # Inicio de programa: se instancia videoSource
-        import videoSource
-        vs = videoSource.videoSource();
-        cam = vs.getVideoSource();
-        
-        
-        
-        
-        
-        #cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
-        cv2.namedWindow(self.winName, cv2.WINDOW_AUTOSIZE)
-        
-        # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
-        t_before = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
-        t_now = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
-        capturedImage = cam.read()[1]
-        
-        
-        #self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
-        self.capturedImageWidth, self.capturedImageHeight = self.cv_size( capturedImage )
-        self.capturedImageSize = capturedImage.size
-        print "Size: %r " % self.capturedImageSize
-        print "Width: %r " %  self.capturedImageWidth
-        print "Height: %r " %  self.capturedImageHeight
-        
-        time.sleep(0.1)
-
-        self.startCalibration = True
-        print "Starting video detection main loop."
-        Lnew = []
-        while (self.available == True):
-                #===============================================================
-                # #calibrate if necessary
-                #===============================================================
-                if (self.startCalibration == True):
+    def doCalibration(self, capturedImage):
                     if (self.manageCalibrationVariables(0) == False):
                         print "Calibration file missing. A new calibration file will be created.."
                         logger.info("Calibration file missing. A new calibration file will be created..")
@@ -906,7 +854,7 @@ class sphereVideoDetection():
                             (x, y), radius = cv2.minEnclosingCircle(cnt)
                             center = (int(x), int(y))
                             radius = int(radius)
-                            if cv2.contourArea(cnt) > ABSOLUTEMIN_CONTOUR_AREA and cv2.contourArea(cnt) < ABSOLUTEMAX_CONTOUR_AREA: 
+                            if cv2.contourArea(cnt) > self.ABSOLUTEMIN_CONTOUR_AREA and cv2.contourArea(cnt) < self.ABSOLUTEMAX_CONTOUR_AREA: 
                                 # áreas muy chicas pueden significar ruido que se mueve, mejor ignorarlo..
                                 cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)
                                 circleCenters.append(center)
@@ -962,6 +910,7 @@ class sphereVideoDetection():
                             cv2.destroyWindow(self.winName)
                         self.startCalibration = False
                     else:
+                        pass
                         # Calibration file exists, there is no need to calibrate.
                         print " - Calibration file exists. Using calibration file. - "
                         logger.info(str("Max Circle Movement: %d" % int(self.MAX_CIRCLE_MOVEMENT)))
@@ -975,7 +924,57 @@ class sphereVideoDetection():
                         logger.info(str("Max contour area: %d" % int(self.WORKING_MAX_CONTOUR_AREA)))
                         self.startCalibration = False
                         pass
-                
+    
+    def mainVideoDetection(self):
+    
+        """
+            Programa de detección de movimiento:
+            Se enciende y configura cámara.
+            Por cada ciclo de programa, se compara el fotograma actual con el anterior.
+                Si hay diferencias en el movimiento de un círculo particular (comparando
+                si son iguales por el hecho de que hay colisión en el espacio 2D-tiempo)
+                entonces añadir valor en el vector en el que este círculo se movió.
+        """        
+        self.WORKING_MIN_CONTOUR_AREA = 9999  # min contour area to be valid, used in every main loop
+        self.WORKING_MAX_CONTOUR_AREA = 0  # max contour area to be valid, used in every main loop
+        self.MIN_CIRCLE_MOVEMENT = 3  # mínima diferencia en movimiento del círculo para considerarlo como movimiento
+        self.MAX_CIRCLE_MOVEMENT = 35  # máx diferencia en movimiento del círculo para considerarlo como movimiento
+        
+        # Inicio de programa: se instancia videoSource
+        import videoSource
+        vs = videoSource.videoSource();
+        cam = vs.getVideoSource();
+        
+        
+        
+        
+        
+        #cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
+        cv2.namedWindow( self.winName , cv2.WINDOW_AUTOSIZE )
+        
+        # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
+        t_now = cv2.cvtColor( cam.read()[1], cv2.COLOR_RGB2GRAY )
+        capturedImage = cam.read()[1]
+        
+        
+        #self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
+        self.capturedImageWidth, self.capturedImageHeight = self.cv_size( capturedImage )
+        self.capturedImageSize = capturedImage.size
+        print "Size: %r " % self.capturedImageSize
+        print "Width: %r " %  self.capturedImageWidth
+        print "Height: %r " %  self.capturedImageHeight
+        
+        time.sleep(0.1)
+
+        self.startCalibration = True
+        print "Starting video detection main loop."
+        Lnew = []
+        while (self.available == True):
+                #===============================================================
+                # #calibrate if necessary
+                #===============================================================
+                if (self.startCalibration == True):
+                    self.doCalibration( capturedImage )
                 #===============================================================
                 # # Preparo las imgs antigûa, actual y futura<>
                 #===============================================================
@@ -1004,9 +1003,7 @@ class sphereVideoDetection():
                     #break;
                     pass
                 pass
-                # t_before es el del anterior ciclo, t_now es el recién capturado (procesándolo 1ero..),
-                
-                # t_before = t_now #saves old matrix; unnecessary since what is important from old matrix is the circle and point matrix
+            
                 t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
                 
                 #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
@@ -1056,7 +1053,7 @@ class sphereVideoDetection():
                     for jndex in range(index, len(Lbefore)):
                         movement_difference = (Lnew[index][0] - Lbefore[jndex][0]) ** 2 + (Lnew[index][1] - Lbefore[jndex][1]) ** 2
                         if (math.sqrt(movement_difference) >= self.MIN_CIRCLE_MOVEMENT):
-                             if (math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
+                            if (math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
                                 # print "Hay colisión: %d %d" % (index,jndex)
                                 # cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
                                 if (self.showTrackingFeedback):

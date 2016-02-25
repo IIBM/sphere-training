@@ -1667,9 +1667,9 @@ class Training():
         self.gVariables.videoDet.initAll()
         self.gVariables.logger.debug('sphereVideoDetection started.')
         #second cam:
-        import simpleCam
-        self.gVariables.videoSecond = simpleCam.simpleCam();
-        self.gVariables.logger.debug('secondCam started.');
+        ####import simpleCam
+        ####self.gVariables.videoSecond = simpleCam.simpleCam();
+        ####self.gVariables.logger.debug('secondCam started.');
         #Display:
         self.initDisplay()
         #main Program Loop
