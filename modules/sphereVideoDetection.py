@@ -201,13 +201,13 @@ class sphereVideoDetection():
         self.vectorInstantaneo.x = 0
         self.vectorPseudoInstantaneo.x = 0
         self.vectorAcumulado.x = 0
-        self.movEjeX = 0
+        self.movementAxisX = 0
 
     def resetY(self):
         self.vectorInstantaneo.y = 0
         self.vectorPseudoInstantaneo.y = 0
         self.vectorAcumulado.y = 0
-        self.movEjeY = 0
+        self.movementAxisY = 0
 
     def getAccumX(self):
         return self.vectorAcumulado.x
@@ -1054,8 +1054,8 @@ class sphereVideoDetection():
                 #===============================================================
                 # Si las hubiera, voy sumando contribuciones para ver hacia donde apunta el movimiento medio.
                 # Se analizan ambos versores del vector en el plano bidireccional:
-                self.movEjeX = 0
-                self.movEjeY = 0
+                self.movementAxisX = 0
+                self.movementAxisY = 0
                 self.movingVectorsCount = 0
                 self.standingVectorsCount = 0
                 
@@ -1068,8 +1068,8 @@ class sphereVideoDetection():
                                 if (self.showTrackingFeedback):
                                     self.draw_arrow(capturedImage, (Lbefore[jndex][0], Lbefore[jndex][1]) , (Lnew[index][0], Lnew[index][1]) , (255, 0, 0) );
                                 # se suma a todos los desplazamientos (en x, en y).
-                                self.movEjeX += Lnew[index][0] - Lbefore[jndex][0]
-                                self.movEjeY += Lnew[index][1] - Lbefore[jndex][1]
+                                self.movementAxisX += Lnew[index][0] - Lbefore[jndex][0]
+                                self.movementAxisY += Lnew[index][1] - Lbefore[jndex][1]
                                 self.movingVectorsCount += 1
                         else:
                             # están muy cerca, son probablemente el mismo.
@@ -1088,26 +1088,26 @@ class sphereVideoDetection():
                 
                 self.trackingVector[0:-1] = self.trackingVector[1:]
                 self.trackingVector[-1] = self.isTrackingTemp
-                cant_pastframes_tracking = 0
+                amountOfPreviousTrackingFrames = 0
                 self.isTracking = True
                 for i in range( 0, len(self.trackingVector) ):
                     if self.trackingVector[i] == True:
-                        cant_pastframes_tracking += 1
-                if (cant_pastframes_tracking < int( 0.8 * len(self.trackingVector) ) ): # from the past LEN tracking frames , 80% or less have lost tracking
+                        amountOfPreviousTrackingFrames += 1
+                if (amountOfPreviousTrackingFrames < int( 0.8 * len(self.trackingVector) ) ): # from the past LEN tracking frames , 80% or less have lost tracking
                     self.isTracking = False # so consider this as a current track loss (movement with unknown direction)
                 
                 # we divide each instant vector components by N, to obtain average instant vector.
                 if (self.movingVectorsCount == 0):
                     pass # no moving vectors, so we don't need to calculate current movement.
                 else:
-                    self.movEjeX /= self.movingVectorsCount  # movimiento x promedio, ponderación de todos los movimientos en x.
-                    self.movEjeY /= self.movingVectorsCount  # movimiento y promedio, ponderación de todos los movimientos en y.
+                    self.movementAxisX /= self.movingVectorsCount  # movimiento x promedio.
+                    self.movementAxisY /= self.movingVectorsCount  # movimiento y promedio
                     
-                    self.vectorAcumulado.x += self.movEjeX
-                    self.vectorAcumulado.y += self.movEjeY
+                    self.vectorAcumulado.x += self.movementAxisX
+                    self.vectorAcumulado.y += self.movementAxisY
                     
-                    self.vectorInstantaneo.x += self.movEjeX  # suma contrib. x en este ciclo (se establece a 0 en otro método)
-                    self.vectorInstantaneo.y += self.movEjeY  # suma contrib. y en este ciclo (se establece a 0 en otro método)
+                    self.vectorInstantaneo.x += self.movementAxisX  # suma contrib. x en este ciclo (se establece a 0 en otro método)
+                    self.vectorInstantaneo.y += self.movementAxisY  # suma contrib. y en este ciclo (se establece a 0 en otro método)
                     
                     # se analiza continuidad de movimiento en función:
                     self.continuousMovementAnalysis()
