@@ -9,6 +9,9 @@ ValvePinMask = 0x04
 DropTime = .1
 
 
+def checkImports():
+    track_bola_utils.__importFromString("configValve")
+
 class Valve(object):
   ### singleton inner class: valve.
   class __Valve:
@@ -16,26 +19,7 @@ class Valve(object):
         self.val = None
         import multiprocessing
         self.displayJobList = multiprocessing.JoinableQueue()
-        
-        try:
-            import configValve
-        except ImportError:
-            print "File configValve.py not found. Generating a new copy..."
-            logger.info("File configValve.py not found. Generating a new copy...")
-            a = os.getcwd() + "/"
-            if (a.endswith("training/")):
-                a = (os.getcwd().split("/training/") [0][:-8]) + "modules/"
-            print a
-            import shutil
-            shutil.copyfile(a + "configValve.py.example", a + "configValve.py")
-            import configValve
-            print "configValve.py copied and imported successfully."
-            logger.info("configValve.py copied and imported successfully.")
-        except:
-            print "Error importing configValve."
-            logger.error("Error importing configValve.")
-            os._exit(1)
-        
+        checkImports()
         import configValve
         self.valve_type = configValve.valve_type; #0: valve_parallel ; 1: valve_serial ; 2: valve_usb
         

@@ -13,7 +13,8 @@ logger = logging.getLogger('soundGen')
 
 PROCESS_SLEEP_TIME = 0.035 #in seconds
 
-
+def checkImports():
+    track_bola_utils.__importFromString("configSoundGenerator")
 
 class soundGen():
     
@@ -41,24 +42,7 @@ class soundGen():
         
         
         
-        try:
-            import configSoundGenerator
-        except ImportError:
-            print "File configSoundGenerator.py not found. Generating a new copy..."
-            logger.info("File configSoundGenerator.py not found. Generating a new copy...")
-            a = os.getcwd() + "/"
-            if (a.endswith("training/")):
-                a = (os.getcwd().split("/training/") [0][:-8]) + "modules/"
-            print a
-            import shutil
-            shutil.copyfile(a + "configSoundGenerator.py.example", a + "configSoundGenerator.py")
-            import configSoundGenerator
-            print "configSoundGenerator.py copied and imported successfully."
-            logger.info("configSoundGenerator.py copied and imported successfully.")
-        except:
-            print "Error importing configSoundGenerator."
-            logger.error("Error importing configSoundGenerator.")
-            os._exit(1)
+        checkImports()
         
         
         import configSoundGenerator

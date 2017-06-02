@@ -8,31 +8,14 @@ import time
 
 PROCESS_SLEEP_TIME = 70 #in milliseconds
 
+def checkImports():
+    track_bola_utils.__importFromString("configSimpleCam")
 
 class multiproc_simpleCam():
     
     def __init__(self, devnum=-1):
         
-        import os
-        logger.info("Initializing simpleCam")
-        try:
-            import configSimpleCam
-        except ImportError:
-            print "File configSimpleCam.py not found. Generating a new copy..."
-            logger.info("File configSimpleCam.py not found. Generating a new copy...")
-            a = os.getcwd() + "/"
-            if (a.endswith("training/")):
-                a = (os.getcwd().split("/training/") [0][:-8]) + "modules/"
-            print a
-            import shutil
-            shutil.copyfile(a + "configSimpleCam.py.example", a + "configSimpleCam.py")
-            import configSimpleCam
-            print "configSimpleCam.py copied and imported successfully."
-            logger.info("configSimpleCam.py copied and imported successfully.")
-        except:
-            print "Error importing configSimpleCam."
-            logger.error("Error importing configSimpleCam.")
-            os._exit(1)
+        checkImports()
         
         
         time.sleep(4)

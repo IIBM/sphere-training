@@ -17,88 +17,63 @@ HEIGHT_INDEX_CAMERA = 4
 """
 videoSource: This class creates a VideoCapture, sets its values (brightness, etc.).
 """
+def checkImports():
+    track_bola_utils.__importFromString("configVideoSource")
 
 class videoSource() :
     def __init__(self) :
         
-        try:
-            import configVideoSource
-        except ImportError:
-            print "File configVideoSource.py not found. Generating a new copy..."
-            logger.info("File configVideoSource.py not found. Generating a new copy...")
-            a = os.getcwd() + "/"
-            if (a.endswith("training/")):
-                a = (os.getcwd().split("/training/") [0][:-8]) + "modules/"
-            print a
-            import shutil
-            shutil.copyfile(a + "configVideoSource.py.example", a + "configVideoSource.py")
-            import configVideoSource
-            print "configVideoSource.py copied and imported successfully."
-            logger.info("configVideoSource.py copied and imported successfully.")
-        except:
-            print "Error importing configVideoSource."
-            logger.error("Error importing configVideoSource.")
-            os._exit(1)
-        
-        try:
-            import configVideoSource as configvideo
-        except ImportError:
-            print "File configVideoSource.py doesn't exist"
-            logger.info("File configVideoSource.py doesn't exist")
-            sys.exit(1);
-        except:
-            print "Error with configVideoSource"
-            logger.info("Error with configVideoSource")
-            sys.exit(1);
+        checkImports()
+        import configVideoSource
         
         # import configCamera
-        cam = cv2.VideoCapture(configvideo.VIDEOSOURCE)
-        print "Videosource: %s" % configvideo.VIDEOSOURCE;
+        cam = cv2.VideoCapture(configVideoSource.VIDEOSOURCE)
+        print "Videosource: %s" % configVideoSource.VIDEOSOURCE;
         # Opciones de ejecuciOn: 640x480 => 60 fps.
-        cam.set(WIDTH_INDEX_CAMERA, configvideo.CAM_WIDTH)
-        cam.set(HEIGHT_INDEX_CAMERA, configvideo.CAM_HEIGHT)
+        cam.set(WIDTH_INDEX_CAMERA, configVideoSource.CAM_WIDTH)
+        cam.set(HEIGHT_INDEX_CAMERA, configVideoSource.CAM_HEIGHT)
         
         # set camera properties: this configuration is very dependent on the type and model of camera.
         
-        cam.set(configvideo.CAM_BRIGHTNESS_VAR, configvideo.CAM_BRIGHTNESS_VALUE)
-        cam.set(configvideo.CAM_CONTRAST_VAR, configvideo.CAM_CONTRAST_VALUE)
-        cam.set(configvideo.CAM_SATURATION_VAR, configvideo.CAM_SATURATION_VALUE)
-        cam.set(configvideo.CAM_HUE_VAR, configvideo.CAM_HUE_VALUE)
-        cam.set(configvideo.CAM_GAIN_VAR, configvideo.CAM_GAIN_VALUE)
-        cam.set(configvideo.CAM_EXPOSURE_VAR, configvideo.CAM_EXPOSURE_VALUE)
+        cam.set(configVideoSource.CAM_BRIGHTNESS_VAR, configVideoSource.CAM_BRIGHTNESS_VALUE)
+        cam.set(configVideoSource.CAM_CONTRAST_VAR, configVideoSource.CAM_CONTRAST_VALUE)
+        cam.set(configVideoSource.CAM_SATURATION_VAR, configVideoSource.CAM_SATURATION_VALUE)
+        cam.set(configVideoSource.CAM_HUE_VAR, configVideoSource.CAM_HUE_VALUE)
+        cam.set(configVideoSource.CAM_GAIN_VAR, configVideoSource.CAM_GAIN_VALUE)
+        cam.set(configVideoSource.CAM_EXPOSURE_VAR, configVideoSource.CAM_EXPOSURE_VALUE)
         print "camera: Width %r" % cam.get(WIDTH_INDEX_CAMERA)
         logger.info(str("camera: Width %r" % cam.get(WIDTH_INDEX_CAMERA)))
         print "camera: Height %r" % cam.get(HEIGHT_INDEX_CAMERA)
         logger.info(str("camera: Height %r" % cam.get(HEIGHT_INDEX_CAMERA)))
         # print "camera: FPS %r" % cam.get(5) #prints error for most cameras.
-        print "camera: Brightness %r" % cam.get(configvideo.CAM_BRIGHTNESS_VAR)
-        logger.info(str("camera: Brightness %r" % cam.get(configvideo.CAM_BRIGHTNESS_VAR)))
-        print "camera: Contrast %r" % cam.get(configvideo.CAM_CONTRAST_VAR)
-        logger.info(str("camera: Contrast %r" % cam.get(configvideo.CAM_CONTRAST_VAR)))
-        print "camera: Saturation %r" % cam.get(configvideo.CAM_SATURATION_VAR)
-        logger.info(str("camera: Saturation %r" % cam.get(configvideo.CAM_SATURATION_VAR)))
-        print "camera: Hue %r" % cam.get(configvideo.CAM_HUE_VAR)
-        logger.info(str("camera: Hue %r" % cam.get(configvideo.CAM_HUE_VAR)))
-        print "camera: Gain %r" % cam.get(configvideo.CAM_GAIN_VAR)
-        logger.info(str("camera: Gain %r" % cam.get(configvideo.CAM_GAIN_VAR)))
-        print "camera: Exposure %r" % cam.get(configvideo.CAM_EXPOSURE_VAR)
-        logger.info(str("camera: Exposure %r" % cam.get(configvideo.CAM_EXPOSURE_VAR)))
+        print "camera: Brightness %r" % cam.get(configVideoSource.CAM_BRIGHTNESS_VAR)
+        logger.info(str("camera: Brightness %r" % cam.get(configVideoSource.CAM_BRIGHTNESS_VAR)))
+        print "camera: Contrast %r" % cam.get(configVideoSource.CAM_CONTRAST_VAR)
+        logger.info(str("camera: Contrast %r" % cam.get(configVideoSource.CAM_CONTRAST_VAR)))
+        print "camera: Saturation %r" % cam.get(configVideoSource.CAM_SATURATION_VAR)
+        logger.info(str("camera: Saturation %r" % cam.get(configVideoSource.CAM_SATURATION_VAR)))
+        print "camera: Hue %r" % cam.get(configVideoSource.CAM_HUE_VAR)
+        logger.info(str("camera: Hue %r" % cam.get(configVideoSource.CAM_HUE_VAR)))
+        print "camera: Gain %r" % cam.get(configVideoSource.CAM_GAIN_VAR)
+        logger.info(str("camera: Gain %r" % cam.get(configVideoSource.CAM_GAIN_VAR)))
+        print "camera: Exposure %r" % cam.get(configVideoSource.CAM_EXPOSURE_VAR)
+        logger.info(str("camera: Exposure %r" % cam.get(configVideoSource.CAM_EXPOSURE_VAR)))
         
         
                 # import camera parameters from file:
-        self.CAM_BRIGHTNESS_VAR = configvideo.CAM_BRIGHTNESS_VAR
-        self.CAM_CONTRAST_VAR = configvideo.CAM_CONTRAST_VAR
-        self.CAM_SATURATION_VAR = configvideo.CAM_SATURATION_VAR
-        self.CAM_HUE_VAR = configvideo.CAM_HUE_VAR
-        self.CAM_GAIN_VAR = configvideo.CAM_GAIN_VAR
-        self.CAM_EXPOSURE_VAR = configvideo.CAM_EXPOSURE_VAR
+        self.CAM_BRIGHTNESS_VAR = configVideoSource.CAM_BRIGHTNESS_VAR
+        self.CAM_CONTRAST_VAR = configVideoSource.CAM_CONTRAST_VAR
+        self.CAM_SATURATION_VAR = configVideoSource.CAM_SATURATION_VAR
+        self.CAM_HUE_VAR = configVideoSource.CAM_HUE_VAR
+        self.CAM_GAIN_VAR = configVideoSource.CAM_GAIN_VAR
+        self.CAM_EXPOSURE_VAR = configVideoSource.CAM_EXPOSURE_VAR
         
-        self.CAM_BRIGHTNESS_VALUE = configvideo.CAM_BRIGHTNESS_VALUE
-        self.CAM_CONTRAST_VALUE = configvideo.CAM_CONTRAST_VALUE
-        self.CAM_SATURATION_VALUE = configvideo.CAM_SATURATION_VALUE
-        self.CAM_HUE_VALUE = configvideo.CAM_HUE_VALUE
-        self.CAM_GAIN_VALUE = configvideo.CAM_GAIN_VALUE
-        self.CAM_EXPOSURE_VALUE = configvideo.CAM_EXPOSURE_VALUE
+        self.CAM_BRIGHTNESS_VALUE = configVideoSource.CAM_BRIGHTNESS_VALUE
+        self.CAM_CONTRAST_VALUE = configVideoSource.CAM_CONTRAST_VALUE
+        self.CAM_SATURATION_VALUE = configVideoSource.CAM_SATURATION_VALUE
+        self.CAM_HUE_VALUE = configVideoSource.CAM_HUE_VALUE
+        self.CAM_GAIN_VALUE = configVideoSource.CAM_GAIN_VALUE
+        self.CAM_EXPOSURE_VALUE = configVideoSource.CAM_EXPOSURE_VALUE
         logger.info("Initial config done.")
         
         time.sleep(0.2)

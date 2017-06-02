@@ -22,59 +22,14 @@ import time
 import timeit
 import logging
 import threading
+import importlib
+import track_bola_utils
+
+
+
 
 def __checkConfigFiles():
                 #checks if the config files needed for training_ exist. If not, generates them.
-                import os
-                
-#                 try:
-#                     import configvideo
-#                 except ImportError:
-#                     print "File configvideo.py not found. Generating a new copy..."
-#                     a = (os.getcwd().split("/training") [0]) + "/modules/"
-#                     import shutil
-#                     shutil.copyfile(a+"configvideo.py.example", a+"configvideo.py")
-#                     import configvideo
-#                     print "configvideo.py copied and imported successfully."
-#                 except:
-#                     print "Error importing configvideo."
-#                     os._exit(1)
-#                 
-#                 if 'configvideo' in sys.modules:  
-#                     del(sys.modules["configvideo"]) 
-#                 
-#                 
-#                 try:
-#                     import configSphereVideoDetection
-#                 except ImportError:
-#                     print "File configSphereVideoDetection.py not found. Generating a new copy..."
-#                     a = (os.getcwd().split("/training") [0]) + "/modules/"
-#                     import shutil
-#                     shutil.copyfile(a+"configSphereVideoDetection.py.example", a+"configSphereVideoDetection.py")
-#                     import configvideo
-#                     print "configSphereVideoDetection.py copied and imported successfully."
-#                 except:
-#                     print "Error importing configSphereVideoDetection."
-#                     os._exit(1)
-#                 
-#                 if 'configSphereVideoDetection' in sys.modules:  
-#                     del(sys.modules["configSphereVideoDetection"]) 
-#                 
-#                 try:
-#                     import configCamera
-#                 except ImportError:
-#                     print "File configCamera.py not found. Generating a new copy..."
-#                     a = (os.getcwd().split("/training") [0]) + "/modules/"
-#                     import shutil
-#                     shutil.copyfile(a+"configCamera.py.example", a+"configCamera.py")
-#                     import configvideo
-#                     print "configCamera.py copied and imported successfully."
-#                 except:
-#                     print "Error importing configCamera."
-#                     os._exit(1)
-#                 
-#                 if 'configCamera' in sys.modules:  
-#                     del(sys.modules["configCamera"]) 
                 
                 try:
                     import config_training as cfgtraining
@@ -156,11 +111,6 @@ def __checkModules():
         
 __checkModules()
 __checkConfigFiles()
-
-
-
-import configVideoSource
-import track_bola_utils
 
 class Training():
     
@@ -1008,7 +958,7 @@ class Training():
         
         # video Detection:
         videoDet = 0  # video Detection object. initialized in the main.
-        videoSecond = 0 # second camera object
+        videoSecond = -1 # second camera object
         
         videoMovementMethod = -1 #movement method to be used for movement analysis.
         
@@ -1426,7 +1376,7 @@ class Training():
             del self.gVariables.fredInput
         self.gVariables.valve1.exit()
         del self.gVariables.valve1
-        if (self.gVariables.secondcam != -1):
+        if (self.gVariables.videoSecond != -1):
             try:
                 self.gVariables.videoSecond.exit()
                 del self.gVariables.videoSecond
@@ -1572,7 +1522,6 @@ class Training():
         #setting training configs per subject; if exists, has priority over previous configs. Check docs.
         subj_config_file = Training.gVariables.subject_name + "_config_training"
         try:
-            import importlib
             subj_config_file = Training.gVariables.subject_name + "_config_training"
             subjectConfig = importlib.import_module(subj_config_file);
             Training.gVariables.trainingName = subjectConfig.trainingName
