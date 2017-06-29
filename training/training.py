@@ -29,20 +29,18 @@ import track_bola_utils
 
 
 def __checkConfigFiles():
-                #checks if the config files needed for training_ exist. If not, generates them.
-                
+                #checks if the config files needed for training exist. If not, it generates them.
                 try:
                     import config_training as cfgtraining
                 except ImportError:
                     print "File config_training.py not found. Generating a new copy..."
                     a = os.getcwd() + "/"
-                    print a
                     import shutil
                     shutil.copyfile(a+"config_training.py.example", a+"config_training.py")
                     import config_training as cfgtraining
                     print "config_training.py copied and imported successfully."
                     print ""
-                    print "To create a custom configuration file for a given subject, copy this file into SUBJNAME_config_training.py"
+                    print "Note: To create a custom configuration file for a given subject, copy this file into SUBJNAME_config_training.py"
                     print ""
                 except:
                     print "Error importing config_training."
@@ -50,18 +48,11 @@ def __checkConfigFiles():
                 
                 if 'config_training' in sys.modules:  
                     del(sys.modules["config_training"]) 
-                
-                ####
-                # End of checking existance of config files.
-                
                 pass
-                ####
-                #training init: check for modules and dependencies. Copy from '*.py.example' if needed
-                ####
         
 def __checkModules():
             def __checkOneModule(arg):
-                #checks if one module passed as arg , exists in the system.
+                #checks if the given module exists in the system.
                 import imp
                 try:
                     imp.find_module( str(arg) )

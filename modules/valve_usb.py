@@ -7,8 +7,6 @@ logger = logging.getLogger('valveusb')
 IDVendor = 0x16c0
 IDProduct = 0x05dc
 
-
-
 class multiproc_Valve():
     def __init__(self, jobl):
         self.displayJobList = jobl
@@ -17,14 +15,19 @@ class multiproc_Valve():
         self.innerDeviceUSB = deviceUSB.deviceUSB();
         if (self.innerDeviceUSB.using_dummy):
             #using dummy, means that it was not well initialized. Retrying:
-            print "retrying1"
+            print "Not using USB device. Retrying device creation.."
             time.sleep(0.5)
             self.innerDeviceUSB.initDevice()
             if (self.innerDeviceUSB.using_dummy):
-                print "retrying2"
+                print "Still not using USB device. Retrying device creation.."
                 time.sleep(0.5)
                 self.innerDeviceUSB.initDevice()
-        print "OK"
+                devStatusMessage = "Device created successfully. Device type: "
+        if (self.innerDeviceUSB.using_dummy):
+            devStatusMessage = devStatusMessage + " dummy device"
+        else
+            devStatusMessage = devStatusMessage + " USB device"
+        print devStatusMessage
     
     def checkJobList(self):
         if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):

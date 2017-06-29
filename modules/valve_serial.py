@@ -15,14 +15,19 @@ class multiproc_Valve():
         self.innerDeviceSerial = deviceSerial.deviceSerial();
         if (self.innerDeviceSerial.using_dummy):
             #using dummy, means that it was not well initialized. Retrying:
-            print "retrying1"
+            print "Not using serial device. Retrying device creation.."
             time.sleep(0.5)
             self.innerDeviceSerial.initDevice()
             if (self.innerDeviceSerial.using_dummy):
-                print "retrying2"
+                print "Still not using serial device. Retrying device creation.."
                 time.sleep(0.5)
                 self.innerDeviceSerial.initDevice()
-        print "OK"
+        devStatusMessage = "Device created successfully. Device type: "
+        if (self.innerDeviceSerial.using_dummy):
+            devStatusMessage = devStatusMessage + " dummy device"
+        else
+            devStatusMessage = devStatusMessage + " serial device"
+        print devStatusMessage
     
     def checkJobList(self):
         if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
