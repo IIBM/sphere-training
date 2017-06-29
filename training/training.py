@@ -40,7 +40,7 @@ def __checkConfigFiles():
                     import config_training as cfgtraining
                     print "config_training.py copied and imported successfully."
                     print ""
-                    print "Note: To create a custom configuration file for a given subject, copy this file into SUBJNAME_config_training.py"
+                    print "Note: To create a custom configuration file for a given subject, copy 'config_training.py' into SUBJNAME_config_training.py"
                     print ""
                 except:
                     print "Error importing config_training."

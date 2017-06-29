@@ -25,7 +25,7 @@ class multiproc_Valve():
                 devStatusMessage = "Device created successfully. Device type: "
         if (self.innerDeviceUSB.using_dummy):
             devStatusMessage = devStatusMessage + " dummy device"
-        else
+        else:
             devStatusMessage = devStatusMessage + " USB device"
         print devStatusMessage
     
