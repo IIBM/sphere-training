@@ -73,10 +73,6 @@ def __checkModules():
                 return found
             
             print "Checking modules."
-            if (__checkOneModule("cv") == False):
-                print "Warning: missing module: "+ "cv"
-                #sys.exit(1)
-                pass
             if (__checkOneModule("cv2")  == False):
                 print "Exiting because of missing import: "+ "cv2"
                 sys.exit(1)

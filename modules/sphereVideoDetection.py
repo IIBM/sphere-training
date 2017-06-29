@@ -338,9 +338,6 @@ class sphereVideoDetection():
     def setUserFeedback(self, fdb):
         self.showUserFeedback = fdb
         if (fdb == False):
-            #import cv2
-            #cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
-            #cv2.destroyWindow(self.winName)
             # currently, it is unstable to destroy window as it will generate errors on the processing of the movement
             # So this function will stop feedback and you can minimize the window manually.
             try:
