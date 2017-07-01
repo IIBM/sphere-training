@@ -807,7 +807,8 @@ class sphereVideoDetection():
             t_calib = cv2.medianBlur(t_calib, 3)
             ret, thresh = cv2.threshold(t_calib, self.CV2THRESHOLD, 255, cv2.THRESH_BINARY)
             #contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-            img2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2:]
+            ######img2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             # recorro los contornos capturando centros de los contornos cuando son englobados por un círculo
             circleCenters = []
             circleRadius = []
@@ -988,7 +989,8 @@ class sphereVideoDetection():
                 #===============================================================
                 ret, thresh = cv2.threshold(t_now, self.CV2THRESHOLD, 255, cv2.THRESH_BINARY)
                 #contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-                img2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2:]
+                #######img2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
                 #===============================================================
                 # #Recorrido de frame actual:
                 #===============================================================
