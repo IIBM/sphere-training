@@ -1597,6 +1597,9 @@ class Training():
         #Sphere Video Detection:
         import sphereVideoDetection
         self.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection()
+        filename='logs/%s_S%s_%s_%s' % (self.gVariables.subject_name, str(session_files_count).zfill(3) , self.gVariables.trainingName, time.strftime("%Y-%m-%d") )
+        self.gVariables.videoDet.setOutputVideoFile(filename+'.avi')
+        self.gVariables.videoDet.setOutputAudioFile(filename+'.wav')
         self.gVariables.videoDet.setMovementTimeWindow(self.gVariables.movementTime)  # seconds that should be moving.
         self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
         self.gVariables.videoDet.usingPygameDisplay = False; #to prevent launching pygame visualization tools for vd.

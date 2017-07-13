@@ -41,13 +41,18 @@ nosetests.xml
 
 # Logging
 *.log
+*.avi
+*.wav
 
 # configuration files
 modules/configvideo.py
+modules/configVideoSource.py
 modules/configCamera.py
 modules/calibrationCamera.py
+modules/configValve.py
 modules/configSphereVideoDetection.py
 training/config_training_two_tones.py
-
+training/config_training.py
+training/subject_list.txt
 
 *.prefs

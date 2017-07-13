@@ -153,6 +153,8 @@ class sphereVideoDetection():
         # Create one non-blocking thread for capturing video Stream
         self.fred1 = threading.Thread(target=self.mainVideoDetection, name="VideoDetection")
         self.fred1.start()
+        self.fred2 = threading.Thread(target=self.mainAudioDetection, name="AudioDetection")
+        self.fred2.start()
     
     def cv_size(self, img):
         return tuple(img.shape[1::-1])
@@ -908,6 +910,57 @@ class sphereVideoDetection():
         # draw second half of arrow head
         cv2.line(image, p, q, color, thickness, line_type, shift)
     
+    def setOutputAudioFile(self,filename):
+        self.outputAudioFile = filename
+
+    def mainAudioDetection(self):
+        import pyaudio
+        #self.open = True
+        self.audioRate = 44100
+        self.audioFrames_per_buffer = 1024
+        self.audioChannels = 2
+        self.audioFormat = pyaudio.paInt16
+        self.audio = pyaudio.PyAudio()
+        self.audioStream = self.audio.open(format=self.audioFormat,
+                                      channels=self.audioChannels,
+                                      rate=self.audioRate,
+                                      input=True,
+                                      frames_per_buffer = self.audioFrames_per_buffer)
+        self.audioFrames = []
+        
+        audiotimes = []
+        audiotimes.append(time.time())
+
+        self.audioStream.start_stream()
+        while(self.available == True):
+            data = self.audioStream.read(self.audioFrames_per_buffer) 
+            self.audioFrames.append(data)
+            
+            if (self.mustquit == 1 or self.available != True):  # escape pressed
+                # end Program.
+                try:
+                    self.audioStream.stop_stream()
+                    self.audioStream.close()
+                    self.audio.terminate()
+
+                    import wave
+                    waveFile = wave.open(self.outputAudioFile, 'wb')
+                    waveFile.setnchannels(self.audioChannels)
+                    waveFile.setsampwidth(self.audio.get_sample_size(self.audioFormat))
+                    waveFile.setframerate(self.audioRate)
+                    waveFile.writeframes(b''.join(self.audioFrames))
+                    waveFile.close()
+
+                    logger.info("AUDIOTIMES")
+                    logger.info(audiotimes)
+                except:
+                    pass
+                return
+
+
+    def setOutputVideoFile(self, filename):
+        self.outputVideoFile = filename
+
     def mainVideoDetection(self):
     
         """
@@ -935,6 +988,11 @@ class sphereVideoDetection():
         t_now = cv2.cvtColor( cam.read()[1], cv2.COLOR_RGB2GRAY )
         capturedImage = cam.read()[1]
         
+
+        videofps=30 # estimado, despues se corrigira
+        videoframesize=vs.getVideoSize()
+        video_out = cv2.VideoWriter(self.outputVideoFile, cv2.cv.CV_FOURCC(*'MPEG'), videofps, videoframesize)
+
         #self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
         self.capturedImageWidth, self.capturedImageHeight = self.cv_size( capturedImage )
         self.capturedImageSize = capturedImage.size
@@ -947,6 +1005,8 @@ class sphereVideoDetection():
         self.startCalibration = True
         print "Starting video detection main loop."
         Lnew = []
+        frametimes = []
+        frametimes.append(time.time())
         while (self.available == True):
                 #===============================================================
                 # #calibrate if necessary
@@ -968,6 +1028,7 @@ class sphereVideoDetection():
                         cam.set(cv2.CAP_PROP_POS_MSEC, 0)
                         cam.set(cv2.CAP_PROP_POS_MSEC, 0)
                         capturedImage = cam.read()[1]
+
                     except:
                         logger.info("sphereVideoDetection failed to recover from \"empty image\" error.");
                         continue;
@@ -975,6 +1036,9 @@ class sphereVideoDetection():
                     pass
                 pass
             
+                video_out.write(capturedImage)
+                frametimes.append(time.time()-frametimes[0])
+
                 t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
                 
                 #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
@@ -1091,6 +1155,9 @@ class sphereVideoDetection():
                     # end Program.
                     try:
                         cam.release()
+                        video_out.release()
+                        logger.info("VIDEOTIMES")
+                        logger.info(frametimes)
                     except:
                         pass
                     cv2.destroyWindow(self.winName)

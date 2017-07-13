@@ -13,6 +13,7 @@ class multiproc_Valve():
         
         import deviceUSB
         self.innerDeviceUSB = deviceUSB.deviceUSB();
+        devStatusMessage = "Device created successfully. Device type: "
         if (self.innerDeviceUSB.using_dummy):
             #using dummy, means that it was not well initialized. Retrying:
             print "Not using USB device. Retrying device creation.."
@@ -22,7 +23,6 @@ class multiproc_Valve():
                 print "Still not using USB device. Retrying device creation.."
                 time.sleep(0.5)
                 self.innerDeviceUSB.initDevice()
-                devStatusMessage = "Device created successfully. Device type: "
         if (self.innerDeviceUSB.using_dummy):
             devStatusMessage = devStatusMessage + " dummy device"
         else:

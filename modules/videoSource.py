@@ -32,6 +32,7 @@ class videoSource() :
         # Opciones de ejecuciOn: 640x480 => 60 fps.
         cam.set(WIDTH_INDEX_CAMERA, configVideoSource.CAM_WIDTH)
         cam.set(HEIGHT_INDEX_CAMERA, configVideoSource.CAM_HEIGHT)
+        self.VIDEOSIZE = (configVideoSource.CAM_WIDTH, configVideoSource.CAM_HEIGHT)
         
         # set camera properties: this configuration is very dependent on the type and model of camera.
         
@@ -108,6 +109,9 @@ class videoSource() :
     def getVideoSource(self):
         return self.cam
     
+    def getVideoSize(self):
+        return self.VIDEOSIZE
+
     def exit(self):
         return;
     
