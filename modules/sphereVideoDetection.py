@@ -22,9 +22,30 @@ import numpy
 logger = logging.getLogger('sphereVideoDetection')
 import track_bola_utils
 
+
+def is_cv2():
+    # if we are using OpenCV 2, then our cv2.__version__ will start with '2.'
+    return check_opencv_version("2.")
+
+def is_cv3():
+    # if we are using OpenCV 3.X, then our cv2.__version__ will start with '3.'
+    return check_opencv_version("3.")
+
+def check_opencv_version(major, lib=None):
+    # if the supplied library is None, import OpenCV
+    if lib is None:
+        import cv2 as lib
+        pass
+    # return whether or not the current OpenCV version matches the
+    # major version number
+    return lib.__version__.startswith(major)
+
+
 def checkImports():
     track_bola_utils.__importFromString("configSphereVideoDetection")
     track_bola_utils.__importFromString("calibrationCamera")
+
+
 
 class sphereVideoDetection():
     NoiseFilteringOffVars = track_bola_utils.dummyClass();
@@ -894,7 +915,7 @@ class sphereVideoDetection():
         pass
     
     
-    def draw_arrow(self, image, p, q, color, arrow_magnitude=9, thickness=1, line_type=8, shift=0):        
+    def draw_arrow(self, image, p, q, color, arrow_magnitude=9, thickness=1, line_type=8, shift=0):
         # draw arrow tail
         cv2.line(image, p, q, color, thickness, line_type, shift)
         # calc angle of the arrow
@@ -991,7 +1012,10 @@ class sphereVideoDetection():
 
         videofps=30 # estimado, despues se corrigira
         videoframesize=vs.getVideoSize()
-        video_out = cv2.VideoWriter(self.outputVideoFile, cv2.cv.CV_FOURCC(*'MPEG'), videofps, videoframesize)
+        if is_cv2():
+            video_out = cv2.VideoWriter(self.outputVideoFile, cv2.cv.CV_FOURCC(*'MPEG'), videofps, videoframesize)
+        elif is_cv3():
+            video_out = cv2.VideoWriter(self.outputVideoFile, cv2.VideoWriter_fourcc(*'MPEG'), videofps, videoframesize)
 
         #self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
         self.capturedImageWidth, self.capturedImageHeight = self.cv_size( capturedImage )
