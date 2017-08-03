@@ -921,10 +921,17 @@ class sphereVideoDetection():
         self.audioChannels = 2
         self.audioFormat = pyaudio.paInt16
         self.audio = pyaudio.PyAudio()
+        numdev=self.audio.get_device_count()
+        devindex=None
+        MICDESC = 'USB' #TODO find a bether way to search for microphne
+        for i in range(numdev):
+            if self.audio.get_device_info_by_index(i)['name'].find(MICDESC):
+                devindex = i
         self.audioStream = self.audio.open(format=self.audioFormat,
                                       channels=self.audioChannels,
                                       rate=self.audioRate,
                                       input=True,
+                                      input_device_index=devindex,
                                       frames_per_buffer = self.audioFrames_per_buffer)
         self.audioFrames = []
         
