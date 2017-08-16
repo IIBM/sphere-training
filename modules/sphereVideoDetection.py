@@ -961,6 +961,7 @@ class sphereVideoDetection():
 
         self.audioStream.start_stream()
         while(self.available == True):
+            audiotimes.append(time.time()-audiotimes[0])
             data = self.audioStream.read(self.audioFrames_per_buffer) 
             self.audioFrames.append(data)
             
@@ -1048,7 +1049,9 @@ class sphereVideoDetection():
                 # # Preparo las imgs antigûa, actual y futura<>
                 #===============================================================
                 # capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
+                frametimes.append(time.time()-frametimes[0])
                 capturedImage = cam.read()[1]
+                video_out.write(capturedImage)
                 #lo primero que se hace es verificar que se haya podido leer algo. Caso contrario, end of video..
                 if (capturedImage.size == 0) or (type(capturedImage) == type(None)):
                     logger.info("sphereVideoDetection detected empty image. If video, will try to seek to the start. Then will try to capture another frame");
@@ -1067,8 +1070,6 @@ class sphereVideoDetection():
                     pass
                 pass
             
-                video_out.write(capturedImage)
-                frametimes.append(time.time()-frametimes[0])
 
                 t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
                 
