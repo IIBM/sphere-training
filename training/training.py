@@ -100,7 +100,9 @@ __checkModules()
 __checkConfigFiles()
 
 class Training():
-    
+    def __init__(self):
+        self.trainingInit()
+        pass
     
     class gVariables():
         #Global variables to be used within the Training class.
@@ -1076,11 +1078,7 @@ class Training():
             pass
         #fin Training.gVariables.
         pass
-    
-    def __init__(self):
-        self.trainingInit()
-        pass
-    
+
     def initDisplay(self):
         import trainingDisplay  # display for showing different variables of interest
         Training.gVariables.display = trainingDisplay.trainingDisplay("Training variables for: " + self.gVariables.subject_name)
@@ -1370,7 +1368,11 @@ class Training():
             except:
                 pass
         self.gVariables.videoDet.exit()
+        time.sleep(0.2)
         del self.gVariables.videoDet
+        self.gVariables.audioRec.exit()
+        time.sleep(0.2)
+        del self.gVariables.audioRec
         #print "videodet exit"
         time.sleep(0.2)
         self.gVariables.display.exitDisplay()
@@ -1597,13 +1599,18 @@ class Training():
         #Sphere Video Detection:
         import sphereVideoDetection
         self.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection()
+        import audioRecorder
+        #.mainAudioDetection()
+        self.gVariables.audioRec = audioRecorder.audioRecorder()
         filename='logs/%s_S%s_%s_%s' % (self.gVariables.subject_name, str(session_files_count).zfill(3) , self.gVariables.trainingName, time.strftime("%Y-%m-%d") )
         self.gVariables.videoDet.setOutputVideoFile(filename+'.avi')
-        self.gVariables.videoDet.setOutputAudioFile(filename+'.wav')
+        self.gVariables.audioRec.setOutputAudioFile(filename+'.wav')
         self.gVariables.videoDet.setMovementTimeWindow(self.gVariables.movementTime)  # seconds that should be moving.
         self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
         self.gVariables.videoDet.usingPygameDisplay = False; #to prevent launching pygame visualization tools for vd.
         self.gVariables.videoDet.initAll()
+        self.gVariables.fred0 = threading.Thread(target=self.gVariables.audioRec.mainAudioDetection)
+        self.gVariables.fred0.start()
         self.gVariables.logger.debug('sphereVideoDetection started.')
         #second cam:
         ####import simpleCam
