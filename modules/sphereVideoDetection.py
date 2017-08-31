@@ -6,8 +6,6 @@
     El movimiento se detecta tomando círculos negros en movimiento, comparando posición actual con su
     posición pasada más probable
 '''
-
-
 import timeit
 import pygame
 import math
@@ -40,12 +38,9 @@ def check_opencv_version(major, lib=None):
     # major version number
     return lib.__version__.startswith(major)
 
-
 def checkImports():
     track_bola_utils.__importFromString("configSphereVideoDetection")
     track_bola_utils.__importFromString("calibrationCamera")
-
-
 
 class sphereVideoDetection():
     NoiseFilteringOffVars = track_bola_utils.dummyClass();
@@ -153,6 +148,7 @@ class sphereVideoDetection():
         self.last_saved_time_movement = timeit.default_timer()  # will be used to check differences in time (determine mvnt time)
         self.last_saved_time_gp = timeit.default_timer()  # general purpose time counter
         
+        self.moduleStartedIndependently = False
         
     
     def initAll(self):
@@ -211,6 +207,9 @@ class sphereVideoDetection():
 
     def calibrateCircle(self):
         self.startCalibration = True
+    
+    def setModuleStartedIndependently(self, bool):
+        self.moduleStartedIndependently = bool #if True, this module is being executed independently for calibration or testing purposes.
     
     def exit(self):
         # os._exit(0)
@@ -1020,10 +1019,11 @@ class sphereVideoDetection():
 
         videofps=30 # estimado, despues se corrigira
         videoframesize=vs.getVideoSize()
-        if is_cv2():
-            video_out = cv2.VideoWriter(self.outputVideoFile, cv2.cv.CV_FOURCC(*'MPEG'), videofps, videoframesize)
-        elif is_cv3():
-            video_out = cv2.VideoWriter(self.outputVideoFile, cv2.VideoWriter_fourcc(*'MPEG'), videofps, videoframesize)
+        if (self.moduleStartedIndependently == False ):
+            if is_cv2():
+                video_out = cv2.VideoWriter(self.outputVideoFile, cv2.cv.CV_FOURCC(*'MPEG'), videofps, videoframesize)
+            elif is_cv3():
+                video_out = cv2.VideoWriter(self.outputVideoFile, cv2.VideoWriter_fourcc(*'MPEG'), videofps, videoframesize)
 
         #self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
         self.capturedImageWidth, self.capturedImageHeight = self.cv_size( capturedImage )
@@ -1051,7 +1051,8 @@ class sphereVideoDetection():
                 # capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
                 frametimes.append(time.time()-frametimes[0])
                 capturedImage = cam.read()[1]
-                video_out.write(capturedImage)
+                if (self.moduleStartedIndependently == False ):
+                    video_out.write(capturedImage) #grabar captura (sólo si módulo no fue ejecutado independientemente)
                 #lo primero que se hace es verificar que se haya podido leer algo. Caso contrario, end of video..
                 if (capturedImage.size == 0) or (type(capturedImage) == type(None)):
                     logger.info("sphereVideoDetection detected empty image. If video, will try to seek to the start. Then will try to capture another frame");
@@ -1187,7 +1188,8 @@ class sphereVideoDetection():
                     # end Program.
                     try:
                         cam.release()
-                        video_out.release()
+                        if (self.moduleStartedIndependently == False ):
+                            video_out.release()
                         logger.info("VIDEOTIMES")
                         logger.info(frametimes)
                     except:
@@ -1234,6 +1236,7 @@ if __name__ == '__main__':
     videoDet = sphereVideoDetection( )
     videoDet.setNoiseFiltering(True)
     videoDet.setMovementTimeWindow(1.6);
+    videoDet.setModuleStartedIndependently(True)
     videoDet.initAll()
     import time
     # time.sleep(2)
