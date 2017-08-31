@@ -50,7 +50,7 @@ class dummydevice () :
 
 
 def __importFromString(importname, modulesFolder = True):
-    print importname
+    #print importname
     try:
         tempModule = importlib.import_module(importname)
     except ImportError:

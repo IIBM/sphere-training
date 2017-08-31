@@ -14,51 +14,6 @@ logger = logging.getLogger('soundGen')
 class multiproc_soundGen():
     toExit = 0;
     soundGenJobList = 0;
-    
-    
-    def checkJobList(self):
-        if (self.soundGenJobList.qsize() > 0 or self.soundGenJobList.empty() == False ):
-                try:
-                        tempvar = self.soundGenJobList.get()
-                        self.soundGenJobList.task_done()
-                except:
-                        return;
-                #print str("checkJobList: queue: " + str(tempvar) )
-                index = tempvar[0]
-                try:
-                    argument = tempvar[1]
-                except:
-                    argument = ""
-                    pass
-                
-                #print "checkJobList: Got a Message:", index
-                #print "checkJobList: Message's argument:", argument
-#                 try:
-#                     a = str(argument)
-#                     print "Argument: %s" %a
-#                 except:
-#                     print "Message's argument cannot be parsed to str."
-#                     pass
-                if (index == "tone"):
-                    #print "Command secondaryInfo received."
-                    logger.debug( str(tempvar[1]) )
-                    logger.debug( str(tempvar[2]) )
-                    self.tone(tempvar[1], tempvar[2])
-                    logger.debug('tone..')
-                elif (index == "play"):
-                    #print "Command exitDisplay received."
-                    
-                    self.play()
-                elif (index == "exit"):
-                    #print "Command exitDisplay received."
-                    logger.debug('exiting..')
-                    self.exit()
-                    return;
-                else:
-                    print "unknown message: %s" % str(index)
-                    
-
-
     def __init__(self,jobl, freq=None,duration=None,sample_rate=44100, bits=16):
         self.soundGenJobList = jobl
         logger.info('New instance of soundGen')
@@ -106,6 +61,46 @@ class multiproc_soundGen():
         print "finish sound test."
         logger.debug("soundGen(multiproc) instance initialized.")
 
+    def checkJobList(self):
+        if (self.soundGenJobList.qsize() > 0 or self.soundGenJobList.empty() == False ):
+                try:
+                        tempvar = self.soundGenJobList.get()
+                        self.soundGenJobList.task_done()
+                except:
+                        return;
+                #print str("checkJobList: queue: " + str(tempvar) )
+                index = tempvar[0]
+                try:
+                    argument = tempvar[1]
+                except:
+                    argument = ""
+                    pass
+                
+                #print "checkJobList: Got a Message:", index
+                #print "checkJobList: Message's argument:", argument
+#                 try:
+#                     a = str(argument)
+#                     print "Argument: %s" %a
+#                 except:
+#                     print "Message's argument cannot be parsed to str."
+#                     pass
+                if (index == "tone"):
+                    #print "Command secondaryInfo received."
+                    logger.debug( str(tempvar[1]) )
+                    logger.debug( str(tempvar[2]) )
+                    self.tone(tempvar[1], tempvar[2])
+                    logger.debug('tone..')
+                elif (index == "play"):
+                    #print "Command exitDisplay received."
+                    
+                    self.play()
+                elif (index == "exit"):
+                    #print "Command exitDisplay received."
+                    logger.debug('exiting..')
+                    self.exit()
+                    return;
+                else:
+                    print "unknown message: %s" % str(index)
 
     def exit(self):
         print "SoundGen exiting."
@@ -148,10 +143,7 @@ class multiproc_soundGen():
         #return self.sound
         return;
 
-    #TODO add new waveforms
-
     def play(self):
-        
         logger.info('Tone freq = %s Hz, duration = %s s',self.freq,self.duration)
         if (float(self.duration)  < 0.000003571):
             #print "not played because duration is less than audible."
@@ -171,38 +163,32 @@ class multiproc_soundGen():
 
 
 class soundGen():
-    
+    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16):
+        self.freq = freq
+        self.duration = duration
+        import multiprocessing
+        self.soundGenJobList = multiprocessing.JoinableQueue()
+        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, freq,duration,sample_rate, bits,) )
+        self.soundGenProc.start()
+        logger.debug('soundGen process started')
+        
     def launch_multiproc(self, jobl, freq, duration, sample_rate, bits):
         a = multiproc_soundGen(jobl, freq, duration, sample_rate, bits)
         time.sleep(0.5)
         while(a.toExit != 1):
-            
             a.checkJobList()
             if (a.toExit == 1):
                 #del a
-                print "Exiting soundGen class."
+                #print "Exiting soundGen_pyaudio soundGen class."
                 a.toExit = 1;
-                logger.debug( "exiting launch_multiproc" )
+                logger.debug( "exiting soundGen_pyaudio launch_multiproc" )
                 #self.exit()
                 break;
             pass
             #print "loop. %s %d" % (str(a), a.toExit)
             time.sleep(0.030)
+        pass
     
-    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16):
-        
-        self.freq = freq
-        self.duration = duration
-        
-        import multiprocessing
-        self.soundGenJobList = multiprocessing.JoinableQueue()
-        
-        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, freq,duration,sample_rate, bits,) )
-        self.soundGenProc.start()
-        
-        logger.debug('soundGen process started')
-
-
     def exit(self):
         self.soundGenJobList.put( ( "exit", "" ) )
         logger.debug("soundGen exit message.")
@@ -218,9 +204,7 @@ class soundGen():
     def tone(self, duration=1.0, freq=1000.0) :
         self.soundGenJobList.put( ( "tone" , duration, freq ) )
 
-    #TODO add new waveforms
-
-    def play(self):
+    def play(self): #there is needed a delay, after the play command.
         self.soundGenJobList.put( ( "play", "" ) )
 
     def getFrequency(self):
@@ -229,7 +213,7 @@ class soundGen():
     def getDuration(self):
         return self.duration
 
-        #there is needed a delay, after the play command.
+        
 
 if __name__ == '__main__':
     # create a logging format
