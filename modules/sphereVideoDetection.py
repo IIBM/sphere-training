@@ -149,8 +149,7 @@ class sphereVideoDetection():
         self.last_saved_time_gp = timeit.default_timer()  # general purpose time counter
         
         self.moduleStartedIndependently = False
-        
-    
+
     def initAll(self):
         if self.usingPygameDisplay:
             #pygame init
@@ -257,7 +256,6 @@ class sphereVideoDetection():
                 logger.info("Returning false for recalibration.")
                 print "Returning false for recalibration."
                 return False
-        
         self.firstCalibration = True
         
         if (flag == 0):
@@ -325,15 +323,13 @@ class sphereVideoDetection():
                     
                     return True  # True, file was written OK
             return False  # False, file couldn't be written (or it was written and it's status is unknown)
-    
-    
+
     def resetMovementTime(self):
         self.continuousMovementTime = 0.0
         self.last_saved_time_movement = timeit.default_timer()
         for i in range(0, len(self.movementVector)):
             self.movementVector[i] = 0
-        
-        
+
     def resetIdleTime(self):
         self.continuousIdleTime = 0.0
         self.last_saved_time_idle = timeit.default_timer()
@@ -389,7 +385,6 @@ class sphereVideoDetection():
             logger.debug("videoDetection: Movement time window changed to %f seconds." % self.movementTimeWindow)
     
     def Method_MovementVectorBinary(self):
-        
         #=======================================================================
         # # Movement Vector Binary (a variant of the non binary method)
         #=======================================================================
@@ -491,9 +486,6 @@ class sphereVideoDetection():
         logger.debug ("       isIdle: %r      " % self.isIdle)
         logger.debug("movementVector:%r" %  self.movementVector)
         return
-    
-    
-    
     
     def Method_MovementVector(self):
         # Movement Vector method:
@@ -638,7 +630,6 @@ class sphereVideoDetection():
         self.vectorPseudoInstantaneo.y = self.vectorInstantaneo.y
         self.vectorInstantaneo.x = 0
         self.vectorInstantaneo.y = 0
-    
     
     def Method_AccumulateTime(self):
         # this function analyzes continuous movement. If detected, saves the amount of seconds of the movement so far.
@@ -912,8 +903,7 @@ class sphereVideoDetection():
             self.startCalibration = False
             pass
         pass
-    
-    
+
     def draw_arrow(self, image, p, q, color, arrow_magnitude=9, thickness=1, line_type=8, shift=0):
         # draw arrow tail
         cv2.line(image, p, q, color, thickness, line_type, shift)
@@ -985,12 +975,10 @@ class sphereVideoDetection():
                     pass
                 return
 
-
     def setOutputVideoFile(self, filename):
         self.outputVideoFile = filename
 
     def mainVideoDetection(self):
-    
         """
             Programa de detección de movimiento:
             Se enciende y configura cámara.
@@ -1204,9 +1192,7 @@ class sphereVideoDetection():
                         os._exit(0)
                     return
 
-""
-#
-#
+
 #===============================================================================
 # #Prueba unitaria de la clase si es ejecutada independientemente:
 #===============================================================================
