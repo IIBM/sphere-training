@@ -138,7 +138,6 @@ class Training():
         
         @staticmethod
         def fn_internalSaveFileWithVars(nombr, num):
-            
             if (num == 1):
                 targetObj = Training.gVariables.pavlovVars
             if (num == 2):
@@ -1258,6 +1257,7 @@ class Training():
             
             Training.gVariables.logger.debug("END: Logging the current state of all variables:")
             #######################################################
+            Training.gVariables.audioRec.startAudioRecording()
             Training.gVariables.logger.info('Variables set. Starting %s' % Training.gVariables.trainingName)
             Training.gVariables.trialStarted = True
             Training.gVariables.trialExecuting = True
@@ -1302,6 +1302,7 @@ class Training():
             Training.gVariables.logger.info('Drops given manually: %r' % Training.gVariables.dropsAmountGivenManually)
             Training.gVariables.trialStarted = False
             Training.gVariables.trialExecuting = False
+            Training.gVariables.audioRec.stopAudioRecording()
             print "Tone Training stopped."
             Training.gVariables.logger.info( "Tone Training stopped." )
     
@@ -1323,7 +1324,6 @@ class Training():
     @staticmethod
     def giveReward():
         if (Training.gVariables.dropReleased == 0 and Training.gVariables.trialExecuting == True):
-                
                 Training.gVariables.successTrialCount += 1
                 Training.gVariables.dropReleased = 1
                 if (Training.gVariables.current_trial_type == 1) :
@@ -1600,7 +1600,6 @@ class Training():
         import sphereVideoDetection
         self.gVariables.videoDet = sphereVideoDetection.sphereVideoDetection()
         import audioRecorder
-        #.mainAudioDetection()
         self.gVariables.audioRec = audioRecorder.audioRecorder()
         filename='logs/%s_S%s_%s_%s' % (self.gVariables.subject_name, str(session_files_count).zfill(3) , self.gVariables.trainingName, time.strftime("%Y-%m-%d") )
         self.gVariables.videoDet.setOutputVideoFile(filename+'.avi')
@@ -1609,7 +1608,7 @@ class Training():
         self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
         self.gVariables.videoDet.usingPygameDisplay = False; #to prevent launching pygame visualization tools for vd.
         self.gVariables.videoDet.initAll()
-        self.gVariables.fred0 = threading.Thread(target=self.gVariables.audioRec.mainAudioDetection)
+        self.gVariables.fred0 = threading.Thread(target=self.gVariables.audioRec.mainAudioRecording)
         self.gVariables.fred0.start()
         self.gVariables.logger.debug('sphereVideoDetection started.')
         #second cam:
