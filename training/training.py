@@ -1258,6 +1258,7 @@ class Training():
             Training.gVariables.logger.debug("END: Logging the current state of all variables:")
             #######################################################
             Training.gVariables.audioRec.startAudioRecording()
+            Training.gVariables.videoDet.setVideoRecording(True)
             Training.gVariables.logger.info('Variables set. Starting %s' % Training.gVariables.trainingName)
             Training.gVariables.trialStarted = True
             Training.gVariables.trialExecuting = True
@@ -1303,6 +1304,7 @@ class Training():
             Training.gVariables.trialStarted = False
             Training.gVariables.trialExecuting = False
             Training.gVariables.audioRec.stopAudioRecording()
+            Training.gVariables.videoDet.setVideoRecording(False)
             print "Tone Training stopped."
             Training.gVariables.logger.info( "Tone Training stopped." )
     
@@ -1311,12 +1313,16 @@ class Training():
         Training.gVariables.trialExecuting = False
         Training.gVariables.current_trial_paused_time = timeit.default_timer()
         Training.gVariables.logger.info('%s paused.' % Training.gVariables.trainingName)
+        Training.gVariables.audioRec.stopAudioRecording()
+        Training.gVariables.videoDet.setVideoRecording(False)
         print "Training paused."
     
     @staticmethod
     def resumeTraining():
         Training.gVariables.trialExecuting = True
         Training.gVariables.current_trial_paused_time = (timeit.default_timer() - Training.gVariables.current_trial_paused_time)
+        Training.gVariables.audioRec.startAudioRecording()
+        Training.gVariables.videoDet.setVideoRecording(True)
         print "Resuming training. Time that has been in pause: ", Training.gVariables.current_trial_paused_time
         Training.gVariables.logger.info('Resuming training. Time that has been in pause: %s' % Training.gVariables.current_trial_paused_time)
         Training.gVariables.logger.info('%s resumed.' % Training.gVariables.trainingName)

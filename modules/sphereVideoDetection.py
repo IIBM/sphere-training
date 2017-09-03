@@ -66,6 +66,8 @@ class sphereVideoDetection():
     capturedImageWidth = 0;
     capturedImageHeight = 0;
     capturedImageSize = 0;
+    videoRecording = False #Si True: grabar cada fotograma en el video stream que se supone inicializado
+    moduleStartedIndependently = False #Si False: inicializar las variables para grabación de video
     
     MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = 0 ;
     
@@ -209,6 +211,9 @@ class sphereVideoDetection():
     def setModuleStartedIndependently(self, bool):
         self.moduleStartedIndependently = bool #if True, this module is being executed independently for calibration or testing purposes.
     
+    def setVideoRecording(self, bool):
+        self.videoRecording = bool #if True and initialized, records each frame to an output file.
+
     def exit(self):
         # os._exit(0)
         self.mustquit = 1
@@ -948,29 +953,32 @@ class sphereVideoDetection():
         t_now = cv2.cvtColor( cam.read()[1], cv2.COLOR_RGB2GRAY )
         capturedImage = cam.read()[1]
         
-
-        videofps=30 # estimado, despues se corrigira
-        videoframesize=vs.getVideoSize()
+        #inicialización de grabación de video
         if (self.moduleStartedIndependently == False ):
+            videofps=30 # estimado, despues se corrigira
+            videoframesize=vs.getVideoSize()
             if is_cv2():
                 video_out = cv2.VideoWriter(self.outputVideoFile, cv2.cv.CV_FOURCC(*'MPEG'), videofps, videoframesize)
             elif is_cv3():
                 video_out = cv2.VideoWriter(self.outputVideoFile, cv2.VideoWriter_fourcc(*'MPEG'), videofps, videoframesize)
-
+        pass
         #self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
         self.capturedImageWidth, self.capturedImageHeight = self.cv_size( capturedImage )
         self.capturedImageSize = capturedImage.size
-        print "Size: %r " % self.capturedImageSize
-        print "Width: %r " %  self.capturedImageWidth
-        print "Height: %r " %  self.capturedImageHeight
-        
+        #print "Size: %r " % self.capturedImageSize
+        logger.info("Size: %r " % self.capturedImageSize);
+        #print "Width: %r " %  self.capturedImageWidth
+        logger.info("Width: %r " % self.capturedImageWidth);
+        #print "Height: %r " %  self.capturedImageHeight
+        logger.info("Height: %r " % self.capturedImageHeight);
         time.sleep(0.1)
         
         self.startCalibration = True
-        print "Starting video detection main loop."
+        logger.info("Starting video detection main loop.");
         Lnew = []
-        frametimes = []
-        frametimes.append(time.time())
+        if (self.moduleStartedIndependently == False ):
+            frametimes = []
+            frametimes.append(time.time())
         while (self.available == True):
                 #===============================================================
                 # #calibrate if necessary
@@ -981,9 +989,10 @@ class sphereVideoDetection():
                 # # Preparo las imgs antigûa, actual y futura<>
                 #===============================================================
                 # capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
-                frametimes.append(time.time()-frametimes[0])
                 capturedImage = cam.read()[1]
-                if (self.moduleStartedIndependently == False ):
+                # se graba la imagen en el grabador de video (si corresponde)
+                if (self.moduleStartedIndependently == False and self.videoRecording == True):
+                    frametimes.append(time.time()-frametimes[0])
                     video_out.write(capturedImage) #grabar captura (sólo si módulo no fue ejecutado independientemente)
                 #lo primero que se hace es verificar que se haya podido leer algo. Caso contrario, end of video..
                 if (capturedImage.size == 0) or (type(capturedImage) == type(None)):
@@ -1122,8 +1131,8 @@ class sphereVideoDetection():
                         cam.release()
                         if (self.moduleStartedIndependently == False ):
                             video_out.release()
-                        logger.info("VIDEOTIMES")
-                        logger.info(frametimes)
+                            logger.info("VIDEOTIMES")
+                            logger.info(frametimes)
                     except:
                         pass
                     cv2.destroyWindow(self.winName)

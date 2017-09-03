@@ -16,7 +16,10 @@ class audioRecorder():
     
     def saveToOutputFile(self):
         try:
-            self.audioStream.stop_stream()
+            if (self.audioStream.is_stopped() == False):
+                self.audioStream.stop_stream()
+                print "stoppeado en saveToOutputFile"
+            self.audioRecordingInitialized = False
             self.audioStream.close()
             self.audio.terminate()
             
@@ -35,6 +38,7 @@ class audioRecorder():
     
     def startAudioRecording(self):
         if (self.audioRecordingInitialized == False):
+            print "AUDIO INICIALIZADO"
             #self.open = True
             self.audioRate = 44100
             self.audioFrames_per_buffer = 1024
@@ -56,12 +60,17 @@ class audioRecorder():
             self.audioFrames = []
             self.audiotimes = []
             self.audiotimes.append(time.time())
-            self.audioStream.start_stream()
             self.audioRecordingInitialized = True
         self.recording = True
+        print "started..1"
+        self.audioStream.start_stream()
     
     def stopAudioRecording(self):
+        #if (self.audioStream.is_stopped()):
+        #    return
         self.recording = False
+        #self.audioStream.stop_stream()
+        print "stopped...."
     
     def setOutputAudioFile(self,filename):
         self.outputAudioFile = filename
@@ -78,9 +87,16 @@ class audioRecorder():
                 time.sleep(0.1)
                 continue
             if (self.recording != True):
+                #self.audiotimes.append(time.time()-self.audiotimes[0])
+                #data = self.audioStream.read(self.audioFrames_per_buffer) 
+                #self.audioFrames.append(data)
+                self.audioStream.stop_stream()
                 time.sleep(0.1)
+                #self.audiotimes.pop()
+                #self.audioFrames.pop()
                 pass
             else:
+                self.audioStream.start_stream()
                 self.audiotimes.append(time.time()-self.audiotimes[0])
                 data = self.audioStream.read(self.audioFrames_per_buffer) 
                 self.audioFrames.append(data)
