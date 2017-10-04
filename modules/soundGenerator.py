@@ -17,9 +17,10 @@ def checkImports():
     track_bola_utils.__importFromString("configSoundGenerator")
 
 class soundGen():
-    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16):
+    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16,volume=1.0):
         self.freq = freq
         self.duration = duration
+        self.volume = volume
         checkImports()
         import configSoundGenerator
         self.generation_method = configSoundGenerator.generation_method; #0: pygame ; 1: pyaudio
@@ -31,13 +32,13 @@ class soundGen():
         import multiprocessing
         self.soundGenJobList = multiprocessing.JoinableQueue()
         
-        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, soundGenMethod, freq,duration,sample_rate, bits,) )
+        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, soundGenMethod, freq,duration,sample_rate, bits,volume,) )
         self.soundGenProc.start()
         
         logger.debug('soundGen process started')
 
-    def launch_multiproc(self, jobl,soundGenMethod, freq, duration, sample_rate, bits):
-        a = soundGenMethod.multiproc_soundGen(jobl, freq, duration, sample_rate, bits)
+    def launch_multiproc(self, jobl,soundGenMethod, freq, duration, sample_rate, bits, volume):
+        a = soundGenMethod.multiproc_soundGen(jobl, freq, duration, sample_rate, bits, volume)
         time.sleep(0.5)
         while(a.toExit != 1):
             a.checkJobList()

@@ -16,20 +16,21 @@ PROCESS_SLEEP_TIME = 0.035 #in seconds
 class multiproc_soundGen():
     toExit = 0;
     soundGenJobList = 0;
-    def __init__(self,jobl, freq=None,duration=None,sample_rate=44100, bits=16):
+    def __init__(self,jobl, freq=None,duration=None,sample_rate=44100, bits=16,volume=1.0):
         self.soundGenJobList = jobl
         logger.info('New instance of soundGen')
         pygame.mixer.pre_init(sample_rate, -bits, 2)
         pygame.init()
         self.sample_rate = sample_rate
         self.bits = bits
+        self.volume = volume
         if ((duration == None) or (freq == None)) :
             self.duration = 1.0
             self.freq = 1000.0
         else :
             self.duration = duration
             self.freq = freq
-        self.sound = self.tone(self.duration,self.freq)
+        self.sound = self.tone(self.duration,self.freq,self.volume)
         logger.debug("soundGen(multiproc) instance initialized.")
 
     def checkJobList(self):
@@ -86,14 +87,16 @@ class multiproc_soundGen():
             pass
         pass
 
-    def tone(self, duration=1.0, freq=1000.0) :
+    def tone(self, duration=1.0, freq=1000.0, volume=1.0) :
         self.duration = duration
         self.freq = freq
-        logger.info('Tone freq = %s Hz, duration = %s s, sample_rate = %s, bits = %s',self.freq,self.duration,self.sample_rate,self.bits)
+        self.volume = volume
+        logger.info('Tone freq = %s Hz, duration = %s s, sample_rate = %s, bits = %s, volume = %s',self.freq,self.duration,self.sample_rate,self.bits,self.volume)
 
         n_samples = int(round(self.duration*self.sample_rate))
         buf = numpy.zeros((n_samples, 2), dtype = numpy.int16)
-        max_sample = 2**(self.bits - 1) - 1
+        max_sample = int(round((2**(self.bits - 1) - 1)*self.volume))
+        print max_sample
         for s in range(n_samples):
             t = float(s)/self.sample_rate    # time in seconds
 
@@ -124,17 +127,18 @@ class multiproc_soundGen():
 
 
 class soundGen():
-    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16):
+    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16, volume = 1.0):
         self.freq = freq
         self.duration = duration
+        self.volume = volume
         import multiprocessing
         self.soundGenJobList = multiprocessing.JoinableQueue()
-        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, freq,duration,sample_rate, bits,) )
+        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, freq,duration,sample_rate, bits, volume,) )
         self.soundGenProc.start()
         logger.debug('soundGen process started')
 
-    def launch_multiproc(self, jobl, freq, duration, sample_rate, bits):
-        a = multiproc_soundGen(jobl, freq, duration, sample_rate, bits)
+    def launch_multiproc(self, jobl, freq, duration, sample_rate, bits, volume):
+        a = multiproc_soundGen(jobl, freq, duration, sample_rate, bits, volume)
         time.sleep(0.5)
         while(a.toExit != 1):
             
@@ -160,11 +164,12 @@ class soundGen():
         del self.soundGenJobList
         del self.freq
         del self.duration
+        del self.volume
         #sys.exit()
         pass
 
-    def tone(self, duration=1.0, freq=1000.0) :
-        self.soundGenJobList.put( ( "tone" , duration, freq ) )
+    def tone(self, duration=1.0, freq=1000.0, volume=1.0) :
+        self.soundGenJobList.put( ( "tone" , duration, freq, volume ) )
 
     def play(self): #there is needed a delay, after the play command.
         self.soundGenJobList.put( ( "play", "" ) )

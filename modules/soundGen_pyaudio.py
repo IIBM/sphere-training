@@ -14,12 +14,13 @@ logger = logging.getLogger('soundGen')
 class multiproc_soundGen():
     toExit = 0;
     soundGenJobList = 0;
-    def __init__(self,jobl, freq=None,duration=None,sample_rate=44100, bits=16):
+    def __init__(self,jobl, freq=None,duration=None,sample_rate=44100, bits=16, volume=1.0):
         self.soundGenJobList = jobl
         logger.info('New instance of soundGen')
         #pygame.mixer.pre_init(sample_rate, -bits, 2)
         self.sample_rate = sample_rate
         self.bits = bits
+        self.volume = volume
         if ((duration == None) or (freq == None)) :
             self.duration = 1.0
             self.freq = 1000.0
@@ -41,10 +42,10 @@ class multiproc_soundGen():
         
         NUMBEROFFRAMES = int(BITRATE * LENGTH)
         RESTFRAMES = NUMBEROFFRAMES % BITRATE
-        WAVEDATA = ''    
+        WAVEDATA = ''
         
         for x in xrange(NUMBEROFFRAMES):
-         WAVEDATA = WAVEDATA+chr(int(math.sin(x/((BITRATE/FREQUENCY)/math.pi))*127+128))    
+         WAVEDATA = WAVEDATA+chr(int(math.sin(x/((BITRATE/FREQUENCY)/math.pi))*127*self.volume+128))
         
         #fill remainder of frameset with silence
         for x in xrange(RESTFRAMES): 
@@ -115,10 +116,11 @@ class multiproc_soundGen():
             pass
         pass
 
-    def tone(self, duration=1.0, freq=1000.0) :
+    def tone(self, duration=1.0, freq=1000.0,volume=1.0) :
         self.duration = duration
         self.freq = freq
-        logger.info('Tone freq = %s Hz, duration = %s s, sample_rate = %s, bits = %s',self.freq,self.duration,self.sample_rate,self.bits)
+        self.volume = volume
+        logger.info('Tone freq = %s Hz, duration = %s s, sample_rate = %s, bits = %s, volume = %s',self.freq,self.duration,self.sample_rate,self.bits,self.volume)
         BITRATE = self.sample_rate #number of frames per second/frameset.      
         
         #See http://www.phy.mtu.edu/~suits/notefreqs.html
@@ -127,10 +129,10 @@ class multiproc_soundGen():
         
         NUMBEROFFRAMES = int(BITRATE * LENGTH)
         RESTFRAMES = NUMBEROFFRAMES % BITRATE
-        WAVEDATA = ''    
+        WAVEDATA = ''
         
         for x in xrange(NUMBEROFFRAMES):
-         WAVEDATA = WAVEDATA+chr(int(math.sin(x/((BITRATE/FREQUENCY)/math.pi))*127+128))    
+         WAVEDATA = WAVEDATA+chr(int(math.sin(x/((BITRATE/FREQUENCY)/math.pi))*127*self.volume+128))
         
         #fill remainder of frameset with silence
         for x in xrange(RESTFRAMES): 
@@ -163,17 +165,18 @@ class multiproc_soundGen():
 
 
 class soundGen():
-    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16):
+    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16, volume = 1.0):
         self.freq = freq
         self.duration = duration
+        self.volume = volume
         import multiprocessing
         self.soundGenJobList = multiprocessing.JoinableQueue()
-        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, freq,duration,sample_rate, bits,) )
+        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, freq,duration,sample_rate, bits, volume,) )
         self.soundGenProc.start()
         logger.debug('soundGen process started')
         
-    def launch_multiproc(self, jobl, freq, duration, sample_rate, bits):
-        a = multiproc_soundGen(jobl, freq, duration, sample_rate, bits)
+    def launch_multiproc(self, jobl, freq, duration, sample_rate, bits, volume):
+        a = multiproc_soundGen(jobl, freq, duration, sample_rate, bits, volume)
         time.sleep(0.5)
         while(a.toExit != 1):
             a.checkJobList()
@@ -198,11 +201,12 @@ class soundGen():
         del self.soundGenJobList
         del self.freq
         del self.duration
+        del self.volume
         #sys.exit()
         pass
 
-    def tone(self, duration=1.0, freq=1000.0) :
-        self.soundGenJobList.put( ( "tone" , duration, freq ) )
+    def tone(self, duration=1.0, freq=1000.0, volume=1.0) :
+        self.soundGenJobList.put( ( "tone" , duration, freq, volume ) )
 
     def play(self): #there is needed a delay, after the play command.
         self.soundGenJobList.put( ( "play", "" ) )
