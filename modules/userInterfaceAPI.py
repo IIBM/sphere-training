@@ -810,6 +810,8 @@ class multiproc_userInterface_API:
         #logger.debug( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
         self.frequencyTone1 = self.currentGUI.frequencyTone1
+        self.volumeTone1 = self.currentGUI.volumeTone1
+        self.setNameSpaceMessage(35, self.volumeTone1 )
         self.setNameSpaceMessage(10, self.frequencyTone1 )
         #logger.debug( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
@@ -820,6 +822,8 @@ class multiproc_userInterface_API:
         #logger.debug( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
         self.frequencyTone2 = self.currentGUI.frequencyTone2
+        self.volumeTone2 = self.currentGUI.volumeTone2
+        self.setNameSpaceMessage(36, self.volumeTone2 )
         self.setNameSpaceMessage(11, self.frequencyTone2 )
         #logger.debug( "ns: " + ns.__str__() )
         #print "API Namespace:", ns

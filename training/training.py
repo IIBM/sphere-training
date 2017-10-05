@@ -501,6 +501,8 @@ class Training():
                         self.soundGenDuration2 = cfg.soundGenDuration2
                         self.soundGenFrequency1 = cfg.soundGenFrequency1
                         self.soundGenFrequency2 = cfg.soundGenFrequency2
+                        self.soundGenVolume1 = cfg.soundGenVolume1
+                        self.soundGenVolume2 = cfg.soundGenVolume2
                         self.toneOneProbability = cfg.toneOneProbability
                         
                         print "done."
@@ -533,6 +535,8 @@ class Training():
                         self.soundGenDuration2 = cfg.soundGenDuration2
                         self.soundGenFrequency1 = cfg.soundGenFrequency1
                         self.soundGenFrequency2 = cfg.soundGenFrequency2
+                        self.soundGenVolume1 = cfg.soundGenVolume1
+                        self.soundGenVolume2 = cfg.soundGenVolume2
                         self.toneOneProbability = cfg.toneOneProbability
                         
                         print "done."
@@ -565,6 +569,8 @@ class Training():
                         self.soundGenDuration2 = cfg.soundGenDuration2
                         self.soundGenFrequency1 = cfg.soundGenFrequency1
                         self.soundGenFrequency2 = cfg.soundGenFrequency2
+                        self.soundGenVolume1 = cfg.soundGenVolume1
+                        self.soundGenVolume2 = cfg.soundGenVolume2
                         self.toneOneProbability = cfg.toneOneProbability
                         
                         print "done."
@@ -597,6 +603,8 @@ class Training():
                         self.soundGenDuration2 = cfg.soundGenDuration2
                         self.soundGenFrequency1 = cfg.soundGenFrequency1
                         self.soundGenFrequency2 = cfg.soundGenFrequency2
+                        self.soundGenVolume1 = cfg.soundGenVolume1
+                        self.soundGenVolume2 = cfg.soundGenVolume2
                         self.toneOneProbability = cfg.toneOneProbability
                         
                         print "done."
@@ -621,6 +629,8 @@ class Training():
                     self.soundGenDuration2 = cfgtraining.soundGenDuration2
                     self.soundGenFrequency1 = cfgtraining.soundGenFrequency1
                     self.soundGenFrequency2 = cfgtraining.soundGenFrequency2
+                    self.soundGenVolume1 = cfgtraining.soundGenVolume1
+                    self.soundGenVolume2 = cfgtraining.soundGenVolume2
                     self.toneOneProbability = cfgtraining.toneOneProbability
                     print "Couldn't read config file for this type. Setting default variables."
                 pass
@@ -642,6 +652,8 @@ class Training():
                     Training.gVariables.pavlovVars.soundGenDuration2 = Training.gVariables.soundGenDuration2
                     Training.gVariables.pavlovVars.soundGenFrequency1 = Training.gVariables.soundGenFrequency1
                     Training.gVariables.pavlovVars.soundGenFrequency2 = Training.gVariables.soundGenFrequency2
+                    Training.gVariables.pavlovVars.soundGenVolume1 = Training.gVariables.soundGenVolume1
+                    Training.gVariables.pavlovVars.soundGenVolume2 = Training.gVariables.soundGenVolume2
                     Training.gVariables.pavlovVars.toneOneProbability = Training.gVariables.toneOneProbability
                     
                     pass
@@ -662,6 +674,8 @@ class Training():
                     Training.gVariables.skinnerVars.soundGenDuration2 = Training.gVariables.soundGenDuration2
                     Training.gVariables.skinnerVars.soundGenFrequency1 = Training.gVariables.soundGenFrequency1
                     Training.gVariables.skinnerVars.soundGenFrequency2 = Training.gVariables.soundGenFrequency2
+                    Training.gVariables.skinnerVars.soundGenVolume1 = Training.gVariables.soundGenVolume1
+                    Training.gVariables.skinnerVars.soundGenVolume2 = Training.gVariables.soundGenVolume2
                     Training.gVariables.skinnerVars.toneOneProbability = Training.gVariables.toneOneProbability
                     
                     pass
@@ -683,6 +697,8 @@ class Training():
                     Training.gVariables.ocondVars.soundGenDuration2 = Training.gVariables.soundGenDuration2
                     Training.gVariables.ocondVars.soundGenFrequency1 = Training.gVariables.soundGenFrequency1
                     Training.gVariables.ocondVars.soundGenFrequency2 = Training.gVariables.soundGenFrequency2
+                    Training.gVariables.ocondVars.soundGenVolume1 = Training.gVariables.soundGenVolume1
+                    Training.gVariables.ocondVars.soundGenVolume2 = Training.gVariables.soundGenVolume2
                     Training.gVariables.ocondVars.toneOneProbability = Training.gVariables.toneOneProbability
                     
                     pass
@@ -704,6 +720,8 @@ class Training():
                     Training.gVariables.discrVars.soundGenDuration2 = Training.gVariables.soundGenDuration2
                     Training.gVariables.discrVars.soundGenFrequency1 = Training.gVariables.soundGenFrequency1
                     Training.gVariables.discrVars.soundGenFrequency2 = Training.gVariables.soundGenFrequency2
+                    Training.gVariables.discrVars.soundGenVolume1 = Training.gVariables.soundGenVolume1
+                    Training.gVariables.discrVars.soundGenVolume2 = Training.gVariables.soundGenVolume2
                     Training.gVariables.discrVars.toneOneProbability = Training.gVariables.toneOneProbability
                     
                     pass
@@ -732,6 +750,9 @@ class Training():
                     Training.gVariables.fn_setFrequencyT1(Training.gVariables.pavlovVars.soundGenFrequency1)
                     #Training.gVariables.soundGenFrequency1 = Training.gVariables.pavlovVars.soundGenFrequency1
                     Training.gVariables.fn_setFrequencyT2(Training.gVariables.pavlovVars.soundGenFrequency2)
+                    Training.gVariables.fn_setVolumeT1(Training.gVariables.pavlovVars.soundGenVolume1)
+                    #Training.gVariables.soundGenFrequency1 = Training.gVariables.pavlovVars.soundGenFrequency1
+                    Training.gVariables.fn_setVolumeT2(Training.gVariables.pavlovVars.soundGenVolume2)
                     #Training.gVariables.soundGenFrequency2 = Training.gVariables.pavlovVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.pavlovVars.toneOneProbability
                     
@@ -762,6 +783,9 @@ class Training():
                     Training.gVariables.fn_setFrequencyT1(Training.gVariables.skinnerVars.soundGenFrequency1)
                     #Training.gVariables.soundGenFrequency1 = Training.gVariables.skinnerVars.soundGenFrequency1
                     Training.gVariables.fn_setFrequencyT2(Training.gVariables.skinnerVars.soundGenFrequency2)
+                    Training.gVariables.fn_setVolumeT1(Training.gVariables.skinnerVars.soundGenVolume1)
+                    #Training.gVariables.soundGenFrequency1 = Training.gVariables.skinnerVars.soundGenFrequency1
+                    Training.gVariables.fn_setVolumeT2(Training.gVariables.skinnerVars.soundGenVolume2)
                     #Training.gVariables.soundGenFrequency2 = Training.gVariables.skinnerVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.skinnerVars.toneOneProbability
                     
@@ -790,6 +814,10 @@ class Training():
                     Training.gVariables.fn_setFrequencyT1(Training.gVariables.ocondVars.soundGenFrequency1)
                     #Training.gVariables.soundGenFrequency1 = Training.gVariables.ocondVars.soundGenFrequency1
                     Training.gVariables.fn_setFrequencyT2(Training.gVariables.ocondVars.soundGenFrequency2)
+                    
+                    Training.gVariables.fn_setVolumeT1(Training.gVariables.ocondVars.soundGenVolume1)
+                    Training.gVariables.fn_setVolumeT2(Training.gVariables.ocondVars.soundGenVolume2)
+                    
                     #Training.gVariables.soundGenFrequency2 = Training.gVariables.ocondVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.ocondVars.toneOneProbability
                     
@@ -818,6 +846,10 @@ class Training():
                     Training.gVariables.fn_setFrequencyT1(Training.gVariables.discrVars.soundGenFrequency1)
                     #Training.gVariables.soundGenFrequency1 = Training.gVariables.discrVars.soundGenFrequency1
                     Training.gVariables.fn_setFrequencyT2(Training.gVariables.discrVars.soundGenFrequency2)
+                    
+                    Training.gVariables.fn_setVolumeT1(Training.gVariables.discrVars.soundGenVolume1)
+                    Training.gVariables.fn_setVolumeT2(Training.gVariables.discrVars.soundGenVolume2)
+                    
                     #Training.gVariables.soundGenFrequency2 = Training.gVariables.discrVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.discrVars.toneOneProbability
                     
@@ -839,7 +871,8 @@ class Training():
                     objc.probabilityToneOne = Training.gVariables.pavlovVars.toneOneProbability;
                     objc.frequencyTone1 = Training.gVariables.pavlovVars.soundGenFrequency1;
                     objc.frequencyTone2 = Training.gVariables.pavlovVars.soundGenFrequency2;
-                    
+                    objc.volumeTone1 = Training.gVariables.pavlovVars.soundGenVolume1;
+                    objc.volumeTone2= Training.gVariables.pavlovVars.soundGenVolume2;
                     #objc.movementAmount = Training.gVariables.pavlovVars.?¡??????
                     #objc.movementMethod = Training.gVariables.pavlovVars.??????????????????????????'
                     objc.movementTime = Training.gVariables.pavlovVars.movementTime;
@@ -862,7 +895,8 @@ class Training():
                     objc.probabilityToneOne = Training.gVariables.skinnerVars.toneOneProbability;
                     objc.frequencyTone1 = Training.gVariables.skinnerVars.soundGenFrequency1;
                     objc.frequencyTone2 = Training.gVariables.skinnerVars.soundGenFrequency2;
-                    
+                    objc.volumeTone1 = Training.gVariables.skinnerVars.soundGenVolume1;
+                    objc.volumeTone2= Training.gVariables.skinnerVars.soundGenVolume2;
                     #objc.movementAmount = Training.gVariables.skinnerVars.?¡??????
                     #objc.movementMethod = Training.gVariables.skinnerVars.??????????????????????????'
                     objc.movementTime = Training.gVariables.skinnerVars.movementTime;
@@ -884,7 +918,8 @@ class Training():
                     objc.probabilityToneOne = Training.gVariables.ocondVars.toneOneProbability;
                     objc.frequencyTone1 = Training.gVariables.ocondVars.soundGenFrequency1;
                     objc.frequencyTone2 = Training.gVariables.ocondVars.soundGenFrequency2;
-                    
+                    objc.volumeTone1 = Training.gVariables.ocondVars.soundGenVolume1;
+                    objc.volumeTone2= Training.gVariables.ocondVars.soundGenVolume2;
                     #objc.movementAmount = Training.gVariables.ocondVars.?¡??????
                     #objc.movementMethod = Training.gVariables.ocondVars.??????????????????????????'
                     objc.movementTime = Training.gVariables.ocondVars.movementTime;
@@ -906,7 +941,8 @@ class Training():
                     objc.probabilityToneOne = Training.gVariables.discrVars.toneOneProbability;
                     objc.frequencyTone1 = Training.gVariables.discrVars.soundGenFrequency1;
                     objc.frequencyTone2 = Training.gVariables.discrVars.soundGenFrequency2;
-                    
+                    objc.volumeTone1 = Training.gVariables.discrVars.soundGenVolume1;
+                    objc.volumeTone2= Training.gVariables.discrVars.soundGenVolume2;
                     #objc.movementAmount = Training.gVariables.discrVars.?¡??????
                     #objc.movementMethod = Training.gVariables.discrVars.??????????????????????????'
                     objc.movementTime = Training.gVariables.discrVars.movementTime;
@@ -1673,6 +1709,8 @@ class Training():
         self.gVariables.currentGUI.probabilityToneOne = self.gVariables.toneOneProbability
         self.gVariables.currentGUI.frequencyTone1 = self.gVariables.soundGenFrequency1
         self.gVariables.currentGUI.frequencyTone2 = self.gVariables.soundGenFrequency2
+        self.gVariables.currentGUI.volumeTone1 = self.gVariables.soundGenVolume1
+        self.gVariables.currentGUI.volumeTone2 = self.gVariables.soundGenVolume2
         self.gVariables.currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
         self.gVariables.currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
         self.gVariables.currentGUI.movementTime = self.gVariables.movementTime
