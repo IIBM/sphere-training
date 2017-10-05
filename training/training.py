@@ -1576,8 +1576,10 @@ class Training():
         # soundGen:
         # La configuración es a nivel de módulo, no en el entrenamiento principal.
         import soundGenerator
-        self.gVariables.s1 = soundGenerator.soundGen(self.gVariables.soundGenFrequency1, self.gVariables.soundGenDuration1)
-        self.gVariables.s2 = soundGenerator.soundGen(self.gVariables.soundGenFrequency2, self.gVariables.soundGenDuration2)
+        self.gVariables.s1 = soundGenerator.soundGen( self.gVariables.soundGenDuration1,
+                                                     self.gVariables.soundGenFrequency1 )
+        self.gVariables.s2 = soundGenerator.soundGen( self.gVariables.soundGenDuration2, 
+                                                     self.gVariables.soundGenFrequency2 )
         
         self.gVariables.logger.debug('Soundgen init started..')
         #GUI:

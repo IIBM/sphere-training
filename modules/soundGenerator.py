@@ -17,9 +17,9 @@ def checkImports():
     track_bola_utils.__importFromString("configSoundGenerator")
 
 class soundGen():
-    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16,volume=1.0):
-        self.freq = freq
+    def __init__(self, duration=None, freq=None, sample_rate=44100, bits=16,volume=1.0):
         self.duration = duration
+        self.freq = freq
         self.volume = volume
         checkImports()
         import configSoundGenerator
@@ -32,13 +32,13 @@ class soundGen():
         import multiprocessing
         self.soundGenJobList = multiprocessing.JoinableQueue()
         
-        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, soundGenMethod, freq,duration,sample_rate, bits,volume,) )
+        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, soundGenMethod, duration, freq,sample_rate, bits,volume,) )
         self.soundGenProc.start()
         
         logger.debug('soundGen process started')
 
-    def launch_multiproc(self, jobl,soundGenMethod, freq, duration, sample_rate, bits, volume):
-        a = soundGenMethod.multiproc_soundGen(jobl, freq, duration, sample_rate, bits, volume)
+    def launch_multiproc(self, jobl,soundGenMethod, duration, freq, sample_rate, bits, volume):
+        a = soundGenMethod.multiproc_soundGen(jobl, duration, freq, sample_rate, bits, volume)
         time.sleep(0.5)
         while(a.toExit != 1):
             a.checkJobList()
@@ -65,8 +65,8 @@ class soundGen():
         #sys.exit()
         pass
 
-    def tone(self, duration=1.0, freq=1000.0) :
-        self.soundGenJobList.put( ( "tone" , duration, freq ) )
+    def tone(self, duration=1.0, freq=1000.0, volume=1.0) :
+        self.soundGenJobList.put( ( "tone" , duration, freq, volume ) )
 
     def play(self): #there is needed a delay, after the play command.
         self.soundGenJobList.put( ( "play", "" ) )
@@ -103,26 +103,28 @@ if __name__ == '__main__':
     print "Start sound test"
     logger.info('Start sound test')
     s1 = soundGen()
-    duration = 3.0 # in seconds
-    freq1 = 1440
-    freq2 = 1550
+    duration = 0.5 # in seconds
+    freq1 = 1000
+    freq2 = 5000
+    volume= 0.6
 
-    s1.tone(duration, freq1)
+    s1.tone(duration, freq1, volume)
     s1.play()
     time.sleep(duration)
 
     time.sleep(4)
 
-    s1.tone(duration, freq2)
+    s1.tone(duration, freq2, volume)
     s1.play()
     time.sleep(duration)
 
     time.sleep(4)
 
-
-    s2 = soundGen(3*freq1,2*duration)
+    print "3"
+    s2 = soundGen()
+    s2.tone(2*duration, 2*freq1, 0.5*volume)
     s2.play()
-    time.sleep(2*duration)
+    time.sleep(4*duration)
     logger.info('End sound test')
     print "End sound test"
     s1.exit()

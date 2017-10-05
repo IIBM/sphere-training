@@ -16,7 +16,7 @@ PROCESS_SLEEP_TIME = 0.035 #in seconds
 class multiproc_soundGen():
     toExit = 0;
     soundGenJobList = 0;
-    def __init__(self,jobl, freq=None,duration=None,sample_rate=44100, bits=16,volume=1.0):
+    def __init__(self,jobl,duration=None, freq=None,sample_rate=44100, bits=16,volume=1.0):
         self.soundGenJobList = jobl
         logger.info('New instance of soundGen')
         pygame.mixer.pre_init(sample_rate, -bits, 2)
@@ -60,7 +60,8 @@ class multiproc_soundGen():
                     #print "Command secondaryInfo received."
                     logger.debug( str(tempvar[1]) )
                     logger.debug( str(tempvar[2]) )
-                    self.tone(tempvar[1], tempvar[2])
+                    logger.debug( str(tempvar[3]) )
+                    self.tone(tempvar[1], tempvar[2], tempvar[3])
                     logger.debug('tone..')
                 elif (index == "play"):
                     #print "Command exitDisplay received."
@@ -111,7 +112,7 @@ class multiproc_soundGen():
         logger.info('Tone freq = %s Hz, duration = %s s',self.freq,self.duration)
         if (float(self.duration)  < 0.000003571):
             #print "not played because duration is less than audible."
-            logger.debug("Not played tone because duration is less than audible.")
+            logger.debug("Not playing tone because duration is less than audible.")
         else:
             self.sound.play()
             #print "playing tone %s" % self.freq
@@ -127,18 +128,18 @@ class multiproc_soundGen():
 
 
 class soundGen():
-    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16, volume = 1.0):
-        self.freq = freq
+    def __init__(self, duration=None, freq=None,sample_rate=44100, bits=16, volume = 1.0):
         self.duration = duration
+        self.freq = freq
         self.volume = volume
         import multiprocessing
         self.soundGenJobList = multiprocessing.JoinableQueue()
-        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, freq,duration,sample_rate, bits, volume,) )
+        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, duration, freq,sample_rate, bits, volume,) )
         self.soundGenProc.start()
         logger.debug('soundGen process started')
 
-    def launch_multiproc(self, jobl, freq, duration, sample_rate, bits, volume):
-        a = multiproc_soundGen(jobl, freq, duration, sample_rate, bits, volume)
+    def launch_multiproc(self, jobl, duration, freq, sample_rate, bits, volume):
+        a = multiproc_soundGen(jobl, duration, freq, sample_rate, bits, volume)
         time.sleep(0.5)
         while(a.toExit != 1):
             
@@ -162,8 +163,8 @@ class soundGen():
         self.soundGenProc.terminate()
         del self.soundGenProc
         del self.soundGenJobList
-        del self.freq
         del self.duration
+        del self.freq
         del self.volume
         #sys.exit()
         pass
@@ -174,11 +175,13 @@ class soundGen():
     def play(self): #there is needed a delay, after the play command.
         self.soundGenJobList.put( ( "play", "" ) )
 
+    def getDuration(self):
+        return self.duration
+
     def getFrequency(self):
         return self.freq
     
-    def getDuration(self):
-        return self.duration
+
 
 if __name__ == '__main__':
     # create a logging format
@@ -222,7 +225,7 @@ if __name__ == '__main__':
     time.sleep(4)
 
 
-    s2 = soundGen(3*freq1,2*duration)
+    s2 = soundGen(2*duration, 3*freq1)
     s2.play()
     time.sleep(2*duration)
     logger.info('End Sound Test')

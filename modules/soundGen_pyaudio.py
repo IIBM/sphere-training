@@ -14,7 +14,7 @@ logger = logging.getLogger('soundGen')
 class multiproc_soundGen():
     toExit = 0;
     soundGenJobList = 0;
-    def __init__(self,jobl, freq=None,duration=None,sample_rate=44100, bits=16, volume=1.0):
+    def __init__(self,jobl, duration=None, freq=None,sample_rate=44100, bits=16, volume=1.0):
         self.soundGenJobList = jobl
         logger.info('New instance of soundGen')
         #pygame.mixer.pre_init(sample_rate, -bits, 2)
@@ -32,31 +32,11 @@ class multiproc_soundGen():
         
         #sudo apt-get install python-pyaudio
         PyAudio = pyaudio.PyAudio
-        
-        #See http://en.wikipedia.org/wiki/Bit_rate#Audio
-        BITRATE = self.sample_rate #number of frames per second/frameset.      
-        
-        #See http://www.phy.mtu.edu/~suits/notefreqs.html
-        FREQUENCY = self.freq #Hz, waves per second, 261.63=C4-note.
-        LENGTH = 2*self.duration #seconds to play sound # for some reason, needs to be 2 times the number..
-        
-        NUMBEROFFRAMES = int(BITRATE * LENGTH)
-        RESTFRAMES = NUMBEROFFRAMES % BITRATE
-        WAVEDATA = ''
-        
-        for x in xrange(NUMBEROFFRAMES):
-         WAVEDATA = WAVEDATA+chr(int(math.sin(x/((BITRATE/FREQUENCY)/math.pi))*127*self.volume+128))
-        
-        #fill remainder of frameset with silence
-        for x in xrange(RESTFRAMES): 
-         WAVEDATA = WAVEDATA+chr(128)
-        
-        self.WAVEDATA = WAVEDATA
         self.soundp = PyAudio()
-        self.stream = self.soundp.open(format = self.soundp.get_format_from_width(1), 
-                        channels = 2, 
-                        rate = BITRATE, 
-                        output = True)
+        self.stream = self.soundp.open(format = self.soundp.get_format_from_width(1), channels = 2, rate = self.sample_rate, output = True)
+        self.tone(self.duration, self.freq, self.volume)
+
+        
         
         
         print "finish sound test."
@@ -89,7 +69,8 @@ class multiproc_soundGen():
                     #print "Command secondaryInfo received."
                     logger.debug( str(tempvar[1]) )
                     logger.debug( str(tempvar[2]) )
-                    self.tone(tempvar[1], tempvar[2])
+                    logger.debug( str(tempvar[3]) )
+                    self.tone(tempvar[1], tempvar[2], tempvar[3])
                     logger.debug('tone..')
                 elif (index == "play"):
                     #print "Command exitDisplay received."
@@ -121,6 +102,7 @@ class multiproc_soundGen():
         self.freq = freq
         self.volume = volume
         logger.info('Tone freq = %s Hz, duration = %s s, sample_rate = %s, bits = %s, volume = %s',self.freq,self.duration,self.sample_rate,self.bits,self.volume)
+        #See http://en.wikipedia.org/wiki/Bit_rate#Audio
         BITRATE = self.sample_rate #number of frames per second/frameset.      
         
         #See http://www.phy.mtu.edu/~suits/notefreqs.html
@@ -128,7 +110,7 @@ class multiproc_soundGen():
         LENGTH = 2*self.duration #seconds to play sound # for some reason, needs to be 2 times the number..
         
         NUMBEROFFRAMES = int(BITRATE * LENGTH)
-        RESTFRAMES = NUMBEROFFRAMES % BITRATE
+        RESTFRAMES = int(NUMBEROFFRAMES % BITRATE)
         WAVEDATA = ''
         
         for x in xrange(NUMBEROFFRAMES):
@@ -141,7 +123,7 @@ class multiproc_soundGen():
         self.WAVEDATA = WAVEDATA
         #self.stream.write(self.WAVEDATA) #does not play tone when calling tone function by default..
         
-        logger.debug(str(self.soundp))
+        #logger.debug(str(self.soundp))
         #return self.sound
         return;
 
@@ -165,18 +147,18 @@ class multiproc_soundGen():
 
 
 class soundGen():
-    def __init__(self,freq=None,duration=None,sample_rate=44100, bits=16, volume = 1.0):
+    def __init__(self,duration=None,freq=None,sample_rate=44100, bits=16, volume = 1.0):
         self.freq = freq
         self.duration = duration
         self.volume = volume
         import multiprocessing
         self.soundGenJobList = multiprocessing.JoinableQueue()
-        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, freq,duration,sample_rate, bits, volume,) )
+        self.soundGenProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.soundGenJobList, duration, freq,sample_rate, bits, volume,) )
         self.soundGenProc.start()
         logger.debug('soundGen process started')
         
-    def launch_multiproc(self, jobl, freq, duration, sample_rate, bits, volume):
-        a = multiproc_soundGen(jobl, freq, duration, sample_rate, bits, volume)
+    def launch_multiproc(self, jobl, duration,freq,  sample_rate, bits, volume):
+        a = multiproc_soundGen(jobl,  duration,freq, sample_rate, bits, volume)
         time.sleep(0.5)
         while(a.toExit != 1):
             a.checkJobList()
@@ -243,7 +225,7 @@ if __name__ == '__main__':
     
     
     logger.info('Start Sound Test')
-    s1 = soundGen(freq=1000, duration=1.0)
+    s1 = soundGen(duration=1.0, freq=1000, volume=0.1)
     duration = 3.0 # in seconds
     freq1 = 1440
     freq2 = 1550
@@ -256,7 +238,7 @@ if __name__ == '__main__':
 
     time.sleep(4)
     print "pre play2"
-    s1.tone(duration, freq2)
+    s1.tone(duration, freq2, volume=0.1)
     
     time.sleep(duration)
     print "post play2"
@@ -268,11 +250,11 @@ if __name__ == '__main__':
     time.sleep(4)
 
     print "pre play4"
-    s2 = soundGen(3*freq1,2*duration)
+    s2 = soundGen(2*duration, 3*freq1, volume=0.1)
     s2.play()
     time.sleep(2*duration)
     print "post play4"
-    s2.tone(2*duration, 0.5*freq2)
+    s2.tone(2*duration, 0.5*freq2, volume=0.1)
     logger.info('End Sound Test')
     s1.exit()
     s2.exit()
