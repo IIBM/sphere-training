@@ -30,6 +30,8 @@ class userInterface_API:
     probabilityToneOne = 0
     frequencyTone1 = 0
     frequencyTone2 = 0
+    volumeTone1 = 0
+    volumeTone2 = 0
     movementAmount = 0
     movementMethod = 0
     movementTime = 0
@@ -59,6 +61,8 @@ class userInterface_API:
     pavlovVars.probabilityToneOne = 1
     pavlovVars.frequencyTone1 = 1
     pavlovVars.frequencyTone2 = 1
+    pavlovVars.volumeTone1 = 1
+    pavlovVars.volumeTone2 = 1
     #pavlovVars.movementAmount = 1
     #pavlovVars.movementMethod = 1
     pavlovVars.movementTime = 1
@@ -76,6 +80,8 @@ class userInterface_API:
     skinnerVars.probabilityToneOne = 1
     skinnerVars.frequencyTone1 = 1
     skinnerVars.frequencyTone2 = 1
+    skinnerVars.volumeTone1 = 1
+    skinnerVars.volumeTone2 = 1
     #skinnerVars.movementAmount = 1
     #skinnerVars.movementMethod = 1
     skinnerVars.movementTime = 1
@@ -91,6 +97,8 @@ class userInterface_API:
     ocondVars.probabilityToneOne = 1
     ocondVars.frequencyTone1 = 1
     ocondVars.frequencyTone2 = 1
+    ocondVars.volumeTone1 = 1
+    ocondVars.volumeTone2 = 1
     #ocondVars.movementAmount = 1
     #ocondVars.movementMethod = 1
     ocondVars.movementTime = 1
@@ -106,6 +114,8 @@ class userInterface_API:
     discrVars.probabilityToneOne = 1
     discrVars.frequencyTone1 = 1
     discrVars.frequencyTone2 = 1
+    discrVars.volumeTone1 = 1
+    discrVars.volumeTone2 = 1
     #discrVars.movementAmount = 1
     #discrVars.movementMethod = 1
     discrVars.movementTime = 1
@@ -128,6 +138,8 @@ class userInterface_API:
         multipUI.probabilityToneOne = self.probabilityToneOne
         multipUI.frequencyTone1 = self.frequencyTone1
         multipUI.frequencyTone2 = self.frequencyTone2
+        multipUI.volumeTone1 = self.volumeTone1
+        multipUI.volumeTone2 = self.volumeTone2
         
         multipUI.movementAmount = self.movementAmount
         multipUI.movementMethod = self.movementMethod
@@ -157,6 +169,8 @@ class userInterface_API:
         multipUI.pavlovVars.probabilityToneOne = self.pavlovVars.probabilityToneOne
         multipUI.pavlovVars.frequencyTone1 = self.pavlovVars.frequencyTone1
         multipUI.pavlovVars.frequencyTone2 = self.pavlovVars.frequencyTone2
+        multipUI.pavlovVars.volumeTone1 = self.pavlovVars.volumeTone1
+        multipUI.pavlovVars.volumeTone2 = self.pavlovVars.volumeTone2
         
         #multipUI.pavlovVars.movementAmount = self.pavlovVars.movementAmount
         #multipUI.pavlovVars.movementMethod = self.pavlovVars.movementMethod
@@ -176,6 +190,8 @@ class userInterface_API:
             multipUI.probabilityToneOne = self.pavlovVars.probabilityToneOne
             multipUI.frequencyTone1 = self.pavlovVars.frequencyTone1
             multipUI.frequencyTone2 = self.pavlovVars.frequencyTone2
+            multipUI.volumeTone1 = self.pavlovVars.volumeTone1
+            multipUI.volumeTone2 = self.pavlovVars.volumeTone2
             
             #multipUI.movementAmount = self.pavlovVars.movementAmount
             #multipUI.movementMethod = self.pavlovVars.movementMethod
@@ -195,6 +211,8 @@ class userInterface_API:
         multipUI.skinnerVars.probabilityToneOne = self.skinnerVars.probabilityToneOne
         multipUI.skinnerVars.frequencyTone1 = self.skinnerVars.frequencyTone1
         multipUI.skinnerVars.frequencyTone2 = self.skinnerVars.frequencyTone2
+        multipUI.skinnerVars.volumeTone1 = self.skinnerVars.volumeTone1
+        multipUI.skinnerVars.volumeTone2 = self.skinnerVars.volumeTone2
         
         #multipUI.skinnerVars.movementAmount = self.skinnerVars.movementAmount
         #multipUI.skinnerVars.movementMethod = self.skinnerVars.movementMethod
@@ -214,6 +232,8 @@ class userInterface_API:
             multipUI.probabilityToneOne = self.skinnerVars.probabilityToneOne
             multipUI.frequencyTone1 = self.skinnerVars.frequencyTone1
             multipUI.frequencyTone2 = self.skinnerVars.frequencyTone2
+            multipUI.volumeTone1 = self.skinnerVars.volumeTone1
+            multipUI.volumeTone2 = self.skinnerVars.volumeTone2
             
             #multipUI.movementAmount = self.skinnerVars.movementAmount
             #multipUI.movementMethod = self.skinnerVars.movementMethod
@@ -237,6 +257,8 @@ class userInterface_API:
         multipUI.ocondVars.probabilityToneOne = self.ocondVars.probabilityToneOne
         multipUI.ocondVars.frequencyTone1 = self.ocondVars.frequencyTone1
         multipUI.ocondVars.frequencyTone2 = self.ocondVars.frequencyTone2
+        multipUI.ocondVars.volumeTone1 = self.ocondVars.volumeTone1
+        multipUI.ocondVars.volumeTone2 = self.ocondVars.volumeTone2
         
         #multipUI.ocondVars.movementAmount = self.ocondVars.movementAmount
         #multipUI.ocondVars.movementMethod = self.ocondVars.movementMethod
@@ -257,6 +279,8 @@ class userInterface_API:
             multipUI.probabilityToneOne = self.ocondVars.probabilityToneOne
             multipUI.frequencyTone1 = self.ocondVars.frequencyTone1
             multipUI.frequencyTone2 = self.ocondVars.frequencyTone2
+            multipUI.volumeTone1 = self.ocondVars.volumeTone1
+            multipUI.volumeTone2 = self.ocondVars.volumeTone2
             
             #multipUI.movementAmount = self.ocondVars.movementAmount
             #multipUI.movementMethod = self.ocondVars.movementMethod
@@ -277,6 +301,8 @@ class userInterface_API:
         multipUI.discrVars.probabilityToneOne = self.discrVars.probabilityToneOne
         multipUI.discrVars.frequencyTone1 = self.discrVars.frequencyTone1
         multipUI.discrVars.frequencyTone2 = self.discrVars.frequencyTone2
+        multipUI.discrVars.volumeTone1 = self.discrVars.volumeTone1
+        multipUI.discrVars.volumeTone2 = self.discrVars.volumeTone2
         
         #multipUI.discrVars.movementAmount = self.discrVars.movementAmount
         #multipUI.discrVars.movementMethod = self.discrVars.movementMethod
@@ -296,6 +322,8 @@ class userInterface_API:
             multipUI.probabilityToneOne = self.discrVars.probabilityToneOne
             multipUI.frequencyTone1 = self.discrVars.frequencyTone1
             multipUI.frequencyTone2 = self.discrVars.frequencyTone2
+            multipUI.volumeTone1 = self.discrVars.volumeTone1
+            multipUI.volumeTone2 = self.discrVars.volumeTone2
             
             #multipUI.movementAmount = self.discrVars.movementAmount
             #multipUI.movementMethod = self.discrVars.movementMethod
@@ -422,6 +450,8 @@ class multiproc_userInterface_API:
     pavlovVars.probabilityToneOne = 1
     pavlovVars.frequencyTone1 = 1
     pavlovVars.frequencyTone2 = 1
+    pavlovVars.volumeTone1 = 1
+    pavlovVars.volumeTone2 = 1
     #pavlovVars.movementAmount = 1
     #pavlovVars.movementMethod = 1
     pavlovVars.movementTime = 1
@@ -436,6 +466,8 @@ class multiproc_userInterface_API:
     skinnerVars.probabilityToneOne = 1
     skinnerVars.frequencyTone1 = 1
     skinnerVars.frequencyTone2 = 1
+    skinnerVars.volumeTone1 = 1
+    skinnerVars.volumeTone2 = 1
     #skinnerVars.movementAmount = 1
     #skinnerVars.movementMethod = 1
     skinnerVars.movementTime = 1
@@ -450,6 +482,8 @@ class multiproc_userInterface_API:
     ocondVars.probabilityToneOne = 1
     ocondVars.frequencyTone1 = 1
     ocondVars.frequencyTone2 = 1
+    ocondVars.volumeTone1 = 1
+    ocondVars.volumeTone2 = 1
     #ocondVars.movementAmount = 1
     #ocondVars.movementMethod = 1
     ocondVars.movementTime = 1
@@ -464,6 +498,8 @@ class multiproc_userInterface_API:
     discrVars.probabilityToneOne = 1
     discrVars.frequencyTone1 = 1
     discrVars.frequencyTone2 = 1
+    discrVars.volumeTone1 = 1
+    discrVars.volumeTone2 = 1
     #discrVars.movementAmount = 1
     #discrVars.movementMethod = 1
     discrVars.movementTime = 1
@@ -530,6 +566,8 @@ class multiproc_userInterface_API:
         self.probabilityToneOne = 0
         self.frequencyTone1 = 0
         self.frequencyTone2 = 0
+        self.volumeTone1 = 0
+        self.volumeTone2 = 0
         self.movementAmount = 0
         self.movementMethod = 0
         self.movementTime = 0
@@ -560,6 +598,8 @@ class multiproc_userInterface_API:
         self.currentGUI.probabilityToneOne = self.probabilityToneOne
         self.currentGUI.frequencyTone1 = self.frequencyTone1
         self.currentGUI.frequencyTone2 = self.frequencyTone2
+        self.currentGUI.volumeTone1 = self.volumeTone1
+        self.currentGUI.volumeTone2 = self.volumeTone2
         self.currentGUI.movementAmount = self.movementAmount
         self.currentGUI.movementMethod = self.movementMethod
         self.currentGUI.movementTime = self.movementTime
@@ -687,11 +727,17 @@ class multiproc_userInterface_API:
         #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
         
-        
         self.setNameSpaceMessage(18, self.currentGUI.frequencyTone2 )
         #logger.debug ( "ns: " + ns.__str__() )
         #print "API Namespace:", ns
         
+        self.setNameSpaceMessage(35, self.currentGUI.volumeTone1 )
+        #logger.debug ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
+        
+        self.setNameSpaceMessage(36, self.currentGUI.volumeTone2 )
+        #logger.debug ( "ns: " + ns.__str__() )
+        #print "API Namespace:", ns
         
         self.setNameSpaceMessage(19, self.currentGUI.movementAmount )
         #logger.debug ( "ns: " + ns.__str__() )

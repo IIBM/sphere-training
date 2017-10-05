@@ -273,6 +273,35 @@ class Training():
                 print "Tone 2 Duration is already at value: ", value_given
                 Training.gVariables.logger.info( "Tone 2 Duration is already at value: " + str(value_given) )
         
+        
+        
+        @staticmethod
+        def fn_setVolumeT1(volmn):
+            if ( float(volmn) != Training.gVariables.soundGenVolume1):
+                a = "setting volume T1: " + str(volmn)
+                print a
+                Training.gVariables.logger.info(a)
+                Training.gVariables.soundGenVolume1 = float(volmn)
+                Training.gVariables.s1.tone(Training.gVariables.soundGenDuration1, Training.gVariables.soundGenFrequency1, Training.gVariables.soundGenVolume1)
+                #Training.gVariables.s1 = soundGen.soundGen(Training.gVariables.soundGenFrequency1, Training.gVariables.soundGenDuration1)
+            else:
+                print "volume for Tone 1 already set at ", volmn
+                Training.gVariables.logger.info("volume for Tone 1 already set at " + str(volmn) )
+        
+        @staticmethod
+        def fn_setVolumeT2(volmn):
+            if ( float(volmn) != Training.gVariables.soundGenVolume2):
+                a = "setting volume T2: " + str(volmn)
+                print a
+                Training.gVariables.logger.info(a)
+                Training.gVariables.soundGenVolume2 = float(volmn)
+                Training.gVariables.s2.tone(Training.gVariables.soundGenDuration2, Training.gVariables.soundGenFrequency2, Training.gVariables.soundGenVolume2)
+                #Training.gVariables.s2 = soundGen.soundGen(Training.gVariables.soundGenFrequency2, Training.gVariables.soundGenDuration2)
+            else:
+                print "volume for Tone 2 already set at ", volmn
+                Training.gVariables.logger.info("volume for Tone 2 already set at " + str(volmn) )
+        
+        
         @staticmethod
         def fn_setFrequencyT1(freq):
             if ( int(freq) != Training.gVariables.soundGenFrequency1):
@@ -2038,6 +2067,18 @@ class Training():
                     print "GUICheck: 'Variable to change: Tone2 Frequency' message"
                     Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Tone2 Frequency' message" )
                     Training.gVariables.fn_setFrequencyT2( argument )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                elif (index == 35):
+                    print "GUICheck: 'Variable to change: Tone1 Volume' message"
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Tone1 Volume' message" )
+                    Training.gVariables.fn_setVolumeT1( argument )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
+                elif (index == 36):
+                    print "GUICheck: 'Variable to change: Tone2 Volume' message"
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Tone2 Volume' message" )
+                    Training.gVariables.fn_setVolumeT2( argument )
                     print "GUICheck: Argument value read from Queue: ", argument
                     Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 19):

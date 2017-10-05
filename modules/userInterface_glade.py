@@ -189,6 +189,8 @@ class GUIGTK_Class():
                 self.comment = ""
                 self.frequencyTone1 = 0
                 self.frequencyTone2 = 0
+                self.volumeTone1 = 0
+                self.volumeTone2 = 0
                 self.movementAmount = 0
                 self.movementMethod = 0
                 self.movementTime = 0
@@ -217,6 +219,8 @@ class GUIGTK_Class():
             logger.info( str( self.probabilityToneOne ) )
             logger.info( str( self.frequencyTone1 ) )
             logger.info( str( self.frequencyTone2 ) )
+            logger.info( str( self.volumeTone1 ) )
+            logger.info( str( self.volumeTone2 ) )
             logger.info( str( self.movementAmount ) )
             logger.info( str( self.movementMethod ) )
             logger.info( str( self.movementTime ) )
@@ -231,6 +235,8 @@ class GUIGTK_Class():
             self.glade.get_object("entryProbab1").set_text( str(self.probabilityToneOne) )
             self.glade.get_object("entryTone1").set_text( str(self.frequencyTone1) )
             self.glade.get_object("entryTone2").set_text( str(self.frequencyTone2) )
+            self.glade.get_object("entryVOLUMETone1").set_text( str(self.volumeTone1) )
+            self.glade.get_object("entryVOLUMETone2").set_text( str(self.volumeTone2) )
             self.glade.get_object("entryMovementAmount").set_text( str(self.movementAmount) )
             self.glade.get_object("entryMethod").set_text( str(self.movementMethod) )
             self.glade.get_object("entryMovementTime").set_text( str(self.movementTime) )
@@ -574,6 +580,8 @@ class GUIGTK_Class():
             self.__rawPInput()
             self.previousVars.frequencyTone1 = self.frequencyTone1
             self.previousVars.frequencyTone2 = self.frequencyTone2
+            self.previousVars.volumeTone1 = self.volumeTone1
+            self.previousVars.volumeTone2 = self.volumeTone2
             self.previousVars.movementAmount = self.movementAmount
             self.previousVars.movementMethod = self.movementMethod
             self.previousVars.movementTime = self.movementTime
@@ -582,8 +590,6 @@ class GUIGTK_Class():
             pass
         
         def checkTrialEventsVarsConsistency(self):
-            
-            
             try:
                 a = float(self.toneStart)
             except:
@@ -638,6 +644,8 @@ class GUIGTK_Class():
         def __rawPInput(self):
                 self.frequencyTone1 = self.glade.get_object("entryTone1").get_text()
                 self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
+                self.volumeTone1 = self.glade.get_object("entryVOLUMETone1").get_text()
+                self.volumeTone2 = self.glade.get_object("entryVOLUMETone2").get_text()
                 self.movementAmount = self.glade.get_object("entryMovementAmount").get_text()
                 self.movementMethod = self.glade.get_object("entryMethod").get_text()
                 self.movementTime = self.glade.get_object("entryMovementTime").get_text()
@@ -646,7 +654,6 @@ class GUIGTK_Class():
                 pass
         
         def __TE_modes(self):
-                
                 self.modeHasChanged = 0;
                 temppavlov = self.glade.get_object("checkbuttonPavlov").get_active()
                 
@@ -731,7 +738,6 @@ class GUIGTK_Class():
         
         def __rawTEInput(self):
                 self.__TE_modes();
-                
                 self.toneStart = self.glade.get_object("entryToneStart").get_text()
                 self.toneEnd = self.glade.get_object("entryToneEnd").get_text()
                 self.movementWindowStart = self.glade.get_object("entryMvmntWinStart").get_text()
@@ -753,18 +759,22 @@ class GUIGTK_Class():
         def checkParametersVarsConsistency(self):
             try:
                 a = float(self.frequencyTone1)
+                b = float(self.volumeTone1)
             except:
                 #incorrect input. Returning to previous state.
                 self.frequencyTone1 = self.previousVars.frequencyTone1
+                self.volumeTone1 = self.previousVars.volumeTone1
                 self.glade.get_object("entryTone1").set_text( str( self.previousVars.frequencyTone1 ) )
-                print "Bad input: frequencyTone1 to previous var."
+                print "Bad input: frequencyTone1 and volumeTone1 to previous var."
             try:
                 a = float(self.frequencyTone2)
+                b = float(self.volumeTone2)
             except:
                 #incorrect input. Returning to previous state.
                 self.frequencyTone2 = self.previousVars.frequencyTone2
+                self.volumeTone2 = self.previousVars.volumeTone2
                 self.glade.get_object("entryTone2").set_text( str( self.previousVars.frequencyTone2 ) )
-                print "Bad input: frequencyTone2 to previous var."
+                print "Bad input: frequencyTone2 and volumeTone2 previous var."
             try:
                 a = float(self.movementAmount)
             except:
@@ -846,6 +856,8 @@ class GUIGTK_Class():
                 
                 logger.info( self.frequencyTone1 )
                 logger.info( self.frequencyTone2 )
+                logger.info( self.volumeTone1 )
+                logger.info( self.volumeTone2 )
                 logger.info( self.movementAmount )
                 logger.info( self.movementMethod )
                 logger.info( self.movementTime )
@@ -921,6 +933,8 @@ class GUIGTK_Class():
                 #print "Test T1"
                 self.frequencyTone1 = self.glade.get_object("entryTone1").get_text()
                 self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
+                self.volumeTone1 = self.glade.get_object("entryVOLUMETone1").get_text()
+                self.volumeTone2 = self.glade.get_object("entryVOLUMETone2").get_text()
                 self.checkParametersVarsConsistency()
                 self.saveParametersPreviousState()
                 try:
@@ -932,6 +946,8 @@ class GUIGTK_Class():
                 #print "Test T2"
                 self.frequencyTone1 = self.glade.get_object("entryTone1").get_text()
                 self.frequencyTone2 = self.glade.get_object("entryTone2").get_text()
+                self.volumeTone1 = self.glade.get_object("entryVOLUMETone1").get_text()
+                self.volumeTone2 = self.glade.get_object("entryVOLUMETone2").get_text()
                 self.checkParametersVarsConsistency()
                 self.saveParametersPreviousState()
                 try:
