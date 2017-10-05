@@ -303,14 +303,14 @@ class Training():
         def fn_recreateTone1():
             #Training.gVariables.s1 = soundGen.soundGen(Training.gVariables.soundGenFrequency1, Training.gVariables.soundGenDuration1)
             #recreating tone is too unstable. Better to configure tone
-            Training.gVariables.s1.tone(Training.gVariables.soundGenDuration1, Training.gVariables.soundGenFrequency1)
+            Training.gVariables.s1.tone(Training.gVariables.soundGenDuration1, Training.gVariables.soundGenFrequency1, Training.gVariables.soundGenVolume1)
             pass
         
         @staticmethod
         def fn_recreateTone2():
             #Training.gVariables.s2 = soundGen.soundGen(Training.gVariables.soundGenFrequency2, Training.gVariables.soundGenDuration2)
             #recreating tone is too unstable. Better to configure tone
-            Training.gVariables.s2.tone(Training.gVariables.soundGenDuration2, Training.gVariables.soundGenFrequency2)
+            Training.gVariables.s2.tone(Training.gVariables.soundGenDuration2, Training.gVariables.soundGenFrequency2, Training.gVariables.soundGenVolume2)
             pass
         
         @staticmethod
@@ -917,6 +917,8 @@ class Training():
         soundGenDuration2 = cfgtraining.soundGenDuration2
         soundGenFrequency1 = cfgtraining.soundGenFrequency1  # in Hz
         soundGenFrequency2 = cfgtraining.soundGenFrequency2  # in Hz
+        soundGenVolume1 = cfgtraining.soundGenVolume1  # in Hz
+        soundGenVolume2 = cfgtraining.soundGenVolume2  # in Hz
         
         trialCount = 0  # total number of trials
         movementTrialCount = 0  # total number of trials of the type "Move" (which requires the subject to move)
@@ -1576,10 +1578,10 @@ class Training():
         # soundGen:
         # La configuración es a nivel de módulo, no en el entrenamiento principal.
         import soundGenerator
-        self.gVariables.s1 = soundGenerator.soundGen( self.gVariables.soundGenDuration1,
-                                                     self.gVariables.soundGenFrequency1 )
-        self.gVariables.s2 = soundGenerator.soundGen( self.gVariables.soundGenDuration2, 
-                                                     self.gVariables.soundGenFrequency2 )
+        self.gVariables.s1 = soundGenerator.soundGen()
+        self.gVariables.s1.tone(self.gVariables.soundGenDuration1, self.gVariables.soundGenFrequency1, volume=self.gVariables.soundGenVolume1)
+        self.gVariables.s2 = soundGenerator.soundGen()
+        self.gVariables.s2.tone(self.gVariables.soundGenDuration2, self.gVariables.soundGenFrequency2, volume=self.gVariables.soundGenVolume2)
         
         self.gVariables.logger.debug('Soundgen init started..')
         #GUI:

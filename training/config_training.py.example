@@ -21,6 +21,8 @@ soundGenDuration1 = 1.0 #tone 1 duration in seconds
 soundGenDuration2 = 1.0 #tone 2 duration in seconds
 soundGenFrequency1 = 1000  # in Hz
 soundGenFrequency2 = 8000  # in Hz
+soundGenVolume1 = 1.0 #tone 1 volume
+soundGenVolume2 = 1.0 #tone 2 volume
 
 toneOneProbability = 0.5
 multiProcSubjectNameQuery = 1 ; #0: don't use multiprocessing for Subject Name query    1: Use multiprocessing for Subject Name query (def.:1)
