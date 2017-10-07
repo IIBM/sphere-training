@@ -210,6 +210,13 @@ class Training():
             Training.gVariables.logger.info( "Movement method set: " + str(value_given) )
         
         @staticmethod
+        def fn_setNumberOfDrops(value_given):
+            Training.gVariables.numberOfRewardDrops = int(value_given)
+            Training.gVariables.numberOfRewardDropsIdle = int(value_given) #could be different number?
+            print "Number of drops per reward set: ", value_given
+            Training.gVariables.logger.info( "Number of drops per reward set: " + str(value_given) )
+        
+        @staticmethod
         def fn_movementThresholdSet(value_given):
             #aumentar threshold
             Training.gVariables.videoDet.setMovementThreshold(int(value_given) )
@@ -1713,6 +1720,7 @@ class Training():
         self.gVariables.currentGUI.volumeTone2 = self.gVariables.soundGenVolume2
         self.gVariables.currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
         self.gVariables.currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
+        self.gVariables.currentGUI.numDrops = configs.NUMBER_OF_DROPS_INITIAL_VALUE
         self.gVariables.currentGUI.movementTime = self.gVariables.movementTime
         self.gVariables.currentGUI.idleTime = self.gVariables.idleTime
         self.gVariables.currentGUI.comment = configs.initialComment
@@ -2131,6 +2139,12 @@ class Training():
                     Training.gVariables.fn_setMovementMethod(argument)
                     print "GUICheck: Argument value read from Queue: ", argument
                     Training.gVariables.logger.debug( str( "GUICheck: Argument value read from ns: " + str(argument) ) )
+                elif (index == 37):
+                    print "GUICheck: 'Variable to change: Number of drops' message"
+                    Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Number of drops' message" )
+                    Training.gVariables.fn_setNumberOfDrops( argument )
+                    print "GUICheck: Argument value read from Queue: ", argument
+                    Training.gVariables.logger.debug( str( "GUICheck: Argument value read from Queue: " + str(argument) ) )
                 elif (index == 21):
                     print "GUICheck: 'Variable to change: Movement Time' message"
                     Training.gVariables.logger.debug( "GUICheck: 'Variable to change: Movement Time' message" )
