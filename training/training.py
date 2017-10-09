@@ -1720,8 +1720,8 @@ class Training():
         self.gVariables.currentGUI.movementMethod = self.gVariables.videoMovementMethod #note: using config_training
         #self.gVariables.currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
         #self.gVariables.currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
-        self.gVariables.currentGUI.numDropsMovement = self.gVariables.numberOfRewardDrops # configs.NUMBER_OF_DROPS_INITIAL_VALUE
-        self.gVariables.currentGUI.numDropsIdle = self.gVariables.numberOfRewardDropsIdle  #configs.NUMBER_OF_DROPSIDLE_INITIAL_VALUE
+        self.gVariables.currentGUI.numDropsMovement = self.gVariables.numberOfRewardDrops
+        self.gVariables.currentGUI.numDropsIdle = self.gVariables.numberOfRewardDropsIdle
         self.gVariables.currentGUI.movementTime = self.gVariables.movementTime
         self.gVariables.currentGUI.idleTime = self.gVariables.idleTime
         self.gVariables.currentGUI.comment = configs.initialComment
