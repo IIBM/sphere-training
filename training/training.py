@@ -423,6 +423,15 @@ class Training():
                 Training.gVariables.logger.info( "fn_pauseResumeTraining: \n   Trial has not been started and cannot be paused or resumed." )
         
         @staticmethod
+        def fn_pauseResumeVideoRecording():
+            if (Training.gVariables.videoIsRecording == True):
+                Training.pauseVideoRecording();
+            else:
+                Training.resumeVideoRecording();
+            pass
+        
+        
+        @staticmethod
         def fn_showTrackingFeedback():
             Training.gVariables.videoDet.setTrackingFeedback(True)
             pass
@@ -435,7 +444,6 @@ class Training():
         @staticmethod
         def fn_showUserFeedback():
             Training.gVariables.videoDet.setUserFeedback(True)
-            
             pass
         
         @staticmethod
@@ -983,6 +991,9 @@ class Training():
         numberOfRewardDrops = cfgtraining.numberOfRewardDrops #number of drops to give as reward when trial successful
         numberOfRewardDropsIdle = cfgtraining.numberOfRewardDropsIdle #number of drops to give as reward when trial successful
         
+        pauseAudioAndVideoWhenTrPaused = cfgtraining.pauseAudioAndVideoWhenTrPaused #if 1, audio and video paused when training paused.
+
+
         interTrialRandom1Time = cfgtraining.interTrialRandom1Time  # intertrial time is random between this value and the random2 value
         interTrialRandom2Time = cfgtraining.interTrialRandom2Time  # intertrial time is random between previous value and this value. This
         # is also the max duration of a trial.
@@ -1394,19 +1405,50 @@ class Training():
         Training.gVariables.trialExecuting = False
         Training.gVariables.current_trial_paused_time = timeit.default_timer()
         Training.gVariables.logger.info('%s paused.' % Training.gVariables.trainingName)
-        Training.gVariables.audioRec.stopAudioRecording()
-        Training.gVariables.videoDet.setVideoRecording(False)
+        if (Training.gVariables.pauseAudioAndVideoWhenTrPaused == 1):
+            Training.gVariables.audioRec.stopAudioRecording()
+            Training.gVariables.videoDet.setVideoRecording(False)
+            print "Audio and video recording paused."
         print "Training paused."
     
     @staticmethod
     def resumeTraining():
         Training.gVariables.trialExecuting = True
         Training.gVariables.current_trial_paused_time = (timeit.default_timer() - Training.gVariables.current_trial_paused_time)
-        Training.gVariables.audioRec.startAudioRecording()
-        Training.gVariables.videoDet.setVideoRecording(True)
+        if (Training.gVariables.pauseAudioAndVideoWhenTrPaused == 1):
+            Training.gVariables.audioRec.startAudioRecording()
+            Training.gVariables.videoDet.setVideoRecording(True)
         print "Resuming training. Time that has been in pause: ", Training.gVariables.current_trial_paused_time
         Training.gVariables.logger.info('Resuming training. Time that has been in pause: %s' % Training.gVariables.current_trial_paused_time)
         Training.gVariables.logger.info('%s resumed.' % Training.gVariables.trainingName)
+    
+    @staticmethod
+    def pauseVideoRecording():
+        Training.gVariables.videoIsRecording = False
+        Training.gVariables.logger.info('Video recording paused.')
+        Training.gVariables.videoDet.setVideoRecording(False)
+        print "Video recording paused."
+    
+    @staticmethod
+    def resumeVideoRecording():
+        Training.gVariables.videoIsRecording = True
+        Training.gVariables.logger.info('Video recording resumed.')
+        Training.gVariables.videoDet.setVideoRecording(True)
+        print "Video recording resumed."
+    
+    @staticmethod
+    def pauseAudioRecording():
+        Training.gVariables.audioIsRecording = False
+        Training.gVariables.logger.info('Audio recording paused.')
+        Training.gVariables.audioRec.stopAudioRecording()
+        print "Audio recording paused."
+    
+    @staticmethod
+    def resumeAudioRecording():
+        Training.gVariables.audioIsRecording = True
+        Training.gVariables.logger.info('Audio recording resumed.')
+        Training.gVariables.audioRec.startAudioRecording()
+        print "Audio recording resumed."
     
     @staticmethod
     def giveReward():

@@ -43,5 +43,6 @@ NUMBER_OF_DROPSIDLE_INITIAL_VALUE = 1 #Number of drops per reward, idle type tri
 numberOfRewardDrops = 1; #Number of reward drops to give when the trial is successful (for go trials).
 numberOfRewardDropsIdle = 1; #Number of reward drops to give when the trial is successful (for no-go trials).
 
+pauseAudioAndVideoWhenTrPaused = 0 #if 1, audio and video will be paused if the training is paused, and resumed if trial is resumed. (def.:0)
 
 
