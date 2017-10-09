@@ -250,7 +250,6 @@ class Training():
             Training.gVariables.interTrialRandom2Time = value_given
             Training.gVariables.logger.info( "Intertrial random 2 time set to : " + str(value_given) )
         
-        
         @staticmethod
         def fn_setMovementWindowStart(value_given):
             Training.gVariables.eventTime1_movement_start = value_given
@@ -286,8 +285,7 @@ class Training():
             else:
                 print "Tone 2 Duration is already at value: ", value_given
                 Training.gVariables.logger.info( "Tone 2 Duration is already at value: " + str(value_given) )
-        
-        
+            pass
         
         @staticmethod
         def fn_setVolumeT1(volmn):
@@ -301,6 +299,7 @@ class Training():
             else:
                 print "volume for Tone 1 already set at ", volmn
                 Training.gVariables.logger.info("volume for Tone 1 already set at " + str(volmn) )
+            pass
         
         @staticmethod
         def fn_setVolumeT2(volmn):
@@ -314,7 +313,7 @@ class Training():
             else:
                 print "volume for Tone 2 already set at ", volmn
                 Training.gVariables.logger.info("volume for Tone 2 already set at " + str(volmn) )
-        
+            pass
         
         @staticmethod
         def fn_setFrequencyT1(freq):
@@ -328,6 +327,7 @@ class Training():
             else:
                 print "frequency for Tone 1 already set at ", freq
                 Training.gVariables.logger.info("frequency for Tone 1 already set at " + str(freq) )
+            pass
         
         @staticmethod
         def fn_setFrequencyT2(freq):
@@ -341,6 +341,7 @@ class Training():
             else:
                 print "frequency for Tone 2 already set at ", freq
                 Training.gVariables.logger.info("frequency for Tone 2 already set at " + str(freq) )
+            pass
         
         @staticmethod
         def fn_recreateTone1():
@@ -429,7 +430,6 @@ class Training():
             else:
                 Training.resumeVideoRecording();
             pass
-        
         
         @staticmethod
         def fn_showTrackingFeedback():
@@ -728,7 +728,6 @@ class Training():
             @staticmethod
             def saveDiscrVars():
                     print "saveDiscrVars"
-                    
                     Training.gVariables.discrVars.eventTime1_sound = Training.gVariables.eventTime1_sound
                     Training.gVariables.discrVars.eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
                     Training.gVariables.discrVars.eventTime2_movement = Training.gVariables.eventTime2_movement
@@ -745,14 +744,11 @@ class Training():
                     Training.gVariables.discrVars.soundGenVolume1 = Training.gVariables.soundGenVolume1
                     Training.gVariables.discrVars.soundGenVolume2 = Training.gVariables.soundGenVolume2
                     Training.gVariables.discrVars.toneOneProbability = Training.gVariables.toneOneProbability
-                    
                     pass
             
-                        
             @staticmethod
             def loadPavlovVars():
                     print "loadPavlovVars"
-                    
                     Training.gVariables.eventTime1_sound = Training.gVariables.pavlovVars.eventTime1_sound
                     Training.gVariables.eventTime1_movement_start = Training.gVariables.pavlovVars.eventTime1_movement_start
                     Training.gVariables.eventTime2_movement = Training.gVariables.pavlovVars.eventTime2_movement
@@ -777,15 +773,11 @@ class Training():
                     Training.gVariables.fn_setVolumeT2(Training.gVariables.pavlovVars.soundGenVolume2)
                     #Training.gVariables.soundGenFrequency2 = Training.gVariables.pavlovVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.pavlovVars.toneOneProbability
-                    
-                    
-                    
-                    
                     pass
+            
             @staticmethod
             def loadSkinnerVars():
                     print "loadSkinnerVars"
-                    
                     Training.gVariables.eventTime1_sound = Training.gVariables.skinnerVars.eventTime1_sound
                     Training.gVariables.eventTime1_movement_start = Training.gVariables.skinnerVars.eventTime1_movement_start
                     Training.gVariables.eventTime2_movement = Training.gVariables.skinnerVars.eventTime2_movement
@@ -810,13 +802,11 @@ class Training():
                     Training.gVariables.fn_setVolumeT2(Training.gVariables.skinnerVars.soundGenVolume2)
                     #Training.gVariables.soundGenFrequency2 = Training.gVariables.skinnerVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.skinnerVars.toneOneProbability
-                    
                     pass
             
             @staticmethod
             def loadOcondVars():
                     print "loadOcondVars"
-                    
                     Training.gVariables.eventTime1_sound = Training.gVariables.ocondVars.eventTime1_sound
                     Training.gVariables.eventTime1_movement_start = Training.gVariables.ocondVars.eventTime1_movement_start
                     Training.gVariables.eventTime2_movement = Training.gVariables.ocondVars.eventTime2_movement
@@ -842,13 +832,11 @@ class Training():
                     
                     #Training.gVariables.soundGenFrequency2 = Training.gVariables.ocondVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.ocondVars.toneOneProbability
-                    
                     pass
             
             @staticmethod
             def loadDiscrVars():
                     print "loadDiscrVars"
-                    
                     Training.gVariables.eventTime1_sound = Training.gVariables.discrVars.eventTime1_sound
                     Training.gVariables.eventTime1_movement_start = Training.gVariables.discrVars.eventTime1_movement_start
                     Training.gVariables.eventTime2_movement = Training.gVariables.discrVars.eventTime2_movement
@@ -874,11 +862,7 @@ class Training():
                     
                     #Training.gVariables.soundGenFrequency2 = Training.gVariables.discrVars.soundGenFrequency2
                     Training.gVariables.toneOneProbability = Training.gVariables.discrVars.toneOneProbability
-                    
                     pass
-            
-            
-            
             
             @staticmethod
             def loadIntoAPIPavlovVars():
@@ -900,10 +884,8 @@ class Training():
                     objc.movementTime = Training.gVariables.pavlovVars.movementTime;
                     objc.idleTime = Training.gVariables.pavlovVars.idleTime;
                     objc.requireStillnessVar = Training.gVariables.pavlovVars.requireStillness;
-                    
-                    
-                    
                     pass
+            
             @staticmethod
             def loadIntoAPISkinnerVars():
                     print "loadIntoAPISkinnerVars"
@@ -924,7 +906,6 @@ class Training():
                     objc.movementTime = Training.gVariables.skinnerVars.movementTime;
                     objc.idleTime = Training.gVariables.skinnerVars.idleTime;
                     objc.requireStillnessVar = Training.gVariables.skinnerVars.requireStillness;
-                    
                     pass
             
             @staticmethod
@@ -947,7 +928,6 @@ class Training():
                     objc.movementTime = Training.gVariables.ocondVars.movementTime;
                     objc.idleTime = Training.gVariables.ocondVars.idleTime;
                     objc.requireStillnessVar = Training.gVariables.ocondVars.requireStillness;
-                    
                     pass
             
             @staticmethod
@@ -970,14 +950,9 @@ class Training():
                     objc.movementTime = Training.gVariables.discrVars.movementTime;
                     objc.idleTime = Training.gVariables.discrVars.idleTime;
                     objc.requireStillnessVar = Training.gVariables.discrVars.requireStillness;
-                    
                     pass
-            
-            
-            
+        
         pass
-        
-        
         import config_training as cfgtraining
         trainingName = cfgtraining.trainingName
         # relevant Training variables
@@ -1816,213 +1791,215 @@ class Training():
         pass
     
     def trialLoop(self):
-            # This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
-            
-            #===================================================================
-                # Check / update current trial stage and time
-                #===================================================================
-            if (Training.gVariables.trialExecuting == True):
-                # Update Trial Time. Important since this is where events happen at certain moments in this line.
-                Training.gVariables.current_trial_start_time += Training.gVariables.current_trial_paused_time
-                Training.gVariables.start_time += Training.gVariables.current_trial_paused_time  # we consider that training time has not passed in the pause state.
-                Training.gVariables.current_trial_paused_time = 0
-                Training.gVariables.current_trial_time = (timeit.default_timer() - Training.gVariables.current_trial_start_time)
-                if ( ( Training.gVariables.current_trial_stage == 3 and 
-                            ( ( Training.gVariables.videoDet.getIdleTime() >= Training.gVariables.minIdleIntertrialTime and
-                                    Training.gVariables.videoDet.getMovementStatus() == False) or (Training.gVariables.requireStillness == 0) ) or (Training.gVariables.trialCount == 0)  ) ) :
-                    
-                    
-                    Training.gVariables.trialCount += 1
-                    Training.gVariables.logger.info('Starting trial:%d' % Training.gVariables.trialCount)
-                    
-                    Training.gVariables.dropReleased = 0
-                    Training.gVariables.current_trial_start_time = timeit.default_timer()
+        pass
+        # This function controls all events that defines a trial: Tone at a given time, reward opportunity, etc.
+        #===================================================================
+        # Check / update current trial stage and time
+        #===================================================================
+        if (Training.gVariables.trialExecuting == True):
+            # Update Trial Time. Important since this is where events happen at certain moments in this line.
+            Training.gVariables.current_trial_start_time += Training.gVariables.current_trial_paused_time
+            Training.gVariables.start_time += Training.gVariables.current_trial_paused_time  # we consider that training time has not passed in the pause state.
+            Training.gVariables.current_trial_paused_time = 0
+            Training.gVariables.current_trial_time = (timeit.default_timer() - Training.gVariables.current_trial_start_time)
+            if ( ( Training.gVariables.current_trial_stage == 3 and 
+                        ( ( Training.gVariables.videoDet.getIdleTime() >= Training.gVariables.minIdleIntertrialTime and
+                                Training.gVariables.videoDet.getMovementStatus() == False) or (Training.gVariables.requireStillness == 0) ) or (Training.gVariables.trialCount == 0)  ) ) :
+                
+                
+                Training.gVariables.trialCount += 1
+                Training.gVariables.logger.info('Starting trial:%d' % Training.gVariables.trialCount)
+                
+                Training.gVariables.dropReleased = 0
+                Training.gVariables.current_trial_start_time = timeit.default_timer()
 
-                    if (Training.gVariables.toneOneProbability < 0.75) and (Training.gVariables.toneOneProbability > 0.25) and (Training.gVariables.history_trial[-1] == Training.gVariables.history_trial[-2]) and (Training.gVariables.history_trial[-2] == Training.gVariables.history_trial[-3]) :
-                        # 3 equal trial have past. forcing change of trial type
-                        Training.gVariables.logger.info('fixed tone')
-                        if (Training.gVariables.history_trial[-1]) == 2:
-                            Training.gVariables.current_trial_type = 1
-                        else :
-                            Training.gVariables.current_trial_type = 2
+                if (Training.gVariables.toneOneProbability < 0.75) and (Training.gVariables.toneOneProbability > 0.25) and (Training.gVariables.history_trial[-1] == Training.gVariables.history_trial[-2]) and (Training.gVariables.history_trial[-2] == Training.gVariables.history_trial[-3]) :
+                    # 3 equal trial have past. forcing change of trial type
+                    Training.gVariables.logger.info('fixed tone')
+                    if (Training.gVariables.history_trial[-1]) == 2:
+                        Training.gVariables.current_trial_type = 1
                     else :
-                        from random import random
-                        if (random() < Training.gVariables.toneOneProbability) :
-                            Training.gVariables.current_trial_type = 1
-                        else :
-                            Training.gVariables.current_trial_type = 2
-                    
-                    if (Training.gVariables.type_ocond == 1 or Training.gVariables.type_skinner == 1 or Training.gVariables.type_pavlov == 1): #force it to "move"
-                        Training.gVariables.current_trial_type = 1 #pavlov here is unnecessary, but to keep all except discr in "move" type.
-                    
-                    if (Training.gVariables.current_trial_type == 1) :
-                            Training.gVariables.logger.info('tone 1: %s Hz' % str(Training.gVariables.soundGenFrequency1) )
-                            
-                            Training.gVariables.s1.play()
-                            Training.gVariables.movementTrialCount += 1
-                            # a new "time window" should be set for 
-                            # some movement analysis methods to work.
-                            Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.movementTime)
+                        Training.gVariables.current_trial_type = 2
+                else :
+                    from random import random
+                    if (random() < Training.gVariables.toneOneProbability) :
+                        Training.gVariables.current_trial_type = 1
                     else :
-                            Training.gVariables.logger.info('tone 2: %s Hz'  % str(Training.gVariables.soundGenFrequency2))
-                            Training.gVariables.s2.play()
-                            Training.gVariables.idleTrialCount += 1
-                            # a new "time window" should be set for 
-                            # some movement analysis methods to work.
-                            Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.idleTime)
+                        Training.gVariables.current_trial_type = 2
+                
+                if (Training.gVariables.type_ocond == 1 or Training.gVariables.type_skinner == 1 or Training.gVariables.type_pavlov == 1): #force it to "move"
+                    Training.gVariables.current_trial_type = 1 #pavlov here is unnecessary, but to keep all except discr in "move" type.
+                
+                if (Training.gVariables.current_trial_type == 1) :
+                        Training.gVariables.logger.info('tone 1: %s Hz' % str(Training.gVariables.soundGenFrequency1) )
+                        
+                        Training.gVariables.s1.play()
+                        Training.gVariables.movementTrialCount += 1
+                        # a new "time window" should be set for 
+                        # some movement analysis methods to work.
+                        Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.movementTime)
+                else :
+                        Training.gVariables.logger.info('tone 2: %s Hz'  % str(Training.gVariables.soundGenFrequency2))
+                        Training.gVariables.s2.play()
+                        Training.gVariables.idleTrialCount += 1
+                        # a new "time window" should be set for 
+                        # some movement analysis methods to work.
+                        Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.idleTime)
 
-                    if (Training.gVariables.current_trial_type == 1):
-                            sttrial = "move"
-                    elif (Training.gVariables.current_trial_type == 2):
-                            sttrial = "still"
-                    Training.gVariables.logger.info('Trial type:%s' % sttrial)
-                    Training.gVariables.logger.debug(Training.gVariables.history_trial)
-                    Training.gVariables.logger.debug(Training.gVariables.toneOneProbability)
-                    Training.gVariables.logger.debug(Training.gVariables.current_trial_type)
-                    
-                    Training.gVariables.history_trial[0:-1] = Training.gVariables.history_trial[1:]
-                    Training.gVariables.history_trial[-1] = Training.gVariables.current_trial_type
-
-                    Training.gVariables.current_trial_stage = 0
-                    Training.gVariables.current_trial_paused_time = 0
-                    
-                    # add random factor to the intertrial time in the next one:
-                    from random import randint
-                    i = randint(0, 10)
-                    scaleF = (Training.gVariables.interTrialRandom2Time - Training.gVariables.interTrialRandom1Time) / 10
-                    Training.gVariables.eventTime3_trialEnd = Training.gVariables.interTrialRandom1Time + (i * scaleF)
-                
-                #there is a space of time between Training.gVariables.eventTime1_sound and  Training.gVariables.eventTime1_movement_start
-                #which is not used. It could be used in the future. see docs.
-                
-                #the tone end is not necessarily tied to the start of movement detection. see docs.
-                
-                if (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime1_movement_start and 
-                     int(Training.gVariables.current_trial_time) <= Training.gVariables.eventTime2_movement 
-                     and Training.gVariables.current_trial_stage == 0):
-                    Training.gVariables.logger.info('Start trial movement detection')
-                    Training.gVariables.trialSuccessful = False
-                    if (Training.gVariables.current_trial_type == 1) :
-                        Training.gVariables.videoDet.resetMovementTime()
-                    else:
-                        Training.gVariables.videoDet.resetIdleTime()
-                    Training.gVariables.current_trial_stage = 1
-                elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime2_movement and 
-                      Training.gVariables.current_trial_stage == 1):
-                    Training.gVariables.logger.info('End trial movement detection')
-                    if (Training.gVariables.type_pavlov == 0):
-                        if (Training.gVariables.trialSuccessful == True):
-                            Training.giveReward()
-                            Training.gVariables.logger.info('Reward given because trial was successful')
-                        else:
-                            Training.gVariables.logger.info('Reward not given because trial was not successful')
-                    else:
-                        Training.giveReward()
-                        Training.gVariables.logger.info('Reward given because pavlov mode is enabled')
-                    Training.gVariables.logger.info('Start inter-trial delay')
-                    Training.gVariables.current_trial_stage = 2
-                elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime3_trialEnd and
-                      Training.gVariables.current_trial_stage == 2):
-                    Training.gVariables.logger.info('End trial:%d' % (Training.gVariables.trialCount - 1 ) )
-                    Training.gVariables.logger.info('Trial type was: ' + str(Training.gVariables.current_trial_type_str))
-                    now = timeit.default_timer()
-                    frmtime = Training.gVariables.getFormattedTime(int(now - Training.gVariables.absolute_start_time))
-                    Training.gVariables.logger.info('Amount of time passed since start of training: %s' % frmtime)
-                    # #
-                    Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.minIdleIntertrialTime)
-                    if(Training.gVariables.dropReleased == 1):
-                        Training.gVariables.logger.info('Trial successful')
-                    else:
-                        Training.gVariables.logger.info('Trial not successful')
-                    Training.gVariables.logger.info('Success rate: %r' % (Training.gVariables.successRate))
-                    Training.gVariables.current_trial_stage = 3
-            # Training.gVariables.logger.debug('Movement Vector: %s',Training.gVariables.movementVector)
-            
-            #===============================================================
-            # Check if should give reward
-            #===============================================================
-            
-            if (Training.gVariables.trialExecuting == True and Training.gVariables.current_trial_stage == 1):
-                # print Training.gVariables.videoDet.getTrackingStatus()
                 if (Training.gVariables.current_trial_type == 1):
-                  if (Training.gVariables.videoDet.getMovementStatus() == True and 
-                    ((Training.gVariables.videoDet.getMovementTime() >= (Training.gVariables.movementTime))
-                       ) ):
-                    # Training.giveReward() #the reward is given at the end of the mvnt window
-                    Training.gVariables.trialSuccessful = True
-                    Training.gVariables.logger.info('Movement threshold reached. Will give reward at the end of movement window. (mvnt)')
-                    # print "Continuous total time: %r"%Training.gVariables.videoDet.getMovementTime()
+                        sttrial = "move"
                 elif (Training.gVariables.current_trial_type == 2):
-                  if (Training.gVariables.videoDet.getMovementStatus() == False and 
-                    Training.gVariables.videoDet.getIdleTime() >= (Training.gVariables.idleTime)):  #
-                    # Training.giveReward() #the reward is given at the end of the mvnt window
-                    Training.gVariables.trialSuccessful = True
-                    Training.gVariables.logger.info('Movement threshold reached. Will give reward at the end of movement window. (idle)')
-                    # print "Continuous total time: %r"%Training.gVariables.videoDet.getMovementTime()
-                    pass
-            else:
-                #trial not executing or tr.stage not 1, so it is unnecessary to check if should give reward..
+                        sttrial = "still"
+                Training.gVariables.logger.info('Trial type:%s' % sttrial)
+                Training.gVariables.logger.debug(Training.gVariables.history_trial)
+                Training.gVariables.logger.debug(Training.gVariables.toneOneProbability)
+                Training.gVariables.logger.debug(Training.gVariables.current_trial_type)
+                
+                Training.gVariables.history_trial[0:-1] = Training.gVariables.history_trial[1:]
+                Training.gVariables.history_trial[-1] = Training.gVariables.current_trial_type
+
+                Training.gVariables.current_trial_stage = 0
+                Training.gVariables.current_trial_paused_time = 0
+                
+                # add random factor to the intertrial time in the next one:
+                from random import randint
+                i = randint(0, 10)
+                scaleF = (Training.gVariables.interTrialRandom2Time - Training.gVariables.interTrialRandom1Time) / 10
+                Training.gVariables.eventTime3_trialEnd = Training.gVariables.interTrialRandom1Time + (i * scaleF)
+            
+            #there is a space of time between Training.gVariables.eventTime1_sound and  Training.gVariables.eventTime1_movement_start
+            #which is not used. It could be used in the future. see docs.
+            
+            #the tone end is not necessarily tied to the start of movement detection. see docs.
+            
+            if (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime1_movement_start and 
+                 int(Training.gVariables.current_trial_time) <= Training.gVariables.eventTime2_movement 
+                 and Training.gVariables.current_trial_stage == 0):
+                Training.gVariables.logger.info('Start trial movement detection')
+                Training.gVariables.trialSuccessful = False
+                if (Training.gVariables.current_trial_type == 1) :
+                    Training.gVariables.videoDet.resetMovementTime()
+                else:
+                    Training.gVariables.videoDet.resetIdleTime()
+                Training.gVariables.current_trial_stage = 1
+            elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime2_movement and 
+                  Training.gVariables.current_trial_stage == 1):
+                Training.gVariables.logger.info('End trial movement detection')
+                if (Training.gVariables.type_pavlov == 0):
+                    if (Training.gVariables.trialSuccessful == True):
+                        Training.giveReward()
+                        Training.gVariables.logger.info('Reward given because trial was successful')
+                    else:
+                        Training.gVariables.logger.info('Reward not given because trial was not successful')
+                else:
+                    Training.giveReward()
+                    Training.gVariables.logger.info('Reward given because pavlov mode is enabled')
+                Training.gVariables.logger.info('Start inter-trial delay')
+                Training.gVariables.current_trial_stage = 2
+            elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime3_trialEnd and
+                  Training.gVariables.current_trial_stage == 2):
+                Training.gVariables.logger.info('End trial:%d' % (Training.gVariables.trialCount - 1 ) )
+                Training.gVariables.logger.info('Trial type was: ' + str(Training.gVariables.current_trial_type_str))
+                now = timeit.default_timer()
+                frmtime = Training.gVariables.getFormattedTime(int(now - Training.gVariables.absolute_start_time))
+                Training.gVariables.logger.info('Amount of time passed since start of training: %s' % frmtime)
+                # #
+                Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.minIdleIntertrialTime)
+                if(Training.gVariables.dropReleased == 1):
+                    Training.gVariables.logger.info('Trial successful')
+                else:
+                    Training.gVariables.logger.info('Trial not successful')
+                Training.gVariables.logger.info('Success rate: %r' % (Training.gVariables.successRate))
+                Training.gVariables.current_trial_stage = 3
+        # Training.gVariables.logger.debug('Movement Vector: %s',Training.gVariables.movementVector)
+        
+        #===============================================================
+        # Check if should give reward
+        #===============================================================
+        
+        if (Training.gVariables.trialExecuting == True and Training.gVariables.current_trial_stage == 1):
+            # print Training.gVariables.videoDet.getTrackingStatus()
+            if (Training.gVariables.current_trial_type == 1):
+              if (Training.gVariables.videoDet.getMovementStatus() == True and 
+                ((Training.gVariables.videoDet.getMovementTime() >= (Training.gVariables.movementTime))
+                   ) ):
+                # Training.giveReward() #the reward is given at the end of the mvnt window
+                Training.gVariables.trialSuccessful = True
+                Training.gVariables.logger.info('Movement threshold reached. Will give reward at the end of movement window. (mvnt)')
+                # print "Continuous total time: %r"%Training.gVariables.videoDet.getMovementTime()
+            elif (Training.gVariables.current_trial_type == 2):
+              if (Training.gVariables.videoDet.getMovementStatus() == False and 
+                Training.gVariables.videoDet.getIdleTime() >= (Training.gVariables.idleTime)):  #
+                # Training.giveReward() #the reward is given at the end of the mvnt window
+                Training.gVariables.trialSuccessful = True
+                Training.gVariables.logger.info('Movement threshold reached. Will give reward at the end of movement window. (idle)')
+                # print "Continuous total time: %r"%Training.gVariables.videoDet.getMovementTime()
                 pass
+        else:
+            #trial not executing or tr.stage not 1, so it is unnecessary to check if should give reward..
+            pass
+        pass
     
     def saveToInternalVars(self, a):
-                    if ("pavlov" in a):
-                        print "pavlov mode detected"
-                        if (Training.gVariables.type_pavlov == 1):
-                            print "Pavlov already set to 1. Saving Pavlov vars."
-                            Training.gVariables.saveVariables.savePavlovVars()
-                        else:
-                            print "Pavlov set. Not saving Pavlov variables. Loading GUI for previously loaded vars"
-                            Training.gVariables.saveVariables.loadPavlovVars()
-                            
-                            
-                        Training.gVariables.type_pavlov = 1
-                        Training.gVariables.type_skinner = 0
-                        Training.gVariables.type_discr = 0
-                        Training.gVariables.type_ocond = 0
-                        pass
-                    if ("skinner") in a:
-                        print "skinner detected"
-                        if (Training.gVariables.type_skinner == 1):
-                            print "Skinner already set to 1. Saving Skinner vars."
-                            Training.gVariables.saveVariables.saveSkinnerVars()
-                        else:
-                            print "Skinner set. Not saving Skinner variables. Loading GUI for previously loaded vars"
-                            Training.gVariables.saveVariables.loadSkinnerVars()
-                        Training.gVariables.type_pavlov = 0
-                        Training.gVariables.type_skinner = 1
-                        Training.gVariables.type_discr = 0
-                        Training.gVariables.type_ocond = 0
-                        pass
-                    if ("oc") in a:
-                        print "oc detected"
-                        if (Training.gVariables.type_ocond == 1):
-                            print "O.Cond. already set to 1. Saving O.Cond. vars."
-                            Training.gVariables.saveVariables.saveOcondVars()
-                        else:
-                            print "O.Cond. set. Not saving O.Cond. variables. Loading GUI for previously loaded vars"
-                            Training.gVariables.saveVariables.loadOcondVars()
-                        Training.gVariables.type_pavlov = 0
-                        Training.gVariables.type_skinner = 0
-                        Training.gVariables.type_discr = 0
-                        Training.gVariables.type_ocond = 1
-                        pass
-                    if ("discr") in a:
-                        print "discr detected"
-                        if (Training.gVariables.type_discr == 1):
-                            print "..................................................................."
-                            print "Discr. already set to 1. Saving Discr. vars."
-                            print "..................................................................."
-                            Training.gVariables.saveVariables.saveDiscrVars()
-                        else:
-                            print "..................................................................."
-                            print "Discr. set. Not saving Discr. variables. Loading GUI for previously loaded vars"
-                            print "..................................................................."
-                            Training.gVariables.saveVariables.loadDiscrVars()
-                        Training.gVariables.type_pavlov = 0
-                        Training.gVariables.type_skinner = 0
-                        Training.gVariables.type_discr = 1
-                        Training.gVariables.type_ocond = 0
-                        pass
+        if ("pavlov" in a):
+            print "pavlov mode detected"
+            if (Training.gVariables.type_pavlov == 1):
+                print "Pavlov already set to 1. Saving Pavlov vars."
+                Training.gVariables.saveVariables.savePavlovVars()
+            else:
+                print "Pavlov set. Not saving Pavlov variables. Loading GUI for previously loaded vars"
+                Training.gVariables.saveVariables.loadPavlovVars()
+                
+                
+            Training.gVariables.type_pavlov = 1
+            Training.gVariables.type_skinner = 0
+            Training.gVariables.type_discr = 0
+            Training.gVariables.type_ocond = 0
+            pass
+        if ("skinner") in a:
+            print "skinner detected"
+            if (Training.gVariables.type_skinner == 1):
+                print "Skinner already set to 1. Saving Skinner vars."
+                Training.gVariables.saveVariables.saveSkinnerVars()
+            else:
+                print "Skinner set. Not saving Skinner variables. Loading GUI for previously loaded vars"
+                Training.gVariables.saveVariables.loadSkinnerVars()
+            Training.gVariables.type_pavlov = 0
+            Training.gVariables.type_skinner = 1
+            Training.gVariables.type_discr = 0
+            Training.gVariables.type_ocond = 0
+            pass
+        if ("oc") in a:
+            print "oc detected"
+            if (Training.gVariables.type_ocond == 1):
+                print "O.Cond. already set to 1. Saving O.Cond. vars."
+                Training.gVariables.saveVariables.saveOcondVars()
+            else:
+                print "O.Cond. set. Not saving O.Cond. variables. Loading GUI for previously loaded vars"
+                Training.gVariables.saveVariables.loadOcondVars()
+            Training.gVariables.type_pavlov = 0
+            Training.gVariables.type_skinner = 0
+            Training.gVariables.type_discr = 0
+            Training.gVariables.type_ocond = 1
+            pass
+        if ("discr") in a:
+            print "discr detected"
+            if (Training.gVariables.type_discr == 1):
+                print "..................................................................."
+                print "Discr. already set to 1. Saving Discr. vars."
+                print "..................................................................."
+                Training.gVariables.saveVariables.saveDiscrVars()
+            else:
+                print "..................................................................."
+                print "Discr. set. Not saving Discr. variables. Loading GUI for previously loaded vars"
+                print "..................................................................."
+                Training.gVariables.saveVariables.loadDiscrVars()
+            Training.gVariables.type_pavlov = 0
+            Training.gVariables.type_skinner = 0
+            Training.gVariables.type_discr = 1
+            Training.gVariables.type_ocond = 0
+            pass
+        pass
     
     def GUICheck(self):
                 #GUICheck: this function is called once in every thread loop, and checks if
@@ -2044,22 +2021,7 @@ class Training():
                     return;
                 if (index == -1):
                     return
-#             return;
-#             
-#             if (self.gVariables.jobList.qsize() > 0 or self.gVariables.jobList.empty() == False ):
-#                 try:
-#                         tempvar = self.gVariables.jobList.get()
-#                         self.gVariables.jobList.task_done()
-#                 except:
-#                         return;
-#                 Training.gVariables.logger.debug( str("GUICheck: queue: " + str(tempvar) )  )
-#                 index = tempvar[0]
-#                 try:
-#                     argument = tempvar[1]
-#                 except:
-#                     argument = ""
-#                     pass
-#                 pass
+                pass
                 #print "GUICheck: Got a Message:", index
                 Training.gVariables.logger.debug( str("GUICheck: Got a Message:" + str(index)) )
                 #print "GUICheck: Message's argument:", argument
