@@ -115,9 +115,9 @@ class Training():
         
         @staticmethod
         def fn_testingFunction():
-            print Training.gVariables.videoDet.getMovementMethod()
-            print Training.gVariables.videoDet.getMovementThreshold()
-            print "end fn_testingFunction"
+            #print Training.gVariables.videoDet.getMovementMethod()
+            #print Training.gVariables.videoDet.getMovementThreshold()
+            #print "end fn_testingFunction"
             pass
         
         @staticmethod
@@ -167,6 +167,8 @@ class Training():
             fileToSave.write("idleTime = %r\n" % targetObj.idleTime);
             fileToSave.write("soundGenDuration1 = %r\n" % targetObj.soundGenDuration1);
             fileToSave.write("soundGenDuration2 = %r\n" % targetObj.soundGenDuration2);
+            fileToSave.write("soundGenVolume1 = %r\n" % targetObj.soundGenVolume1);
+            fileToSave.write("soundGenVolume2 = %r\n" % targetObj.soundGenVolume2);
             fileToSave.write("soundGenFrequency1 = %r\n" % targetObj.soundGenFrequency1);
             fileToSave.write("soundGenFrequency2 = %r\n" % targetObj.soundGenFrequency2);
             fileToSave.write("toneOneProbability = %r\n" % targetObj.toneOneProbability);
@@ -506,7 +508,7 @@ class Training():
                 cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile( inspect.currentframe() ))[0],"configs")))
                 if cmd_subfolder not in sys.path:
                             sys.path.insert(0, cmd_subfolder)
-                            
+                pass
                 if (numParsed == 1):
                     #type pavlov.
                     type_pavlov = 1;
@@ -1011,6 +1013,12 @@ class Training():
         
         discrVars = saveVariables(4)
         
+        if (pavlovVars.nothingToLoad == 1 
+            and skinnerVars.nothingToLoad == 1
+            and ocondVars.nothingToLoad == 1
+            and discrVars.nothingToLoad == 1):
+            print "Custom config files for trial types don't exist. Default configuration files or subject configuration files will be used."
+        
         subject_name = "" #subject name, set at training init, used in logging filename.
         programRunning = 1;
         #print soundGenFrequency1
@@ -1100,6 +1108,7 @@ class Training():
                 soundGenFrequency2 = discrVars.soundGenFrequency2
                 toneOneProbability = discrVars.toneOneProbability
                 current_mode = "discr"
+                print soundGenFrequency1
                 print "grabbed from discrVars."
                 pass
             pass
@@ -1593,6 +1602,8 @@ class Training():
             Training.gVariables.soundGenDuration2 = subjectConfig.soundGenDuration2
             Training.gVariables.soundGenFrequency1 = subjectConfig.soundGenFrequency1
             Training.gVariables.soundGenFrequency2 = subjectConfig.soundGenFrequency2
+            Training.gVariables.soundGenVolume1 = subjectConfig.soundGenVolume1
+            Training.gVariables.soundGenVolume2 = subjectConfig.soundGenVolume2
             Training.gVariables.toneOneProbability = subjectConfig.toneOneProbability
             Training.gVariables.usingTK = subjectConfig.usingTK
             Training.gVariables.initialComment = subjectConfig.initialComment
@@ -1606,6 +1617,7 @@ class Training():
             pass
             Training.gVariables.numberOfRewardDrops = subjectConfig.numberOfRewardDrops
             Training.gVariables.numberOfRewardDropsIdle = subjectConfig.numberOfRewardDropsIdle
+            print Training.gVariables.numberOfRewardDropsIdle
             Training.gVariables.override_training_types = 1;
             print "Configurations loaded from %s.py" % subj_config_file
             self.gVariables.logger.info("Configurations loaded from %s.py" % subj_config_file)
@@ -1626,7 +1638,7 @@ class Training():
         self.gVariables.logger.info('===============================================')
         self.gVariables.logger.info('Start %s' % self.gVariables.trainingName)
         self.gVariables.logger.info('Subject name: %s' % self.gVariables.subject_name)
-        
+        pass
         # valve:
         import valveDevice as vlv
         self.gVariables.valve1 = vlv.Valve()
@@ -1708,8 +1720,8 @@ class Training():
         self.gVariables.currentGUI.movementMethod = self.gVariables.videoMovementMethod #note: using config_training
         #self.gVariables.currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
         #self.gVariables.currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
-        self.gVariables.currentGUI.numDropsMovement = configs.NUMBER_OF_DROPS_INITIAL_VALUE
-        self.gVariables.currentGUI.numDropsIdle = configs.NUMBER_OF_DROPSIDLE_INITIAL_VALUE
+        self.gVariables.currentGUI.numDropsMovement = self.gVariables.numberOfRewardDrops # configs.NUMBER_OF_DROPS_INITIAL_VALUE
+        self.gVariables.currentGUI.numDropsIdle = self.gVariables.numberOfRewardDropsIdle  #configs.NUMBER_OF_DROPSIDLE_INITIAL_VALUE
         self.gVariables.currentGUI.movementTime = self.gVariables.movementTime
         self.gVariables.currentGUI.idleTime = self.gVariables.idleTime
         self.gVariables.currentGUI.comment = configs.initialComment
