@@ -172,7 +172,6 @@ class sphereVideoDetection():
         self.fred1 = threading.Thread(target=self.mainVideoDetection, name="VideoDetection")
         self.fred1.start()
 
-    
     def cv_size(self, img):
         return tuple(img.shape[1::-1])
     

@@ -114,8 +114,16 @@ class Training():
             print "testing"
         
         @staticmethod
+        def fn_testingFunction():
+            print Training.gVariables.videoDet.getMovementMethod()
+            print Training.gVariables.videoDet.getMovementThreshold()
+            print "end fn_testingFunction"
+            pass
+        
+        @staticmethod
         def fn_giveDrop():
                 #print "giving drop"
+                Training.gVariables.fn_testingFunction() #should do nothing if nothing is being tested.
                 Training.gVariables.logger.debug('valve drop')
                 Training.gVariables.valve1.drop()
                 if (Training.gVariables.trialExecuting == True):
@@ -503,12 +511,6 @@ class Training():
                     #type pavlov.
                     type_pavlov = 1;
                     try:
-                        #a = open("configs/config_Pavlov.cfg")
-                        #print a.readlines()
-                        
-                        print "about to import."
-                        
-                        
                         import config_Pavlov as cfg
                         self.eventTime1_sound = cfg.eventTime1_sound
                         self.eventTime1_movement_start = cfg.eventTime1_movement_start
@@ -526,8 +528,7 @@ class Training():
                         self.soundGenVolume1 = cfg.soundGenVolume1
                         self.soundGenVolume2 = cfg.soundGenVolume2
                         self.toneOneProbability = cfg.toneOneProbability
-                        
-                        print "done."
+                        print "config_Pavlov loaded successfully."
                         nothingToLoad = 0
                     except:
                         nothingToLoad = 1;
@@ -536,14 +537,7 @@ class Training():
                     #type skinner.
                     type_skinner = 1;
                     try:
-                        #a = open("configs/config_Pavlov.cfg")
-                        #print a.readlines()
-                        
-                        print "about to import."
-                        
-                        
                         import config_Skinner as cfg
-                        
                         self.eventTime1_sound = cfg.eventTime1_sound
                         self.eventTime1_movement_start = cfg.eventTime1_movement_start
                         self.eventTime2_movement = cfg.eventTime2_movement
@@ -560,8 +554,7 @@ class Training():
                         self.soundGenVolume1 = cfg.soundGenVolume1
                         self.soundGenVolume2 = cfg.soundGenVolume2
                         self.toneOneProbability = cfg.toneOneProbability
-                        
-                        print "done."
+                        print "config_Skinner loaded successfully."
                         nothingToLoad = 0
                     except:
                         nothingToLoad = 1;
@@ -570,14 +563,7 @@ class Training():
                     #type ocond.
                     type_ocond = 1;
                     try:
-                        #a = open("configs/config_Pavlov.cfg")
-                        #print a.readlines()
-                        
-                        print "about to import."
-                        
-                        
                         import config_Ocond as cfg
-                        
                         self.eventTime1_sound = cfg.eventTime1_sound
                         self.eventTime1_movement_start = cfg.eventTime1_movement_start
                         self.eventTime2_movement = cfg.eventTime2_movement
@@ -594,8 +580,7 @@ class Training():
                         self.soundGenVolume1 = cfg.soundGenVolume1
                         self.soundGenVolume2 = cfg.soundGenVolume2
                         self.toneOneProbability = cfg.toneOneProbability
-                        
-                        print "done."
+                        print "config_Ocond loaded successfully."
                         nothingToLoad = 0
                     except:
                         nothingToLoad = 1;
@@ -604,14 +589,7 @@ class Training():
                     #type discr.
                     type_discr = 1;
                     try:
-                        #a = open("configs/config_Pavlov.cfg")
-                        #print a.readlines()
-                        
-                        print "about to import."
-                        
-                        
                         import config_Discr as cfg
-                        
                         self.eventTime1_sound = cfg.eventTime1_sound
                         self.eventTime1_movement_start = cfg.eventTime1_movement_start
                         self.eventTime2_movement = cfg.eventTime2_movement
@@ -628,13 +606,12 @@ class Training():
                         self.soundGenVolume1 = cfg.soundGenVolume1
                         self.soundGenVolume2 = cfg.soundGenVolume2
                         self.toneOneProbability = cfg.toneOneProbability
-                        
-                        print "done."
+                        print "config_Discr loaded successfully."
                         nothingToLoad = 0
                     except:
                         nothingToLoad = 1;
                         pass
-                
+                pass
                 if (nothingToLoad == 1):
                     import config_training as cfgtraining
                     #nothing to load. but as this hasn't loaded anything, its vars will be set to default vars
@@ -654,13 +631,11 @@ class Training():
                     self.soundGenVolume1 = cfgtraining.soundGenVolume1
                     self.soundGenVolume2 = cfgtraining.soundGenVolume2
                     self.toneOneProbability = cfgtraining.toneOneProbability
-                    print "Couldn't read config file for this type. Setting default variables."
+                    #print "Couldn't read config file for this custom training type configuration. Setting default variables."
                 pass
             
             @staticmethod
             def savePavlovVars():
-                    print "savePavlovVars"
-                    
                     Training.gVariables.pavlovVars.eventTime1_sound = Training.gVariables.eventTime1_sound
                     Training.gVariables.pavlovVars.eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
                     Training.gVariables.pavlovVars.eventTime2_movement = Training.gVariables.eventTime2_movement
@@ -677,12 +652,10 @@ class Training():
                     Training.gVariables.pavlovVars.soundGenVolume1 = Training.gVariables.soundGenVolume1
                     Training.gVariables.pavlovVars.soundGenVolume2 = Training.gVariables.soundGenVolume2
                     Training.gVariables.pavlovVars.toneOneProbability = Training.gVariables.toneOneProbability
-                    
                     pass
+            
             @staticmethod
             def saveSkinnerVars():
-                    print "saveSkinnerVars"
-                    
                     Training.gVariables.skinnerVars.eventTime1_sound = Training.gVariables.eventTime1_sound
                     Training.gVariables.skinnerVars.eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
                     Training.gVariables.skinnerVars.eventTime2_movement = Training.gVariables.eventTime2_movement
@@ -699,13 +672,10 @@ class Training():
                     Training.gVariables.skinnerVars.soundGenVolume1 = Training.gVariables.soundGenVolume1
                     Training.gVariables.skinnerVars.soundGenVolume2 = Training.gVariables.soundGenVolume2
                     Training.gVariables.skinnerVars.toneOneProbability = Training.gVariables.toneOneProbability
-                    
                     pass
             
             @staticmethod
             def saveOcondVars():
-                    print "saveOcondVars"
-                    
                     Training.gVariables.ocondVars.eventTime1_sound = Training.gVariables.eventTime1_sound
                     Training.gVariables.ocondVars.eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
                     Training.gVariables.ocondVars.eventTime2_movement = Training.gVariables.eventTime2_movement
@@ -722,12 +692,10 @@ class Training():
                     Training.gVariables.ocondVars.soundGenVolume1 = Training.gVariables.soundGenVolume1
                     Training.gVariables.ocondVars.soundGenVolume2 = Training.gVariables.soundGenVolume2
                     Training.gVariables.ocondVars.toneOneProbability = Training.gVariables.toneOneProbability
-                    
                     pass
             
             @staticmethod
             def saveDiscrVars():
-                    print "saveDiscrVars"
                     Training.gVariables.discrVars.eventTime1_sound = Training.gVariables.eventTime1_sound
                     Training.gVariables.discrVars.eventTime1_movement_start = Training.gVariables.eventTime1_movement_start
                     Training.gVariables.discrVars.eventTime2_movement = Training.gVariables.eventTime2_movement
@@ -748,7 +716,6 @@ class Training():
             
             @staticmethod
             def loadPavlovVars():
-                    print "loadPavlovVars"
                     Training.gVariables.eventTime1_sound = Training.gVariables.pavlovVars.eventTime1_sound
                     Training.gVariables.eventTime1_movement_start = Training.gVariables.pavlovVars.eventTime1_movement_start
                     Training.gVariables.eventTime2_movement = Training.gVariables.pavlovVars.eventTime2_movement
@@ -777,7 +744,6 @@ class Training():
             
             @staticmethod
             def loadSkinnerVars():
-                    print "loadSkinnerVars"
                     Training.gVariables.eventTime1_sound = Training.gVariables.skinnerVars.eventTime1_sound
                     Training.gVariables.eventTime1_movement_start = Training.gVariables.skinnerVars.eventTime1_movement_start
                     Training.gVariables.eventTime2_movement = Training.gVariables.skinnerVars.eventTime2_movement
@@ -806,7 +772,6 @@ class Training():
             
             @staticmethod
             def loadOcondVars():
-                    print "loadOcondVars"
                     Training.gVariables.eventTime1_sound = Training.gVariables.ocondVars.eventTime1_sound
                     Training.gVariables.eventTime1_movement_start = Training.gVariables.ocondVars.eventTime1_movement_start
                     Training.gVariables.eventTime2_movement = Training.gVariables.ocondVars.eventTime2_movement
@@ -836,7 +801,6 @@ class Training():
             
             @staticmethod
             def loadDiscrVars():
-                    print "loadDiscrVars"
                     Training.gVariables.eventTime1_sound = Training.gVariables.discrVars.eventTime1_sound
                     Training.gVariables.eventTime1_movement_start = Training.gVariables.discrVars.eventTime1_movement_start
                     Training.gVariables.eventTime2_movement = Training.gVariables.discrVars.eventTime2_movement
@@ -866,7 +830,6 @@ class Training():
             
             @staticmethod
             def loadIntoAPIPavlovVars():
-                    print "loadIntoAPIPavlovVars"
                     objc = Training.gVariables.currentGUI.pavlovVars
                     objc.toneStart = 0;
                     objc.toneEnd = Training.gVariables.pavlovVars.eventTime1_sound;
@@ -888,7 +851,6 @@ class Training():
             
             @staticmethod
             def loadIntoAPISkinnerVars():
-                    print "loadIntoAPISkinnerVars"
                     objc = Training.gVariables.currentGUI.skinnerVars
                     objc.toneStart = 0;
                     objc.toneEnd = Training.gVariables.skinnerVars.eventTime1_sound;
@@ -910,7 +872,6 @@ class Training():
             
             @staticmethod
             def loadIntoAPIOcondVars():
-                    print "loadIntoAPIOcondVars"
                     objc = Training.gVariables.currentGUI.ocondVars
                     objc.toneStart = 0;
                     objc.toneEnd = Training.gVariables.ocondVars.eventTime1_sound;
@@ -932,7 +893,6 @@ class Training():
             
             @staticmethod
             def loadIntoAPIDiscrVars():
-                    print "loadIntoAPIDiscrVars"
                     objc = Training.gVariables.currentGUI.discrVars
                     objc.toneStart = 0;
                     objc.toneEnd = Training.gVariables.discrVars.eventTime1_sound;
@@ -1015,7 +975,8 @@ class Training():
         videoDet = 0  # video Detection object. initialized in the main.
         videoSecond = -1 # second camera object
         
-        videoMovementMethod = -1 #movement method to be used for movement analysis.
+        videoMovementMethod = cfgtraining.MOVEMENT_METHOD_INITIAL_VALUE #movement method to be used for movement analysis.
+        movementAmount = cfgtraining.MOVEMENT_THRESHOLD_INITIAL_VALUE
         
         absolute_start_time = timeit.default_timer()  # time when training started.
         start_time = timeit.default_timer()  # time when training with tone started.
@@ -1032,7 +993,7 @@ class Training():
         
         trial_comment = "" #comment about this training session.
         
-        override_training_types = 0; #if 1, all training types configs will be ommited.
+        override_training_types = 0; #if 1, all training types configs will be omitted.
         type_pavlov = cfgtraining.type_pavlov;
         type_skinner = cfgtraining.type_skinner;
         type_ocond = cfgtraining.type_ocond;
@@ -1639,27 +1600,28 @@ class Training():
             Training.gVariables.type_skinner = subjectConfig.type_skinner
             Training.gVariables.type_ocond = subjectConfig.type_ocond
             Training.gVariables.type_discr = subjectConfig.type_discr
-            #movement threshold and method: edit sphereVideoDetection config files (check docs.)
+            #movement threshold and method: editing sphereVideoDetection config files is recommended (still can be edited from config_training.)
+            Training.gVariables.movementAmount = subjectConfig.MOVEMENT_THRESHOLD_INITIAL_VALUE
+            Training.gVariables.videoMovementMethod = subjectConfig.MOVEMENT_METHOD_INITIAL_VALUE
+            pass
             Training.gVariables.numberOfRewardDrops = subjectConfig.numberOfRewardDrops
             Training.gVariables.numberOfRewardDropsIdle = subjectConfig.numberOfRewardDropsIdle
             Training.gVariables.override_training_types = 1;
             print "Configurations loaded from %s.py" % subj_config_file
             self.gVariables.logger.info("Configurations loaded from %s.py" % subj_config_file)
         except:
-            print "File %s.py doesn't exist. Will be using general configuration variables instead." % subj_config_file
-            self.gVariables.logger.info("File %s.py doesn't exist. Will be using general configuration variables instead." % subj_config_file)
+            print "File %s.py doesn't exist. Will be using default configuration variables instead." % subj_config_file
+            self.gVariables.logger.info("File %s.py doesn't exist. Will be using default configuration variables instead." % subj_config_file)
         #adjusting trial types and modes:
         if (self.gVariables.type_pavlov == 1):
             #movement starts and ceases to be detected just after the tone ends. Basically, there's no movement window when Pavlov mode is enabled.
             self.gVariables.eventTime2_movement = self.gVariables.soundGenDuration1
             self.gVariables.eventTime1_movement_start = self.gVariables.soundGenDuration1
-        
         if (self.gVariables.type_skinner == 1):
             #there are no tones, so setting their duration to 0
             Training.gVariables.soundGenDuration1 = 0.0
             Training.gVariables.soundGenDuration2 = 0.0
-        
-        
+        pass
         self.gVariables.trialExecuting = False  # boolean, if a 8 second with tone trial is wanted, this shoulb be set to 1
         self.gVariables.logger.info('===============================================')
         self.gVariables.logger.info('Start %s' % self.gVariables.trainingName)
@@ -1669,7 +1631,6 @@ class Training():
         import valveDevice as vlv
         self.gVariables.valve1 = vlv.Valve()
         self.gVariables.logger.debug('Valve created.')
-        
         
         # soundGen:
         # La configuración es a nivel de módulo, no en el entrenamiento principal.
@@ -1685,7 +1646,6 @@ class Training():
         self.gVariables.jobList = multiprocessing.JoinableQueue()
         #self.gVariables.jobList.put_nowait((0, 0))
         pass
-        
         
         if (self.gVariables.GUIType != 2):
             #import userInterfaceAPI
@@ -1711,7 +1671,9 @@ class Training():
         self.gVariables.videoDet.setOutputVideoFile(filename+'.avi')
         self.gVariables.audioRec.setOutputAudioFile(filename+'.wav')
         self.gVariables.videoDet.setMovementTimeWindow(self.gVariables.movementTime)  # seconds that should be moving.
-        self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod()
+        #self.gVariables.videoMovementMethod =  self.gVariables.videoDet.getMovementMethod() #already loaded from config_training
+        self.gVariables.videoDet.setMovementMethod(self.gVariables.videoMovementMethod)
+        self.gVariables.videoDet.setMovementThreshold(self.gVariables.movementAmount)
         self.gVariables.videoDet.usingPygameDisplay = False; #to prevent launching pygame visualization tools for vd.
         self.gVariables.videoDet.initAll()
         self.gVariables.fred0 = threading.Thread(target=self.gVariables.audioRec.mainAudioRecording)
@@ -1727,7 +1689,7 @@ class Training():
         self.gVariables.fred1 = threading.Thread(target=self.mainLoopFunction)
         self.gVariables.fred1.start()
         self.gVariables.logger.debug('Training loop function started..')
-        
+        pass #end trainingInit
     
     def commitToCurrentGUI(self):
         import config_training as configs
@@ -1742,8 +1704,10 @@ class Training():
         self.gVariables.currentGUI.frequencyTone2 = self.gVariables.soundGenFrequency2
         self.gVariables.currentGUI.volumeTone1 = self.gVariables.soundGenVolume1
         self.gVariables.currentGUI.volumeTone2 = self.gVariables.soundGenVolume2
-        self.gVariables.currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
-        self.gVariables.currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
+        self.gVariables.currentGUI.movementAmount = self.gVariables.movementAmount #note: using config_training
+        self.gVariables.currentGUI.movementMethod = self.gVariables.videoMovementMethod #note: using config_training
+        #self.gVariables.currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
+        #self.gVariables.currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
         self.gVariables.currentGUI.numDropsMovement = configs.NUMBER_OF_DROPS_INITIAL_VALUE
         self.gVariables.currentGUI.numDropsIdle = configs.NUMBER_OF_DROPSIDLE_INITIAL_VALUE
         self.gVariables.currentGUI.movementTime = self.gVariables.movementTime
@@ -1783,9 +1747,7 @@ class Training():
             self.gVariables.currentGUI.current_type = "ocond"
         if (self.gVariables.type_discr):
             self.gVariables.currentGUI.current_type = "discr"
-        
-        
-        
+        pass
         self.gVariables.currentGUI.requireStillnessVar = self.gVariables.requireStillness
         #print "--%d" % self.gVariables.requireStillness
         pass
