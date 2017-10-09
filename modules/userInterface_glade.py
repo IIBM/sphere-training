@@ -193,7 +193,8 @@ class GUIGTK_Class():
                 self.volumeTone2 = 0
                 self.movementAmount = 0
                 self.movementMethod = 0
-                self.numDrops = 0
+                self.numDropsMovement = 0
+                self.numDropsIdle = 0
                 self.movementTime = 0
                 self.idleTime = 0
                 self.toneStart = 0
@@ -224,7 +225,8 @@ class GUIGTK_Class():
             logger.info( str( self.volumeTone2 ) )
             logger.info( str( self.movementAmount ) )
             logger.info( str( self.movementMethod ) )
-            logger.info( str( self.numDrops ) )
+            logger.info( str( self.numDropsMovement ) )
+            logger.info( str( self.numDropsIdle ) )
             logger.info( str( self.movementTime ) )
             logger.info( str( self.idleTime ) )
             logger.info( str( self.comment ) )
@@ -241,7 +243,8 @@ class GUIGTK_Class():
             self.glade.get_object("entryVOLUMETone2").set_text( str(self.volumeTone2) )
             self.glade.get_object("entryMovementAmount").set_text( str(self.movementAmount) )
             self.glade.get_object("entryMethod").set_text( str(self.movementMethod) )
-            self.glade.get_object("entryDropAmount").set_text( str(self.numDrops) )
+            self.glade.get_object("entryDropAmount").set_text( str(self.numDropsMovement) )
+            self.glade.get_object("entryDrop2Amount").set_text( str(self.numDropsIdle) )
             self.glade.get_object("entryMovementTime").set_text( str(self.movementTime) )
             self.glade.get_object("entryIdleTime").set_text( str(self.idleTime) )
             self.glade.get_object("entryCommentTr").set_text( str(self.comment) )
@@ -587,7 +590,8 @@ class GUIGTK_Class():
             self.previousVars.volumeTone2 = self.volumeTone2
             self.previousVars.movementAmount = self.movementAmount
             self.previousVars.movementMethod = self.movementMethod
-            self.previousVars.numDrops = self.numDrops
+            self.previousVars.numDropsMovement = self.numDropsMovement
+            self.previousVars.numDropsIdle = self.numDropsIdle
             self.previousVars.movementTime = self.movementTime
             self.previousVars.idleTime = self.idleTime
             print "Parameters: Previous states saved."
@@ -652,7 +656,8 @@ class GUIGTK_Class():
                 self.volumeTone2 = self.glade.get_object("entryVOLUMETone2").get_text()
                 self.movementAmount = self.glade.get_object("entryMovementAmount").get_text()
                 self.movementMethod = self.glade.get_object("entryMethod").get_text()
-                self.numDrops = self.glade.get_object("entryDropAmount").get_text()
+                self.numDropsMovement = self.glade.get_object("entryDropAmount").get_text()
+                self.numDropsIdle = self.glade.get_object("entryDrop2Amount").get_text()
                 self.movementTime = self.glade.get_object("entryMovementTime").get_text()
                 self.idleTime = self.glade.get_object("entryIdleTime").get_text()
                 print "Raw P Input done."
@@ -795,12 +800,19 @@ class GUIGTK_Class():
                 self.glade.get_object("entryMethod").set_text( str( self.previousVars.movementMethod ) )
                 print "Bad input: movementMethod to previous var."
             try:
-                a = int(self.numDrops)
+                a = int(self.numDropsMovement)
             except:
                 #incorrect input. Returning to previous state.
-                self.numDrops = self.previousVars.numDrops
-                self.glade.get_object("entryDropAmount").set_text( str( self.previousVars.numDrops ) )
-                print "Bad input: numDrops to previous var."
+                self.numDropsMovement = self.previousVars.numDropsMovement
+                self.glade.get_object("entryDropAmount").set_text( str( self.previousVars.numDropsMovement ) )
+                print "Bad input: numDropsMovement to previous var."
+            try:
+                a = int(self.numDropsIdle)
+            except:
+                #incorrect input. Returning to previous state.
+                self.numDropsIdle = self.previousVars.numDropsIdle
+                self.glade.get_object("entryDrop2Amount").set_text( str( self.previousVars.numDropsIdle ) )
+                print "Bad input: numDropsIdle to previous var."
             try:
                 a = float(self.movementTime)
             except:
@@ -872,7 +884,8 @@ class GUIGTK_Class():
                 logger.info( self.volumeTone2 )
                 logger.info( self.movementAmount )
                 logger.info( self.movementMethod )
-                logger.info( self.numDrops )
+                logger.info( self.numDropsMovement )
+                logger.info( self.numDropsIdle )
                 logger.info( self.movementTime )
                 logger.info( self.idleTime )
                 

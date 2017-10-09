@@ -35,7 +35,8 @@ class userInterface_API:
     movementAmount = 0
     movementMethod = 0
     movementTime = 0
-    numDrops = 0 #number of drops given if trial successful.
+    numDropsMovement = 0 #number of drops given if trial successful.
+    numDropsIdle = 0 #number of drops given if trial successful.
     idleTime = 0
     comment = ""
     
@@ -144,7 +145,8 @@ class userInterface_API:
         
         multipUI.movementAmount = self.movementAmount
         multipUI.movementMethod = self.movementMethod
-        multipUI.numDrops = self.numDrops
+        multipUI.numDropsMovement = self.numDropsMovement
+        multipUI.numDropsIdle = self.numDropsIdle
         multipUI.movementTime = self.movementTime
         multipUI.idleTime = self.idleTime
         multipUI.comment = self.comment
@@ -572,7 +574,8 @@ class multiproc_userInterface_API:
         self.volumeTone2 = 0
         self.movementAmount = 0
         self.movementMethod = 0
-        self.numDrops = 0
+        self.numDropsMovement = 0
+        self.numDropsIdle = 0
         self.movementTime = 0
         self.idleTime = 0
         self.comment = ""
@@ -605,7 +608,8 @@ class multiproc_userInterface_API:
         self.currentGUI.volumeTone2 = self.volumeTone2
         self.currentGUI.movementAmount = self.movementAmount
         self.currentGUI.movementMethod = self.movementMethod
-        self.currentGUI.numDrops = self.numDrops
+        self.currentGUI.numDropsMovement = self.numDropsMovement
+        self.currentGUI.numDropsIdle = self.numDropsIdle
         self.currentGUI.movementTime = self.movementTime
         self.currentGUI.idleTime = self.idleTime
         self.currentGUI.comment = self.comment
@@ -755,7 +759,10 @@ class multiproc_userInterface_API:
         self.setNameSpaceMessage(22, self.currentGUI.idleTime )
         #logger.debug ( "ns: " + ns.__str__() )
         
-        self.setNameSpaceMessage(37, self.currentGUI.numDrops )
+        self.setNameSpaceMessage(37, self.currentGUI.numDropsMovement )
+        #logger.debug ( "ns: " + ns.__str__() )
+        
+        self.setNameSpaceMessage(38, self.currentGUI.numDropsIdle )
         #logger.debug ( "ns: " + ns.__str__() )
     
     
@@ -950,7 +957,8 @@ class multiproc_userInterface_API:
         self.frequencyTone2 = self.currentGUI.frequencyTone2
         self.movementAmount = self.currentGUI.movementAmount
         self.movementMethod = self.currentGUI.movementMethod
-        self.numDrops = self.currentGUI.numDrops
+        self.numDropsMovement = self.currentGUI.numDropsMovement
+        self.numDropsIdle = self.currentGUI.numDropsIdle
         self.movementTime = self.currentGUI.movementTime
         self.idleTime = self.currentGUI.idleTime
         logger.debug( "API: Apply Parameters:" )
