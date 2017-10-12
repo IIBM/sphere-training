@@ -71,6 +71,7 @@ class sphereVideoDetection():
     
     MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = 0 ;
     frames = list()
+    putRedSquare = 0;
     video_out = -1
     
     def __init__ (self) :
@@ -176,6 +177,9 @@ class sphereVideoDetection():
 
     def cv_size(self, img):
         return tuple(img.shape[1::-1])
+    
+    def setupNewTrial(self):
+        self.putRedSquare = 1
     
     def getAccumulatedVector(self):
         return [self.vectorAcumulado.x, self.vectorAcumulado.y]
@@ -1000,6 +1004,10 @@ class sphereVideoDetection():
                 ret, capturedImage = cam.read()
                 if (ret == False):
                     continue
+                #si hay que poner cuadrado rojo (por nuevo trial), ponerlo antes que cualquier cosa
+                if (self.putRedSquare ):
+                    self.putRedSquare = 0
+                    cv2.rectangle(capturedImage, (0,0), (2,2), (0, 0, 255) , -1 ) 
                 # se graba la imagen en el grabador de video (si corresponde)
                 if (self.moduleStartedIndependently == False and self.videoRecording == True):
                     frametimes.append(time.time()-frametimes[0])

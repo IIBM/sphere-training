@@ -1785,11 +1785,10 @@ class Training():
             if ( ( Training.gVariables.current_trial_stage == 3 and 
                         ( ( Training.gVariables.videoDet.getIdleTime() >= Training.gVariables.minIdleIntertrialTime and
                                 Training.gVariables.videoDet.getMovementStatus() == False) or (Training.gVariables.requireStillness == 0) ) or (Training.gVariables.trialCount == 0)  ) ) :
-                
-                
+                pass #trial start
                 Training.gVariables.trialCount += 1
                 Training.gVariables.logger.info('Starting trial:%d' % Training.gVariables.trialCount)
-                
+                Training.gVariables.videoDet.setupNewTrial()
                 Training.gVariables.dropReleased = 0
                 Training.gVariables.current_trial_start_time = timeit.default_timer()
 
