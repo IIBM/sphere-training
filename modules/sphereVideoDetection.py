@@ -183,6 +183,8 @@ class sphereVideoDetection():
     def flushCapturedFrames(self):
         for item in self.frames:
             self.video_out.write(item)
+        del self.frames[:]
+        self.frames = []
     
     def resetX(self):
         self.vectorInstantaneo.x = 0

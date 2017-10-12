@@ -118,7 +118,7 @@ class Training():
             #print Training.gVariables.videoDet.getMovementMethod()
             #print Training.gVariables.videoDet.getMovementThreshold()
             #print "end fn_testingFunction"
-            Training.gVariables.videoDet.flushCapturedFrames()
+            #Training.gVariables.videoDet.flushCapturedFrames()
             pass
         
         @staticmethod
@@ -950,6 +950,8 @@ class Training():
         soundGenFrequency2 = cfgtraining.soundGenFrequency2  # in Hz
         soundGenVolume1 = cfgtraining.soundGenVolume1  # in Hz
         soundGenVolume2 = cfgtraining.soundGenVolume2  # in Hz
+        
+        flushVideoFramesEachTrial = cfgtraining.flushVideoFramesEachTrial #flush frames each trial
         
         trialCount = 0  # total number of trials
         movementTrialCount = 0  # total number of trials of the type "Move" (which requires the subject to move)
@@ -1873,7 +1875,8 @@ class Training():
                     Training.giveReward()
                     Training.gVariables.logger.info('Reward given because pavlov mode is enabled')
                 Training.gVariables.logger.info('Start inter-trial delay')
-                Training.gVariables.videoDet.flushCapturedFrames() # save cached frames to video file
+                if (Training.gVariables.flushVideoFramesEachTrial == 1):
+                    Training.gVariables.videoDet.flushCapturedFrames() # save cached frames to video file
                 Training.gVariables.current_trial_stage = 2
             elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime3_trialEnd and
                   Training.gVariables.current_trial_stage == 2):

@@ -43,4 +43,4 @@ numberOfRewardDropsIdle = 1; #Number of reward drops to give when the trial is s
 
 pauseAudioAndVideoWhenTrPaused = 0 #if 1, audio and video will be paused if the training is paused, and resumed if trial is resumed. (def.:0)
 
-
+flushVideoFramesEachTrial = 1 # if 1: flush video frames to disk each trial ; if 0: flush frames only at start/end/pause of training
