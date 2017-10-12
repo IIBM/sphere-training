@@ -70,6 +70,8 @@ class sphereVideoDetection():
     moduleStartedIndependently = False #Si False: inicializar las variables para grabación de video
     
     MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = 0 ;
+    frames = list()
+    video_out = -1
     
     def __init__ (self) :
         import track_bola_utils
@@ -177,6 +179,10 @@ class sphereVideoDetection():
     
     def getAccumulatedVector(self):
         return [self.vectorAcumulado.x, self.vectorAcumulado.y]
+    
+    def flushCapturedFrames(self):
+        for item in self.frames:
+            self.video_out.write(item)
     
     def resetX(self):
         self.vectorInstantaneo.x = 0
@@ -957,9 +963,9 @@ class sphereVideoDetection():
             videofps=30 # estimado, despues se corrigira
             videoframesize=vs.getVideoSize()
             if is_cv2():
-                video_out = cv2.VideoWriter(self.outputVideoFile, cv2.cv.CV_FOURCC(*'MPEG'), videofps, videoframesize)
+                self.video_out = cv2.VideoWriter(self.outputVideoFile, cv2.cv.CV_FOURCC(*'MPEG'), videofps, videoframesize)
             elif is_cv3():
-                video_out = cv2.VideoWriter(self.outputVideoFile, cv2.VideoWriter_fourcc(*'MPEG'), videofps, videoframesize)
+                self.video_out = cv2.VideoWriter(self.outputVideoFile, cv2.VideoWriter_fourcc(*'MPEG'), videofps, videoframesize)
         pass
         #self.capturedImageWidth, self.capturedImageHeight = cv.GetSize( cv.fromarray(capturedImage) )
         self.capturedImageWidth, self.capturedImageHeight = self.cv_size( capturedImage )
@@ -975,6 +981,7 @@ class sphereVideoDetection():
         self.startCalibration = True
         logger.info("Starting video detection main loop.");
         Lnew = []
+        
         if (self.moduleStartedIndependently == False ):
             frametimes = []
             frametimes.append(time.time())
@@ -988,11 +995,14 @@ class sphereVideoDetection():
                 # # Preparo las imgs antigûa, actual y futura<>
                 #===============================================================
                 # capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
-                capturedImage = cam.read()[1]
+                ret, capturedImage = cam.read()
+                if (ret == False):
+                    continue
                 # se graba la imagen en el grabador de video (si corresponde)
                 if (self.moduleStartedIndependently == False and self.videoRecording == True):
                     frametimes.append(time.time()-frametimes[0])
-                    video_out.write(capturedImage) #grabar captura (sólo si módulo no fue ejecutado independientemente)
+                    #video_out.write(capturedImage) #grabar captura (sólo si módulo no fue ejecutado independientemente)
+                    self.frames.append(capturedImage) ;
                 #lo primero que se hace es verificar que se haya podido leer algo. Caso contrario, end of video..
                 if (capturedImage.size == 0) or (type(capturedImage) == type(None)):
                     logger.info("sphereVideoDetection detected empty image. If video, will try to seek to the start. Then will try to capture another frame");
@@ -1129,7 +1139,7 @@ class sphereVideoDetection():
                     try:
                         cam.release()
                         if (self.moduleStartedIndependently == False ):
-                            video_out.release()
+                            self.video_out.release()
                             logger.info("VIDEOTIMES")
                             logger.info(frametimes)
                     except:

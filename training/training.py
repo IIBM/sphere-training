@@ -118,6 +118,7 @@ class Training():
             #print Training.gVariables.videoDet.getMovementMethod()
             #print Training.gVariables.videoDet.getMovementThreshold()
             #print "end fn_testingFunction"
+            Training.gVariables.videoDet.flushCapturedFrames()
             pass
         
         @staticmethod
@@ -416,6 +417,7 @@ class Training():
                 Training.restartTraining()
             if (flg == 2):
                 Training.stopTraining()
+            Training.gVariables.videoDet.flushCapturedFrames() # save cached frames to video file.
         
         @staticmethod
         def fn_pauseResumeTraining(flag):
@@ -432,6 +434,7 @@ class Training():
             else:
                 print "fn_pauseResumeTraining: \n   Trial has not been started and cannot be paused or resumed."
                 Training.gVariables.logger.info( "fn_pauseResumeTraining: \n   Trial has not been started and cannot be paused or resumed." )
+            Training.gVariables.videoDet.flushCapturedFrames() # save cached frames to video file.
         
         @staticmethod
         def fn_pauseResumeVideoRecording():
@@ -439,6 +442,7 @@ class Training():
                 Training.pauseVideoRecording();
             else:
                 Training.resumeVideoRecording();
+            Training.gVariables.videoDet.flushCapturedFrames() # save cached frames to video file.
             pass
         
         @staticmethod
@@ -1869,6 +1873,7 @@ class Training():
                     Training.giveReward()
                     Training.gVariables.logger.info('Reward given because pavlov mode is enabled')
                 Training.gVariables.logger.info('Start inter-trial delay')
+                Training.gVariables.videoDet.flushCapturedFrames() # save cached frames to video file
                 Training.gVariables.current_trial_stage = 2
             elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime3_trialEnd and
                   Training.gVariables.current_trial_stage == 2):
