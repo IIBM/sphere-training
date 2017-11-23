@@ -222,15 +222,13 @@ class Training():
         
         @staticmethod
         def fn_setNumberOfDropsMovement(value_given):
-            Training.gVariables.numberOfRewardDrops = int(value_given)
-            #Training.gVariables.numberOfRewardDropsIdle = int(value_given)
+            Training.gVariables.numberOfRewardDropsGo = int(value_given)
             print "Number of drops per 'movement trial reward' set: ", value_given
             Training.gVariables.logger.info( "Number of drops per 'movement trial reward' set: " + str(value_given) )
         
         @staticmethod
         def fn_setNumberOfDropsIdle(value_given):
-            #Training.gVariables.numberOfRewardDrops = int(value_given)
-            Training.gVariables.numberOfRewardDropsIdle = int(value_given)
+            Training.gVariables.numberOfRewardDropsNoGo = int(value_given)
             print "Number of drops per 'idle trial reward' set: ", value_given
             Training.gVariables.logger.info( "Number of drops per 'idle trial reward' set: " + str(value_given) )
         
@@ -929,8 +927,8 @@ class Training():
         minIdleIntertrialTime = cfgtraining.minIdleIntertrialTime  # no-movement time in seconds before the start of next trial. If not reached this time with no movement, trial doesn't start
         
         requireStillness = cfgtraining.requireStillness # require to stay idle to end trial and start next one.
-        numberOfRewardDrops = cfgtraining.numberOfRewardDrops #number of drops to give as reward when trial successful
-        numberOfRewardDropsIdle = cfgtraining.numberOfRewardDropsIdle #number of drops to give as reward when trial successful
+        numberOfRewardDropsGo = cfgtraining.numberOfRewardDropsGo #number of drops to give as reward when GO trial is successful
+        numberOfRewardDropsNoGo = cfgtraining.numberOfRewardDropsNoGo #number of drops to give as reward when GO trial is successful
         
         pauseAudioAndVideoWhenTrPaused = cfgtraining.pauseAudioAndVideoWhenTrPaused #if 1, audio and video paused when training paused.
 
@@ -1409,19 +1407,19 @@ class Training():
                 if (Training.gVariables.current_trial_type == 1) :
                     Training.gVariables.successMovementTrialCount += 1
                     # print "Release drop of water."
-                    for i in range(0, Training.gVariables.numberOfRewardDrops):
+                    for i in range(0, Training.gVariables.numberOfRewardDropsGo):
                         Training.gVariables.valve1.drop()
                         #print "drop"
-                        if (Training.gVariables.numberOfRewardDrops > 1):
+                        if (Training.gVariables.numberOfRewardDropsGo > 1):
                              time.sleep(0.45)
                         Training.gVariables.logger.debug("Drop of water released.")
                 else:
                     Training.gVariables.successIdleTrialCount += 1
                     # print "Release drop of water."
-                    for i in range(0, Training.gVariables.numberOfRewardDropsIdle):
+                    for i in range(0, Training.gVariables.numberOfRewardDropsNoGo):
                         Training.gVariables.valve1.drop()
                         #print "drop"
-                        if (Training.gVariables.numberOfRewardDropsIdle > 1):
+                        if (Training.gVariables.numberOfRewardDropsNoGo > 1):
                              time.sleep(0.45)
                         Training.gVariables.logger.debug("Drop of water released.")
     
@@ -1621,9 +1619,8 @@ class Training():
             Training.gVariables.movementAmount = subjectConfig.MOVEMENT_THRESHOLD_INITIAL_VALUE
             Training.gVariables.videoMovementMethod = subjectConfig.MOVEMENT_METHOD_INITIAL_VALUE
             pass
-            Training.gVariables.numberOfRewardDrops = subjectConfig.numberOfRewardDrops
-            Training.gVariables.numberOfRewardDropsIdle = subjectConfig.numberOfRewardDropsIdle
-            print Training.gVariables.numberOfRewardDropsIdle
+            Training.gVariables.numberOfRewardDropsGo = subjectConfig.numberOfRewardDropsGo
+            Training.gVariables.numberOfRewardDropsNoGo = subjectConfig.numberOfRewardDropsNoGo
             Training.gVariables.override_training_types = 1;
             print "Configurations loaded from %s.py" % subj_config_file
             self.gVariables.logger.info("Configurations loaded from %s.py" % subj_config_file)
@@ -1726,8 +1723,8 @@ class Training():
         self.gVariables.currentGUI.movementMethod = self.gVariables.videoMovementMethod #note: using config_training
         #self.gVariables.currentGUI.movementAmount = configs.MOVEMENT_THRESHOLD_INITIAL_VALUE #sphereVideoDetection but read from training config file
         #self.gVariables.currentGUI.movementMethod = configs.MOVEMENT_METHOD_INITIAL_VALUE #same as above
-        self.gVariables.currentGUI.numDropsMovement = self.gVariables.numberOfRewardDrops
-        self.gVariables.currentGUI.numDropsIdle = self.gVariables.numberOfRewardDropsIdle
+        self.gVariables.currentGUI.numDropsMovement = self.gVariables.numberOfRewardDropsGo
+        self.gVariables.currentGUI.numDropsIdle = self.gVariables.numberOfRewardDropsNoGo
         self.gVariables.currentGUI.movementTime = self.gVariables.movementTime
         self.gVariables.currentGUI.idleTime = self.gVariables.idleTime
         self.gVariables.currentGUI.comment = configs.initialComment

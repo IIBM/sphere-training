@@ -38,8 +38,8 @@ type_discr = 0 #1: Discrimination mode enabled. Check documentation for more inf
 MOVEMENT_THRESHOLD_INITIAL_VALUE = 30 #initial movement threshold value (amount of difference in sum, to consider a movement valid)
 MOVEMENT_METHOD_INITIAL_VALUE = 2 #Type of movement analysis method used initially.
 
-numberOfRewardDrops = 1; #Number of reward drops to give when the trial is successful (for go trials).
-numberOfRewardDropsIdle = 1; #Number of reward drops to give when the trial is successful (for no-go trials).
+numberOfRewardDropsGo = 1; #Number of reward drops to give when the trial is successful (for go trials).
+numberOfRewardDropsNoGo = 1; #Number of reward drops to give when the trial is successful (for no-go trials).
 
 pauseAudioAndVideoWhenTrPaused = 0 #if 1, audio and video will be paused if the training is paused, and resumed if trial is resumed. (def.:0)
 
