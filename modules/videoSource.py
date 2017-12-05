@@ -22,7 +22,6 @@ def checkImports():
 
 class videoSource() :
     def __init__(self) :
-        
         checkImports()
         import configVideoSource
         
@@ -35,7 +34,10 @@ class videoSource() :
         self.VIDEOSIZE = (configVideoSource.CAM_WIDTH, configVideoSource.CAM_HEIGHT)
         
         # set camera properties: this configuration is very dependent on the type and model of camera.
-        
+        if ( type(configVideoSource.VIDEOSOURCE) == int ):
+            self.videoStatus = False #if videoStatus = False, it is a camera and not a video
+        else:
+            self.videoStatus = True #if videoStatus = True, it is a video and not a camera
         cam.set(configVideoSource.CAM_BRIGHTNESS_VAR, configVideoSource.CAM_BRIGHTNESS_VALUE)
         cam.set(configVideoSource.CAM_CONTRAST_VAR, configVideoSource.CAM_CONTRAST_VALUE)
         cam.set(configVideoSource.CAM_SATURATION_VAR, configVideoSource.CAM_SATURATION_VALUE)
@@ -108,6 +110,9 @@ class videoSource() :
  
     def getVideoSource(self):
         return self.cam
+    
+    def is_video(self):
+        return self.videoStatus
     
     def getVideoSize(self):
         return self.VIDEOSIZE

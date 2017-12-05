@@ -956,6 +956,7 @@ class sphereVideoDetection():
         import videoSource
         vs = videoSource.videoSource();
         cam = vs.getVideoSource();
+        cam_is_video = vs.is_video()
         
         #cv2.namedWindow(self.winName, cv2.CV_WINDOW_AUTOSIZE)
         cv2.namedWindow( self.winName , cv2.WINDOW_AUTOSIZE )
@@ -1002,144 +1003,139 @@ class sphereVideoDetection():
                 #===============================================================
                 # capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
                 ret, capturedImage = cam.read()
-                if (ret == False):
-                    continue
-                #si hay que poner cuadrado rojo (por nuevo trial), ponerlo antes que cualquier cosa
-                if (self.putRedSquare ):
-                    self.putRedSquare = 0
-                    cv2.rectangle(capturedImage, (0,0), (2,2), (0, 0, 255) , -1 ) 
-                # se graba la imagen en el grabador de video (si corresponde)
-                if (self.moduleStartedIndependently == False and self.videoRecording == True):
-                    frametimes.append(time.time()-frametimes[0])
-                    #video_out.write(capturedImage) #grabar captura (sólo si módulo no fue ejecutado independientemente)
-                    self.frames.append(capturedImage) ;
-                #lo primero que se hace es verificar que se haya podido leer algo. Caso contrario, end of video..
-                if (capturedImage.size == 0) or (type(capturedImage) == type(None)):
-                    logger.info("sphereVideoDetection detected empty image. If video, will try to seek to the start. Then will try to capture another frame");
-                    #cv.SetCaptureProperty(capture, cv.CV_CAP_PROP_POS_FRAMES, 0)
-                    #cam.set(cv2.cv.CV_CAP_PROP_POS_MSEC, 0)
-                    #cam.set(cv2.cv.CV_CAP_PROP_POS_MSEC, 0)
+                if (ret == False and cam_is_video == True): #no hay captura y la fuente es un video => terminó el video
+                    logger.info("seek to video position: 0")
                     try:
-                        cam.set(cv2.CAP_PROP_POS_MSEC, 0)
-                        cam.set(cv2.CAP_PROP_POS_MSEC, 0)
-                        capturedImage = cam.read()[1]
-
+                        cam.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                        cam.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                        ret, capturedImage = cam.read()
                     except:
-                        logger.info("sphereVideoDetection failed to recover from \"empty image\" error.");
-                        continue;
-                    #break;
+                        logger.info("couldn't retrieve new image")
+                        pass
+                    if (ret == False):
+                        logger.info("seek to video position 0 failed")
+                        self.mustquit = 1
                     pass
-                pass
-            
-
-                t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
-                
-                #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
-                t_now = cv2.medianBlur(t_now, 3)
-                # cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_GAUSSIAN, 3, 0);
-                #===============================================================
-                # Se guarda la matriz utilizada en el ciclo anterior.
-                #===============================================================
-                Lbefore = Lnew  # guardo vieja matriz de movimiento; actualizo la nueva
-                #===============================================================
-                # #Proceso la imagen actual: t_now
-                #===============================================================
-                ret, thresh = cv2.threshold(t_now, self.CV2THRESHOLD, 255, cv2.THRESH_BINARY)
-                #contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-                contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2:]
-                #######img2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-                #===============================================================
-                # #Recorrido de frame actual:
-                #===============================================================
-                # recorro los contornos para el frame actual, capturando centros.
-                Lnew = []
-                self.totalCirclesArea = 0; #cantidad de área cubierta por todos los círculos siendo trackeados
-                # si el área es muy chica respecto de lo que es normal, probablemente ha perdido tracking.
-                for cnt in contours:
-                    (x, y), radius = cv2.minEnclosingCircle(cnt)
-                    center = (int(x), int(y))
-                    radius = int(radius)
-                    # a continuaciOn, si el contorno tiene suficiente área, pero también si no es TAN grande:
-                    if (cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and
-                         cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA):
-                        if (self.showTrackingFeedback):
-                            cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)  # visual feedback to user.
-                        Lnew.append(center)
-                        self.totalCirclesArea+= 3.1415926 * radius*radius;
-                self.areasVector[0:-1] = self.areasVector[1:]
-                self.areasVector[-1] = self.totalCirclesArea
-                #===============================================================
-                # #analizo si hay colisiones en el espacio 2D-tiempo
-                #===============================================================
-                # Si las hubiera, voy sumando contribuciones para ver hacia donde apunta el movimiento medio.
-                # Se analizan ambos versores del vector en el plano bidireccional:
-                self.movementAxisX = 0
-                self.movementAxisY = 0
-                self.movingVectorsCount = 0
-                self.standingVectorsCount = 0
-                
-                for index in range(len(Lnew)):
-                    for jndex in range(index, len(Lbefore)):
-                        movement_difference = (Lnew[index][0] - Lbefore[jndex][0]) ** 2 + (Lnew[index][1] - Lbefore[jndex][1]) ** 2
-                        if (math.sqrt(movement_difference) >= self.MIN_CIRCLE_MOVEMENT):
-                            if (math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
-                                # cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
-                                if (self.showTrackingFeedback):
-                                    self.draw_arrow(capturedImage, (Lbefore[jndex][0], Lbefore[jndex][1]) , (Lnew[index][0], Lnew[index][1]) , (255, 0, 0) );
-                                # se suma a todos los desplazamientos (en x, en y).
-                                self.movementAxisX += Lnew[index][0] - Lbefore[jndex][0]
-                                self.movementAxisY += Lnew[index][1] - Lbefore[jndex][1]
-                                self.movingVectorsCount += 1
-                        else:
-                            # están muy cerca, son probablemente el mismo.
-                            self.standingVectorsCount += 1
-                self.isTrackingTemp = True
-                self.losingTrackCause = ""
-                if (self.standingVectorsCount < len(Lnew) / 3 and self.movingVectorsCount < len(Lnew) / 3):  # see docs.
-                    if (len(Lnew) > 2):  # else too few circles to determine loss of tracking
-                        self.isTrackingTemp = False #on this frame, the tracking has been lost.
-                        self.losingTrackCause = "standing_vs_moving_vectors"
-                if self.isTrackingTemp == True:
-                    # studying lose of track associated with area of circles
-                    if (self.totalCirclesArea < self.MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING):
-                            self.isTrackingTemp = False #less area than expected, it has lost movement tracking
-                            self.losingTrackCause = "small_area"
-                
-                self.trackingVector[0:-1] = self.trackingVector[1:]
-                self.trackingVector[-1] = self.isTrackingTemp
-                amountOfPreviousTrackingFrames = 0
-                self.isTracking = True
-                for i in range( 0, len(self.trackingVector) ):
-                    if self.trackingVector[i] == True:
-                        amountOfPreviousTrackingFrames += 1
-                if (amountOfPreviousTrackingFrames < int( 0.8 * len(self.trackingVector) ) ): # from the past LEN tracking frames , 80% or less have lost tracking
-                    self.isTracking = False # so consider this as a current track loss (movement with unknown direction)
-                
-                # we divide each instant vector components by N, to obtain average instant vector.
-                if (self.movingVectorsCount == 0):
-                    pass # no moving vectors, so we don't need to calculate current movement.
-                else:
-                    self.movementAxisX /= self.movingVectorsCount  # movimiento x promedio.
-                    self.movementAxisY /= self.movingVectorsCount  # movimiento y promedio
+                if (ret == False and cam_is_video == False): #si es cámara y no generó una captura, puede ser que el stream siga funcional
+                    pass
+                    continue
+                if (ret == True): #si se obtuvo un capturedImage correctamente, analizar imagen
+                    #si hay que poner cuadrado rojo (por nuevo trial), ponerlo antes que cualquier cosa
+                    if (self.putRedSquare ):
+                        self.putRedSquare = 0
+                        cv2.rectangle(capturedImage, (0,0), (2,2), (0, 0, 255) , -1 ) 
+                    # se graba la imagen en el grabador de video (si corresponde)
+                    if (self.moduleStartedIndependently == False and self.videoRecording == True):
+                        frametimes.append(time.time()-frametimes[0])
+                        #video_out.write(capturedImage) #grabar captura (sólo si módulo no fue ejecutado independientemente)
+                        self.frames.append(capturedImage)
+                    t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
+                    #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
+                    t_now = cv2.medianBlur(t_now, 3)
+                    # cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_GAUSSIAN, 3, 0);
+                    #===============================================================
+                    # Se guarda la matriz utilizada en el ciclo anterior.
+                    #===============================================================
+                    Lbefore = Lnew  # guardo vieja matriz de movimiento; actualizo la nueva
+                    #===============================================================
+                    # #Proceso la imagen actual: t_now
+                    #===============================================================
+                    ret, thresh = cv2.threshold(t_now, self.CV2THRESHOLD, 255, cv2.THRESH_BINARY)
+                    #contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2:]
+                    #######img2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                    #===============================================================
+                    # #Recorrido de frame actual:
+                    #===============================================================
+                    # recorro los contornos para el frame actual, capturando centros.
+                    Lnew = []
+                    self.totalCirclesArea = 0; #cantidad de área cubierta por todos los círculos siendo trackeados
+                    # si el área es muy chica respecto de lo que es normal, probablemente ha perdido tracking.
+                    for cnt in contours:
+                        (x, y), radius = cv2.minEnclosingCircle(cnt)
+                        center = (int(x), int(y))
+                        radius = int(radius)
+                        # a continuaciOn, si el contorno tiene suficiente área, pero también si no es TAN grande:
+                        if (cv2.contourArea(cnt) > self.WORKING_MIN_CONTOUR_AREA and
+                            cv2.contourArea(cnt) < self.WORKING_MAX_CONTOUR_AREA):
+                            if (self.showTrackingFeedback):
+                                cv2.circle(capturedImage, center, radius, (0, 255, 0), 2)  # visual feedback to user.
+                            Lnew.append(center)
+                            self.totalCirclesArea+= 3.1415926 * radius*radius;
+                    self.areasVector[0:-1] = self.areasVector[1:]
+                    self.areasVector[-1] = self.totalCirclesArea
+                    #===============================================================
+                    # #analizo si hay colisiones en el espacio 2D-tiempo
+                    #===============================================================
+                    # Si las hubiera, voy sumando contribuciones para ver hacia donde apunta el movimiento medio.
+                    # Se analizan ambos versores del vector en el plano bidireccional:
+                    self.movementAxisX = 0
+                    self.movementAxisY = 0
+                    self.movingVectorsCount = 0
+                    self.standingVectorsCount = 0
                     
-                    self.vectorAcumulado.x += self.movementAxisX
-                    self.vectorAcumulado.y += self.movementAxisY
+                    for index in range(len(Lnew)):
+                        for jndex in range(index, len(Lbefore)):
+                            movement_difference = (Lnew[index][0] - Lbefore[jndex][0]) ** 2 + (Lnew[index][1] - Lbefore[jndex][1]) ** 2
+                            if (math.sqrt(movement_difference) >= self.MIN_CIRCLE_MOVEMENT):
+                                if (math.sqrt(movement_difference) <= self.MAX_CIRCLE_MOVEMENT):
+                                    # cv2.circle(capturedImage, (Lnew[index][0], Lnew[index][1]),3,(0,0,255),2)
+                                    if (self.showTrackingFeedback):
+                                        self.draw_arrow(capturedImage, (Lbefore[jndex][0], Lbefore[jndex][1]) , (Lnew[index][0], Lnew[index][1]) , (255, 0, 0) );
+                                    # se suma a todos los desplazamientos (en x, en y).
+                                    self.movementAxisX += Lnew[index][0] - Lbefore[jndex][0]
+                                    self.movementAxisY += Lnew[index][1] - Lbefore[jndex][1]
+                                    self.movingVectorsCount += 1
+                            else:
+                                # están muy cerca, son probablemente el mismo.
+                                self.standingVectorsCount += 1
+                    self.isTrackingTemp = True
+                    self.losingTrackCause = ""
+                    if (self.standingVectorsCount < len(Lnew) / 3 and self.movingVectorsCount < len(Lnew) / 3):  # see docs.
+                        if (len(Lnew) > 2):  # else too few circles to determine loss of tracking
+                            self.isTrackingTemp = False #on this frame, the tracking has been lost.
+                            self.losingTrackCause = "standing_vs_moving_vectors"
+                    if self.isTrackingTemp == True:
+                        # studying lose of track associated with area of circles
+                        if (self.totalCirclesArea < self.MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING):
+                                self.isTrackingTemp = False #less area than expected, it has lost movement tracking
+                                self.losingTrackCause = "small_area"
                     
-                    self.vectorInstantaneo.x += self.movementAxisX  # suma contrib. x en este ciclo (se establece a 0 en otro método)
-                    self.vectorInstantaneo.y += self.movementAxisY  # suma contrib. y en este ciclo (se establece a 0 en otro método)
+                    self.trackingVector[0:-1] = self.trackingVector[1:]
+                    self.trackingVector[-1] = self.isTrackingTemp
+                    amountOfPreviousTrackingFrames = 0
+                    self.isTracking = True
+                    for i in range( 0, len(self.trackingVector) ):
+                        if self.trackingVector[i] == True:
+                            amountOfPreviousTrackingFrames += 1
+                    if (amountOfPreviousTrackingFrames < int( 0.8 * len(self.trackingVector) ) ): # from the past LEN tracking frames , 80% or less have lost tracking
+                        self.isTracking = False # so consider this as a current track loss (movement with unknown direction)
                     
-                    # se analiza continuidad de movimiento en función:
-                    self.continuousMovementAnalysis()
-                
-                # se ejecutan visualization tools de pygame (es opcional)
-                if self.usingPygameDisplay:
-                    self.pygameVisualizationTools()
-                
-                #===============================================================
-                # se "muestra" el resultado al usuario (feedback)
-                #===============================================================
-                if (self.showUserFeedback):
-                    cv2.imshow(self.winName , capturedImage)  # obs.: NO es estrictamente necesario mostrar la ventana para que funcione, podría comentarse.
+                    # we divide each instant vector components by N, to obtain average instant vector.
+                    if (self.movingVectorsCount == 0):
+                        pass # no moving vectors, so we don't need to calculate current movement.
+                    else:
+                        self.movementAxisX /= self.movingVectorsCount  # movimiento x promedio.
+                        self.movementAxisY /= self.movingVectorsCount  # movimiento y promedio
+                        
+                        self.vectorAcumulado.x += self.movementAxisX
+                        self.vectorAcumulado.y += self.movementAxisY
+                        
+                        self.vectorInstantaneo.x += self.movementAxisX  # suma contrib. x en este ciclo (se establece a 0 en otro método)
+                        self.vectorInstantaneo.y += self.movementAxisY  # suma contrib. y en este ciclo (se establece a 0 en otro método)
+                        
+                        # se analiza continuidad de movimiento en función:
+                        self.continuousMovementAnalysis()
+                    
+                    # se ejecutan visualization tools de pygame (es opcional)
+                    if self.usingPygameDisplay:
+                        self.pygameVisualizationTools()
+                    
+                    #===============================================================
+                    # se "muestra" el resultado al usuario (feedback)
+                    #===============================================================
+                    if (self.showUserFeedback):
+                        cv2.imshow(self.winName , capturedImage)  # obs.: NO es estrictamente necesario mostrar la ventana para que funcione, podría comentarse.
                 #===============================================================
                 # #para finalizar programa, usuario presiona "Escape":
                 #===============================================================
@@ -1157,6 +1153,9 @@ class sphereVideoDetection():
                     cv2.destroyWindow(self.winName)
                     cv2.destroyAllWindows()
                     # cv.DestroyWindow(self.winName)
+                    if self.usingPygameDisplay:
+                        pygame.quit()
+                    self.available = False
                     logger.info("Exiting sphereVideoDetection")
                     # os.kill(os.getpid(), signal.SIGINT)
                     #print self.mustquit
@@ -1201,7 +1200,7 @@ if __name__ == '__main__':
     # videoDet.setNoiseFiltering(False)
     # videoDet.calibrate()
     
-    while(True):
+    while(videoDet.available == True):
         # print "x:  "+str(videoDet.getAccumX())
         # print "y:  "+str(videoDet.getAccumY()) #<>
         # print "Continuous movement time: %r    Idle movement time: %r   IsMoving: %r"  % (videoDet.getMovementTime() , videoDet.getIdleTime(), videoDet.getMovementStatus())
