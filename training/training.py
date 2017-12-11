@@ -410,7 +410,6 @@ class Training():
             else:
                 #the trial has started, is stoppable.
                 flg = 2
-            
             if (flg == 1):
                 Training.restartTraining()
             if (flg == 2):
@@ -1335,7 +1334,7 @@ class Training():
                     Training.gVariables.idleTrialCount -= 1;
                     #print "Restado idle por trial trunco"
                     pass
-            
+            Training.gVariables.videoDet.setupNewTrial() #red square to signal trial ending
             Training.updateDisplayInfo()
             Training.gVariables.logger.info('%s stopped.' % Training.gVariables.trainingName)
             Training.gVariables.logger.info('Success rate: %s' % Training.gVariables.successRate)
