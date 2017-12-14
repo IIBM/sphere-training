@@ -1016,6 +1016,8 @@ class sphereVideoDetection():
                         logger.info("seek to video position 0 failed")
                         self.mustquit = 1
                     pass
+                if (ret == True and ( (capturedImage.size == 0) or (type(capturedImage) == type(None)) ) ):
+                    ret = False
                 if (ret == False and cam_is_video == False): #si es cámara y no generó una captura, puede ser que el stream siga funcional
                     pass
                     continue
@@ -1027,7 +1029,7 @@ class sphereVideoDetection():
                     # se graba la imagen en el grabador de video (si corresponde)
                     if (self.moduleStartedIndependently == False and self.videoRecording == True):
                         frametimes.append(time.time()-frametimes[0])
-                        #video_out.write(capturedImage) #grabar captura (sólo si módulo no fue ejecutado independientemente)
+                        ###self.video_out.write(capturedImage) #grabar captura (sólo si módulo no fue ejecutado independientemente)
                         self.frames.append(capturedImage)
                     t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
                     #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
