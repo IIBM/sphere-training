@@ -66,8 +66,12 @@ class sphereVideoDetection():
     capturedImageWidth = 0;
     capturedImageHeight = 0;
     capturedImageSize = 0;
+    bufferingRule = 0; #default: no buffering, save each frame to disk; nonzero:buffer each frame to mem
+    #warning: if nonzero, an external trigger must be executed to flush to disk (flushCapturedFrames)
     videoRecording = False #Si True: grabar cada fotograma en el video stream que se supone inicializado
     moduleStartedIndependently = False #Si False: inicializar las variables para grabación de video
+    exitVarSuccessful = 0 #si 1, saliO del bucle de exit correctamente
+    alreadyFlushing = 0 #0:ok; 1: already flushing, do not flush further!
     
     MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = 0 ;
     frames = list()
@@ -185,10 +189,22 @@ class sphereVideoDetection():
         return [self.vectorAcumulado.x, self.vectorAcumulado.y]
     
     def flushCapturedFrames(self):
+        if (self.alreadyFlushing):
+            return
+        self.alreadyFlushing  = 1
+        if (len(self.frames) == 0):
+            print "flush: len0"
+            self.exitVarSuccessful = 1
+            self.alreadyFlushing = 0
+            return
+        print "flushing ", len(self.frames)
         for item in self.frames:
             self.video_out.write(item)
         del self.frames[:]
         self.frames = []
+        print "flushed ok ", len(self.frames)
+        self.exitVarSuccessful = 1
+        self.alreadyFlushing = 0
     
     def resetX(self):
         self.vectorInstantaneo.x = 0
@@ -967,8 +983,10 @@ class sphereVideoDetection():
         
         #inicialización de grabación de video
         if (self.moduleStartedIndependently == False ):
-            videofps=30 # estimado, despues se corrigira
+            videofps=vs.getVideoFPS()
             videoframesize=vs.getVideoSize()
+            print "sVD: fps:", videofps
+            print "sVD: frsize:", videoframesize
             if is_cv2():
                 self.video_out = cv2.VideoWriter(self.outputVideoFile, cv2.cv.CV_FOURCC(*'MPEG'), videofps, videoframesize)
             elif is_cv3():
@@ -1030,7 +1048,10 @@ class sphereVideoDetection():
                     if (self.moduleStartedIndependently == False and self.videoRecording == True):
                         frametimes.append(time.time()-frametimes[0])
                         ###self.video_out.write(capturedImage) #grabar captura (sólo si módulo no fue ejecutado independientemente)
-                        self.frames.append(capturedImage)
+                        if (self.bufferingRule==0):
+                            self.video_out.write(capturedImage)
+                        else: #buffering to list, external trigger will flushCapturedFrames
+                            self.frames.append(capturedImage)
                     t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
                     #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
                     t_now = cv2.medianBlur(t_now, 3)
@@ -1147,6 +1168,9 @@ class sphereVideoDetection():
                     try:
                         cam.release()
                         if (self.moduleStartedIndependently == False ):
+                            while len(self.frames) > 1: #flushing... don't quit until finished..
+                                time.sleep(1)
+                            self.exitVarSuccessful = 1
                             self.video_out.release()
                             logger.info("VIDEOTIMES")
                             logger.info(frametimes)

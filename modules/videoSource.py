@@ -11,8 +11,7 @@ import track_bola_utils
 import logging
 logger = logging.getLogger('videosource')
 
-WIDTH_INDEX_CAMERA = 3
-HEIGHT_INDEX_CAMERA = 4
+
 
 """
 videoSource: This class creates a VideoCapture, sets its values (brightness, etc.).
@@ -24,20 +23,30 @@ class videoSource() :
     def __init__(self) :
         checkImports()
         import configVideoSource
+        WIDTH_INDEX_CAMERA = configVideoSource.CAM_WIDTH_VAR
+        HEIGHT_INDEX_CAMERA = configVideoSource.CAM_HEIGHT_VAR
         
         # import configCamera
         cam = cv2.VideoCapture(configVideoSource.VIDEOSOURCE)
         print "Videosource: %s" % configVideoSource.VIDEOSOURCE;
-        # Opciones de ejecuciOn: 640x480 => 60 fps.
-        cam.set(WIDTH_INDEX_CAMERA, configVideoSource.CAM_WIDTH)
-        cam.set(HEIGHT_INDEX_CAMERA, configVideoSource.CAM_HEIGHT)
-        self.VIDEOSIZE = (configVideoSource.CAM_WIDTH, configVideoSource.CAM_HEIGHT)
-        
         # set camera properties: this configuration is very dependent on the type and model of camera.
         if ( type(configVideoSource.VIDEOSOURCE) == int ):
-            self.videoStatus = False #if videoStatus = False, it is a camera and not a video
+            self.videoStatus = False #if videoStatus = False, it is a CAMERA and not a video
+            # Opciones de ejecuciOn: 640x480 => 60 fps.
+            cam.set(WIDTH_INDEX_CAMERA, configVideoSource.CAM_WIDTH)
+            cam.set(HEIGHT_INDEX_CAMERA, configVideoSource.CAM_HEIGHT)
+            cam.set(configVideoSource.CAM_FPS_VAR, configVideoSource.CAM_FPS_VALUE)
+            self.CAM_FPS = configVideoSource.CAM_FPS_VALUE
+            self.VIDEOSIZE = (configVideoSource.CAM_WIDTH, configVideoSource.CAM_HEIGHT)
         else:
-            self.videoStatus = True #if videoStatus = True, it is a video and not a camera
+            self.videoStatus = True #if videoStatus = True, it is a VIDEO and not a camera
+            configVideoSource.CAM_WIDTH = int(cam.get(WIDTH_INDEX_CAMERA)) #ignoring cfg and putting detected W from video
+            configVideoSource.CAM_HEIGHT = int(cam.get(HEIGHT_INDEX_CAMERA)) #ignoring cfg and putting detected H from video
+            configVideoSource.CAM_FPS = int(cam.get(configVideoSource.CAM_FPS_VAR)) #ignoring cfg and putting detected FPS from video
+            self.CAM_FPS = configVideoSource.CAM_FPS
+            self.VIDEOSIZE = (configVideoSource.CAM_WIDTH, configVideoSource.CAM_HEIGHT)
+            print "Warning: overriding configVideoSource with input video settings: %s %s %s" % (configVideoSource.CAM_WIDTH , configVideoSource.CAM_HEIGHT , configVideoSource.CAM_FPS)
+        
         cam.set(configVideoSource.CAM_BRIGHTNESS_VAR, configVideoSource.CAM_BRIGHTNESS_VALUE)
         cam.set(configVideoSource.CAM_CONTRAST_VAR, configVideoSource.CAM_CONTRAST_VALUE)
         cam.set(configVideoSource.CAM_SATURATION_VAR, configVideoSource.CAM_SATURATION_VALUE)
@@ -62,8 +71,7 @@ class videoSource() :
         print "camera: Exposure %r" % cam.get(configVideoSource.CAM_EXPOSURE_VAR)
         logger.info(str("camera: Exposure %r" % cam.get(configVideoSource.CAM_EXPOSURE_VAR)))
         
-        
-                # import camera parameters from file:
+        # import camera parameters from file:
         self.CAM_BRIGHTNESS_VAR = configVideoSource.CAM_BRIGHTNESS_VAR
         self.CAM_CONTRAST_VAR = configVideoSource.CAM_CONTRAST_VAR
         self.CAM_SATURATION_VAR = configVideoSource.CAM_SATURATION_VAR
@@ -78,7 +86,6 @@ class videoSource() :
         self.CAM_GAIN_VALUE = configVideoSource.CAM_GAIN_VALUE
         self.CAM_EXPOSURE_VALUE = configVideoSource.CAM_EXPOSURE_VALUE
         logger.info("Initial config done.")
-        
         time.sleep(0.2)
         """
         1-CV_CAP_PROP_POS_MSEC Current position of the video file in milliseconds.
@@ -100,8 +107,17 @@ class videoSource() :
         17-CV_CAP_PROP_CONVERT_RGB Boolean flags indicating whether images should be converted to RGB.
         18-CV_CAP_PROP_WHITE_BALANCE Currently unsupported
         19-CV_CAP_PROP_RECTIFICATION Rectification flag for stereo cameras (note: only supported by DC1394 v 2.x backend currently)
+        _______
+        ObservaciOn: mAs allA de los valores establecidos, puede que los valores reales difieran
+        El motivo mAs usual es incompatibilidad cAmara <> configuraciOn
+        Entonces los valores que toma videoSource son los que realmente se estA capturando del source.
+        Esto permite que no hayan inconvenientes en la grabaciOn de video de salida.
         """
-        
+        print "width:", int(cam.get(WIDTH_INDEX_CAMERA))
+        print "height:", int(cam.get(HEIGHT_INDEX_CAMERA))
+        print "fps:", int(cam.get(configVideoSource.CAM_FPS_VAR))
+        self.VIDEOSIZE = ( int(cam.get(WIDTH_INDEX_CAMERA)) , int(cam.get(HEIGHT_INDEX_CAMERA)) )
+        self.CAM_FPS = cam.get(configVideoSource.CAM_FPS_VAR)
         if not cam:
             print "Error opening capture device"
             logger.error("Error opening capture device")
@@ -116,6 +132,9 @@ class videoSource() :
     
     def getVideoSize(self):
         return self.VIDEOSIZE
+    
+    def getVideoFPS(self):
+        return self.CAM_FPS
 
     def exit(self):
         return;

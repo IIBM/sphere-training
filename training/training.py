@@ -1426,6 +1426,7 @@ class Training():
         # Finalize this training and exits.
         self.gVariables.logger.info('Exit signal.')
         self.gVariables.logger.info('Comment about this training: %s', Training.gVariables.trial_comment)
+        self.gVariables.videoDet.flushCapturedFrames() #if user is exitting without stopping....
         #self.gVariables.fred1.stop() #this function has not
         self.gVariables.programRunning = 0;
         time.sleep(0.5)
@@ -1446,6 +1447,8 @@ class Training():
                 pass
         self.gVariables.videoDet.exit()
         time.sleep(0.2)
+        while self.gVariables.videoDet.exitVarSuccessful == 0:
+            time.sleep(1) #espera a que libere su buffer si tiene
         del self.gVariables.videoDet
         self.gVariables.audioRec.exit()
         time.sleep(0.2)
@@ -1689,6 +1692,7 @@ class Training():
         self.gVariables.videoDet.setMovementMethod(self.gVariables.videoMovementMethod)
         self.gVariables.videoDet.setMovementThreshold(self.gVariables.movementAmount)
         self.gVariables.videoDet.usingPygameDisplay = False; #to prevent launching pygame visualization tools for vd.
+        self.gVariables.videoDet.bufferingRule = self.gVariables.flushVideoFramesEachTrial
         self.gVariables.videoDet.initAll()
         self.gVariables.fred0 = threading.Thread(target=self.gVariables.audioRec.mainAudioRecording)
         self.gVariables.fred0.start()
