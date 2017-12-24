@@ -1055,6 +1055,7 @@ class sphereVideoDetection():
                             self.video_out.write(capturedImage)
                         else: #buffering to list, external trigger will flushCapturedFrames
                             self.frames.append(capturedImage)
+                    start = time.time() #testing time difference. 
                     t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
                     #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
                     t_now = cv2.medianBlur(t_now, 3)
@@ -1152,7 +1153,8 @@ class sphereVideoDetection():
                         
                         # se analiza continuidad de movimiento en función:
                         self.continuousMovementAnalysis()
-                    
+                    done = time.time()
+                    print(done - start)
                     # se ejecutan visualization tools de pygame (es opcional)
                     if self.usingPygameDisplay:
                         self.pygameVisualizationTools()
