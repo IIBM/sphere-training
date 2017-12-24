@@ -19,7 +19,7 @@ import logging
 import numpy
 logger = logging.getLogger('sphereVideoDetection')
 import track_bola_utils
-
+import collections
 
 def is_cv2():
     # if we are using OpenCV 2, then our cv2.__version__ will start with '2.'
@@ -74,7 +74,7 @@ class sphereVideoDetection():
     alreadyFlushing = 0 #0:ok; 1: already flushing, do not flush further!
     
     MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING = 0 ;
-    frames = list()
+    frames = collections.deque() #list()
     putRedSquare = 0;
     video_out = -1
     
@@ -200,7 +200,7 @@ class sphereVideoDetection():
         print "flushing ", len(self.frames), "frames."
         count=0
         while len(self.frames) > 0: #for item in self.frames:
-            self.video_out.write(self.frames.pop(0))
+            self.video_out.write(self.frames.popleft())
             count+=1
         #del self.frames[:]
         #self.frames = []
