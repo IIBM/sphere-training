@@ -197,9 +197,10 @@ class sphereVideoDetection():
             self.exitVarSuccessful = 1
             self.alreadyFlushing = 0
             return
-        print "flushing ", len(self.frames), "frames."
+        flushQuantity=len(self.frames)
+        print "flushing ", flushQuantity, "frames."
         count=0
-        while len(self.frames) > 0: #for item in self.frames:
+        for _ in xrange(flushQuantity): #len(self.frames) > 0: #for item in self.frames:
             self.video_out.write(self.frames.popleft())
             count+=1
         #del self.frames[:]
