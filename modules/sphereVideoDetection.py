@@ -983,6 +983,8 @@ class sphereVideoDetection():
         # Se declaran unas imágenes, para inicializar correctamente cámara y variables.
         t_now = cv2.cvtColor( cam.read()[1], cv2.COLOR_RGB2GRAY )
         capturedImage = cam.read()[1]
+        thresh = t_now.copy()
+        originalImage = capturedImage.copy()
         
         #inicialización de grabación de video
         if (self.moduleStartedIndependently == False ):
@@ -1022,8 +1024,7 @@ class sphereVideoDetection():
                 #===============================================================
                 # # Preparo las imgs antigûa, actual y futura<>
                 #===============================================================
-                # capturedImage toma una captura para t_now, y para algunas geometrías que se dibujan encima de él.
-                ret, capturedImage = cam.read()
+                ret, capturedImage = cam.read() #t_now: img.proces. (gray, blur), thresh: (gray, blur, thresh), capturedImage: img orig. + cIrculos /ayudas visuales, originalImage: img original 
                 if (ret == False and cam_is_video == True): #no hay captura y la fuente es un video => terminó el video
                     logger.info("seek to video position: 0")
                     try:
@@ -1046,15 +1047,16 @@ class sphereVideoDetection():
                     #si hay que poner cuadrado rojo (por nuevo trial), ponerlo antes que cualquier cosa
                     if (self.putRedSquare ):
                         self.putRedSquare = 0
-                        cv2.rectangle(capturedImage, (0,0), (2,2), (0, 0, 255) , -1 ) 
+                        cv2.rectangle(capturedImage, (0,0), (2,2), (0, 0, 255) , -1 )
                     # se graba la imagen en el grabador de video (si corresponde)
                     if (self.moduleStartedIndependently == False and self.videoRecording == True):
                         frametimes.append(time.time()-frametimes[0])
                         ###self.video_out.write(capturedImage) #grabar captura (sólo si módulo no fue ejecutado independientemente)
                         if (self.bufferingRule==0):
-                            self.video_out.write(capturedImage)
+                            self.video_out.write(capturedImage) #si no bufferea, no necesita clonar
                         else: #buffering to list, external trigger will flushCapturedFrames
-                            self.frames.append(capturedImage)
+                            originalImage = capturedImage.copy() #clonar y appendear el clon
+                            self.frames.append(originalImage)
                     t_now = cv2.cvtColor(capturedImage, cv2.COLOR_RGB2GRAY)  # current matrix
                     #cv.Smooth(cv.fromarray(t_now), cv.fromarray(t_now), cv.CV_BLUR, 3);
                     t_now = cv2.medianBlur(t_now, 3)
@@ -1155,7 +1157,6 @@ class sphereVideoDetection():
                     # se ejecutan visualization tools de pygame (es opcional)
                     if self.usingPygameDisplay:
                         self.pygameVisualizationTools()
-                    
                     #===============================================================
                     # se "muestra" el resultado al usuario (feedback)
                     #===============================================================

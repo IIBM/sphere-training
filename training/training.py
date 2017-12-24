@@ -107,7 +107,6 @@ class Training():
     class gVariables():
         #Global variables to be used within the Training class.
         #Contains global variables AND some training functions (internal to the Training class).
-        
         @staticmethod
         def dummy_fn():
             #does nothing, used before as a testing function.
@@ -1152,9 +1151,13 @@ class Training():
                 else:
                     sttrial = ""
                 Training.gVariables.current_trial_type_str = sttrial
+                if (Training.gVariables.trialSuccessful):
+                    temporalSuccessStatus = " - S"
+                else:
+                    temporalSuccessStatus = " - F"
                 if (Training.gVariables.current_trial_time < Training.gVariables.eventTime2_movement):
                     #Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "running")
-                    UpdList.append( ("Trial status", sttrial + " - " + "running") )
+                    UpdList.append( ("Trial status", sttrial + " - " + "running"+temporalSuccessStatus) )
                 else:
                     if Training.gVariables.dropReleased == 1:
                         #Training.gVariables.display.updateInfo("Trial status", sttrial + " - " + "SUCCESS")
@@ -1907,6 +1910,7 @@ class Training():
                 #trial stage not 1, so it is unnecessary to check if should give reward..
                 pass
             pass
+        pass
     
     def saveToInternalVars(self, a):
         if ("pavlov" in a):
