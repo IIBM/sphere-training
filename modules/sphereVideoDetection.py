@@ -125,7 +125,8 @@ class sphereVideoDetection():
         self.showUserFeedback = True  # show or hide video window.
         
         self.movementVector = []  # binary vector, each loop adds 1 if moving, 0 otherwise
-        
+        self.onlyZeros = [] #only ceros, used for trial movement detection.
+        self.onlyOnes = [] #only 1s, used for trial movement detection.
         
         self.movementVectorLength = configSphereVideoDetection.MOVEMENT_VECTOR_LENGTH
         
@@ -149,6 +150,12 @@ class sphereVideoDetection():
         
         for i in range (0, self.movementVectorLength):
             self.movementVector.append(0)
+        
+        for i in range (0, self.movementVectorLength):
+            self.onlyZeros.append(0)
+            
+        for i in range (0, self.movementVectorLength):
+            self.onlyOnes.append(1)
         
         for i in range (0, self.movementDelayVectorLength):
             self.movementDelayVector.append(0)
@@ -361,14 +368,15 @@ class sphereVideoDetection():
     def resetMovementTime(self):
         self.continuousMovementTime = 0.0
         self.last_saved_time_movement = timeit.default_timer()
-        for i in range(0, len(self.movementVector)):
-            self.movementVector[i] = 0
+        self.isMoving = False
+        self.movementVector = self.onlyZeros[:]
 
     def resetIdleTime(self):
         self.continuousIdleTime = 0.0
         self.last_saved_time_idle = timeit.default_timer()
-        for i in range(0, len(self.movementVector)):
-            self.movementVector[i] = 1
+        self.isIdle = False
+        self.movementVector = self.onlyOnes[:]
+
     
     def setMovementThreshold(self, thres):
         # Movement threshold: how much "movement" between two frames should be considered as "movement"
@@ -422,9 +430,8 @@ class sphereVideoDetection():
         #=======================================================================
         # # Movement Vector Binary (a variant of the non binary method)
         #=======================================================================
-        
-        # This method will set the movement time in a preset value, and no more or less, only if that much time
-        # is detected. For example:
+        # This method will set the movement time to a fixed preset value, and will determine
+        # if that time-amount of movement is detected. For example:
         # If it was moving for 1 second, and the time window in the training
         # files set this module to detect at least 0.5 s, this method will detect movingTIme to 0.5 s
         # If this method does not detect 0.5 s , it will set movingTime to 0 and idle time to 0
@@ -432,8 +439,7 @@ class sphereVideoDetection():
         # # Keep track of the time it takes to process the whole loop
         #=======================================================================
         # work in seconds.
-        
-        # print "MVB Start."
+        #print "MVB Start."
         self.continuousMovementTime = 0.0
         self.continuousIdleTime = 0.0
         timeDif = (timeit.default_timer() - self.last_saved_time_gp)

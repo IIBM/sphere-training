@@ -1825,7 +1825,7 @@ class Training():
                         # a new "time window" should be set for 
                         # some movement analysis methods to work.
                         Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.idleTime)
-
+                
                 if (Training.gVariables.current_trial_type == 1):
                         sttrial = "move"
                 elif (Training.gVariables.current_trial_type == 2):
