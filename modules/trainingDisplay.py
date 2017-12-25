@@ -143,11 +143,8 @@ class multiproc_trainingDisplay():
         pass #sets from the class lists. the one that has "text", and updates it with newValue
         a = False
         if (self.available == False): return
-        try:
-            if ( (len(self.displayText1) <= 0) and  (len(self.displayText2) <= 0) ):
+        if ( (len(self.displayText1) <= 0) and  (len(self.displayText2) <= 0) ):
                 return;
-        except:
-            return;
         for i in range(0, len(self.displayText1)):
             if str(self.displayText1[i][0]) == str(text):
                 self.displayText1[i] = (text,newValue)

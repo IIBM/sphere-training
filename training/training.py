@@ -1806,26 +1806,20 @@ class Training():
                         Training.gVariables.current_trial_type = 1
                     else :
                         Training.gVariables.current_trial_type = 2
-                
                 if (Training.gVariables.type_ocond == 1 or Training.gVariables.type_skinner == 1 or Training.gVariables.type_pavlov == 1): #force it to "move"
                     Training.gVariables.current_trial_type = 1 #pavlov here is unnecessary, but to keep all except discr in "move" type.
-                
                 if (Training.gVariables.current_trial_type == 1) :
                         Training.gVariables.logger.info('tone 1: %s Hz' % str(Training.gVariables.soundGenFrequency1) )
-                        
                         Training.gVariables.s1.play()
                         Training.gVariables.movementTrialCount += 1
-                        # a new "time window" should be set for 
-                        # some movement analysis methods to work.
+                        # a new "time window" should be set for some movement analysis methods to work.
                         Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.movementTime)
                 else :
                         Training.gVariables.logger.info('tone 2: %s Hz'  % str(Training.gVariables.soundGenFrequency2))
                         Training.gVariables.s2.play()
                         Training.gVariables.idleTrialCount += 1
-                        # a new "time window" should be set for 
-                        # some movement analysis methods to work.
+                        # a new "time window" should be set for some movement analysis methods to work.
                         Training.gVariables.videoDet.setMovementTimeWindow(Training.gVariables.idleTime)
-                
                 if (Training.gVariables.current_trial_type == 1):
                         sttrial = "move"
                 elif (Training.gVariables.current_trial_type == 2):
@@ -1834,13 +1828,10 @@ class Training():
                 Training.gVariables.logger.debug(Training.gVariables.history_trial)
                 Training.gVariables.logger.debug(Training.gVariables.toneOneProbability)
                 Training.gVariables.logger.debug(Training.gVariables.current_trial_type)
-                
                 Training.gVariables.history_trial[0:-1] = Training.gVariables.history_trial[1:]
                 Training.gVariables.history_trial[-1] = Training.gVariables.current_trial_type
-
                 Training.gVariables.current_trial_stage = 0
                 Training.gVariables.current_trial_paused_time = 0
-                
                 # add random factor to the intertrial time in the next one:
                 from random import randint
                 i = randint(0, 10)
@@ -1875,6 +1866,7 @@ class Training():
                 if (Training.gVariables.flushVideoFramesEachTrial == 1):
                     Training.gVariables.videoDet.flushCapturedFrames() # save cached frames to video file
                 Training.gVariables.current_trial_stage = 2
+                Training.gVariables.trialSuccessful = False #esta variable ya se usó para dar reward. se pone en False para no confundir al trainingDisplay
             elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime3_trialEnd and Training.gVariables.current_trial_stage == 2):
                 Training.gVariables.logger.info('End trial:%d' % (Training.gVariables.trialCount - 1 ) )
                 Training.gVariables.logger.info('Trial type was: ' + str(Training.gVariables.current_trial_type_str))
