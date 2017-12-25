@@ -1593,45 +1593,60 @@ class Training():
         pass
         #setting training configs per subject; if exists, has priority over previous configs. Check docs.
         subj_config_file = Training.gVariables.subject_name + "_config_training"
+        import imp
+        f = 0
+        filename=0
+        description =0
         try:
-            subj_config_file = Training.gVariables.subject_name + "_config_training"
-            subjectConfig = importlib.import_module(subj_config_file);
-            Training.gVariables.trainingName = subjectConfig.trainingName
-            Training.gVariables.eventTime1_sound = subjectConfig.eventTime1_sound
-            Training.gVariables.eventTime1_movement_start = subjectConfig.eventTime1_movement_start
-            Training.gVariables.eventTime2_movement = subjectConfig.eventTime2_movement
-            Training.gVariables.eventTime3_trialEnd = subjectConfig.eventTime3_trialEnd
-            Training.gVariables.minIdleIntertrialTime = subjectConfig.minIdleIntertrialTime
-            Training.gVariables.requireStillness = subjectConfig.requireStillness
-            Training.gVariables.interTrialRandom1Time = subjectConfig.interTrialRandom1Time
-            Training.gVariables.interTrialRandom2Time = subjectConfig.interTrialRandom2Time
-            Training.gVariables.movementTime = subjectConfig.movementTime
-            Training.gVariables.idleTime = subjectConfig.idleTime
-            Training.gVariables.soundGenDuration1 = subjectConfig.soundGenDuration1
-            Training.gVariables.soundGenDuration2 = subjectConfig.soundGenDuration2
-            Training.gVariables.soundGenFrequency1 = subjectConfig.soundGenFrequency1
-            Training.gVariables.soundGenFrequency2 = subjectConfig.soundGenFrequency2
-            Training.gVariables.soundGenVolume1 = subjectConfig.soundGenVolume1
-            Training.gVariables.soundGenVolume2 = subjectConfig.soundGenVolume2
-            Training.gVariables.toneOneProbability = subjectConfig.toneOneProbability
-            Training.gVariables.usingTK = subjectConfig.usingTK
-            Training.gVariables.initialComment = subjectConfig.initialComment
-            Training.gVariables.type_pavlov = subjectConfig.type_pavlov
-            Training.gVariables.type_skinner = subjectConfig.type_skinner
-            Training.gVariables.type_ocond = subjectConfig.type_ocond
-            Training.gVariables.type_discr = subjectConfig.type_discr
-            #movement threshold and method: editing sphereVideoDetection config files is recommended (still can be edited from config_training.)
-            Training.gVariables.movementAmount = subjectConfig.MOVEMENT_THRESHOLD_INITIAL_VALUE
-            Training.gVariables.videoMovementMethod = subjectConfig.MOVEMENT_METHOD_INITIAL_VALUE
+            f, filename, description = imp.find_module( subj_config_file )
+            configFileFound = True
+        except ImportError:
+            configFileFound = False
+        if (configFileFound == False):
+            #print "Config file: %s not found" % subj_config_file
+            print "File %s.py doesn't exist. Will be using default configuration variables instead." % subj_config_file
+            self.gVariables.logger.info("File %s.py doesn't exist. Will be using default configuration variables instead." % subj_config_file)
+        else:
             pass
-            Training.gVariables.numberOfRewardDropsGo = subjectConfig.numberOfRewardDropsGo
-            Training.gVariables.numberOfRewardDropsNoGo = subjectConfig.numberOfRewardDropsNoGo
+            #print "Config file: %s found." % subj_config_file
+            #subjectConfig = importlib.import_module(subj_config_file);
+            #import config_training as cfgtraining
+            subjCfgSubmodule = imp.load_module(subj_config_file, f, filename, description)
+            print subjCfgSubmodule
+            Training.gVariables.trainingName = subjCfgSubmodule.trainingName
+            Training.gVariables.eventTime1_sound = subjCfgSubmodule.eventTime1_sound
+            Training.gVariables.eventTime1_movement_start = subjCfgSubmodule.eventTime1_movement_start
+            Training.gVariables.eventTime2_movement = subjCfgSubmodule.eventTime2_movement
+            Training.gVariables.eventTime3_trialEnd = subjCfgSubmodule.eventTime3_trialEnd
+            Training.gVariables.minIdleIntertrialTime = subjCfgSubmodule.minIdleIntertrialTime
+            Training.gVariables.requireStillness = subjCfgSubmodule.requireStillness
+            Training.gVariables.interTrialRandom1Time = subjCfgSubmodule.interTrialRandom1Time
+            Training.gVariables.interTrialRandom2Time = subjCfgSubmodule.interTrialRandom2Time
+            Training.gVariables.movementTime = subjCfgSubmodule.movementTime
+            Training.gVariables.idleTime = subjCfgSubmodule.idleTime
+            Training.gVariables.soundGenDuration1 = subjCfgSubmodule.soundGenDuration1
+            Training.gVariables.soundGenDuration2 = subjCfgSubmodule.soundGenDuration2
+            Training.gVariables.soundGenFrequency1 = subjCfgSubmodule.soundGenFrequency1
+            Training.gVariables.soundGenFrequency2 = subjCfgSubmodule.soundGenFrequency2
+            Training.gVariables.soundGenVolume1 = subjCfgSubmodule.soundGenVolume1
+            Training.gVariables.soundGenVolume2 = subjCfgSubmodule.soundGenVolume2
+            Training.gVariables.toneOneProbability = subjCfgSubmodule.toneOneProbability
+            Training.gVariables.usingTK = subjCfgSubmodule.usingTK
+            Training.gVariables.initialComment = subjCfgSubmodule.initialComment
+            Training.gVariables.type_pavlov = subjCfgSubmodule.type_pavlov
+            Training.gVariables.type_skinner = subjCfgSubmodule.type_skinner
+            Training.gVariables.type_ocond = subjCfgSubmodule.type_ocond
+            Training.gVariables.type_discr = subjCfgSubmodule.type_discr
+            #movement threshold and method: editing sphereVideoDetection config files is recommended (still can be edited from config_training.)
+            Training.gVariables.movementAmount = subjCfgSubmodule.MOVEMENT_THRESHOLD_INITIAL_VALUE
+            Training.gVariables.videoMovementMethod = subjCfgSubmodule.MOVEMENT_METHOD_INITIAL_VALUE
+            pass
+            Training.gVariables.numberOfRewardDropsGo = subjCfgSubmodule.numberOfRewardDropsGo
+            Training.gVariables.numberOfRewardDropsNoGo = subjCfgSubmodule.numberOfRewardDropsNoGo
             Training.gVariables.override_training_types = 1;
             print "Configurations loaded from %s.py" % subj_config_file
             self.gVariables.logger.info("Configurations loaded from %s.py" % subj_config_file)
-        except:
-            print "File %s.py doesn't exist. Will be using default configuration variables instead." % subj_config_file
-            self.gVariables.logger.info("File %s.py doesn't exist. Will be using default configuration variables instead." % subj_config_file)
+        pass
         #adjusting trial types and modes:
         if (self.gVariables.type_pavlov == 1):
             #movement starts and ceases to be detected just after the tone ends. Basically, there's no movement window when Pavlov mode is enabled.
