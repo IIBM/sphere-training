@@ -474,14 +474,12 @@ class sphereVideoDetection():
                            abs(self.getInstantY() * self.getInstantY()))
         # logger.debug( "Amount of movement: %d" % movementAmount)
         # if it surpasses threshold OR if it lost tracking (so it is moving quite fast..)
-        
-        if (movementAmount >= self.movementThreshold or self.isTracking == False):
+        if (movementAmount >= self.movementThreshold) or self.isTrackingTemp == False:
                     self.movementVector[self.movementVectorLength - 1] = 1
-                    # print "1 appended   ", movementAmount ,"    Thres: ", self.movementThreshold
+                    #print "1 appended; ", movementAmount ," ; Thres: ", self.movementThreshold , " ; iTT: ", self.isTrackingTemp, " ; iT: ", self.isTracking
         else:
                     self.movementVector[self.movementVectorLength - 1] = 0
-                    # print "0 appended   ", movementAmount ,"    Thres: ", self.movementThreshold
-        
+                    #print "0 appended   ", movementAmount ,"    Thres: ", self.movementThreshold
         self.vectorPseudoInstantaneo.x = self.vectorInstantaneo.x
         self.vectorPseudoInstantaneo.y = self.vectorInstantaneo.y
         self.vectorInstantaneo.x = 0
@@ -1085,6 +1083,7 @@ class sphereVideoDetection():
                     Lnew = []
                     self.totalCirclesArea = 0; #cantidad de área cubierta por todos los círculos siendo trackeados
                     # si el área es muy chica respecto de lo que es normal, probablemente ha perdido tracking.
+                    
                     for cnt in contours:
                         (x, y), radius = cv2.minEnclosingCircle(cnt)
                         center = (int(x), int(y))
@@ -1107,7 +1106,6 @@ class sphereVideoDetection():
                     self.movementAxisY = 0
                     self.movingVectorsCount = 0
                     self.standingVectorsCount = 0
-                    
                     for index in range(len(Lnew)):
                         for jndex in range(index, len(Lbefore)):
                             movement_difference = (Lnew[index][0] - Lbefore[jndex][0]) ** 2 + (Lnew[index][1] - Lbefore[jndex][1]) ** 2
@@ -1134,7 +1132,9 @@ class sphereVideoDetection():
                         if (self.totalCirclesArea < self.MIN_CIRCLE_TOTAL_AREA_TO_CONSIDER_TRACKING):
                                 self.isTrackingTemp = False #less area than expected, it has lost movement tracking
                                 self.losingTrackCause = "small_area"
-                    
+                    if len(Lnew) == 0:
+                        self.isTrackingTemp = False
+                        self.losingTrackCause = "no_circles_detected"
                     self.trackingVector[0:-1] = self.trackingVector[1:]
                     self.trackingVector[-1] = self.isTrackingTemp
                     amountOfPreviousTrackingFrames = 0
@@ -1144,24 +1144,19 @@ class sphereVideoDetection():
                             amountOfPreviousTrackingFrames += 1
                     if (amountOfPreviousTrackingFrames < int( 0.8 * len(self.trackingVector) ) ): # from the past LEN tracking frames , 80% or less have lost tracking
                         self.isTracking = False # so consider this as a current track loss (movement with unknown direction)
-                    
                     # we divide each instant vector components by N, to obtain average instant vector.
                     if (self.movingVectorsCount == 0):
                         pass # no moving vectors, so we don't need to calculate current movement.
                     else:
                         self.movementAxisX /= self.movingVectorsCount  # movimiento x promedio.
                         self.movementAxisY /= self.movingVectorsCount  # movimiento y promedio
-                        
                         self.vectorAcumulado.x += self.movementAxisX
                         self.vectorAcumulado.y += self.movementAxisY
-                        
                         self.vectorInstantaneo.x += self.movementAxisX  # suma contrib. x en este ciclo (se establece a 0 en otro método)
                         self.vectorInstantaneo.y += self.movementAxisY  # suma contrib. y en este ciclo (se establece a 0 en otro método)
-                        
-                        # se analiza continuidad de movimiento en función:
-                        self.continuousMovementAnalysis()
-                    # se ejecutan visualization tools de pygame (es opcional)
-                    if self.usingPygameDisplay:
+                    pass
+                    self.continuousMovementAnalysis() # se analiza continuidad de movimiento en función:
+                    if self.usingPygameDisplay: # se ejecutan visualization tools de pygame (es opcional)
                         self.pygameVisualizationTools()
                     #===============================================================
                     # se "muestra" el resultado al usuario (feedback)

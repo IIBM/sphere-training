@@ -14,14 +14,9 @@ class multiproc_trainingDisplay():
     #Created because the need of showing Trials and Successful trials to the user on a regular training.
     #This class should be able to display two different types of information (important, in a bigger font, and 
     # less important information in a regular font) and adjust the graphical window according to the amount of information.
-    #This class is a WIP.>< 
-    
-    
+    #This class is a WIP.
     def __init__(self, jobl, caption="Variables"):
         self.displayJobList = jobl
-        
-        
-        
         self.available = True
         self.displayText1 = [] #important text to display in a relatively big font
         self.displayText2 = [] #less important text to display in a smaller font
@@ -41,18 +36,15 @@ class multiproc_trainingDisplay():
         pygame.display.set_caption(caption)
         self.basicFont = pygame.font.SysFont(None, 48)
         self.secondaryFont = pygame.font.SysFont(None, 36)
-        #time.sleep(0.5)
-        #self.renderAgain()
         pass
-
 
     def discardOldJobList(self):
         if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
             try:
-                            tempvar = self.displayJobList.get()
-                            self.displayJobList.task_done()
+                tempvar = self.displayJobList.get()
+                self.displayJobList.task_done()
             except:
-                            return;
+                return;
 
     def checkJobList(self):
         if (self.displayJobList.qsize() > 0 or self.displayJobList.empty() == False ):
@@ -62,24 +54,13 @@ class multiproc_trainingDisplay():
                 except:
                         return;
                 #print str("checkJobList: queue: " + str(tempvar) )
-                try:
-                    index = tempvar[0]
-                except:
+                if (len(tempvar) < 1):
                     return; #probably ill-formed message
-                try:
+                index = tempvar[0]
+                if (len(tempvar) > 1):
                     argument = tempvar[1]
-                except:
+                else:
                     argument = "__" #two chars to prevent error in updateInfo if above try fails..
-                    pass
-                
-                #print "checkJobList: Got a Message:", index
-                #print "checkJobList: Message's argument:", argument
-#                 try:
-#                     a = str(argument)
-#                     print "Argument: %s" %a
-#                 except:
-#                     print "Message's argument cannot be parsed to str."
-#                     pass
                 if (index == "updateInfo"):
                     #print "Command updateInfo received."
                     self.updateInfo(argument[0], argument[1])
@@ -107,36 +88,28 @@ class multiproc_trainingDisplay():
                     self.renderAgain()
 
     def renderAgain(self):
-        #render things in pygame again.
+        pass #render things in pygame again.
         if (self.available == True):
-            try:
-                if ( (len(self.displayText1) <= 0) and  (len(self.displayText2) <= 0) ):
+            if ( (len(self.displayText1) <= 0) and  (len(self.displayText2) <= 0) ):
                     return;
-            except:
-                return;
-            
             if (self.isUserWriting == False):
-                # draw the white background onto the surface
+                # draw background onto the surface
                 self.windowSurface.fill((55,55,55))
-                #
                 for i in range(0, len(self.displayText1)):
                     text1 = self.basicFont.render('%s: %r' % (self.displayText1[i][0],self.displayText1[i][1]), True, (255,255,255))
                     textRect1 = text1.get_rect()
                     textRect1.centerx = self.windowSurface.get_rect().centerx
                     textRect1.centery = self.INITIAL_SEPARATION+ i*self.TEXT1_FONT_SIZE
                     self.windowSurface.blit(text1, textRect1)
-                
                 for i in range(0, len(self.displayText2)):
                     text1 = self.secondaryFont.render('%s: %r' % (self.displayText2[i][0],self.displayText2[i][1]), True, (255,255,255))
                     textRect1 = text1.get_rect()
                     textRect1.centerx = self.windowSurface.get_rect().centerx
-                    textRect1.centery = (self.INITIAL_SEPARATION + self.TEXT_1_2_SEPARATION + len(self.displayText1) * self.TEXT1_FONT_SIZE +
-                                          i*self.TEXT2_FONT_SIZE)
+                    textRect1.centery = (self.INITIAL_SEPARATION + self.TEXT_1_2_SEPARATION + len(self.displayText1) * self.TEXT1_FONT_SIZE + i*self.TEXT2_FONT_SIZE)
                     self.windowSurface.blit(text1, textRect1)
                 # draw the window onto the screen
                 pygame.display.update()
 
-    
     def askUserInput(self, texts):
         self.isUserWriting = True
         #print "Asking user input:"
@@ -145,7 +118,6 @@ class multiproc_trainingDisplay():
         s = ""
         self.isUserWriting = False
         return s
-        
     
     def addImportantInfo(self, info):
         self.displayText1.append(info)
@@ -168,14 +140,14 @@ class multiproc_trainingDisplay():
         pass
     
     def updateInfo(self, text, newValue):
-        #sets from the class lists. the one that has "text", and updates it with newValue
+        pass #sets from the class lists. the one that has "text", and updates it with newValue
         a = False
+        if (self.available == False): return
         try:
             if ( (len(self.displayText1) <= 0) and  (len(self.displayText2) <= 0) ):
                 return;
         except:
             return;
-            
         for i in range(0, len(self.displayText1)):
             if str(self.displayText1[i][0]) == str(text):
                 self.displayText1[i] = (text,newValue)
@@ -186,40 +158,27 @@ class multiproc_trainingDisplay():
                 self.displayText2[i] = (text,newValue)
                 #print "updated : " + text
                 a = True
-        """
-        if (a == False):
-            print "Info with text : " + text + " not found, value: " + str(newValue) + " not updated."
-            print self.displayText1
-            print self.displayText2
-        """
         self.renderAgain()
 
 
 class trainingDisplay() :
     #This class relays information to the multiproc_trainingDisplay class..
     #check that class for information about trainingDisplay functionality.>< 
-    
-    def launch_multiproc(self, jobl, caption):
-        a = multiproc_trainingDisplay(jobl, caption)
-        time.sleep(0.5)
-        while(True):
-            time.sleep(PROCESS_SLEEP_TIME)
-            
-            a.checkJobList()
-            #a.updateInfo("Other secondary information", var)
-            #for event in pygame.event.get():
-            #        if event.type == pygame.QUIT: sys.exit()
-            pass
-    
     def __init__(self, caption="Variables"):
         import multiprocessing
         self.displayJobList = multiprocessing.JoinableQueue()
-        
         self.displayProc = multiprocessing.Process(target=self.launch_multiproc, args=(self.displayJobList, caption,) )
         self.displayProc.start()
-        
         logger.debug("trainingDisplay process Started.")
 
+    def launch_multiproc(self, jobl, caption):
+        multiprocObjDisplay = multiproc_trainingDisplay(jobl, caption)
+        time.sleep(0.5)
+        while(True):
+            time.sleep(PROCESS_SLEEP_TIME)
+            multiprocObjDisplay.checkJobList()
+        pass
+    
     def getSleepTime(self):
         return PROCESS_SLEEP_TIME
 
@@ -245,9 +204,8 @@ class trainingDisplay() :
     def exitDisplay(self):
         #print "exiting Display."
         self.displayJobList.put( ("exitDisplay", "") )
-        time.sleep(0.5)
+        time.sleep(0.3)
         self.displayProc.terminate()
-        #sys.exit()
         pass
     
     def updateMultipleInfo(self, lista):

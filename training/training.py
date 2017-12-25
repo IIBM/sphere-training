@@ -1785,7 +1785,7 @@ class Training():
             Training.gVariables.start_time += Training.gVariables.current_trial_paused_time  # we consider that training time has not passed in the pause state.
             Training.gVariables.current_trial_paused_time = 0
             Training.gVariables.current_trial_time = (timeit.default_timer() - Training.gVariables.current_trial_start_time)
-            trackingStatus=Training.gVariables.videoDet.getTrackingStatus() #if losing track, it's mvmnt
+            trackingStatus=Training.gVariables.videoDet.getTrackingStatus() #if losing track, it is moving on this frame
             if ( ( Training.gVariables.current_trial_stage == 3 and ( ( Training.gVariables.videoDet.getIdleTime() >= Training.gVariables.minIdleIntertrialTime and Training.gVariables.videoDet.getMovementStatus() == False and trackingStatus == True) or (Training.gVariables.requireStillness == 0) ) or (Training.gVariables.trialCount == 0)  ) ) :
                 pass #trial start
                 Training.gVariables.trialCount += 1
@@ -1855,8 +1855,10 @@ class Training():
                 Training.gVariables.trialSuccessful = False
                 if (Training.gVariables.current_trial_type == 1) :
                     Training.gVariables.videoDet.resetMovementTime()
+                    Training.gVariables.logger.info('movement vector set to 0')
                 else:
                     Training.gVariables.videoDet.resetIdleTime()
+                    Training.gVariables.logger.info('movement vector set to 1')
                 Training.gVariables.current_trial_stage = 1
             elif (int(Training.gVariables.current_trial_time) >= Training.gVariables.eventTime2_movement and Training.gVariables.current_trial_stage == 1):
                 Training.gVariables.logger.info('End trial movement detection')
@@ -1893,14 +1895,14 @@ class Training():
             #===============================================================
             if (Training.gVariables.current_trial_stage == 1):
                 if (Training.gVariables.current_trial_type == 1):
-                    if (Training.gVariables.videoDet.getMovementStatus() == True and ((Training.gVariables.videoDet.getMovementTime() >= (Training.gVariables.movementTime)) ) ) or (trackingStatus == False) :
+                    if (Training.gVariables.videoDet.getMovementStatus() == True and ((Training.gVariables.videoDet.getMovementTime() >= (Training.gVariables.movementTime)) ) ):
                         Training.gVariables.trialSuccessful = True
                         # Training.giveReward() #the reward is given at the end of the mvnt window
                         Training.gVariables.logger.info('Movement threshold reached. Will give reward at the end of movement window. (mvnt) trackingStatus:%r'%trackingStatus)
                         # print "Continuous total time: %r"%Training.gVariables.videoDet.getMovementTime()
                         pass
                 elif (Training.gVariables.current_trial_type == 2):
-                    if (trackingStatus == True and Training.gVariables.videoDet.getMovementStatus() == False and Training.gVariables.videoDet.getIdleTime() >= (Training.gVariables.idleTime)):  #
+                    if (Training.gVariables.videoDet.getMovementStatus() == False and Training.gVariables.videoDet.getIdleTime() >= (Training.gVariables.idleTime)):
                         Training.gVariables.trialSuccessful = True
                         # Training.giveReward() #the reward is given at the end of the mvnt window
                         Training.gVariables.logger.info('Movement threshold reached. Will give reward at the end of movement window. (idle) trackingStatus:%r'%trackingStatus)
